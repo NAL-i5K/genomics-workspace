@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from blast.models import Organism
+from app.models import Organism
 from filebrowser.fields import FileBrowseField
 import os.path
 
