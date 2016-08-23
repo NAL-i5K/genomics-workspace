@@ -4,6 +4,7 @@ from filebrowser.fields import FileBrowseField
 from django.core.urlresolvers import reverse
 import os.path
 from django.conf import settings
+import app.models
 
 class BlastQueryRecord(models.Model):
     task_id = models.CharField(max_length=32, primary_key=True) # ex. 128c8661c25d45b8-9ca7809a09619db9
@@ -66,7 +67,7 @@ class BlastDbManager(models.Manager):
 
 class BlastDb(models.Model):
     objects = BlastDbManager()
-    organism = models.ForeignKey(Organism) # 
+    organism = models.ForeignKey(app.models.Organism) # 
     type = models.ForeignKey(SequenceType) # 
     #fasta_file = models.FileField(upload_to='blastdb') # upload file
     fasta_file = FileBrowseField('FASTA file path', max_length=100, directory='blast/db/', extensions='FASTA', format='FASTA')

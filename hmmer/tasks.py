@@ -53,16 +53,16 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     result_status = 'SUCCESS'
     for args in args_list:
         Popen(args, stdin=None, stdout=PIPE).wait()
-        if(args[0] == 'hmmbuild'):
+        if('hmmbuild' in args[0]):
             if not path.isfile(args[3]):
                 result_status= 'FAILURE'
                 break
-        elif(args[0] == 'hmmsearch'):
+        elif('hmmsearch' in args[0]):
             merge_result_command = merge_result_command + ' ' + args[2]
             if not path.isfile(args[2]):
                 result_status= 'FAILURE'
                 break
-        elif(args[0] == 'phmmer'):
+        elif('phmmer' in args[0]):
              merge_result_command = merge_result_command + ' ' + args[2]
              if not path.isfile(args[2]):
                 result_status= 'FAILURE'
