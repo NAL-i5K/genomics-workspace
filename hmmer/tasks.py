@@ -28,7 +28,7 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     import django
     django.setup()
 
-    logger.info("blast_task_id: %s" % (task_id,))
+    logger.info("hmmer_task_id: %s" % (task_id,))
 
     chdir(path.dirname(file_prefix))
 
@@ -107,7 +107,7 @@ def task_sent_handler(sender=None, task_id=None, task=None, args=None,
         try:
             tlist = cache.get(CACHE_ID, [])
             if args:
-                bid = args[0] # blast_task_id
+                bid = args[0] # hmmer_task_id
                 tlist.append( (task_id,bid) )
                 logger.info('[task_sent] task sent: %s. queue length: %s' % (bid, len(tlist)) )
                 #print('[task_sent] task sent: %s. queue length: %s' % (bid, len(tlist)) )
@@ -123,18 +123,18 @@ def task_success_handler(sender=None, result=None, **kwds):
         while not acquire_lock():
             time.sleep(0.1)
         try:
-            blast_task_id = result
+            hmmer_task_id = result
             tlist = cache.get(CACHE_ID, [])
-            if tlist and blast_task_id:
+            if tlist and hmmer_task_id:
                 for tuple in tlist:
-                    if blast_task_id in tuple:
+                    if hmmer_task_id in tuple:
                         tlist.remove(tuple)
-                        logger.info('[task_success] task removed from queue: %s' % (blast_task_id) )
+                        logger.info('[task_success] task removed from queue: %s' % (hmmer_task_id) )
                         break
-                logger.info('[task_success] task done: %s. queue length: %s' % (blast_task_id, len(tlist)) )
+                logger.info('[task_success] task done: %s. queue length: %s' % (hmmer_task_id, len(tlist)) )
                 cache.set(CACHE_ID, tlist)
             else:
-                logger.info('[task_success] no queue list or blast task id.')
+                logger.info('[task_success] no queue list or hmmer task id.')
         finally:
             release_lock()
 
