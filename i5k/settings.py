@@ -206,7 +206,6 @@ INSTALLED_APPS = (
     'clustal',
     'webapollo_sso',
     'drupal_sso',
-    'django_cas_ng',
 )
 
 
@@ -332,7 +331,7 @@ SUIT_CONFIG = {
 # more details on how to customize your logging configuration.
 
 #
-# Use default 'django' loger to a file in /var/log/django/django.log
+# Use default 'django' logger to a file in /var/log/django/django.log
 # and new log 'i5k' to /var/log/i5k/i5k.log
 # See logging.md doc for more details.
 #
@@ -683,7 +682,6 @@ AUTHENTICATION_BACKENDS = (
     'social.backends.google.GoogleOAuth2',
     'social.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
-    'django_cas_ng.backends.CASBackend',
 )
 
 SOCIAL_AUTH_PIPELINE = (
