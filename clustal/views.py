@@ -50,14 +50,18 @@ def create(request):
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
-            query_filename = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id + 'in')
+            query_filename = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id + '.in')
             with open(query_filename, 'wb') as query_f:
-                query_f.write(request.POST['query-sequence'])
+                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_f.write('\n'.join(query_text))
         else:
             return render(request, 'clustal/invalid_query.html', {'title': '',})
 
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) 
         # ensure the standalone dequeuing process can access the file
+
+        bin_name = 'bin_linux'
+        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name)
 
         # count number of query sequence by counting '>'
         with open(query_filename, 'r') as f:
@@ -144,7 +148,7 @@ def create(request):
                 option_params.append('-OUTPUT='+request.POST['OUTPUT'])
                 option_params.append('-OUTORDER='+request.POST['OUTORDER'])
 
-                args_list.append(['clustalw2', '-infile='+query_filename,
+                args_list.append([path.join(program_path,'clustalw2'), '-infile='+query_filename,
                                   '-OUTFILE='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id+'.aln'),
                                   '-type=protein'])
 
@@ -173,11 +177,13 @@ def create(request):
                 if request.POST['omega_order'] != "":
                     option_params.append("--output-order="+request.POST['omega_order'])
  
-                args_list.append(['clustalo', '--infile='+query_filename,
+                args_list.append([path.join(program_path,'clustalo'), '--infile='+query_filename,
                                   '--guidetree-out='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.ph',
                                   '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln'] 
                                   + option_params)
-                
+            
+                print args_list
+    
                 args_list_log = []
                 args_list_log.append(['clustalo', '--infile='+path.basename(query_filename),
                                       '--guidetree-out=' + task_id + '.ph', 

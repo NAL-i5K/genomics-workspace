@@ -84,7 +84,8 @@ def create(request):
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, task_id + '.in')
             with open(query_filename, 'wb') as query_f:
-                query_f.write(request.POST['query-sequence'])
+                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_f.write('\n'.join(query_text))
         else:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
 
@@ -92,6 +93,8 @@ def create(request):
               Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)  
         # ensure the standalone dequeuing process can access the file
 
+        bin_name = 'bin_linux'
+        program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
 
         if(request.POST['program'] == 'phmmer'):
             with open(query_filename, 'r') as f:
@@ -107,7 +110,7 @@ def create(request):
         But you need find a good to check format in front-end
         '''
         if(request.POST['program'] == 'hmmsearch'):
-            p = Popen(["hmmbuild","--fast", '--amino', 
+            p = Popen([path.join(program_path, "hmmbuild"),"--fast", '--amino', 
                       path.join(settings.MEDIA_ROOT, 'hmmer', 'task',  "hmmbuild.test"), query_filename], 
                       stdout=PIPE, stderr=PIPE)
             p.wait()
@@ -127,6 +130,7 @@ def create(request):
 
         if not db_list:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
+
 
         # check if program is in list for security
         if request.POST['program'] in ['phmmer', 'hmmsearch']:
@@ -160,15 +164,15 @@ def create(request):
             args_list = []
             if (request.POST['program'] == 'hmmsearch'):
                 #hmmsearch
-                args_list.append(['hmmbuild', '--amino', '-o', 'hmm.sumary', 
+                args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary', 
                     os.path.basename(query_filename) + '.hmm', os.path.basename(query_filename)])
                 for idx, db in enumerate(db_list.split()):
-                    args_list.append(['hmmsearch', '-o', str(idx) + '.out'] 
+                    args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out'] 
                             + option_params + [os.path.basename(query_filename) + '.hmm', os.path.basename(db)])
             else:
                 #phmmer
                 for idx, db in enumerate(db_list.split()):
-                    args_list.append(['phmmer', '-o', str(idx) + '.out'] 
+                    args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out'] 
                             + option_params + [os.path.basename(query_filename), os.path.basename(db)])
 
             run_hmmer_task.delay(task_id, args_list, file_prefix)

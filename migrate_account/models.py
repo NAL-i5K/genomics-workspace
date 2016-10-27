@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-from blast.models import Organism
+from app.models import Organism
 from filebrowser.fields import FileBrowseField
 
 
@@ -8,7 +8,6 @@ from filebrowser.fields import FileBrowseField
 
 #class User_account(models.Model):
 
-        
 class MigrateUserRecord(models.Model):
     username = models.CharField(max_length=300)
     password = models.CharField(max_length=70)
