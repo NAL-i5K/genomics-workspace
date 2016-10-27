@@ -68,6 +68,7 @@ class BlastDbAdmin(admin.ModelAdmin):
         js = ('blast/scripts/blastdb-admin.js',)
 admin.site.register(BlastDb, BlastDbAdmin)
 
+
 class OrganismForm(ModelForm):
     class Meta:
         widgets = {
