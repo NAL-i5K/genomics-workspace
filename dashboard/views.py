@@ -15,15 +15,15 @@ dash = i5kLogger()
 #@login_required
 def dashboard(request):
 
-    dash.debug("<debug message> (file: %s line: %s)" % (src.file(), src.line()))
+    dash.debug("<debug message> %s" % src.request(request))
 
-    dash.info("<info message> (file: %s line: %s)" % (src.file(), src.line()))
+    dash.info("<info message>")
 
-    dash.warn("<warn message> (file: %s line: %s)" % (src.file(), src.line()))
+    dash.warn("<warn message>")
 
-    dash.error("<error message> (file: %s line: %s)\nrequest: %s" % (src.file(), src.line(), src.request(request)))
+    dash.error("<error message>")
 
-    dash.critical("<critical message> (file: %s line: %s)\nrequest: %s" % (src.file(), src.line(), src.request(request)))
+    dash.critical("<critical message>")
 
     raise Http404("No way Jose")
     #return render(request, 'dashboard/index.html', { 'year': datetime.now().year, 'title': 'Dashboard', })

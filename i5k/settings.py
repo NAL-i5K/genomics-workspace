@@ -340,7 +340,7 @@ LOGGING = {
     'disable_existing_loggers': False,
     'formatters': {
         'normal': {
-            'format': '%(name)s %(levelname)s %(asctime)s %(process)d [%(message)s]'
+            'format': '%(name)s %(levelname)s %(asctime)s %(process)d [%(message)s] (file: %(pathname)s line: %(lineno)d)'
         },
     },
     'filters': {
