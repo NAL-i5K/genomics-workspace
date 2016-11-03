@@ -84,7 +84,7 @@ by the various tools that can be used to examine and analyze log files.
 
     'formatters': {
         'normal': {
-            'format': '%(name)s %(levelname)s %(asctime)s %(process)d [%(message)s]'
+            'format': '%(name)s %(levelname)s %(asctime)s %(process)d [%(message)s] (file: %(pathname)s line: %(lineno)d)'
         },
     }
 
@@ -98,9 +98,14 @@ by the various tools that can be used to examine and analyze log files.
 
 [%(message)s] is the log message, enclosed in square brackets.  
 
+%(pathname)s is the full path name of the file where the log originated.
+
+%(lineno)d is the line number in the file where the log originated.
+
+
 Thus, an example log message looks like: 
 
-    django.request WARNING 2016-09-08 05:31:01,681 4678 [Not Found: /dashboard]
+    i5k ERROR 2016-11-02 10:41:07,110 21900 [<error message>] (file: /django-blast/dashboard/views.py line: 24)
 
 We have no control of the message part of the logs produced by the Django loggers, 
 but we can still specify their general log entry format.
@@ -285,9 +290,7 @@ and if possible adhere to the following conventions.
     import misc.fileline as src 
     from misc.logger import i5kLogger
 
-The *fileline* module provides functions to include the file name and the line number 
-of the call to the logger in the log message, similar to the \_\_FILE\_\_ and \_\_LINE\_\_
-macros in the C language.  
+The *fileline* module provides a function to print the Django HTTP request when available. 
 
 The *i5kLogger()* function is a wrapper for:
 
@@ -301,22 +304,22 @@ Here is an example showing the use of all logging methods.
 
     blast = i5kLogger() 
 
-    blast.debug("<debug message> (file: %s line: %s)" % (src.file(), src.line()))
+    blast.debug("<debug message>")
 
-    blast.info("<info message> (file: %s line: %s)" % (src.file(), src.line()))
+    blast.info("<info message>")
 
-    blast.warning("<warning message> (file: %s line: %s)" % (src.file(), src.line()))
+    blast.warning("<warning message>")
 
-    blast.error("<error message> (file: %s line: %s)" % (src.file(), src.line()))
+    blast.error("<error message>")
 
-    blast.critical("<critical message> (file: %s line: %s)" % (src.file(), src.line()))
+    blast.critical("<critical message>")
 
 'blast', or any variable name of your choice, holds the pointer to the 'i5k' logger, and 
 allows to call any of the five methods corresponding to the five message severities.  
 
 The resulting debug log is for example:
 
-    i5k DEBUG 2016-09-08 10:29:22,861 9055 [<debug message> (file: /django-blast/blast/views.py line: 23)]
+    i5k DEBUG 2016-09-08 10:29:22,861 9055 [<debug message>] (file: /django-blast/blast/views.py line: 23)
 
 Log entries are usually a single line, except when you print the http request, if available.  
 
@@ -325,22 +328,20 @@ To add the entire http request to the log message use the *request()* funtion of
 In a view or any other function where the request is available, say in the variable 'request', you can 
 add the request to the log like this:
 
-    blast.error("<error message> (file: %s line: %s) %s" % (src.file(), src.line(), src.request(request)))
+    blast.error("<error message> %s" % src.request(request))
 
 This produces a multiline log similar to this: 
 
-    i5k ERROR 2016-09-08 05:31:01,484 4678 [<error message> (file: /django-blast/blast/views.py line: 29)
-    request:
+    i5k ERROR 2016-09-08 05:31:01,484 4678 [<error message> 
+    RequestBegin:
     <WSGIRequest
     path:/dashboard,
     GET:<QueryDict: {}>,
     POST:<QueryDict: {}>,
     COOKIES:{'csrftoken': 'lw03D5JjghuOzEFDsQE3uaREaHr1xUM2'},
     <other request fields> 
+    RequestEnd] (file: /django-blast/blast/views.py line: 29)
 
 The request data makes the log file less readable but equally useful to text manipulation tools.
-The call to *'src.request(request)'* returns the string 'request:' in the first line, so there is no need to 
-add it to the message format string. 
-
-Adding the file and line to each logging call is a bit laborious, but it provides invaluable information 
-to troubleshooters and developers when errors occur, and it is a recommended practice that repays the time invested many times over.
+The call to *'src.request(request)'* returns the request string sandwiched between the strings 
+"RequestBegin:" and RequestEnd" on separate lines. 
