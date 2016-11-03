@@ -44,7 +44,7 @@ ALLOWED_HOSTS = (
 )
 
 ADMINS = (
-     ('Joseph', 'vagrant'),
+     ('Your Name', 'Your@email.address'),
 )
 
 MANAGERS = ADMINS
@@ -188,7 +188,7 @@ INSTALLED_APPS = (
     'pipeline',
     'app',
     'blast',
-    'migrate_account',
+#    'migrate_account',
     # 'userprofile',
     # Uncomment the next line to enable the admin:
     'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
@@ -204,8 +204,8 @@ INSTALLED_APPS = (
     #'data',
     'hmmer',
     'clustal',
-    'webapollo_sso',
-    'drupal_sso',
+#    'webapollo_sso',
+#    'drupal_sso',
 )
 
 
