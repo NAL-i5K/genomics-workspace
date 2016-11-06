@@ -359,14 +359,14 @@ LOGGING = {
         },
         'django_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'django.log',
+            'filename': '/var/log/django/django.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
         },
         'i5k_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': 'i5k.log',
+            'filename': '/var/log/django/i5k.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
