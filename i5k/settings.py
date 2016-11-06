@@ -188,7 +188,6 @@ INSTALLED_APPS = (
     'pipeline',
     'app',
     'blast',
-#    'migrate_account',
     # 'userprofile',
     # Uncomment the next line to enable the admin:
     'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
@@ -360,14 +359,14 @@ LOGGING = {
         },
         'django_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/django/django.log',
+            'filename': 'django.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
         },
         'i5k_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/i5k/i5k.log',
+            'filename': 'i5k.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
