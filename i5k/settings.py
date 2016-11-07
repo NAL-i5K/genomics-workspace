@@ -188,7 +188,6 @@ INSTALLED_APPS = (
     'pipeline',
     'app',
     'blast',
-#    'migrate_account',
     # 'userprofile',
     # Uncomment the next line to enable the admin:
     'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
