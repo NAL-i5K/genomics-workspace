@@ -366,7 +366,7 @@ LOGGING = {
         },
         'i5k_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/django/i5k.log',
+            'filename': '/var/log/i5k/i5k.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
