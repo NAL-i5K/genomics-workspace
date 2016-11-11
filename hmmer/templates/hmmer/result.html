@@ -1,8 +1,9 @@
 {% extends "app/layout.html" %}
 {% load staticfiles %}
+{% load pipeline %}
 
 {% block head-scripts %}
-<link href="{% static 'hmmer/css/main.css' %}" rel="stylesheet" type="text/css" />
+{% stylesheet 'hmmer-css' %}
 {% endblock %}
 {% block content %}
 

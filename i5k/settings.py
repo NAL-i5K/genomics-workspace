@@ -367,7 +367,7 @@ LOGGING = {
         },
         'i5k_file': {
             'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/i5k/i5k.log',
+            'filename': '/var/log/django/i5k.log',
             'when': 'midnight',
             'backupCount': 60,
             'formatter': 'normal'
@@ -469,109 +469,6 @@ REST_FRAMEWORK = {
 
 # django-pipeline
 STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
-
-# django-pipeline 1.3
-'''
-PIPELINE_CSS_COMPRESSOR = 'pipeline.compressors.cssmin.CSSMinCompressor'
-PIPELINE_CSSMIN_BINARY = 'cssmin'
-PIPELINE_JS_COMPRESSOR = 'pipeline.compressors.slimit.JSMinCompressor'
-
-PIPELINE_CSS = {
-    'app-layout': {
-	    'source_filenames': (
-            'app/content/site.css',
-            'app/content/bootstrap.min.css',
-        ),
-        'output_filename': 'app/content/app-layout.min.css',
-    },
-    'blast-results': {
-        'source_filenames': (
-            'blast/css/codemirror.css',
-            'blast/css/xq-light.css',
-            'blast/css/kendo.common-bootstrap.core.css',
-            'blast/css/kendo.bootstrap.min.css',
-            'blast/css/jquery-ui.min.css',
-            'blast/dataTables/css/jquery.dataTables.min.css',
-            'blast/dataTables/css/dataTables.scroller.min.css',
-            'blast/dataTables/css/dataTables.colReorder.min.css',
-            'blast/dataTables/css/dataTables.bootstrap.css',
-            'blast/css/bootstrap-select.min.css',
-            'blast/css/bootstrap-switch.min.css',
-            'blast/css/blast-results.css',
-        ),
-        'output_filename': 'blast/css/blast-results.min.css',
-    },
-    'clustal-css': {
-        'source_filenames': (
-            'clustal/css/main.css',
-        ),
-        'output_filename': 'clustal/css/clustal-css.min.css',
-    },
-    'hmmer-css' : {
-        'source_filenames': (
-            'hmmer/css/main.css',
-        ),
-        'output_filename': 'hmmer/css/hmmer-css.min.css',
-    },
-}
-
-PIPELINE_JS = {
-    'app-layout': {
-        'source_filenames': (
-            'app/scripts/jquery-1.11.1.min.js',
-            'app/scripts/bootstrap.min.js',
-            'app/scripts/respond.js',
-        ),
-        'output_filename': 'app/scripts/app-layout.min.js',
-    },
-    'blast-results': {
-        'source_filenames': (
-            'blast/scripts/chroma.min.js',
-            'blast/scripts/codemirror-compressed.js',
-            'blast/scripts/kendo-hotdogee.js',
-            'blast/scripts/jquery-ui.min.js',
-            'blast/scripts/dragscrollable.js',
-            'blast/dataTables/js/jquery.dataTables-hotdogee.js',
-            'blast/dataTables/js/dataTables.scroller.js',
-            'blast/dataTables/js/dataTables.colReorder.min.js',
-            'blast/dataTables/js/dataTables.tableTools.min.js',
-            'blast/dataTables/js/dataTables.bootstrap.js',
-            'blast/scripts/underscore-min.js',
-            'blast/scripts/backbone-min.js',
-            'blast/scripts/scribl.1.1.5-hotdogee.js',
-            'blast/scripts/bootstrap-select-hotdogee.js',
-            'blast/scripts/bootstrap-switch.min.js',
-            'blast/scripts/blast-results.js',
-        ),
-        'output_filename': 'blast/scripts/blast-results.min.js',
-    },
-    'clustal-js': {
-        'source_filenames': (
-            'clustal/scripts/underscore-min.js',
-            'clustal/scripts/jquery.hoverIntent.minified.js',
-            'clustal/scripts/jquery.validate.min.js',
-            'clustal/scripts/clustal-multi.js',
-        ),
-        'output_filename': 'clustal/scripts/clustal-js.min.js',
-    },
-    'hmmer-js': {
-        'source_filenames': (
-                'hmmer/scripts/underscore-min.js',
-                'hmmer/scripts/jquery.hoverIntent.minified.js',
-                'hmmer/scripts/jquery.validate.min.js',
-                'hmmer/scripts/hmmer-multi.js',
-        ),
-        'output_filename': 'hmmer/scripts/hmmer-js.min.js',
-    },
-    'sso-js': {
-        'source_filenames': (
-                'webapollo_sso/scripts/underscore-min.js',
-                'webapollo_sso/scripts/sso-datatable.js',
-        ),
-        'output_filename': 'sso/scripts/sso-js.min.js',
-    },
-}
-'''
 # django-pipeline 1.6
 
 PIPELINE = {
@@ -654,10 +551,10 @@ PIPELINE = {
         },
         'hmmer-js': {
             'source_filenames': (
-                    'clustal/scripts/underscore-min.js',
-                    'clustal/scripts/jquery.hoverIntent.minified.js',
-                    'clustal/scripts/jquery.validate.min.js',
-                    'hmmer/scripts/hmmer-multi.js',
+                    'hmmer/scripts/underscore-min.js',
+                    'hmmer/scripts/jquery.hoverIntent.minified.js',
+                    'hmmer/scripts/jquery.validate.min.js',
+                    #'hmmer/scripts/hmmer-multi.js',
             ),
             'output_filename': 'hmmer/scripts/hmmer-js.min.js',
         },
@@ -671,7 +568,7 @@ PIPELINE = {
     },
 }
 
-#PIPELINE['PIPELINE_ENABLED'] = True
+PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
 PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
