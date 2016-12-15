@@ -56,6 +56,9 @@ def create(request, iframe=False):
             'blastdb_type_counts': blastdb_type_counts,
             'iframe': iframe
         })
+    elif request.method == 'OPTIONS':
+        return HttpResponse("OPTIONS METHOD NOT SUPPORTED", status=202)
+
     elif request.method == 'POST':
         # setup file paths
         task_id = uuid4().hex # TODO: Create from hash of input to check for duplicate inputs
@@ -76,7 +79,8 @@ def create(request, iframe=False):
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             with open(query_filename, 'wb') as query_f:
-                query_f.write(request.POST['query-sequence'])
+                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_f.write('\n'.join(query_text))
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
 
@@ -92,7 +96,7 @@ def create(request, iframe=False):
 
             # generate customized_options
             input_opt = []
-            max_target_seqs = request.POST['max_target_seqs']
+            max_target_seqs = request.POST.get('max_target_seqs', 50)
             for blast_option in blast_customized_options[request.POST['program']]:
                 if blast_option == 'low_complexity':
                     if request.POST['program'] == 'blastn':
