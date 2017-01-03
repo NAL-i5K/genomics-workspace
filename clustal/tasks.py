@@ -79,7 +79,7 @@ def remove_files():
         if path.exists(task_path):
             rmtree(task_path)
             logger.info('removed directory %s' % (task_path))
-
+'''
 @task_sent.connect
 def task_sent_handler(sender=None, task_id=None, task=None, args=None,
                       kwargs=None, **kwds):
@@ -126,3 +126,4 @@ def task_failure_handler(sender=None, task_id=None, exception=None,
     if settings.USE_CACHE:
         logger.info('[task_failure] task failed. rabbit task_id: %s' % (task_id) )
         task_success_handler(sender, task_id)
+'''
