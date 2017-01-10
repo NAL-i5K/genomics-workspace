@@ -18,6 +18,7 @@ import traceback
 import stat as Perm
 from itertools import groupby
 from subprocess import Popen, PIPE
+from i5k.settings import HMMER_QUERY_MAX
 
 def manual(request):
     '''
@@ -99,10 +100,11 @@ def create(request):
         if(request.POST['program'] == 'phmmer'):
             with open(query_filename, 'r') as f:
                 qstr = f.read()
-                if(qstr.count('>') > 10):
+                if(qstr.count('>') > int(BLAST_QUERY_MAX)):
+                    query_cnt = str(qstr.count('>'))
                     os.remove(query_filename)
                     return render(request, 'hmmer/invalid_query.html', 
-                            {'title': 'Phmmer, Max number of query sequences: 10 sequences', }) 
+                            {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', }) 
 
         '''
         Format validation by hmmsearch fast mode
