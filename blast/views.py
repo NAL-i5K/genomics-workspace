@@ -6,13 +6,16 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.conf import settings
 from django.core.cache import cache
+from random import randint
 from uuid import uuid4
 from os import path, makedirs, chmod, stat, remove
 from sys import platform
-from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting
+from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting, BlastSearch
 from .tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now
+from misc.logger import i5kLogger
+from misc.get_tag import get_tag
 from pytz import timezone
 import subprocess
 import json
@@ -23,6 +26,9 @@ from copy import deepcopy
 from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
 from multiprocessing import cpu_count
+import dashboard.views
+
+log = i5kLogger()
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -47,14 +53,73 @@ blast_info = {
 }
 
 def create(request, iframe=False):
+    #return HttpResponse("BLAST Page: create.")
+    from django.views.debug import get_exception_reporter_filter
+    import inspect
+    import sys
+    fil = get_exception_reporter_filter(request)
+    request_repr = '\n{0}'.format(fil.get_request_repr(request))
+    with open('/tmp/requests', 'a') as f:
+        #f.write(json.dumps(request.POST, indent=4))
+        f.write(request_repr)
+    replay = False  #  True if it's a history search being replayed.
     if request.method == 'GET':
         blastdb_list = sorted([[db.type.dataset_type, db.type.get_molecule_type_display(), db.title, db.organism.display_name, db.description] for db in BlastDb.objects.select_related('organism').select_related('type').filter(is_shown=True) if db.db_ready()], key=lambda x: (x[3], x[1], x[0], x[2]))
         blastdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in groupby(sorted(blastdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
+        if 'search_id' in request.GET and request.GET['search_id']:
+            #
+            #  This is a search replay from saved history
+            #  Populate form with values from previous search.
+            #  User can edit them or run the exact same search.
+            #
+            replay = True
+            tag = request.GET['search_id']
+            saved_search = BlastSearch.objects.filter(search_tag=tag)
+            if saved_search:
+                saved_search = saved_search[0]
+                sequence_list = saved_search.sequence.split('\n')
+                print "Blast create: tag = %s" % saved_search.search_tag
+                print 'sequence %s' %  sequence_list
+                return render(request, 'blast/main.html', {
+                    'tag':             saved_search.search_tag,
+                    'soft_masking':    saved_search.soft_masking,
+                    'enqueue_date':    saved_search.enqueue_date,
+                    'low_complexity':  saved_search.low_complexity,
+                    'penalty':         saved_search.penalty,
+                    'evalue':          saved_search.evalue,
+                    'gapopen':         saved_search.gapopen,
+                    'strand':          saved_search.strand,
+                    'ga_box':          saved_search.ga_box,
+                    'transcript_box':  saved_search.transcript_box,
+                    'peptide_box':     saved_search.peptide_box,
+                    'gapextend':       saved_search.gapextend,
+                    'word_size':       saved_search.word_size,
+                    'max_target_seqs': saved_search.max_target_seqs,
+                    'sequence1':       sequence_list[0],
+                    'sequence2':       sequence_list[1],
+                    'title': 'BLAST Query',
+                    'blastdb_list': json.dumps(blastdb_list),
+                    'blastdb_type_counts': blastdb_type_counts,
+                    'iframe': iframe,
+                })
+            else:
+                print "Blast create: no saved search found"
+                pass
+
+
+        #with open('/tmp/requests', 'a') as f:
+            #f.write('\n\n\n')
+            #f.write(str(blastdb_list))
+            #f.write('\n\n\n')
+            #f.write(str(blastdb_type_counts))
+        #tag = get_tag(request.GET['USER'])
+        tag = get_tag('vagrant', BlastSearch)
         return render(request, 'blast/main.html', {
             'title': 'BLAST Query',
             'blastdb_list': json.dumps(blastdb_list),
             'blastdb_type_counts': blastdb_type_counts,
-            'iframe': iframe
+            'iframe': iframe,
+            'tag': tag
         })
     elif request.method == 'OPTIONS':
         return HttpResponse("OPTIONS METHOD NOT SUPPORTED", status=202)
@@ -73,12 +138,14 @@ def create(request, iframe=False):
             bin_name = 'bin_win'
         elif platform == 'darwin':
             bin_name = 'bin_mac'
+        print  ' =====>> checkbox: %s' % request.POST
         # write query to file
         if 'query-file' in request.FILES:
             with open(query_filename, 'wb') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
+            print 'POST sequence: %s' %  request.POST['query-sequence']
             with open(query_filename, 'wb') as query_f:
                 query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
@@ -150,6 +217,12 @@ def create(request, iframe=False):
                     json.dump({'status': 'pending', 'seq_count': seq_count}, f)
 
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
+
+            #
+            #  Create a search history record.
+            #
+            save_history(request.POST, task_id, query_filename)
+
 
             # debug
             #run_blast_task.delay(task_id, args_list, file_prefix, blast_info).get()
@@ -280,3 +353,29 @@ def user_tasks(request, user_id):
         serializer = UserBlastQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
 
+#
+#  Save a search in the search history.
+#
+def save_history(post, task_id, seq_file):
+    rec = BlastSearch()
+    with open(seq_file) as f:
+        rec.sequence     = f.read()
+    rec.task_id          = task_id
+    rec.search_tag       = post.get('tag')
+    rec.enqueue_date     = datetime.now()
+    rec.soft_masking     = post.get('chk_soft_masking', False)
+    rec.low_complexity   = post.get('chk_low_complexity', False)
+    rec.penalty          = post.get('penalty', 0)
+    rec.evalue           = float(post.get('evalue', 0))
+    rec.gapopen          = post.get('gapopen', 0)
+    rec.strand           = post.get('strand', '')
+    rec.gapextend        = post.get('gapextend', 0)
+    rec.ga_box           = post.get('genome_assembly_box', False)
+    rec.transcript_box   = post.get('transcript_box', False)
+    rec.peptide_box      = post.get('peptide_box', False)
+    rec.program          = post.get('program', '')
+    rec.word_size        = post.get('word_size', 0)
+    rec.reward           = post.get('reward', 0)
+    rec.max_target_seqs  = post.get('max_target_seqs', 0)
+    rec.organisms        = json.dumps(post.get('db-name', []))
+    rec.save()

@@ -33,6 +33,10 @@
     </style>
     <script>
     var dataset_list = {{ blastdb_list|safe }};
+    var sequence1 = "{{ sequence1 }}" 
+    var sequence2 = "{{ sequence2 }}"
+    var sequence = '>' + sequence1 + '\n' + sequence2
+    var tag = "{{ tag }}";
     var blastdb_type_counts = {{ blastdb_type_counts|jsonify }};
     </script>
 {% endblock %}
@@ -79,14 +83,14 @@
             {% if blastdb_type_counts.genome_assembly or blastdb_type_counts.transcript %}
 			<fieldset class="nucleotide">
 				<legend>Nucleotide</legend>
-				{% if blastdb_type_counts.genome_assembly %}<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="genome-assembly" class="all-dataset-checkbox nucleotide genome-assembly">Genome Assembly - {{ blastdb_type_counts.genome_assembly|default:0 }} databases</label></div>{% endif %}
-				{% if blastdb_type_counts.transcript %}<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="transcript" class="all-dataset-checkbox nucleotide transcript">Transcript - {{ blastdb_type_counts.transcript|default:0 }} databases</label></div>{% endif %}
+				{% if blastdb_type_counts.genome_assembly %}<div><label><input type="checkbox" id="genome_assembly_box" name="dataset-checkbox[]" organism="all" dataset-type="genome-assembly" class="all-dataset-checkbox nucleotide genome-assembly">Genome Assembly - {{ blastdb_type_counts.genome_assembly|default:0 }} databases</label></div>{% endif %}
+				{% if blastdb_type_counts.transcript %}<div><label><input type="checkbox" id="transcript_box" name="dataset-checkbox[]" organism="all" dataset-type="transcript" class="all-dataset-checkbox nucleotide transcript">Transcript - {{ blastdb_type_counts.transcript|default:0 }} databases</label></div>{% endif %}
 			</fieldset>
             {% endif %}
             {% if blastdb_type_counts.protein %}
 			<fieldset class="peptide">
 				<legend>Peptide</legend>
-				<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="protein" class="all-dataset-checkbox peptide protein">Protein - {{ blastdb_type_counts.protein|default:0 }} databases</label></div>
+				<div><label><input type="checkbox" id="peptide_box" name="dataset-checkbox[]" organism="all" dataset-type="protein" class="all-dataset-checkbox peptide protein">Protein - {{ blastdb_type_counts.protein|default:0 }} databases</label></div>
 			</fieldset>
             {% endif %}
 		</div>
@@ -144,6 +148,10 @@ Enter here your input data as
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
 		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
 	</div>
+</fieldset>
+<fieldset id="fieldset-program">
+	<legend>Search Tag</legend>
+    <INPUT TYPE="text" VALUE="{{ tag }}" id="tag" name="tag">
 </fieldset>
 
 <!-- BLAST options start -->
