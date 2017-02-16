@@ -29,7 +29,7 @@ Generate metadata cache::
 
     yum makecache
     
-Python 2.7.8
+Python 2.7.13
 ------------
 
 Install necessary packages::
@@ -38,14 +38,14 @@ Install necessary packages::
     sudo yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel 
     sudo yum -y install readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel python-devel
 
-Install python 2.7.8 from source::
+Install python 2.7.13 from source::
 
     cd <user-home>
-    wget http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz  
-    tar -xf Python-2.7.8.tar.xz
+    wget http://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz  
+    tar -xf Python-2.7.13.tar.xz
     
     # Configure as a shared library:
-    cd Python-2.7.8
+    cd Python-2.7.13
     ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
 
     # Compile and install:
@@ -55,12 +55,12 @@ Install python 2.7.8 from source::
     # Update PATH:
     export PATH="/usr/local/bin:$PATH"
     
-    # Checking Python version (output should be: Python 2.7.8):
+    # Checking Python version (output should be: Python 2.7.13):
     python2.7 -V
 
     # Cleanup if desired:
     cd ..
-    rm -rf Python-2.7.8.tar.xz Python-2.7.8
+    rm -rf Python-2.7.13.tar.xz Python-2.7.13
     
 Install pip and virtualenv::
 
