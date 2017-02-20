@@ -401,7 +401,16 @@ $(function() { // document ready
 				r.readAsText(f);
 			}
 		}
-    });
+        });
+
+        var ex_nucleotide = ">Test1\n\ATCGATGCTA\n\>Test2\n\ATCGATCGATCGA"
+
+        $('.load-example').click(function() {
+                $('#query-textarea').val(ex_nucleotide);
+                $('#query-textarea').keyup();
+        });
+
+
 
 	// Validate MainHmmerForm form on keyup and submit
 	$("#MainHmmerForm").validate({
