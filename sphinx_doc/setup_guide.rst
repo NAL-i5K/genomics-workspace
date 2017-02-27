@@ -75,7 +75,7 @@ Install pip and virtualenv::
 Build a separate virtualenv::
 
     # Make root dir for virtualenv and cd into it:
-    cd django-blast
+    cd genomics-workspace
     
     # Create a virtual environment called py2.7 and activate:
     virtualenv py2.7 
