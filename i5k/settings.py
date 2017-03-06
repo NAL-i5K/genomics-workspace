@@ -390,7 +390,9 @@ LOGGING = {
         },
     }
 }
-
+# Query maximum limit
+BLAST_QUERY_MAX = 10
+HMMER_QUERY_MAX = 10
 
 # Apollo SSO
 ROBOT_ID = 'R2D2'

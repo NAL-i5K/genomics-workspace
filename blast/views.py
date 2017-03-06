@@ -21,6 +21,7 @@ import traceback
 import stat as Perm
 from copy import deepcopy
 from itertools import groupby
+from i5k.settings import BLAST_QUERY_MAX
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -93,6 +94,14 @@ def create(request, iframe=False):
         
         # check if program is in list for security
         if request.POST['program'] in ['blastn', 'tblastn', 'tblastx', 'blastp', 'blastx']:
+
+            with open(query_filename, 'r') as f:
+                qstr = f.read()
+                if(qstr.count('>') > int(BLAST_QUERY_MAX)):
+                    query_cnt = str(qstr.count('>'))
+                    remove(query_filename)
+                    return render(request, 'blast/invalid_query.html',
+                            {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
 
             # generate customized_options
             input_opt = []
