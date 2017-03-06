@@ -99,7 +99,7 @@ def create(request, iframe=False):
                 qstr = f.read()
                 if(qstr.count('>') > int(BLAST_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
-                    remove(query_filename)
+                    os.remove(query_filename)
                     return render(request, 'blast/invalid_query.html',
                             {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
 
