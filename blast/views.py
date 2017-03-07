@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
-from os import path, makedirs, chmod, stat
+from os import path, makedirs, chmod, stat, remove
 from sys import platform
 from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting
 from .tasks import run_blast_task
@@ -99,7 +99,7 @@ def create(request, iframe=False):
                 qstr = f.read()
                 if(qstr.count('>') > int(BLAST_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
-                    os.remove(query_filename)
+                    remove(query_filename)
                     return render(request, 'blast/invalid_query.html',
                             {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
 
