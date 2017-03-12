@@ -241,6 +241,9 @@ def retrieve(request, task_id='1'):
                     with open(dir_prefix + '.aln', 'r') as content_file:
                         for line in content_file:
                             line = line.rstrip('\n')
+                            e = line.split()
+                            if len(e) == 2:
+                                line = line[:len(line) - len(e[1])] + e[1].upper()
                             report.append(line + "<br>")
 
                     out_txt.append(''.join(report).replace(' ','&nbsp;'))
