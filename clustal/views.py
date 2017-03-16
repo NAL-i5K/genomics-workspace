@@ -238,17 +238,11 @@ def retrieve(request, task_id='1'):
                     out_txt.append(report)
                 else:
                     report = ["<br>"]
-                    #report_color = ["<br>"]
                     with open(dir_prefix + '.aln', 'r') as content_file:
                         for line in content_file:
                             line = line.rstrip('\n')
-                            e = line.split()
-                            if len(e) == 2 and "*" not in line:
-                                line = line[:len(line) - len(e[1])] + e[1]
-                                report.append(line + "<br>")
-                            else:
-                                report.append(line + "<br>")
                             report.append(line + "<br>")
+
                     out_txt.append(''.join(report).replace(' ','&nbsp;'))
             else:
                 return render(request, 'clustal/results_not_existed.html',
