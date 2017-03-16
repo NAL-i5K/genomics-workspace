@@ -243,6 +243,7 @@ def retrieve(request, task_id='1'):
                         for line in content_file:
                             line = line.rstrip('\n')
                             e = line.split()
+<<<<<<< HEAD
                             if len(e) == 2 and "*" not in line:
                                 #colorful_str = []
                                 #for c in e[1]:
@@ -253,6 +254,12 @@ def retrieve(request, task_id='1'):
                             else:
                                 report.append(line + "<br>")
                                 #report_color.append(line + "<br>")
+=======
+                            if len(e) == 2:
+                                line = line[:len(line) - len(e[1])] + e[1].upper()
+                            report.append(line + "<br>")
+
+>>>>>>> 38621c840047aa09fdc8852f78125711a5d33d2f
                     out_txt.append(''.join(report).replace(' ','&nbsp;'))
             else:
                 return render(request, 'clustal/results_not_existed.html',
