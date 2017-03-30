@@ -9,16 +9,16 @@ Note: The following variables may be used in path names; substitute as appropria
    <user-home> :  the user's home directory, e.g., /home/<user>
    <app-home>  :  the root directory of the i5K application, e.g., /app/local/i5k
    <virt-env>  :  the root directory of the virtualenv this set up creates. 
-   <git-home>  :  the directory containing the django-blast git repository, e.g. <user-home>/git
+   <git-home>  :  the directory containing the genomics-workspace, e.g. <user-home>/git
 
 Project Applications 
 --------------------
 
-Clone or refresh the django-blast project::
+Clone or refresh the genomics-workspace 
 
-    git clone https://github.com/NAL-i5K/django-blast
+    clone https://github.com/NAL-i5K/genomics-workspace
     
-    # Or if the django-blast repository exists:
+    # Or if the  repository exists:
     cd <git-home>
     git fetch
 
@@ -75,7 +75,7 @@ Install pip and virtualenv::
 Build a separate virtualenv::
 
     # Make root dir for virtualenv and cd into it:
-    cd django-blast
+    cd genomics-workspace
     
     # Create a virtual environment called py2.7 and activate:
     virtualenv py2.7 
@@ -157,12 +157,12 @@ Install celery in the virtualenv and configure::
 
     # Copy files:
     # 
+    # When using CentOS 7 copy 
+    # celeryd.sysconfig and celerybeat.sysconfig
+    # to /etc/default instead.
+    #
     sudo cp celeryd /etc/init.d
     sudo cp celerybeat /etc/init.d
-    #
-    #  This two files should be copied to /etc/default 
-    #  instead when the OS upgrades to CentOS 7.
-    #
     sudo cp celeryd.sysconfig /etc/sysconfig/celeryd
     sudo cp celerybeat.sysconfig /etc/sysconfig/celerybeat
     
@@ -170,7 +170,7 @@ Install celery in the virtualenv and configure::
     CELERYD_CHDIR="<virt-env>"
     CELERYD_MULTI="<virt-env>/py2.7/bin/celery multi"
     
-    # Sudo edit '/etc/sysconfig/sysconfig/celerybeat' as follows:
+    # Sudo edit '/etc/sysconfig/celerybeat' as follows:
     CELERYBEAT_CHDIR="<virt-env>"
     CELERY_BIN="<virt-env>/py2.7/bin/celery"
 
