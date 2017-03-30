@@ -156,16 +156,21 @@ Install celery in the virtualenv and configure::
     pip install celery==3.1.23
 
     # Copy files:
+    # 
     sudo cp celeryd /etc/init.d
     sudo cp celerybeat /etc/init.d
-    sudo cp celeryd.sysconfig /etc/default/celeryd
-    sudo cp celerybeat.sysconfig /etc/default/celerybeat
+    #
+    #  This two files should be copied to /etc/default 
+    #  instead when the OS upgrades to CentOS 7.
+    #
+    sudo cp celeryd.sysconfig /etc/sysconfig/celeryd
+    sudo cp celerybeat.sysconfig /etc/sysconfig/celerybeat
     
-    # Sudo edit '/etc/default/celeryd' as follows: 
+    # Sudo edit '/etc/sysconfig/celeryd' as follows: 
     CELERYD_CHDIR="<virt-env>"
     CELERYD_MULTI="<virt-env>/py2.7/bin/celery multi"
     
-    # Sudo edit '/etc/default/celerybeat' as follows:
+    # Sudo edit '/etc/sysconfig/sysconfig/celerybeat' as follows:
     CELERYBEAT_CHDIR="<virt-env>"
     CELERY_BIN="<virt-env>/py2.7/bin/celery"
 

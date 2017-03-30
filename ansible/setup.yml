@@ -7,7 +7,7 @@
 
 ################  PROVISION VM  #####################
 #
-- name: Deploy dgango-blast project and dependencies
+- name: Deploy genomics-workspace project and dependencies
   hosts: "{{ target }}"
   user: "{{ user }}"
   vars:
@@ -38,19 +38,19 @@
          - libselinux-python
       become: True
 
-    - name: Wget and untar Python 2.7
-      unarchive: src=http://www.python.org/ftp/python/2.7.8/Python-2.7.8.tar.xz
+    - name: Wget and untar Python 2.7.13
+      unarchive: src=http://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
                  dest={{ ansible_env.HOME }} copy=no
 
-    - name: Configure Python 2.7 as a shared library
+    - name: Configure Python 2.7.13 as a shared library
       command: ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
-               chdir="{{ ansible_env.HOME }}/Python-2.7.8"
+               chdir="{{ ansible_env.HOME }}/Python-2.7.13"
 
-    - name: Make Python 2.7
-      command: make chdir="{{ ansible_env.HOME }}/Python-2.7.8"
+    - name: Make Python 2.7.13
+      command: make chdir="{{ ansible_env.HOME }}/Python-2.7.13"
 
     - name: Make altinstall Python 2.7
-      command: make altinstall chdir="{{ ansible_env.HOME }}/Python-2.7.8"
+      command: make altinstall chdir="{{ ansible_env.HOME }}/Python-2.7.13"
       become: True
 
     - name: Get ez_setup.py
@@ -75,22 +75,22 @@
                chdir={{ ansible_env.HOME }}
       become: True
 
-    - name: Copy the django-blast repository
+    - name: Copy the genomics-workspace repository
       copy: src={{ repo }} 
             dest={{ ansible_env.HOME }} 
             owner={{ user }}
       when: repo is defined
 
-    - name: Clone the django-blast repository
-      git: repo=https://github.com/NAL-i5K/django-blast
-           dest={{ ansible_env.HOME }}/django-blast
+    - name: Clone the genomics-workspace repository
+    git: repo=https://github.com/NAL-i5K/genomics-workspace
+        dest={{ ansible_env.HOME }}/genomics-workspace
       when: repo is not defined
 
     - name: Create virtual environment, activate, and install packages
       pip:
           name={{ item.name }}
           version={{ item.version | default(omit) }}
-          virtualenv="{{ ansible_env.HOME }}/django-blast/py2.7"
+          virtualenv="{{ ansible_env.HOME }}/genomics-workspace/py2.7"
           virtualenv_command=/usr/local/bin/virtualenv
       with_items:
           - name: django
@@ -159,42 +159,46 @@
       pip:
           name=celery
           version=3.1.23
-          virtualenv="{{ ansible_env.HOME }}/django-blast/py2.7"
+          virtualenv="{{ ansible_env.HOME }}/genomics-workspace/py2.7"
 
     - name: Configure celeryd
-      command: cp {{ ansible_env.HOME }}/django-blast/celeryd /etc/init.d
+      command: cp {{ ansible_env.HOME }}/genomics-workspace/celeryd /etc/init.d
       become: True
 
     - name: Configure celerybeat
-      command: cp {{ ansible_env.HOME }}/django-blast/celerybeat /etc/init.d
+      command: cp {{ ansible_env.HOME }}/genomics-workspace/celerybeat /etc/init.d
       become: True
 
-    - name: Edit 1 celeryd.sysconfig
-      lineinfile: dest="{{ ansible_env.HOME }}/django-blast/celeryd.sysconfig"
-                  line="CELERYD_CHDIR={{ ansible_env.HOME }}/django-blast"
-                  regexp='^CELERYD_CHDIR='
-
-    - name: Edit 2 celeryd.sysconfig
-      lineinfile: dest="{{ ansible_env.HOME }}/django-blast/celeryd.sysconfig"
-                  line="CELERYD_MULTI={{ ansible_env.HOME }}/django-blast/py2.7/bin/celery multi"
-                  regexp='^CELERYD_MULTI='
-
-    - name: Edit 3 celerybeat.sysconfig
-      lineinfile: dest="{{ ansible_env.HOME }}/django-blast/celerybeat.sysconfig"
-                  line="CELERYBEAT_CHDIR={{ ansible_env.HOME }}/django-blast"
-                  regexp='^CELERYBEAT_CHDIR='
-
-    - name: Edit 4 celerybeat.sysconfig
-      lineinfile: dest="{{ ansible_env.HOME }}/django-blast/celerybeat.sysconfig"
-                  line="CELERY_BIN={{ ansible_env.HOME }}/django-blast/py2.7/bin/celery"
-                  regexp='^CELERY_BIN='
-
     - name: Configure celeryd.sysconfig
-      command: cp "{{ ansible_env.HOME }}/django-blast/celeryd.sysconfig" /etc/default/celeryd
+      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celeryd.sysconfig" /etc/sysconfig/celeryd
       become: True
 
     - name: Configure celerybeat.sysconfig
-      command: cp "{{ ansible_env.HOME }}/django-blast/celerybeat.sysconfig" /etc/default/celerybeat
+      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celerybeat.sysconfig" /etc/sysconfig/celerybeat
+      become: True
+
+    - name: Edit 1 celeryd.sysconfig
+      lineinfile: dest="/etc/sysconfig/celeryd"
+        line="CELERYD_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
+                  regexp='^CELERYD_CHDIR='
+      become: True
+
+    - name: Edit 2 celeryd.sysconfig
+      lineinfile: dest="/etc/sysconfig/celeryd"
+        line='CELERYD_MULTI="{{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery multi"'
+                  regexp='^CELERYD_MULTI='
+      become: True
+
+    - name: Edit 3 celerybeat.sysconfig
+      lineinfile: dest="/etc/sysconfig/celerybeat"
+        line="CELERYBEAT_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
+                  regexp='^CELERYBEAT_CHDIR='
+      become: True
+
+    - name: Edit 4 celerybeat.sysconfig
+      lineinfile: dest="/etc/sysconfig/celerybeat"
+        line="CELERY_BIN={{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery"
+                  regexp='^CELERY_BIN='
       become: True
 
     - name: Set celeryd and celerybeat as daemons
@@ -250,7 +254,7 @@
 
     - name: Install psycopg2
       shell: export PATH=/usr/pgsql-9.5/bin:$PATH; \
-             {{ ansible_env.HOME }}/django-blast/py2.7/bin/python -m pip install psycopg2==2.6
+          {{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/python -m pip install psycopg2==2.6
 
     - name: Create django database
       shell: psql -c 'create database django;'
@@ -277,8 +281,8 @@
     - name: Run python manage.py migrate
       django_manage:
           command=migrate
-          app_path={{ ansible_env.HOME }}/django-blast
-          virtualenv={{ ansible_env.HOME }}/django-blast/py2.7
+          app_path={{ ansible_env.HOME }}/genomics-workspace
+          virtualenv={{ ansible_env.HOME }}/genomics-workspace/py2.7
 
 #---------------------  Apache  ----------------------------
 
@@ -317,7 +321,7 @@
           - "{{ ansible_env.HOME }}/get-pip.py"
           - "{{ ansible_env.HOME }}/epel-release-6-8.noarch.rpm"
           - "{{ ansible_env.HOME }}/pgdg-centos95-9.5-2.noarch.rpm"
-          - "{{ ansible_env.HOME }}/Python-2.7.8"
+          - "{{ ansible_env.HOME }}/Python-2.7.13"
       become: True
 
     - name: Cleanup setuptools current version
