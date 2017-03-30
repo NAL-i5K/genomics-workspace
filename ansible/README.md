@@ -1,11 +1,19 @@
 ## Welcome to Ansible
 
-It assumes VirtualBox and Vagrant are available.  
+This facility has two kinds of setup scripts, one for remote setup, and one for local setup.  
 
-To run django-blast setup with Ansible you must be in a directory (the "launch" directory) that contains the following files:
+The difference is that the remote setup (setup.py) operates from a linux machine to create and provision a new
+virtual machine; while the local setup (setup2.yml) only provisions a system from inside itself.  
+
+REMOTE SETUP
+------------
+
+It assumes VirtualBox,  Vagrant, and Ansible are available.  
+
+To run genomics-workspace setup with Ansible you must be in a directory (the "launch" directory) that contains the following files:
 
 - `setup.py`
-- `setup.ym`l
+- `setup.yml`
 - `vm.yml`
 - `vagrantfix.sh`
 - `pg_hba.conf`
@@ -111,4 +119,22 @@ To get debug output:
     ansible-playbook -vvv -e"vm=<vm-name> target=<target>  setup.yml  
 
 man page: http://linux.die.net/man/1/ansible-playbook
+
+
+LOCAL SETUP 
+
+Make sure /etc/ansible/hosts exist with an entry for the local machine.
+
+From the install directory run:  
+
+ansible-playbook -e "addr=<ipaddr> target=<system_name>" setup2.yml 
+
+or
+
+ansible-playbook -e "target=<system_name>" setup2.yml 
+
+If you define addr, it will result in a new entry for this name and address in /etc/hosts, 
+which would be unnecessary if an entry already exists.  
+
+
 
