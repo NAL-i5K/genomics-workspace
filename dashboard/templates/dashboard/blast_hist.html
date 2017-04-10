@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>I5K Dashboard</title>
+    <title>BLAST History</title>
     <meta charset="utf-8">
 
     <!-- META -->
@@ -84,40 +84,17 @@
                     <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
                         <!-- anchors Item #1  -->
                         <div>
-                            <a href="/blast_hist" class="list-group-item">BLAST</a>
-                            <a href="/hmmer_hist" class="list-group-item">HMMER</a>
-                            <a href="/clustal_hist" class="list-group-item">CLUSTAL</a>
-                            <a href="/apollo_hist" class="list-group-item">APOLLO</a>
+                            <a href="blast_hist.html" class="list-group-item">BLAST</a>
+                            <a href="hmmer_hist.html" class="list-group-item">HMMER</a>
+                            <a href="clustal_hist.html" class="list-group-item">CLUSTAL</a>
+                            <a href="apollo_hist.html" class="list-group-item">APOLLO</a>
                         </div>
                         <!-- anchors Item #1  -->
                     </div>
-                    <ldass="taskadd" maxlength="200" name="issue_list" autocomplete="on"nv>
+                </div>
                 <!-- END Collapsible Group Item #1  -->
                 
                 <!-- Collapsible Group Item #2  -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading3">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="true" aria-controls="collapse3">
-                                <i class="fa fa-table"></i> Tables
-                                <i class="pull-right fa fa-caret-down"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    
-                    <div id="collapse3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading3">
-                        <!-- anchors Item #2  -->
-                        <div>
-                            <a href="simple-tables.html" class="list-group-item">Simple Tables</a>
-                            <a href="data-tables.html" class="list-group-item">Data Tables</a>
-                            <a href="beauty-tables.html" class="list-group-item">Beauty Tables</a>
-                        </div>
-                        <!-- END anchors Item #2  -->
-                    </div>
-                </div>
-                <!-- END Collapsible Group Item #2  -->
-
-                <!-- Collapsible Group Item #6  -->
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="heading7">
                         <h4 class="panel-title">
@@ -129,7 +106,7 @@
                     </div>
                     
                     <div id="collapse7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading7">
-                        <!-- anchors Item #6  -->
+                        <!-- anchors Item #2  -->
                         <div>
                             <a href="gallery-1.html" class="list-group-item">Gallery 1</a>
                             <a href="gallery-2.html" class="list-group-item">Gallery 2</a>
@@ -137,10 +114,10 @@
                             <a href="gallery-4.html" class="list-group-item">Gallery 4</a>
                             <a href="gallery-5.html" class="list-group-item">Gallery 5</a>
                         </div>
-                        <!-- END anchors Item #6  -->
+                        <!-- END anchors Item #2  -->
                     </div>
                 </div>
-                <!-- END Collapsible Group Item #6  -->             
+                <!-- END Collapsible Group Item #2  -->             
             </div>
             <!-- END SIDEBAR ACCORDION MENU -->
         </div>
@@ -152,7 +129,40 @@
     <div class="container-fluid left-border">
     <div class="row">
     
-        <h1>Dashboard</h1> 
+    <div class="container">
+        <div class="panel-group" id="accordion">
+            {% for search in search_list %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ search.id_str }}" aria-expanded="true" aria-controls    ="{{ search.id_str }}">{{ search.search_head }}</a>
+                        </h4>
+                    </div>
+                    <div id="{{ search.id_str }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <fieldset> 
+                                <div>
+                                    <span>Max target sequences: <input type="number" maxlength="3" value="{{ search.max_target_seqs }}"></span>
+                                </div>
+                                <div>
+                                    <span>Expect threshold:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=number" value="{{ search.evalue }}"></span>
+                                </div>
+                                <div>
+                                    <span>Word Size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=number" value="{{ search.word_size }}"></span>
+                                </div>
+                                <span>Sequence:</span>
+                                <div>
+                                    <textarea rows="4" cols="140">{{ search.sequence}}</textarea>
+                                    <input type="submit" value="Search Again">
+                                </div>
+                            </fieldset> 
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+        
     </div>  
     </div>  
     <!-- MAIN CONTENT  -->
