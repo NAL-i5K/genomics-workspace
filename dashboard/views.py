@@ -1,30 +1,33 @@
-from datetime import datetime
-from django.shortcuts import render, redirect
+'''
+    Dashboard views.py
+'''
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.http import Http404
-import sys
-import json
-import logging
+from django.shortcuts import render, redirect
 from django.core.mail import send_mail
-from blast.models import SearchQuery
-from dashboard.models import SearchForm
-
-
-import misc.fileline as src
+from django.http import HttpResponse
+from blast.models import BlastSearch
 from misc.logger import i5kLogger
+from django.http import Http404
+from datetime import datetime
+import misc.fileline as src
+import logging
+import json
+import sys
+import os
 
 dash = i5kLogger()
 
 def dashboard(request):
     search_list = []
+    print 'Method: %s' % request.method
+    print 'Path: %s' % request.path
     if request.method == 'GET':
         id_num = 0
-        if request.path == '/dashboard':
+        if request.path == '/dashboard' or request.path == '/home':
             return render(request, 'dashboard/index.html')
         if request.path == '/blast_hist':
             search_list = []
-            for obj in SearchQuery.objects.all():
+            for obj in BlastSearch.objects.all():
                 search_dict = {}
                 id_num += 1
                 orgs = json.loads(obj.db_name)
@@ -45,5 +48,3 @@ def dashboard(request):
             return render(request, 'dashboard/blast_hist.html', { 'search_list': search_list})
     elif request.method == 'POST':
         return render(request, 'dashboard/index.html', { 'year': datetime.now().year, 'title': 'Dashboard', })
-
-

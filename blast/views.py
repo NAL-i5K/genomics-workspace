@@ -9,7 +9,7 @@ from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod, stat, remove
 from sys import platform
-from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting, SearchQuery
+from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting, BlastSearch
 from .tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now

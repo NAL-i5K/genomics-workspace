@@ -1,4 +1,6 @@
 from django.db import models
+from django.db.models import Count
+from random import randint
 from django.contrib.auth.models import User
 from filebrowser.fields import FileBrowseField
 from django.core.urlresolvers import reverse
@@ -214,30 +216,24 @@ class JbrowseSetting(models.Model):
     def __unicode__(self):
         return self.url
 
-class SearchQuery(models.Model):
-    enqueue_date        = models.DateTimeField()
-    sequence            = models.TextField(null=True)
-    soft_masking        = models.BooleanField()
-    low_complexity      = models.BooleanField()
-    chk_soft_masking    = models.BooleanField()
-    penalty             = models.IntegerField()
-    evalue              = models.DecimalField(max_digits=10, decimal_places=5)
-    gapopen             = models.IntegerField()
-    strand              = models.CharField(max_length=10)
-    gapextend           = models.IntegerField()
-    dataset_checkbox    = models.TextField(null=True)
-    click_submit_hidden = models.BooleanField()
-    program             = models.CharField(max_length=32)
-    organism_checkbox   = models.TextField(null=True)
-    word_size           = models.IntegerField()
-    csrftoken           = models.CharField(max_length=64)
-    reward              = models.IntegerField()
-    query_file          = models.CharField(max_length=128)
-    max_target_seqs     = models.IntegerField()
-    db_name             = models.TextField(null=True)
-
+class BlastSearch(models.Model):
+    task_id         = models.CharField(null=True, max_length=50)
+    search_tag      = models.CharField(max_length=64)
+    enqueue_date    = models.DateTimeField()
+    sequence        = models.TextField(null=True)
+    soft_masking    = models.BooleanField()
+    low_complexity  = models.BooleanField()
+    penalty         = models.IntegerField()
+    evalue          = models.DecimalField(max_digits=10, decimal_places=5)
+    gapopen         = models.IntegerField()
+    strand          = models.CharField(max_length=10)
+    gapextend       = models.IntegerField()
+    program         = models.CharField(max_length=32)
+    word_size       = models.IntegerField()
+    reward          = models.IntegerField()
+    max_target_seqs = models.IntegerField()
+    organisms       = models.TextField(null=True)
 
     def __unicode__(self):
-        return self.enqueue_date
-
+        return self.search_tag
 
