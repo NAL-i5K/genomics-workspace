@@ -27,6 +27,7 @@
     </style>
     <script>
     var dataset_list = {{ blastdb_list|safe }};
+    var check_list = {{ chk_blastdb_list|safe }};
     var blastdb_type_counts = {{ blastdb_type_counts|jsonify }};
     </script>
 {% endblock %}
@@ -136,6 +137,10 @@ Enter here your input data as
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
 		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
 	</div>
+</fieldset>
+<fieldset id="fieldset-program">
+	<legend>Search Tag</legend>
+    <INPUT TYPE="text" VALUE="{{ tag }}" id="tag" name="tag">
 </fieldset>
 
 <!-- BLAST options start -->

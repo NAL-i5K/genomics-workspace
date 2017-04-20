@@ -401,11 +401,31 @@ email us (or phone us when the helpdesk becomes available). For example:
 ---
 
 ## Programming Structure <a name="ProgrammingStructure"></a>
-The Dashboard APIs to both the front end and the Apps exchanges data in JSON format. If any sender is unable to do so, server side
-functions convert the incoming format to JSON before passing the data to the Dashboard.  For example, the server converts 
-form data from the browser from HTML request to a JSON object.   
+At present the dashboard only function is to display the user's search history.  
 
-- TBD
+It uses the same Drupal header and footer as other apps, but for the nav sidebar and content to display history uses
+bootstrap accordion widgets.  
+
+It uses external files for jquery and bootstrap.  The front-end files are:
+
+    dashboard/templates/index.html
+    dashboard/templates/blast_hist.html
+    dashboard/templates/hmmer_hist.html
+    dashboard/templates/clustal_hist.html
+    dashboard/templates/apollo_hist.html
+    dashboard/static/css/dashboard.css 
+
+The server side does the following:  
+
+- Save the search in the blast_searchquery table.  See blast/models.py and blast/view.py 
+- Retrive all searches and display only headers.  See dashboard/views.py 
+- If a search gets replayed, manufacture a request to send to the Blast app. 
+
+Storage limits enforced by history size and by time.  
+
+For easy identification, searches are tagged by a system default tag or by a user supplied string, at the time of building 
+a search, the same tag should appear in the search results and history. 
+
 
 ### Authentication Subsystem
 

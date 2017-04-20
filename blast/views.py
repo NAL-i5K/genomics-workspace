@@ -6,6 +6,7 @@ from django.http import HttpResponse
 from django.template import RequestContext
 from django.conf import settings
 from django.core.cache import cache
+from random import randint
 from uuid import uuid4
 from os import path, makedirs, chmod, stat, remove
 from sys import platform
@@ -13,6 +14,8 @@ from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting, BlastSe
 from .tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now
+from misc.logger import i5kLogger
+from misc.get_tag import get_tag
 from pytz import timezone
 import subprocess
 import json
@@ -22,6 +25,16 @@ import stat as Perm
 from copy import deepcopy
 from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX
+import dashboard.views
+
+log = i5kLogger()
+
+#
+#  Search tag generator.
+#
+CONS = 'BCDFGHJKLMNPQRSTVWXYZ'
+VOWS = 'AEIOU'
+TAG_MAXTRIES = 100
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -54,17 +67,66 @@ def create(request, iframe=False):
     request_repr = '\n{0}'.format(fil.get_request_repr(request))
     with open('/tmp/requests', 'a') as f:
         #f.write(json.dumps(request.POST, indent=4))
-        f.write(json.dumps(request_repr, indent=4))
-
+        f.write(request_repr)
+    replay = False  #  True if it's a history search being replayed.
     if request.method == 'GET':
-        # build dataset_list = [['Genome Assembly', 'Nucleotide', 'Agla_Btl03082013.genome_new_ids.fa', 'Anoplophora glabripennis'],]
         blastdb_list = sorted([[db.type.dataset_type, db.type.get_molecule_type_display(), db.title, db.organism.display_name, db.description] for db in BlastDb.objects.select_related('organism').select_related('type').filter(is_shown=True) if db.db_ready()], key=lambda x: (x[3], x[1], x[0], x[2]))
         blastdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in groupby(sorted(blastdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
+        if 'search_tag' in request.GET and request.GET['search_tag']:
+            #
+            #  This is a search replay from saved history
+            #  Populate form with values from previous search.
+            #  User can edit them or run the exact same search.
+            #
+            replay = True
+            tag = request.GET['search_tag']
+            saved_search = BlastSearch.objects.filter(search_tag=tag)
+
+            db_names = json.loads(saved_search.db_names)
+
+            chk_orgs_list = []
+            for org_file in db_names:
+                found = False
+                for org in blastdb_list:
+                    if org[2] == org_file:
+                        chk_orgs_list.append(org[3])
+                        found = True
+                        break
+                if not found:
+                    pass
+                    print "org file %s not found" % org_file
+                    #log.error("organism not found")
+
+
+            return render(request, 'blast/main.html', {
+                'tag':             saved_search.tag,
+                'soft_masking':    saved_search.soft_masking,
+                'enqueue_date':    saved_search.enqueue_date,
+                'low_complexity':  saved_search.low_complexity,
+                'penalty':         saved_search.penalty,
+                'evalue':          saved_search.evalue,
+                'gapopen':         saved_search.gapopen,
+                'strand':          saved_search.strand,
+                'gapextend':       saved_search.gapextend,
+                'word_size':       saved_search.word_size,
+                'max_target_seqs': saved_search.max_target_seqs,
+                'sequence':        saved_search.sequence,
+                'chk_orgs_list':   chk_orgs_list
+            })
+
+        #with open('/tmp/requests', 'a') as f:
+            #f.write('\n\n\n')
+            #f.write(str(blastdb_list))
+            #f.write('\n\n\n')
+            #f.write(str(blastdb_type_counts))
+        #tag = get_tag(request.GET['USER'])
+        tag = get_tag('vagrant', BlastSearch)
         return render(request, 'blast/main.html', {
             'title': 'BLAST Query',
             'blastdb_list': json.dumps(blastdb_list),
             'blastdb_type_counts': blastdb_type_counts,
-            'iframe': iframe
+            'iframe': iframe,
+            'tag': tag
         })
     elif request.method == 'OPTIONS':
         return HttpResponse("OPTIONS METHOD NOT SUPPORTED", status=202)
@@ -165,7 +227,7 @@ def create(request, iframe=False):
             #
             #  Create a search history record.
             #
-            save_history(request.POST, query_filename)
+            save_history(request.POST, task_id)
 
 
             # debug
@@ -301,30 +363,24 @@ def user_tasks(request, user_id):
 #
 #  Save a search in the search history.
 #
-def save_history(post, seq_file):
-    rec = SearchQuery()
+def save_history(post, task_id):
+    rec = BlastSearch()
     with open(seq_file) as f:
-        rec.sequence = f.read()
-    rec.enqueue_date        = datetime.now()
-    rec.soft_masking        = post.get('soft_masking', False)
-    rec.low_complexity      = post.get('low_complexity', False)
-    rec.chk_soft_masking    = post.get('chk_soft_masking', False)
-    rec.penalty             = post.get('penalty', 0)
-    rec.evalue              = float(post.get('evalue', 0))
-    rec.gapopen             = post.get('gapopen', 0)
-    rec.strand              = post.get('strand', '')
-    rec.gapextend           = post.get('gapextend', 0)
-    rec.dataset_checkbox    = json.dumps(post.get('dataset-checkbox', []))
-    rec.click_submit_hidden = post.get('click_submit_hidden', False)
-    rec.program             = post.get('program', '')
-    rec.organism_checkbox   = json.dumps(post.get('organism-checkbox', []))
-    rec.word_size           = post.get('word_size', 0)
-    rec.csrftoken           = post.get('csrfmiddlewaretoken', '')
-    rec.reward              = post.get('reward', 0)
-    rec.query_file          = post.get('query-file', '')
-    rec.max_target_seqs     = post.get('max_target_seqs', 0)
-    rec.db_name             = json.dumps(post.get('db-name', []))
+        rec.sequence     = f.read()
+    rec.task_id          = task_id
+    rec.search_tag       = tag
+    rec.enqueue_date     = datetime.now()
+    rec.soft_masking     = post.get('chk_soft_masking', False)
+    rec.low_complexity   = post.get('chk_low_complexity', False)
+    rec.penalty          = post.get('penalty', 0)
+    rec.evalue           = float(post.get('evalue', 0))
+    rec.gapopen          = post.get('gapopen', 0)
+    rec.strand           = post.get('strand', '')
+    rec.gapextend        = post.get('gapextend', 0)
+    rec.dataset_checkbox = json.dumps(post.get('dataset-checkbox', []))
+    rec.program          = post.get('program', '')
+    rec.word_size        = post.get('word_size', 0)
+    rec.reward           = post.get('reward', 0)
+    rec.max_target_seqs  = post.get('max_target_seqs', 0)
+    rec.db_name          = json.dumps(post.get('db-name', []))
     rec.save()
-
-
-

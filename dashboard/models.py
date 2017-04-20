@@ -8,4 +8,3 @@ from django.conf import settings
 import app.models
 
 
-

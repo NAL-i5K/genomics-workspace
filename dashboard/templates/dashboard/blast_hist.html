@@ -84,10 +84,10 @@
                     <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
                         <!-- anchors Item #1  -->
                         <div>
-                            <a href="blast_hist.html" class="list-group-item">BLAST</a>
-                            <a href="hmmer_hist.html" class="list-group-item">HMMER</a>
-                            <a href="clustal_hist.html" class="list-group-item">CLUSTAL</a>
-                            <a href="apollo_hist.html" class="list-group-item">APOLLO</a>
+                            <a href="blast_hist" class="list-group-item">BLAST</a>
+                            <a href="hmmer_hist" class="list-group-item">HMMER</a>
+                            <a href="clustal_hist" class="list-group-item">CLUSTAL</a>
+                            <a href="apollo_hist" class="list-group-item">APOLLO</a>
                         </div>
                         <!-- anchors Item #1  -->
                     </div>
@@ -151,10 +151,12 @@
                                     <span>Word Size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=number" value="{{ search.word_size }}"></span>
                                 </div>
                                 <span>Sequence:</span>
-                                <div>
-                                    <textarea rows="4" cols="140">{{ search.sequence}}</textarea>
+                                <textarea rows="4" cols="140">{{ search.sequence}}</textarea>
+                                <form action="/blast" method="GET">
+                                    <!--<input type="hidden" name="sarch_id" value="{{ search.search_id }}">-->
+                                    <input type="hidden" name="sarch_id" value="234">
                                     <input type="submit" value="Search Again">
-                                </div>
+                                </form>
                             </fieldset> 
                         </div>
                     </div>
