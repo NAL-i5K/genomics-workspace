@@ -86,7 +86,7 @@ def create(request, iframe=False):
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
         
         if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
-            return render(request, 'blast/invalid_query.html', {'title': 'Your search size is ' + str(path.getsize(query_filename)) + ' bytes, but blast allows a maximum size of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' k bytes per submission',})
+            return render(request, 'blast/invalid_query.html', {'title': 'Your query size is ' + str(path.getsize(query_filename)) + ' bytes, but exceeds our query size limit of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' kbytes,  Please try again with a smaller query size.',})
 
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) # ensure the standalone dequeuing process can access the file
 
