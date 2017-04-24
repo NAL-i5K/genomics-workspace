@@ -21,7 +21,7 @@ import traceback
 import stat as Perm
 from copy import deepcopy
 from itertools import groupby
-from i5k.settings import BLAST_QUERY_MAX
+from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -84,6 +84,9 @@ def create(request, iframe=False):
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
+        
+        if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
+            return render(request, 'blast/invalid_query.html', {'title': 'Your search size is ' + str(path.getsize(query_filename)) + ' bytes, but blast allows a maximum size of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' k bytes per submission',})
 
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) # ensure the standalone dequeuing process can access the file
 
