@@ -394,6 +394,9 @@ LOGGING = {
 BLAST_QUERY_MAX = 10
 HMMER_QUERY_MAX = 10
 
+# Query maximum size (k bytes)
+BLAST_QUERY_SIZE_MAX = 1
+
 # Apollo SSO
 ROBOT_ID = 'R2D2'
 ROBOT_PWD = 'demo'
