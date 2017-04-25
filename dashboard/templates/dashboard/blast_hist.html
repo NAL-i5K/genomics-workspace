@@ -140,22 +140,33 @@
                     </div>
                     <div id="{{ search.id_str }}" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            <fieldset> 
-                                <div>
-                                    <span>Max target sequences: <input type="number" maxlength="3" value="{{ search.max_target_seqs }}"></span>
-                                </div>
-                                <div>
-                                    <span>Expect threshold:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=number" value="{{ search.evalue }}"></span>
-                                </div>
-                                <div>
-                                    <span>Word Size:&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<input type=number" value="{{ search.word_size }}"></span>
-                                </div>
-                                <span>Sequence:</span>
-                                <textarea rows="4" cols="140">{{ search.sequence}}</textarea>
-                                <form action="/blast" method="GET">
-                                    <!--<input type="hidden" name="sarch_id" value="{{ search.search_id }}">-->
-                                    <input type="hidden" name="sarch_id" value="234">
-                                    <input type="submit" value="Search Again">
+                            <div style="display:flex">
+                            <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
+                                <table>
+                                    <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
+                                    <tr><td>Date:                 </td><td>{{ search.enqueue_date }}   </td></tr>
+                                    <tr><td>Program:              </td><td>{{ search.program }}        </td></tr>
+                                    <tr><td>Max target sequences: </td><td>{{ search.max_target_seqs }}</td></tr>
+                                    <tr><td>Expect threshold:     </td><td>{{ search.evalue }}         </td></tr>
+                                    <tr><td>Word Size:            </td><td>{{ search.word_size }}      </td></tr>
+                                </table>
+                            </div>
+                            <div id="right_div" style:"display: flex; justify-content: flex-end;">
+                                <table>
+                                    <tr><td>Match score:          </td><td>{{ search.reward  }}        </td></tr>
+                                    <tr><td>Mismatch score:       </td><td>{{ search.penalty }}        </td></tr>
+                                    <tr><td>Gap opening penalty:  </td><td>{{ search.gapopen }}        </td></tr>
+                                    <tr><td>Gap extension penalty:</td><td>{{ search.gapextend }}      </td></tr>
+                                    <tr><td>Strand:               </td><td>{{ search.strand }}         </td></tr>
+                                    <tr><td>Organisms:            </td><td>{{ search.organisms }}      </td></tr>
+                                    <tr><td>Sequence:             </td><td>{{ search.max_target_seqs }}</td></tr>
+                                </table>
+                            </div>
+                            </div>
+                                </form>
+                                    <input type="hidden" name="search_id" value="234">
+                                    <input type="submit" name="editsearch" value="Edit and Search">
+                                    <input type="submit" name "searchagain" value="Search Again">
                                 </form>
                             </fieldset> 
                         </div>

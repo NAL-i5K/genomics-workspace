@@ -27,7 +27,7 @@ from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX
 import dashboard.views
 
-log = i5kLogger()
+#log = i5kLogger()
 
 #
 #  Search tag generator.
@@ -227,7 +227,7 @@ def create(request, iframe=False):
             #
             #  Create a search history record.
             #
-            save_history(request.POST, task_id)
+            save_history(request.POST, task_id, query_filename)
 
 
             # debug
@@ -363,12 +363,12 @@ def user_tasks(request, user_id):
 #
 #  Save a search in the search history.
 #
-def save_history(post, task_id):
+def save_history(post, task_id, seq_file):
     rec = BlastSearch()
     with open(seq_file) as f:
         rec.sequence     = f.read()
     rec.task_id          = task_id
-    rec.search_tag       = tag
+    rec.search_tag       = post.get('tag')
     rec.enqueue_date     = datetime.now()
     rec.soft_masking     = post.get('chk_soft_masking', False)
     rec.low_complexity   = post.get('chk_low_complexity', False)
@@ -382,5 +382,5 @@ def save_history(post, task_id):
     rec.word_size        = post.get('word_size', 0)
     rec.reward           = post.get('reward', 0)
     rec.max_target_seqs  = post.get('max_target_seqs', 0)
-    rec.db_name          = json.dumps(post.get('db-name', []))
+    rec.organisms        = json.dumps(post.get('db-name', []))
     rec.save()
