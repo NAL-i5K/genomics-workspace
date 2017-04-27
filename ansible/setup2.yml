@@ -1,17 +1,15 @@
 ---
 
-#################  CREATE  VM  #####################
-
-- include: vm.yml
-  when: vm is defined
-
 ################  PROVISION VM  #####################
 #
 - name: Deploy genomics-workspace project and dependencies
-  hosts: "{{ target }}"
-  user: "{{ user }}"
+  user: vagrant
+  hosts: localhost
+  connection: local
+
   vars:
       ipaddr: "{{ addr }}"
+      target: "{{ target }}"
   tasks:
 
 #-----------------   Python   -----------------------
@@ -38,15 +36,15 @@
          - libselinux-python
       become: True
 
-    - name: Wget and untar Python 2.7.13
+    - name: Wget and untar Python 2.7
       unarchive: src=http://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
                  dest={{ ansible_env.HOME }} copy=no
 
-    - name: Configure Python 2.7.13 as a shared library
+    - name: Configure Python 2.7 as a shared library
       command: ./configure --prefix=/usr/local --enable-unicode=ucs4 --enable-shared LDFLAGS="-Wl,-rpath /usr/local/lib"
                chdir="{{ ansible_env.HOME }}/Python-2.7.13"
 
-    - name: Make Python 2.7.13
+    - name: Make Python 2.7
       command: make chdir="{{ ansible_env.HOME }}/Python-2.7.13"
 
     - name: Make altinstall Python 2.7
@@ -82,8 +80,8 @@
       when: repo is defined
 
     - name: Clone the genomics-workspace repository
-    git: repo=https://github.com/NAL-i5K/genomics-workspace
-        dest={{ ansible_env.HOME }}/genomics-workspace
+      git: repo=https://jsuriol@github.com/NAL-i5k/genomics-workspace.git
+           dest={{ ansible_env.HOME }}/genomics-workspace
       when: repo is not defined
 
     - name: Create virtual environment, activate, and install packages
@@ -169,36 +167,32 @@
       command: cp {{ ansible_env.HOME }}/genomics-workspace/celerybeat /etc/init.d
       become: True
 
+    - name: Edit 1 celeryd.sysconfig
+      lineinfile: dest="{{ ansible_env.HOME }}/genomics-workspace/celeryd.sysconfig"
+        line="CELERYD_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
+                  regexp='^CELERYD_CHDIR='
+
+    - name: Edit 2 celeryd.sysconfig
+      lineinfile: dest="{{ ansible_env.HOME }}/genomics-workspace/celeryd.sysconfig"
+        line="CELERYD_MULTI={{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery multi"
+                  regexp='^CELERYD_MULTI='
+
+    - name: Edit 3 celerybeat.sysconfig
+      lineinfile: dest="{{ ansible_env.HOME }}/genomics-workspace/celerybeat.sysconfig"
+        line="CELERYBEAT_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
+                  regexp='^CELERYBEAT_CHDIR='
+
+    - name: Edit 4 celerybeat.sysconfig
+      lineinfile: dest="{{ ansible_env.HOME }}/genomics-workspace/celerybeat.sysconfig"
+        line="CELERY_BIN={{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery"
+                  regexp='^CELERY_BIN='
+
     - name: Configure celeryd.sysconfig
-      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celeryd.sysconfig" /etc/sysconfig/celeryd
+      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celeryd.sysconfig" /etc/default/celeryd
       become: True
 
     - name: Configure celerybeat.sysconfig
-      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celerybeat.sysconfig" /etc/sysconfig/celerybeat
-      become: True
-
-    - name: Edit 1 celeryd.sysconfig
-      lineinfile: dest="/etc/sysconfig/celeryd"
-        line="CELERYD_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
-                  regexp='^CELERYD_CHDIR='
-      become: True
-
-    - name: Edit 2 celeryd.sysconfig
-      lineinfile: dest="/etc/sysconfig/celeryd"
-        line='CELERYD_MULTI="{{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery multi"'
-                  regexp='^CELERYD_MULTI='
-      become: True
-
-    - name: Edit 3 celerybeat.sysconfig
-      lineinfile: dest="/etc/sysconfig/celerybeat"
-        line="CELERYBEAT_CHDIR={{ ansible_env.HOME }}/genomics-workspace"
-                  regexp='^CELERYBEAT_CHDIR='
-      become: True
-
-    - name: Edit 4 celerybeat.sysconfig
-      lineinfile: dest="/etc/sysconfig/celerybeat"
-        line="CELERY_BIN={{ ansible_env.HOME }}/genomics-workspace/py2.7/bin/celery"
-                  regexp='^CELERY_BIN='
+      command: cp "{{ ansible_env.HOME }}/genomics-workspace/celerybeat.sysconfig" /etc/default/celerybeat
       become: True
 
     - name: Set celeryd and celerybeat as daemons
@@ -265,7 +259,7 @@
       shell: psql -c 'create user django;'
       become: True
       become_user: postgres
-    #
+    
     - name: Grant ALL privs to django user
       shell: psql -c 'grant all on database django to django;'
       become: True
@@ -278,9 +272,23 @@
 
 #-------------   Migrate Django Database   -----------------
 
+    - name: Run python manage.py makemigrations
+      django_manage:
+          command=makemigrations
+          app_path={{ ansible_env.HOME }}/genomics-workspace
+          virtualenv={{ ansible_env.HOME }}/genomics-workspace/py2.7
+
     - name: Run python manage.py migrate
       django_manage:
           command=migrate
+          app_path={{ ansible_env.HOME }}/genomics-workspace
+          virtualenv={{ ansible_env.HOME }}/genomics-workspace/py2.7
+
+#-------------   Gather static files   -----------------
+
+    - name: Run python manage.py collectstatic
+      django_manage:
+          command=collectstatic
           app_path={{ ansible_env.HOME }}/genomics-workspace
           virtualenv={{ ansible_env.HOME }}/genomics-workspace/py2.7
 
@@ -298,6 +306,7 @@
     - name: Add this vm to /etc/hosts
       lineinfile: dest=/etc/hosts line="{{ ipaddr }} {{ target }} {{ target }}.local"
                   state=present
+      when: ipaddr is defined
       become: True
 
     - name: Add ServerName to Apache config
@@ -321,7 +330,7 @@
           - "{{ ansible_env.HOME }}/get-pip.py"
           - "{{ ansible_env.HOME }}/epel-release-6-8.noarch.rpm"
           - "{{ ansible_env.HOME }}/pgdg-centos95-9.5-2.noarch.rpm"
-          - "{{ ansible_env.HOME }}/Python-2.7.13"
+          - "{{ ansible_env.HOME }}/Python-2.7.8"
       become: True
 
     - name: Cleanup setuptools current version
