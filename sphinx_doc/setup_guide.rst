@@ -360,7 +360,7 @@ First clear any entries that prevent login.
 
 Set your id as superuser
 
-    update auth_user set is_staff = 't', is_active = 't' where username = '<user_name>';
+    update auth_user set is_staff = 't', is_active = 't', is_superuser = 't' where username = '<user_name>';
 
 Now you should be able to login as admin and navigate to 
 
