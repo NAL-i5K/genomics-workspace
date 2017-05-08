@@ -39,7 +39,7 @@ def create(request):
         file_prefix = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)
         if not path.exists(task_dir):
             makedirs(task_dir)
-        chmod(task_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) 
+        chmod(task_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can open files in the directory
         # change directory to task directory
 
@@ -57,7 +57,7 @@ def create(request):
         else:
             return render(request, 'clustal/invalid_query.html', {'title': '',})
 
-        chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) 
+        chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
 
         bin_name = 'bin_linux'
@@ -68,7 +68,7 @@ def create(request):
             qstr = f.read()
             seq_count = qstr.count('>')
             if(seq_count > 600):
-                return render(request, 'clustal/invalid_query.html', 
+                return render(request, 'clustal/invalid_query.html',
                         {'title': 'Clustal: Max number of query sequences: 600 sequences.',})
 
         is_color = False
@@ -96,7 +96,7 @@ def create(request):
                             option_params.append('-PWMATRIX='+request.POST['PWMATRIX'])
                         if request.POST['protein-PWGAPOPEN'] != "":
                             option_params.append('-PWGAPOPEN='+request.POST['protein-PWGAPOPEN'])
-                        if request.POST['protein-PWGAPOPEN'] != "":
+                        if request.POST['protein-PWGAPEXT'] != "":
                             option_params.append('-PWGAPEXT='+request.POST['protein-PWGAPEXT'])
                 elif request.POST['pairwise'] == "fast":
                     option_params.append('-QUICKTREE')
@@ -153,7 +153,7 @@ def create(request):
                                   '-type=protein'])
 
                 args_list_log = []
-                args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename), 
+                args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename),
                                      '-OUTFILE='+task_id+'.aln', '-type=protein'])
 
             else:
@@ -176,17 +176,17 @@ def create(request):
                     is_color = True if request.POST['omega_output'] == 'clu' else False
                 if request.POST['omega_order'] != "":
                     option_params.append("--output-order="+request.POST['omega_order'])
- 
+
                 args_list.append([path.join(program_path,'clustalo'), '--infile='+query_filename,
                                   '--guidetree-out='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.ph',
-                                  '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln'] 
+                                  '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln']
                                   + option_params)
-            
+
                 print args_list
-    
+
                 args_list_log = []
                 args_list_log.append(['clustalo', '--infile='+path.basename(query_filename),
-                                      '--guidetree-out=' + task_id + '.ph', 
+                                      '--guidetree-out=' + task_id + '.ph',
                                       '--outfile=' + task_id +'.aln'] + option_params)
 
             record = ClustalQueryRecord()
@@ -202,8 +202,8 @@ def create(request):
                 if (seq_count == 0):
                     seq_count = 1
                 with open(path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, 'status.json'), 'wb') as f:
-                    json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'], 
-                               'cmd': " ".join(args_list_log[0]), 'is_color': is_color, 
+                    json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'],
+                               'cmd': " ".join(args_list_log[0]), 'is_color': is_color,
                                'query_filename': path.basename(query_filename)}, f)
 
             run_clustal_task.delay(task_id, args_list, file_prefix)
@@ -249,7 +249,7 @@ def retrieve(request, task_id='1'):
                 {
                     'title': 'Internal Error',
                     'isError': True,
-                })    
+                })
 
             dnd_url, ph_url = None, None
             query_prefix = path.splitext(statusdata['query_filename'])[0]
@@ -315,12 +315,12 @@ def status(request, task_id):
             with open(status_file_path, 'rb') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
-                    tlist = cache.get('task_list_cache', []) 
-                    num_preceding = -1; 
+                    tlist = cache.get('task_list_cache', [])
+                    num_preceding = -1;
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
-                                num_preceding = index 
+                                num_preceding = index
                                 break
                     statusdata['num_preceding'] = num_preceding
                 elif statusdata['status'] == 'running':
