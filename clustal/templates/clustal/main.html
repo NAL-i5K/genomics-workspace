@@ -65,7 +65,7 @@ html {overflow-y: scroll;}
         <div class="tripal_details">
             {% endif %}
             <FORM METHOD="POST" id="MainClustalForm" NAME="MainClustalForm" ENCTYPE="multipart/form-data">
-                <input type="hidden" name="program" id="program" value="clustalo">
+                <input type="hidden" name="program" id="program" value="clustalo" id="program">
                 {% csrf_token %}
                 <div class="tripal_organism-info-box tripal-info-box">
                     <ul class="nav nav-tabs">
@@ -194,10 +194,10 @@ html {overflow-y: scroll;}
                                 <div>Sequence Type</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="sequenceType" value="dna" class="sequenceType dna">
+                                        <input type="radio" name="sequenceType" value="dna" class="sequenceType dna" id="seq_type_dna">
                                         DNA
                                     </label><label>
-                                        <input type="radio" name="sequenceType" value="protein" checked class="sequenceType protein">
+                                        <input type="radio" name="sequenceType" value="protein" checked class="sequenceType protein" id="seq_type_protein">
                                         Protein
                                     </label>
                                 </div>
@@ -225,7 +225,7 @@ html {overflow-y: scroll;}
                                 <div class="d_col">
                                     <div class="p_col">DNA weight matrix</div>
                                     <div>
-                                        <select name="PWDNAMATRIX">
+                                        <select name="PWDNAMATRIX" id="PWDNAMATRIX">
                                             <option value="">Default</option>
                                             <option value="IUB">IUB</option>
                                             <option value="ClustalW">ClustalW</option>
@@ -235,7 +235,7 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         Gap Open Penalty
-                                        <input type="text" name="dna-PWGAPOPEN" checked="checked" size=10>
+                                        <input type="text" name="dna-PWGAPOPEN" checked="checked" size=10 id="dna-PWGAPOPEN">
                                     </label>
                                 </div>
                                 <div class="p_col">

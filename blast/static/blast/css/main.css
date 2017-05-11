@@ -404,3 +404,16 @@ input[type="checkbox"].input-validation-error {
 #box-organism label div {
     padding: 2px 0px 2px;
 }
+
+#org_tab {
+    width: 100%;
+}
+#org_tab th, td {
+    text-align: center;
+}
+.genome_chk, .transcript_chk, .prot_chk {
+    text-align: center;
+}
+#org_td {
+    text-align: left;
+}

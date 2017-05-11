@@ -16,6 +16,7 @@ for (var i = 0; i < dataset_list_count; i++) {
 	var file_name = entry[2];
 	var organism_name = entry[3];
 	var description = entry[4];
+    console.log('data type: ' + data_type + ' alphabet: ' + alphabet + " filename: " + file_name + " organism name: " + organism_name) 
     if (!(organism_name in dataset_dict)) {
 		dataset_dict[organism_name] = {};
 		organism_list.push(organism_name);
@@ -57,6 +58,7 @@ $(function() { // document ready
 		var $organism_checkbox = $('<input>', {
 			'organism': organism_id,
 			'type': 'checkbox',
+            'checked': 'checked',
 			'class': 'organism-checkbox ' + organism_id,
             'name': 'organism-checkbox[]',
 		});
@@ -71,6 +73,7 @@ $(function() { // document ready
 		}).appendTo('#box-datasets');
 		$('<div class="dataset-title">' + organism_list[i] + '</div>').appendTo($organism_datasets_div);
 		var dataset_i = 1;
+        console.log(organism_list[1]);
 		for (var j = 0; j < alphabet_list_count; j++) {
 			if (alphabet_list[j] in dataset_dict[organism_list[i]]) {
 				var alphabet_class = alphabet_list[j].toLowerCase();
@@ -95,10 +98,25 @@ $(function() { // document ready
 					var $organism_datasets_label = $('<label/>').append($organism_datasets_checkbox_div);
 					$alphabet_fieldset.append($organism_datasets_label);
 					//dataset_i++;
+                    //$('#' + organism_list[1]).prop('checked', true).change();
+                    //$('#' + organism_list[1]).attr('checked', true);
+			        $('.dataset-checkbox.' + $(this).attr('organism') + '.' + default_data_type).prop('checked', true);
+                    //console.log(organism_list[1]);
+
 				}
 			}
 		}
-	}
+    }
+    if (sequence) { 
+        $('#query-textarea').val(sequence);
+    }
+    $('#query-textarea').val(sequence);
+    if (tag) { 
+        $('#tag').val(tag);
+    }
+    console.log('sequence: ' + sequence);
+    for (var i = 0; i < organism_list_count; i++) {
+
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
