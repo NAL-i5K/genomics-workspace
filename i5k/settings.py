@@ -395,7 +395,7 @@ BLAST_QUERY_MAX = 10
 HMMER_QUERY_MAX = 10
 
 # Query maximum size (k bytes)
-BLAST_QUERY_SIZE_MAX = 1
+BLAST_QUERY_SIZE_MAX = 1000
 
 # Apollo SSO
 ROBOT_ID = 'R2D2'
