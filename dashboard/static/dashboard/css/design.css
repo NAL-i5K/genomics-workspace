@@ -345,13 +345,13 @@
     /*  Clustal search display  */
 
      .seq_dropdown {
-        width: 12%;
+        width: 20%;
         height: 100%;
         display: flex;
         -webkit-display: flex;
         align-items: center;
         -webkit-align-items: center;
-        margin-right: 65%;
+        margin-right: 0%;
         z-index: 99999;
         /*border: 1px solid blue;*/
     }
@@ -366,7 +366,7 @@
     }
     .seq_dropdown_content {
         position: absolute;
-        top: 35%;
+        top: 0%;
         min-width: 10%;
         display: flex;
         -webkit-display: flex;
