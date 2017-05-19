@@ -178,11 +178,26 @@
                                     {% endif %}
                                 </table>
                             </div>
-                            <div style="display: flex; flex-direction: column;" >
-                                <input type="hidden" name="search_id" value="{{ search.search_tag }}">
-                                <input type="submit" name="searchagain" value="Search Again">
-                                <p><br></p>
-                                <input type="submit" name="editsearch" value="Edit and Search">
+
+                            <div id="end_div" style:"display: flex; justify-content: flex-end;">
+
+                                <div class="seq_dropdown" style="display: flex; flex-direction: column;" >
+                                    <input type="button" class="seq_button">SEQUENCE</button>
+                                    <div class="seq_dropdown_content">
+                                        <textarea rows="20" cols="50" id="sequence">
+                                            {{ search.sequence }}
+                                        </textarea>
+                                    </div>
+                                </div>
+
+
+                                <div style="display: flex; flex-direction: column;" >
+                                    <input type="hidden" name="search_tag" value="{{ search.search_tag }}">
+                                    <input type="submit" name="searchagain" value="Search Again">
+                                    <p><br></p>
+                                    <input type="submit" name="editsearch" value="Edit and Search">
+                                </div>
+
                             </div>
                             </form>
                         </div>

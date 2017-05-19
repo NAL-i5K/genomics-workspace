@@ -80,7 +80,6 @@ def create(request):
 
         is_color = False
 
-
         # check if program is in list for security
         if request.POST['program'] in ['clustalw','clustalo']:
             option_params = []
@@ -211,6 +210,7 @@ def create(request):
 
             run_clustal_task.delay(task_id, args_list, file_prefix)
 
+            #  Save search parameters.
             save_history(request.POST, task_id, query_filename, request.user.username)
 
             return redirect('clustal:retrieve', task_id)
@@ -361,7 +361,9 @@ def user_tasks(request, user_id):
 #  Save a search in the search history.
 #
 def save_history(post, task_id, seq_file, user):
-
+    '''
+        Save a ClustalSearch record.
+    '''
     print 'POST: %s' % post
     search = ClustalSearch()  #  History object.
     search.task_id               = task_id
