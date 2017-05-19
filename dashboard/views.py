@@ -6,6 +6,7 @@ from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
 from blast.models import BlastSearch
+from clustal.models import ClustalSearch
 from misc.logger import i5kLogger
 from django.http import Http404
 from datetime import datetime
@@ -70,5 +71,61 @@ def dashboard(request):
                 search_dict['organisms']       = orgs
                 search_list.append(search_dict)
             return render(request, 'dashboard/blast_hist.html', { 'search_list': search_list})
+
+        if request.path == '/clustal_hist':
+            #
+            #  Clustal history.
+            #
+            search_list = []
+            for obj in ClustalSearch.objects.all():
+                id_num += 1
+                search_dict = {}
+                date_str                             = obj.create_date.strftime('%b %d %H:%M:%S')
+                search_dict['search_head']           = '%s  -  %s  -  %s' % (obj.search_tag, date_str, obj.program)
+                search_dict['id_str']                = 'collapsible' + str(id_num)
+                search_dict['task_id']               = obj.task_id
+                search_dict['sequence']              = obj.sequence
+                search_dict['create_date']           = obj.create_date
+                search_dict['user']                  = obj.user
+                search_dict['program']               = obj.program
+                search_dict['sequence']              = obj.sequence
+                search_dict['pairwise']              = obj.pairwise
+                search_dict['PWDNAMATRIX']           = obj.PWDNAMATRIX
+                search_dict['dna_PWGAPOPEN']         = obj.dna_PWGAPOPEN
+                search_dict['dna_PWGAPEXT']          = obj.dna_PWGAPEXT
+                search_dict['PWMATRIX']              = obj.PWMATRIX
+                search_dict['protein_PWGAPOPEN']     = obj.protein_PWGAPOPEN
+                search_dict['protein_PWGAPEXT']      = obj.protein_PWGAPEXT
+                search_dict['KTUPLE']                = obj.KTUPLE
+                search_dict['WINDOW']                = obj.WINDOW
+                search_dict['PAIRGAP']               = obj.PAIRGAP
+                search_dict['TOPDIAGS']              = obj.TOPDIAGS
+                search_dict['SCORE']                 = obj.SCORE
+                search_dict['DNAMATRIX']             = obj.DNAMATRIX
+                search_dict['dna_GAPOPEN']           = obj.dna_GAPOPEN
+                search_dict['dna_GAPEXT']            = obj.dna_GAPEXT
+                search_dict['dna_GAPDIST']           = obj.dna_GAPDIST
+                search_dict['dna_ITERATION']         = obj.dna_ITERATION
+                search_dict['dna_NUMITER']           = obj.dna_NUMITER
+                search_dict['dna_CLUSTERING']        = obj.dna_CLUSTERING
+                search_dict['MATRIX']                = obj.MATRIX
+                search_dict['protein_GAPOPEN']       = obj.protein_GAPOPEN
+                search_dict['protein_GAPEXT']        = obj.protein_GAPEXT
+                search_dict['protein_GAPDIST']       = obj.protein_GAPDIST
+                search_dict['protein_ITERATION']     = obj.protein_ITERATION
+                search_dict['protein_NUMITER']       = obj.protein_NUMITER
+                search_dict['protein_CLUSTERING']    = obj.protein_CLUSTERING
+                search_dict['OUTPUT']                = obj.OUTPUT
+                search_dict['OUTORDER']              = obj.OUTORDER
+                search_dict['dealing_input']         = obj.dealing_input
+                search_dict['clustering_guide_tree'] = obj.clustering_guide_tree
+                search_dict['clustering_guide_iter'] = obj.clustering_guide_iter
+                search_dict['combined_iter']         = obj.combined_iter
+                search_dict['max_gt_iter']           = obj.max_gt_iter
+                search_dict['max_hmm_iter']          = obj.max_hmm_iter
+                search_dict['omega_output']          = obj.omega_output
+                search_list.append(search_dict)
+            return render(request, 'dashboard/clustal_hist.html', { 'search_list': search_list })
+
     elif request.method == 'POST':
         return render(request, 'dashboard/index.html', { 'year': datetime.now().year, 'title': 'Dashboard', })

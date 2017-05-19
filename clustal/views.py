@@ -1,4 +1,7 @@
 from __future__ import absolute_import
+import json
+import traceback
+import stat as Perm
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import Http404
@@ -8,13 +11,11 @@ from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod
 from .tasks import run_clustal_task
-from .models import ClustalQueryRecord
+from .models import ClustalQueryRecord, ClustalSearch
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
-import json
-import traceback
-import stat as Perm
+from misc.get_tag import get_tag
 
 def manual(request):
     '''
@@ -28,8 +29,12 @@ def create(request):
     * Max number of query sequences: 600 sequences
     '''
     if request.method == 'GET':
+
+
+        tag = get_tag(request.user.username, ClustalSearch)
         return render(request, 'clustal/main.html', {
             'title': 'Clustal Query',
+            'tag': tag
         })
     elif request.method == 'POST':
         # setup file paths
@@ -39,7 +44,7 @@ def create(request):
         file_prefix = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)
         if not path.exists(task_dir):
             makedirs(task_dir)
-        chmod(task_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) 
+        chmod(task_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can open files in the directory
         # change directory to task directory
 
@@ -57,7 +62,9 @@ def create(request):
         else:
             return render(request, 'clustal/invalid_query.html', {'title': '',})
 
-        chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) 
+
+
+        chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
 
         bin_name = 'bin_linux'
@@ -68,20 +75,19 @@ def create(request):
             qstr = f.read()
             seq_count = qstr.count('>')
             if(seq_count > 600):
-                return render(request, 'clustal/invalid_query.html', 
+                return render(request, 'clustal/invalid_query.html',
                         {'title': 'Clustal: Max number of query sequences: 600 sequences.',})
 
         is_color = False
+
+
         # check if program is in list for security
         if request.POST['program'] in ['clustalw','clustalo']:
-
             option_params = []
             args_list = []
-
             if request.POST['program'] == 'clustalw':
                 #clustalw
                 option_params.append("-type="+request.POST['sequenceType'])
-
                 #parameters setting for full option or fast option
                 if request.POST['pairwise'] == "full":
                     if request.POST['sequenceType'] == "dna":
@@ -96,7 +102,7 @@ def create(request):
                             option_params.append('-PWMATRIX='+request.POST['PWMATRIX'])
                         if request.POST['protein-PWGAPOPEN'] != "":
                             option_params.append('-PWGAPOPEN='+request.POST['protein-PWGAPOPEN'])
-                        if request.POST['protein-PWGAPOPEN'] != "":
+                        if request.POST['protein-PWGAPEXT'] != "":
                             option_params.append('-PWGAPEXT='+request.POST['protein-PWGAPEXT'])
                 elif request.POST['pairwise'] == "fast":
                     option_params.append('-QUICKTREE')
@@ -153,7 +159,7 @@ def create(request):
                                   '-type=protein'])
 
                 args_list_log = []
-                args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename), 
+                args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename),
                                      '-OUTFILE='+task_id+'.aln', '-type=protein'])
 
             else:
@@ -164,7 +170,6 @@ def create(request):
                     option_params.append("--full")
                 if request.POST['clustering_guide_iter'] != "no":
                     option_params.append("--full-iter")
-
                 if request.POST['combined_iter'] != "":
                     option_params.append("--iterations="+request.POST['combined_iter'])
                 if request.POST['max_gt_iter'] != "":
@@ -176,17 +181,15 @@ def create(request):
                     is_color = True if request.POST['omega_output'] == 'clu' else False
                 if request.POST['omega_order'] != "":
                     option_params.append("--output-order="+request.POST['omega_order'])
- 
+
                 args_list.append([path.join(program_path,'clustalo'), '--infile='+query_filename,
                                   '--guidetree-out='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.ph',
-                                  '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln'] 
+                                  '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln']
                                   + option_params)
-            
-                print args_list
-    
+
                 args_list_log = []
                 args_list_log.append(['clustalo', '--infile='+path.basename(query_filename),
-                                      '--guidetree-out=' + task_id + '.ph', 
+                                      '--guidetree-out=' + task_id + '.ph',
                                       '--outfile=' + task_id +'.aln'] + option_params)
 
             record = ClustalQueryRecord()
@@ -202,11 +205,13 @@ def create(request):
                 if (seq_count == 0):
                     seq_count = 1
                 with open(path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, 'status.json'), 'wb') as f:
-                    json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'], 
-                               'cmd': " ".join(args_list_log[0]), 'is_color': is_color, 
+                    json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'],
+                               'cmd': " ".join(args_list_log[0]), 'is_color': is_color,
                                'query_filename': path.basename(query_filename)}, f)
 
             run_clustal_task.delay(task_id, args_list, file_prefix)
+
+            save_history(request.POST, task_id, query_filename, request.user.username)
 
             return redirect('clustal:retrieve', task_id)
         else:
@@ -249,7 +254,7 @@ def retrieve(request, task_id='1'):
                 {
                     'title': 'Internal Error',
                     'isError': True,
-                })    
+                })
 
             dnd_url, ph_url = None, None
             query_prefix = path.splitext(statusdata['query_filename'])[0]
@@ -315,12 +320,12 @@ def status(request, task_id):
             with open(status_file_path, 'rb') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
-                    tlist = cache.get('task_list_cache', []) 
-                    num_preceding = -1; 
+                    tlist = cache.get('task_list_cache', [])
+                    num_preceding = -1;
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
-                                num_preceding = index 
+                                num_preceding = index
                                 break
                     statusdata['num_preceding'] = num_preceding
                 elif statusdata['status'] == 'running':
@@ -352,4 +357,55 @@ def user_tasks(request, user_id):
         return JSONResponse(serializer.data)
 
 
+#
+#  Save a search in the search history.
+#
+def save_history(post, task_id, seq_file, user):
 
+    print 'POST: %s' % post
+    search = ClustalSearch()  #  History object.
+    search.task_id               = task_id
+    search.create_date           = datetime.now()
+    search.user                  = user
+    search.search_tag            = post.get('search_tag')
+    with open(seq_file) as f:
+        search.sequence          = f.read()
+    search.program               = post.get('program')
+    search.pairwise              = post.get('pairwise')
+    search.sequenceType          = post.get('sequenceType')
+    search.PWDNAMATRIX           = post.get('PWDNAMATRIX')
+    search.dna_PWGAPOPEN         = post.get('dna-PWGAPOPEN')
+    search.dna_PWGAPEXT          = post.get('dna-PWGAPEXT')
+    search.PWMATRIX              = post.get('PWMATRIX')
+    search.protein_PWGAPOPEN     = post.get('protein-PWGAPOPEN')
+    search.protein_PWGAPEXT      = post.get('protein-PWGAPEXT')
+    search.KTUPLE                = post.get('KTUPLE')
+    search.WINDOW                = post.get('WINDOW')
+    search.PAIRGAP               = post.get('PAIRGAP')
+    search.TOPDIAGS              = post.get('TOPDIAGS')
+    search.SCORE                 = post.get('SCORE')
+    search.DNAMATRIX             = post.get('DNAMATRIX')
+    search.dna_GAPOPEN           = post.get('dna-GAPOPEN')
+    search.dna_GAPEXT            = post.get('dna-GAPEXT')
+    search.dna_GAPDIST           = post.get('dna-GAPDIST')
+    search.dna_ITERATION         = post.get('dna-ITERATION')
+    search.dna_NUMITER           = post.get('dna-NUMITER')
+    search.dna_CLUSTERING        = post.get('dna-CLUSTERING')
+    search.MATRIX                = post.get('MATRIX')
+    search.protein_GAPOPEN       = post.get('protein-GAPOPEN')
+    search.protein_GAPEXT        = post.get('protein-GAPEXT')
+    search.protein_GAPDIST       = post.get('protein-GAPDIST')
+    search.protein_ITERATION     = post.get('protein-ITERATION')
+    search.protein_NUMITER       = post.get('protein-NUMITER')
+    search.protein_CLUSTERING    = post.get('protein-CLUSTERING')
+    search.OUTPUT                = post.get('OUTPUT')
+    search.OUTORDER              = post.get('OUTORDER')
+    search.dealing_input         = post.get('dealing_input')
+    search.clustering_guide_tree = post.get('clustering_guide_tree')
+    search.clustering_guide_iter = post.get('clustering_guide_iter')
+    search.combined_iter         = post.get('combined_iter')
+    search.max_gt_iter           = post.get('max_gt_iter')
+    search.max_hmm_iter          = post.get('max_hmm_iter')
+    search.omega_output          = post.get('omega_output')
+    search.omega_order           = post.get('omega_order')
+    search.save()

@@ -81,6 +81,11 @@ html {overflow-y: scroll;}
                         <div><span class="load-example">Or</span> load it from disk </div>
                         <input type="file" name="query-file" class="query-file" id="queryfile">
                     </fieldset>
+                    <fieldset id="fieldset-program">
+                        <legend>Search Tag</legend>
+                        <INPUT TYPE="text" VALUE="{{ tag }}" id="search_tag" name="search_tag" size="40">
+                    </fieldset>
+
                     <div class="tab-content">
                         <div id="clustalo" class="tab-pane fade in active">
                             <fieldset id="fieldset-omega" class="t_font">
@@ -88,10 +93,10 @@ html {overflow-y: scroll;}
                                 <div>Dealign input sequences</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="dealing_input" value="yes">
+                                        <input type="radio" name="dealing_input" value="yes" id="dealing_input_yes">
                                         yes
                                     </label><label>
-                                        <input type="radio" name="dealing_input" value="no" checked>
+                                        <input type="radio" name="dealing_input" value="no" checked id="dealing_input_no">
                                         no
                                     </label>
                                 </div>
@@ -107,20 +112,20 @@ html {overflow-y: scroll;}
                                 <div>MBED-Like Clustering Guide-Tree</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="clustering_guide_tree" value="yes" checked>
+                                        <input type="radio" name="clustering_guide_tree" value="yes" checked id="clustering_guide_tree_yes">
                                         yes
                                     </label><label>
-                                        <input type="radio" name="clustering_guide_tree" value="no">
+                                        <input type="radio" name="clustering_guide_tree" value="no" id="clustering_guide_tree_no">
                                         no
                                     </label>
                                 </div>
                                 <div>MBED-Like Clustering Iteration</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="clustering_guide_iter" value="yes" checked>
+                                        <input type="radio" name="clustering_guide_iter" value="yes" checked id="clustering_guide_iter_yes">
                                         yes
                                     </label><label>
-                                        <input type="radio" name="clustering_guide_iter" value="no">
+                                        <input type="radio" name="clustering_guide_iter" value="no" id="clustering_guide_iter_no">
                                         no
                                     </label>
                                 </div>
@@ -130,7 +135,7 @@ html {overflow-y: scroll;}
                                 <div class="d_col">
                                     <div class="p_col">Number of Combined Iterations</div>
                                     <div>
-                                        <select name="combined_iter">
+                                        <select name="combined_iter" id="combined_iter">
                                             <option value="0">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
@@ -144,7 +149,7 @@ html {overflow-y: scroll;}
                                 <div class="d_col">
                                     <div class="p_col">Max Guide Tree Iterations</div>
                                     <div>
-                                        <select name="max_gt_iter">
+                                        <select name="max_gt_iter" id="max_gt_iter">
                                             <option value="">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
@@ -158,7 +163,7 @@ html {overflow-y: scroll;}
                                 <div>
                                     <div class="p_col">Max HMM Iterations</div>
                                     <div>
-                                        <select name="max_hmm_iter">
+                                        <select name="max_hmm_iter" id="max_hmm_iter">
                                             <option value="">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
@@ -173,14 +178,14 @@ html {overflow-y: scroll;}
                             <fieldset id="fieldset-omega-output" class="t_font">
                                 <legend>Output</legend>
                                 <div>Format</div>
-                                <select name="omega_output">
+                                <select name="omega_output" id="omega_output">
                                     <option value="clu">Clustal</option>
                                     <option value="phy">PHYLIP</option>
                                     <option value="fa">FASTA</option>
                                     <option value="st">STOCKHOLM</option>
                                 </select>
                                 <div style="padding-top: 10px">Out Order</div>
-                                <select name="omega_order">
+                                <select name="omega_order" id="omega_order">
                                     <option value="tree-order">Aligned</option>
                                     <option value="input-order">Input</option>
                                 </select>
@@ -204,10 +209,10 @@ html {overflow-y: scroll;}
                                 <div>Pairwise Alignment</div>
                                 <div class="d_col">
                                     <label>
-                                        <input type="radio" name="pairwise" value="full" checked class="pairwise full">
+                                        <input type="radio" name="pairwise" value="full" checked class="pairwise full" id="pairwise_full">
                                         Full
                                     </label><label>
-                                        <input type="radio" name="pairwise" value="fast" class="pairwise fast">
+                                        <input type="radio" name="pairwise" value="fast" class="pairwise fast" id="pairwise_fast">
                                         Fast
                                     </label>
                                 </div>
@@ -241,7 +246,7 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         Gap Extension Penalty
-                                        <input type="text" name="dna-PWGAPEXT" size=10>
+                                        <input type="text" name="dna-PWGAPEXT" size=10 id="dna-PWGAPEXT">
                                     </label>
                                 </div>
                             </fieldset>
@@ -251,7 +256,7 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <div style="padding-bottom: 5px">Protein weight matrix</div>
                                     <div>
-                                        <select name="PWMATRIX">
+                                        <select name="PWMATRIX" id="PWMATRIX">
                                             <option value="">Default</option>
                                             <option value="Blosum">Blosum</option>
                                             <option value="PAM">PAM</option>
@@ -263,13 +268,13 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         Gap Open Penalty
-                                        <input type="text" name="protein-PWGAPOPEN" size=10>
+                                        <input type="text" name="protein-PWGAPOPEN" size=10 id="protein-PWGAPOPEN">
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Gap Extension Penalty
-                                        <input type="text" name="protein-PWGAPEXT" size=10>
+                                        <input type="text" name="protein-PWGAPEXT" size=10 id="protein-PWGAPEXT">
                                     </label>
                                 </div>
                             </fieldset>
@@ -279,37 +284,37 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         K-tuple (word) Size
-                                        <input type="text" name="KTUPLE" size=10>
+                                        <input type="text" name="KTUPLE" size=10 id="KTUPLE">
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Window Size
-                                        <input type="text" name="WINDOW" size=10>
+                                        <input type="text" name="WINDOW" size=10 id="WINDOW">
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Gap Penalty
-                                        <input type="text" name="PAIRGAP" size=10>
+                                        <input type="text" name="PAIRGAP" size=10 id="PAIRGAP">
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Number of Top Diagonals
-                                        <input type="text" name="TOPDIAGS" size=10>
+                                        <input type="text" name="TOPDIAGS" size=10 id="TOPDIAGS">
                                     </label>
                                 </div>
                                 <div class="p_col">Scoring Method</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="SCORE" value="percent" checked>
+                                        <input type="radio" name="SCORE" value="percent" checked id="SCORE_percent">
                                         Percent
                                     </label>
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="SCORE" value="absolute">
+                                        <input type="radio" name="SCORE" value="absolute" id="SCORE_absolute">
                                         Absolute
                                     </label>
                                 </div>
@@ -322,7 +327,7 @@ html {overflow-y: scroll;}
                                 </div>
 
                                 <div class="p_col">
-                                    <select name="DNAMATRIX">
+                                    <select name="DNAMATRIX" id="DNAMATRIX">
                                         <option value="">Default</option>
                                         <option value="IUB">IUB</option>
                                         <option value="clustalw">ClustalW</option></select>
@@ -332,23 +337,23 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Gap Opening Penalty
-                                            <input type="text" name="dna-GAPOPEN" size=10>
+                                            <input type="text" name="dna-GAPOPEN" size=10 id="dna-GAPOPEN">
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Extension Penalty
-                                            <input type="text" name="dna-GAPEXT" size=10>
+                                            <input type="text" name="dna-GAPEXT" size=10 id-"dna-GAPEXT">
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Separation Penalty
-                                            <input type="text" name="dna-GAPDIST" size=10>
+                                            <input type="text" name="dna-GAPDIST" size=10 id="dna-GAPDIST">
                                         </label>
                                     </div>
                                     Output
-                                    <select name="dna-ITERATION">
+                                    <select name="dna-ITERATION" id="dna-ITERATION">
                                         <option value="none">None</option>
                                         <option value="tree">Tree</option>
                                         <option value="alignment">Alignment</option>
@@ -356,19 +361,19 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Maximum Number of Iterations
-                                            <input type="text" name="dna-NUMITER" size=10>
+                                            <input type="text" name="dna-NUMITER" size=10 id="dna-NUMITER">
                                         </label>
                                     </div>
                                     <div class="p_col">Clustering</div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="dna-CLUSTERING" value="NJ" checked>
+                                            <input type="radio" name="dna-CLUSTERING" value="NJ" checked id="dna-CLUSTERING_NJ">
                                             Neighbour Joining
                                         </label>
                                     </div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="dna-CLUSTERING" value="UPGMA">
+                                            <input type="radio" name="dna-CLUSTERING" value="UPGMA" id="dna-CLUSTERING_UPGMA">
                                             UPGMA
                                         </label>
                                     </div>
@@ -381,7 +386,7 @@ html {overflow-y: scroll;}
                                     </div>
 
                                     <div class="p_col">
-                                        <select name="MATRIX">
+                                        <select name="MATRIX" id="MATRIX">
                                             <option value="">Default</option>
                                             <option value="Blosum">Blosum</option>
                                             <option value="PAM">PAM</option>
@@ -393,23 +398,23 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Gap Opening Penalty
-                                            <input type="text" name="protein-GAPOPEN" size=10>
+                                            <input type="text" name="protein-GAPOPEN" size=10 id="protein-GAPOPEN">
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Extension Penalty
-                                            <input type="text" name="protein-GAPEXT" size=10>
+                                            <input type="text" name="protein-GAPEXT" size=10 id="protein-GAPEXT">
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Separation Penalty
-                                            <input type="text" name="protein-GAPDIST" size=10>
+                                            <input type="text" name="protein-GAPDIST" size=10 id="protein-GAPDIST">
                                         </label>
                                     </div>
                                     Output
-                                    <select name="protein-ITERATION">
+                                    <select name="protein-ITERATION" id="protein-ITERATION">
                                         <option value="none">None</option>
                                         <option value="tree">Tree</option>
                                         <option value="alignment">Alignment</option>
@@ -417,19 +422,19 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Maximum Number of Iterations
-                                            <input type="text" name="protein-NUMITER" size=10>
+                                            <input type="text" name="protein-NUMITER" size=10 id="protein-NUMITER">
                                         </label>
                                     </div>
                                     <div class="p_col">Clustering</div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="protein-CLUSTERING" value="NJ" checked>
+                                            <input type="radio" name="protein-CLUSTERING" value="NJ" checked id="protein-CLUSTERING_NJ">
                                             Neighbour Joining
                                         </label>
                                     </div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="protein-CLUSTERING" value="UPGMA">
+                                            <input type="radio" name="protein-CLUSTERING" value="UPGMA" id="protein-CLUSTERING_UPGMA">
                                             UPGMA
                                         </label>
                                     </div>
@@ -438,13 +443,13 @@ html {overflow-y: scroll;}
                                 <fieldset id="fieldset-output" class="t_font">
                                     <legend>Output</legend>
                                     <div>Format</div>
-                                    <select name="OUTPUT" style="width: 100px">
+                                    <select name="OUTPUT" style="width: 100px" id="OUTPUT">
                                         <option value="clustal">Clustal&nbsp;&nbsp; </option>
                                         <option value="phylip">PHYLIP</option>
                                         <option value="fasta">FASTA</option>
                                     </select>
                                     <div>Out Order</div>
-                                    <select name="OUTORDER">
+                                    <select name="OUTORDER" id="OUTORDER">
                                         <option value="Aligned">Aligned</option>
                                         <option value="input">Input</option>
                                     </select>

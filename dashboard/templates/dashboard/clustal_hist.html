@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>CLUSTAL History</title>
+    <meta charset="utf-8">
+
+    <!-- META -->
+    <meta name="description" content="">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- END META -->
+
+    <!-- FONTS -->
+    <link href='http://fonts.googleapis.com/css?family=Dosis:400,500,600' rel='stylesheet' type='text/css'>
+    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
+    <!-- END FONTS -->
+
+    <!-- CSS -->
+    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+    
+    <link rel="stylesheet" type="text/css" href="static/dashboard/css/design.css">
+    <!-- END CSS -->    
+</head>
+<body>
+
+<header>
+    <!-- NAVBAR -->
+    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+
+            <div class="brand">
+                <a class="navbar-brand" href="index.html"><span>USDA LOGO</span></a>
+                <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
+            </div>      
+        </div>
+
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+        
+        </div>
+    </div>
+    </nav>
+    <!-- END NAVBAR -->
+</header>
+
+<div class="body slide">
+    <!-- SIDEBAR -->
+    <aside class="sidebar show perfectScrollbar">
+        <div id="solso-sidebar">
+        
+            <!-- SIDEBAR ACCORDION MENU -->
+            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+                <!-- SIMPLE PANEL - no Collapse -->
+                <div class="panel panel-default">
+                    <div class="panel panel-default">
+                        <div class="panel-heading" role="tab" id="heading1">
+                            <h4 class="panel-title">
+                                <a href="/dashboard" class="single-item">
+                                    <i class="fa fa-dashboard"></i> Dashboard 
+                                </a>
+                            </h4>
+                        </div>
+                    </div>
+                </div>
+                <!-- END SIMPLE PANEL - no Collapse -->
+                
+                <!-- Collapsible Group Item #1  -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading2">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                                <i class="fa fa-bar-chart-o"></i> History
+                                <i class="pull-right fa fa-caret-down"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    
+                    <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
+                        <!-- anchors Item #1  -->
+                        <div>
+                            <a href="blast_hist" class="list-group-item">BLAST</a>
+                            <a href="hmmer_hist" class="list-group-item">HMMER</a>
+                            <a href="clustal_hist" class="list-group-item">CLUSTAL</a>
+                            <a href="apollo_hist" class="list-group-item">APOLLO</a>
+                        </div>
+                        <!-- anchors Item #1  -->
+                    </div>
+                </div>
+                <!-- END Collapsible Group Item #1  -->
+                
+                <!-- Collapsible Group Item #2  -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading7">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-expanded="true" aria-controls="collapse7">
+                                <i class="fa fa-picture-o"></i> Gallery
+                                <i class="pull-right fa fa-caret-down"></i>
+                            </a>
+                        </h4>
+                    </div>
+                    
+                    <div id="collapse7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading7">
+                        <!-- anchors Item #2  -->
+                        <div>
+                            <a href="gallery-1.html" class="list-group-item">Gallery 1</a>
+                            <a href="gallery-2.html" class="list-group-item">Gallery 2</a>
+                            <a href="gallery-3.html" class="list-group-item">Gallery 3</a>
+                            <a href="gallery-4.html" class="list-group-item">Gallery 4</a>
+                            <a href="gallery-5.html" class="list-group-item">Gallery 5</a>
+                        </div>
+                        <!-- END anchors Item #2  -->
+                    </div>
+                </div>
+                <!-- END Collapsible Group Item #2  -->             
+            </div>
+            <!-- END SIDEBAR ACCORDION MENU -->
+        </div>
+    </aside>
+    <!-- END SIDEBAR -->
+
+    
+    <!-- MAIN CONTENT  -->
+    <div class="container-fluid left-border">
+    <div class="row">
+    
+    <div class="container">
+        <div class="panel-group" id="accordion">
+            {% for search in search_list %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ search.id_str }}" aria-expanded="true" aria-controls    ="{{ search.id_str }}">{{ search.search_head }}</a>
+                        </h4>
+                    </div>
+                    <div id="{{ search.id_str }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form style="display:flex" method="GET" action="/dashboard">
+                            <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
+                                <table>
+                                    <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
+                                    <tr><td>Date:                 </td><td>{{ search.create_date }}    </td></tr>
+                                    <tr><td>Program:              </td><td>{{ search.program }}        </td></tr>
+                                    {% if search.program == "clustalw" %}
+                                        {% if search.pairwise == "full" %}
+                                            {% if search.sequenceType == "dna" %}
+                                            {% elif search.sequenceType == "protein" %}
+                                            {% endif %}
+                                        {% elif search.pairwise == "fast" %}
+                                        {% endif %}
+                                    {% elif search.program == "clustalo" %}
+                                    <tr><td>Dealign input sequences:</td><td>{{ search.dealing_input }}</td></tr>
+                                    <tr><td>Clustering guide tree:  </td><td>{{ search.clustering_guide_tree }}</td></tr>
+                                    <tr><td>Clustering iteration:   </td><td>{{ search.clustering_guide_iter }}</td></tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                            <div id="right_div" style:"display: flex; justify-content: flex-end;">
+                                <table>
+                                    {% if search.program == "clustalw" %}
+                                        {% if search.pairwise == "full" %}
+                                            {% if search.sequenceType == "dna" %}
+                                            {% elif search.sequenceType == "protein" %}
+                                            {% endif %}
+                                        {% elif search.pairwise == "fast" %}
+                                        {% endif %}
+                                    {% elif search.program == "clustalo" %}
+                                    <tr><td>Combined iterations     </td><td>{{ search.combined_iter }}</td></tr>
+                                    <tr><td>Max guide tree iterations:</td><td>{{ search.max_gt_iter }}</td></tr>
+                                    <tr><td>Max HMM iterations:       </td><td>{{ search.max_hmm_iter }}</td></tr>
+                                    <tr><td>Output format:            </td><td>{{ search.omega_output  }}</td></tr>
+                                    <tr><td>Output Order:             </td><td>{{ search.omega_order  }}</td></tr>
+                                    {% endif %}
+                                </table>
+                            </div>
+                            <div style="display: flex; flex-direction: column;" >
+                                <input type="hidden" name="search_id" value="{{ search.search_tag }}">
+                                <input type="submit" name="searchagain" value="Search Again">
+                                <p><br></p>
+                                <input type="submit" name="editsearch" value="Edit and Search">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+        
+    </div>  
+    </div>  
+    <!-- MAIN CONTENT  -->
+</div>  
+
+<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
+<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
+    
+<!-- === JAVASCRIPT MANDATORY CODE === -->
+<script>
+    
+    /* === SIDEBAR === */
+    $('.toogle').on('click', function() {
+        $('.body').toggleClass('slide');
+        $('.sidebar').toggleClass('show');
+        $('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
+    });
+    /* === END SIDEBAR === */
+
+    /* === ACCORDION === */
+    $( '#accordion' ).on('click', '.single-item', function(){
+        localStorage.removeItem('collapseID');
+        localStorage.removeItem('activeLink');
+    });
+    
+    $( '#accordion' ).on('click', '.list-group-item', function(){
+        localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
+        localStorage.setItem('activeLink', this);
+    });
+
+    if ( localStorage.collapseID ) {
+        $( '.panel-collapse' ).removeClass('in');
+        $( '#' + localStorage.collapseID ).addClass('in');
+    } else {
+        $( '.panel-collapse' ).removeClass('in');
+    }       
+    
+    if ( localStorage.activeLink ) {
+        $( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
+    }   
+    /* === END ACCORDION === */
+
+</script>
+<!-- === END JAVASCRIPT MANDATORY CODE === -->
+    
+    
+</body>
+</html>
