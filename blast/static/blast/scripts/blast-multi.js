@@ -56,6 +56,7 @@ $(function() { // document ready
 		// organism-checkbox
 		var $organism_checkbox = $('<input>', {
 			'organism': organism_id,
+			'id': organism_id,
 			'type': 'checkbox',
 			'class': 'organism-checkbox ' + organism_id,
             'name': 'organism-checkbox[]',
@@ -87,6 +88,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
+						'id': file_name,
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -102,6 +104,16 @@ $(function() { // document ready
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
+	
+        c = $('#recheck').val();
+        c = c.split(":");
+        for (var i = 0; i < c.length; i++){
+             d = c[i].replace(".", "\\.");
+             o = $('#'.concat(d)).attr('organism');
+             $('#'.concat(o)).attr( "checked", true );
+             $('#'.concat(d)).attr( "checked", true );
+        }	
+	
 	var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
     $('')
 	$('.organism-div').hoverIntent(function() {
