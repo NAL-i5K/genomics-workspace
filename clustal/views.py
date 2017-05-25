@@ -80,6 +80,11 @@ def create(request):
 
         is_color = False
 
+        print '========> pairwise %s' % request.POST['pairwise']
+        print '========> SeqType  %s' % request.POST['sequenceType']
+        print '========> pairwise %s' % request.POST['pairwise']
+        print '========> pairwise %s' % request.POST['pairwise']
+        print '========> pairwise %s' % request.POST['pairwise']
         # check if program is in list for security
         if request.POST['program'] in ['clustalw','clustalo']:
             option_params = []

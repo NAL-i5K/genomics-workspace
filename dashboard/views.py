@@ -84,6 +84,7 @@ def dashboard(request):
                 search_dict['search_head']           = '%s  -  %s  -  %s' % (obj.search_tag, date_str, obj.program)
                 search_dict['id_str']                = 'collapsible' + str(id_num)
                 search_dict['task_id']               = obj.task_id
+                search_dict['search_tag']            = obj.search_tag
                 search_dict['sequence']              = obj.sequence
                 search_dict['create_date']           = obj.create_date
                 search_dict['user']                  = obj.user

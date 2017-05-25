@@ -141,7 +141,7 @@
                     <div id="{{ search.id_str }}" class="panel-collapse collapse in">
                         <div class="panel-body">
                             <form style="display:flex" method="GET" action="/dashboard">
-                            <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
+                            <div class="left_div">
                                 <table>
                                     <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
                                     <tr><td>Date:                 </td><td>{{ search.create_date }}    </td></tr>
@@ -149,49 +149,84 @@
                                     {% if search.program == "clustalw" %}
                                         {% if search.pairwise == "full" %}
                                             {% if search.sequenceType == "dna" %}
+                                                <tr><td>PWDNAMATRIX:</td><td>{{ search.PWDNAMATRIX }}</td></tr>
+                                                <tr><td>dna-PWGAPOPEN:</td><td>{{ search.dna_PWGAPOPEN }}</td></tr>
                                             {% elif search.sequenceType == "protein" %}
+                                                <tr><td>PWMATRIX:</td><td>{{ search.PWMATRIX }}</td></tr>
                                             {% endif %}
                                         {% elif search.pairwise == "fast" %}
+                                            <tr><td>KTUPLE:</td><td>{{ search.KTUPLE }}</td></tr>
+                                            <tr><td>WINDOW:</td><td>{{ search.WINDOW }}</td></tr>
+                                        {% endif %}
+                                        {% if search.sequenceType == "dna" %}
+                                            <tr><td>DNAMATRIX:</td><td>{{ search.DNAMATRIX }}</td></tr>
+                                            <tr><td>dna-GAPOPEN:</td><td>{{ search.dna_GAPOPEN }}</td></tr>
+                                            <tr><td>dna-GAPEXT:</td><td>{{ search.dna_GAPEXT }}</td></tr>
+                                            <tr><td>dna-GAPDIST:</td><td>{{ search.dna_GAPDIST }}</td></tr>
+                                        {% elif search.sequenceType == "protein" %}
+                                            <tr><td>MATRIX:</td><td>{{ search.MATRIX }}</td></tr>
+                                            <tr><td>protein-GAPOPEN:</td><td>{{ search.protein_GAPOPEN }}</td></tr>
+                                            <tr><td>protein-GAPEXT:</td><td>{{ search.protein_GAPEXT }}</td></tr>
                                         {% endif %}
                                     {% elif search.program == "clustalo" %}
-                                    <tr><td>Dealign input sequences:</td><td>{{ search.dealing_input }}</td></tr>
-                                    <tr><td>Clustering guide tree:  </td><td>{{ search.clustering_guide_tree }}</td></tr>
-                                    <tr><td>Clustering iteration:   </td><td>{{ search.clustering_guide_iter }}</td></tr>
+                                        <tr><td>Dealign input sequences:</td><td>{{ search.dealing_input }}</td></tr>
+                                        <tr><td>Clustering guide tree:  </td><td>{{ search.clustering_guide_tree }}</td></tr>
                                     {% endif %}
                                 </table>
                             </div>
-                            <div id="right_div" style:"display: flex; justify-content: flex-end;">
+                            <div class="right_div">
                                 <table>
                                     {% if search.program == "clustalw" %}
                                         {% if search.pairwise == "full" %}
                                             {% if search.sequenceType == "dna" %}
+                                                <tr><td>dna-PWGAPEXT:</td><td>{{ search.dna_PWGAPEXT></td></tr>
+                                                <tr><td>dna-PWGAPEXT:</td><td>{{ search.dna_PWGAPEXT></td></tr>
                                             {% elif search.sequenceType == "protein" %}
+                                                <tr><td>protein-PWGAPOPEN:</td><td>{{ search.protein_PWGAPOPEN }}</td></tr>
+                                                <tr><td>protein-PWGAPEXT:</td><td>{{ search.protein_PWGAPEXT }}</td></tr>
                                             {% endif %}
                                         {% elif search.pairwise == "fast" %}
+                                            <tr><td>PAIRGAP:</td><td>{{ search.PAIRGAP }}</td></tr>
+                                            <tr><td>TOPDIAGS:</td><td>{{ search.TOPDIAGS }}</td></tr>
+                                            <tr><td>SCORE:</td><td>{{ search.OPDIAGS }}</td></tr>
                                         {% endif %}
+                                        {% if search.sequenceType == "dna" %}
+                                            <tr><td>dna-ITERATION:</td><td>{{ search.dna_ITERATION }}</td></tr>
+                                            <tr><td>dna-NUMITER:</td><td>{{ search.dna_NUMITER }}</td></tr>
+                                            <tr><td>dna-CLUSTERING:</td><td>{{ search.dna_CLUSTERING }}</td></tr>
+                                        {% elif search.sequenceType == "protein" %}
+                                            <tr><td>protein-GAPDIST:</td><td>{{ search.protein_GAPDIST }}</td></tr>
+                                            <tr><td>protein-ITERATION:</td><td>{{ search.protein_ITERATION }}</td></tr>
+                                            <tr><td>protein-NUMITER:</td><td>{{ search.protein_NUMITER }}</td></tr>
+                                            <tr><td>protein-CLUSTERING:</td><td>{{ search.protein_CLUSTERING }}</td></tr>
+                                        {% endif %}
+                                        <tr><td>OUTPUT:</td><td>{{ search.OUTPUT }}</td></tr>
+                                        <tr><td>OUTORDER:</td><td>{{ search.OUTORDER }}</td></tr>
+
                                     {% elif search.program == "clustalo" %}
-                                    <tr><td>Combined iterations     </td><td>{{ search.combined_iter }}</td></tr>
-                                    <tr><td>Max guide tree iterations:</td><td>{{ search.max_gt_iter }}</td></tr>
-                                    <tr><td>Max HMM iterations:       </td><td>{{ search.max_hmm_iter }}</td></tr>
-                                    <tr><td>Output format:            </td><td>{{ search.omega_output  }}</td></tr>
-                                    <tr><td>Output Order:             </td><td>{{ search.omega_order  }}</td></tr>
+                                        <tr><td>Clustering iteration:</td><td>{{ search.clustering_guide_iter|safe }}</td></tr>
+                                        <tr><td>Combined iterations:</td><td>{{ search.combined_iter }}</td></tr>
+                                        <tr><td>Max guide tree iterations:</td><td>{{ search.max_gt_iter }}</td></tr>
+                                        <tr><td>Max HMM iterations:</td><td>{{ search.max_hmm_iter }}</td></tr>
+                                        <tr><td>Output format:            </td><td>{{ search.omega_output  }}</td></tr>
+                                        <tr><td>Output Order:             </td><td>{{ search.omega_order  }}</td></tr>
                                     {% endif %}
                                 </table>
                             </div>
 
-                            <div id="end_div" style:"display: flex; justify-content: flex-end;">
+                            <div class="end_div">
 
-                                <div class="seq_dropdown" style="display: flex; flex-direction: column;" >
-                                    <input type="button" class="seq_button">SEQUENCE</button>
+                                <div class="seq_dropdown">
+                                    <button class="seq_button">SEQUENCE</button>
                                     <div class="seq_dropdown_content">
-                                        <textarea rows="20" cols="50" id="sequence">
+                                        <textarea rows="50" cols="70" id="sequence">
                                             {{ search.sequence }}
                                         </textarea>
                                     </div>
                                 </div>
 
 
-                                <div style="display: flex; flex-direction: column;" >
+                                <div style="display: flex; flex-direction: column;" class="sub_div">
                                     <input type="hidden" name="search_tag" value="{{ search.search_tag }}">
                                     <input type="submit" name="searchagain" value="Search Again">
                                     <p><br></p>
