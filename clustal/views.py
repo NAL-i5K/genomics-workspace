@@ -1,5 +1,6 @@
 from __future__ import absolute_import
 import json
+import os
 import traceback
 import stat as Perm
 from django.shortcuts import render
@@ -12,10 +13,13 @@ from uuid import uuid4
 from os import path, makedirs, chmod
 from .tasks import run_clustal_task
 from .models import ClustalQueryRecord, ClustalSearch
+from misc.logger import i5kLogger
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
 from misc.get_tag import get_tag
+
+log = i5kLogger()
 
 def manual(request):
     '''
@@ -28,7 +32,55 @@ def create(request):
     Main page of Clustal
     * Max number of query sequences: 600 sequences
     '''
+    no_results = False
+
     if request.method == 'GET':
+
+        if 'tag' in request.GET and request.GET['tag']:
+            #
+            #  Search again or edit/search clicked.
+            #
+            #  Get the search tag and search object.
+            #
+            tag = request.GET['tag']
+            saved_search = ClustalSearch.objects.filter(search_tag=tag)
+            if not saved_search:
+                #  TODO: Show error to user - 404 for now.
+                log.err('search with tag=%s NOT FOUND' % tag)
+                raise Http404
+            saved_search = saved_search[0]
+            task_id = saved_search.task_id
+            print 'SAVED SEARCH: %s' % task_id
+
+            if 'cmd' in request.GET and request.GET['cmd']:
+
+                cmd = request.GET['cmd']
+                if cmd == 'again':
+                    #
+                    #  Repeat search.  See if results are still available.
+                    #
+                    results_name = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id)
+                    if os.path.exists(results_name):
+                        #
+                        #  Previous search results available.
+                        #
+                        return redirect('/clustal/%s' % task_id)
+                    else:
+                        no_results = True  # Drop through
+                        print "NO RESULTS"
+
+                if cmd == 'edit' or no_results:
+                    #
+                    #  Edit/search.
+                    #
+                    search_dict = get_search_dict(saved_search)
+                    return render(request, 'clustal/main.html', {
+                        'search_dict': search_dict,
+                        'title': 'Clustal Query',
+                        'tag': tag
+                    })
+
+            raise Http404
 
 
         tag = get_tag(request.user.username, ClustalSearch)
@@ -80,11 +132,6 @@ def create(request):
 
         is_color = False
 
-        print '========> pairwise %s' % request.POST['pairwise']
-        print '========> SeqType  %s' % request.POST['sequenceType']
-        print '========> pairwise %s' % request.POST['pairwise']
-        print '========> pairwise %s' % request.POST['pairwise']
-        print '========> pairwise %s' % request.POST['pairwise']
         # check if program is in list for security
         if request.POST['program'] in ['clustalw','clustalo']:
             option_params = []
@@ -416,3 +463,48 @@ def save_history(post, task_id, seq_file, user):
     search.omega_output          = post.get('omega_output')
     search.omega_order           = post.get('omega_order')
     search.save()
+
+
+def get_search_dict(search):
+    d = {}
+    d['tag']                   = search.search_tag
+    d['program']               = search.program
+    d['sequence']              = search.sequence
+    d['pairwise']              = search.pairwise
+    d['sequenceType']          = search.sequenceType
+    d['PWDNAMATRIX']           = search.PWDNAMATRIX
+    d['dna-PWGAPOPEN']         = search.dna_PWGAPOPEN
+    d['dna-PWGAPEXT']          = search.dna_PWGAPEXT
+    d['PWMATRIX']              = search.PWMATRIX
+    d['protein-PWGAPOPEN']     = search.protein_PWGAPOPEN
+    d['protein-PWGAPEXT']      = search.protein_PWGAPEXT
+    d['KTUPLE']                = search.KTUPLE
+    d['WINDOW']                = search.WINDOW
+    d['PAIRGAP']               = search.PAIRGAP
+    d['TOPDIAGS']              = search.TOPDIAGS
+    d['SCORE']                 = search.SCORE
+    d['DNAMATRIX']             = search.DNAMATRIX
+    d['dna-GAPOPEN']           = search.dna_GAPOPEN
+    d['dna-GAPEXT']            = search.dna_GAPEXT
+    d['dna-GAPDIST']           = search.dna_GAPDIST
+    d['dna-ITERATION']         = search.dna_ITERATION
+    d['dna-NUMITER']           = search.dna_NUMITER
+    d['dna-CLUSTERING']        = search.dna_CLUSTERING
+    d['MATRIX']                = search.MATRIX
+    d['protein-GAPOPEN']       = search.protein_GAPOPEN
+    d['protein-GAPEXT']        = search.protein_GAPEXT
+    d['protein-GAPDIST']       = search.protein_GAPDIST
+    d['protein-ITERATION']     = search.protein_ITERATION
+    d['protein-NUMITER']       = search.protein_NUMITER
+    d['protein-CLUSTERING']    = search.protein_CLUSTERING
+    d['OUTPUT']                = search.OUTPUT
+    d['OUTORDER']              = search.OUTORDER
+    d['dealing_input']         = search.dealing_input
+    d['clustering_guide_tree'] = search.clustering_guide_tree
+    d['clustering_guide_iter'] = search.clustering_guide_iter
+    d['combined_iter']         = search.combined_iter
+    d['max_gt_iter']           = search.max_gt_iter
+    d['max_hmm_iter']          = search.max_hmm_iter
+    d['omega_output']          = search.omega_output
+    d['omega_order']           = search.omega_order
+    return d

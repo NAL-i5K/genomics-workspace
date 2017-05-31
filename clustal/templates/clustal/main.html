@@ -76,15 +76,19 @@ html {overflow-y: scroll;}
                     <fieldset id="fieldset-query">
                         <legend id="legend-sequence">Query Sequence</legend>
                         <div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format: </div>
-                        <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off"></textarea>
+                        {% if search_dict %}
+                            <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off">{{ search_dict.sequence }}</textarea>
+                        {% else %} 
+                            <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off"></textarea>
+                        {% endif %} 
                         <br>
                         <div><span class="load-example">Or</span> load it from disk </div>
                         <input type="file" name="query-file" class="query-file" id="queryfile">
                     </fieldset>
-                    <!--<fieldset id="fieldset-program">
+                    <fieldset id="fieldset-program">
                         <legend>Search Tag</legend>
                         <INPUT TYPE="text" VALUE="{{ tag }}" id="search_tag" name="search_tag" size="40">
-                    </fieldset> -->
+                    </fieldset>
 
                     <div class="tab-content">
                         <div id="clustalo" class="tab-pane fade in active">

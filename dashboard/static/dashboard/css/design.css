@@ -345,6 +345,7 @@
     /*  Clustal search display  */
 
      .seq_dropdown {
+        top: 10px;
         width: 30%;
         height: 30%;
         display: flex;
@@ -353,10 +354,10 @@
         align-items: center;
         -webkit-align-items: center;
         margin-right: 0%;
-        z-index: 99999;
         /*border: 1px solid blue;*/
     }
     .seq_button {
+        top: 10px;
         width: 100%;
         height: 100%;
         border-radius: 15%;
@@ -366,6 +367,7 @@
         cursor: pointer;
         box-shadow: 0 2px #999;
     }
+    
     .seq_dropdown_content {
         position: absolute;
         top: 20%;
@@ -389,6 +391,7 @@
     }
     .seq_dropdown:hover .seq_dropdown_content {
         visibility: visible;
+        z-index: 99999;
     }
     .seq_dropdown:hover .seq_button {
         background-color: #3e8e41;
@@ -410,7 +413,7 @@
         display: flex; 
         justify-content: flex-end;
         margin-left: 20%;
-        z-index: -1;
+        /*z-index: 3;*/
         /*border: 1px solid blue;*/
     }
     .sub_div {

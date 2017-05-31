@@ -23,6 +23,7 @@ class ClustalSearch(models.Model):
     search_tag            = models.CharField(max_length=64, default="NOTAG")
     program               = models.CharField(max_length=32)
     sequence              = models.TextField()
+    sequenceType          = models.CharField(max_length=32, default="")
     pairwise              = models.CharField(max_length=32)
     PWDNAMATRIX           = models.CharField(max_length=32)
     dna_PWGAPOPEN         = models.CharField(max_length=32)

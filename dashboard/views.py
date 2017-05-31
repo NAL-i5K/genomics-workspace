@@ -16,32 +16,39 @@ import json
 import sys
 import os
 
-dash = i5kLogger()
+log = i5kLogger()
 
 def dashboard(request):
-    search_list = []
+    '''
+        Dashboard history processing.
+    '''
     print 'Method: %s' % request.method
     print 'Path: %s' % request.path
     if request.method == 'GET':
         id_num = 0
         if request.path == '/dashboard' or request.path == '/home':
-            print "GET: %s" % request.GET
-            if 'search_id' in request.GET:
-                search = BlastSearch.objects.all().filter(search_tag=request.GET['search_id'])
-                if not search:
-                    print 'No search FOUND'
-                    return render(request, 'dashboard/index.html')
-                search = search[0]
-                print 'search found: %s %s' % (search.search_tag, search.task_id)
-            if 'searchagain' in request.GET:
-                print 'SEARCHAGAIN'
-                return redirect('/blast/%s' % search.task_id)
-            elif 'editsearch' in request.GET:
-                print 'EDITSEARCH'
-                return redirect('/blast?search_id=%s' % search.search_tag)
+            print "-=========  GET: %s" % request.GET
+            if 'app' in request.GET and 'search_tag' in request.GET:
+                #
+                #  Search again or edit/search clicked.
+                #
+                #  Call clustal view with special GET request + params.
+                #
+                if  request.GET['app'] and request.GET['search_tag']:
+                    app = request.GET['app']
+                    tag = request.GET['search_tag']
+                    if 'cmd' in request.GET and request.GET['cmd']:
+                        cmd = request.GET['cmd']
+                        return redirect('/%s?tag=%s&cmd=%s' % (app, tag, cmd))
+                raise Http404  # For now.  TODO: Show error to user
             else:
                 return render(request, 'dashboard/index.html')
+
+
         if request.path == '/blast_hist':
+            #
+            #  Display blast history.
+            #
             search_list = []
             for obj in BlastSearch.objects.all():
                 search_dict = {}
@@ -74,7 +81,7 @@ def dashboard(request):
 
         if request.path == '/clustal_hist':
             #
-            #  Clustal history.
+            #  Display Clustal history.
             #
             search_list = []
             for obj in ClustalSearch.objects.all():
@@ -85,7 +92,7 @@ def dashboard(request):
                 search_dict['id_str']                = 'collapsible' + str(id_num)
                 search_dict['task_id']               = obj.task_id
                 search_dict['search_tag']            = obj.search_tag
-                search_dict['sequence']              = obj.sequence
+                search_dict['sequenceType']          = obj.sequenceType
                 search_dict['create_date']           = obj.create_date
                 search_dict['user']                  = obj.user
                 search_dict['program']               = obj.program
