@@ -1,4 +1,3 @@
-
 # DASHBOARD DESIGN
 
 The Dashboard is the user cockpit and traffic hub in the I5k experience. It caters for both guest visitors and registered users.  
@@ -401,321 +400,175 @@ email us (or phone us when the helpdesk becomes available). For example:
 
 ## Programming Structure <a name="ProgrammingStructure"></a>
 
-The Dashbord UI uses the bootstrap framework, and the gridstack.js, a jQuery plugin for widget layout. 
-This is drag-and-drop multi-column grid. It allows you to build draggable responsive bootstrap v3 friendly layouts.
+Due to time shortage, I leave the Dashboard unfinished.  
 
-Basic usage:
+What I have done is to set the strategy to implement a history 
+mechanism for the Django apps, with two examples, BLAST and CLUSTAL.  
 
-    <div class="grid-stack">
-        <div class="grid-stack-item"
-            data-gs-x="0" data-gs-y="0"
-            data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content"></div>
+The back-end for both BLAST and CLUSTAL is pretty much complete. 
 
-        </div>
-        <div class="grid-stack-item"
-            data-gs-x="4" data-gs-y="0"
-            data-gs-width="4" data-gs-height="4">
-                <div class="grid-stack-item-content"></div>
-        </div>
-    </div>
-    
-    <script type="text/javascript">
-    $(function () {
-        var options = {
-            cell_height: 80,
-            vertical_margin: 10
-        };
-        $('.grid-stack').gridstack(options);
-    });
+To be clear, I consider 'back-end': views.py, models.py, and settings.py 
 
-####  Requirements 
+I consider 'front-end' .html .css and .js files. 
 
-Some required files must be accessible locally, but others can be accessed remotely. 
+The strategy consists in saving the search parameters necessary
+to reconstruct the search form and run it again on demand.  
 
-Local requirements:
+We start with the database schema to save searches.  One per app.
 
-    gridstack.css
-    gridstack.js
-    gridstack.jQueryUI.js
+It is in the *models.py* file of the application.  For example: ClustalSearch()
 
-Remote libraries required:
+It declares a new class to hold search parameters.  
 
-    https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css
-    https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js           >= 1.11.0 
-    https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js         >= 1.11.0
-    https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
-    https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js        >= 3.5.0
+The search tag is the field used as the search id.  
 
-Bootstrap has ready made objects with a variety of attributes that can be referenced by class name. 
+The search tag is a unique string id within the app history records
+made by calling *get_tag()*, in *misc/get_tag.py*
 
-For instance, in our dashboard we use the following containers and objects for the layout.  
+Important: get_tag() requires an English dictionary Python module
+called enchant. That is, 
 
-#### Basic Usage.
+       sudo yum install libenchant1c2a
+       sudo yum install aspell-en enchant-aspell
+       pip install pyenchant
 
-    <div class="grid-stack">
-        <div class="grid-stack-item" 
-            data-gs-x="0" data-gs-y="0" 
-            data-gs-width="4" data-gs-height="2">
-                <div class="grid-stack-item-content"></div>
-        </div>
-        <div class="grid-stack-item" 
-            data-gs-x="4" data-gs-y="0" 
-            data-gs-width="4" data-gs-height="4">
-                <div class="grid-stack-item-content"></div>
-        </div>
-    </div>
+This must be added to the Django app setup (manual and ansible), if the tag constructor I have devised 
+makes it to the final version, as, alternatively, it could be created by the DB as well. However, get_tag produces 
+a more-or-less pronounceable tag, as aid-memoir for memorable searches, if any.  
 
-    <script type="text/javascript">
-    $(function () {
-        var options = {
-            cell_height: 80,
-            vertical_margin: 10
-        };
-        $('.grid-stack').gridstack(options);
-    });
-    </script>
+Search records are saved to the DB in the code that handles the 
+POST request (views.py) the server receives when it the user clicks 'search.' It calls the function save_history().   
 
-Options:
+The dashboard history mechanism starts by selecting an application 
+in the history navigation bar of the dashboard. Main file is dashboard/views.py.
 
-+ always_show_resize_handle - if true the resizing handles are shown even the user is not hovering over the widget (default: false)
+It uses the bootstrap accordion widget to create a historical list of searches, from searches stored in the history database for that app.  
 
-+ animate - turns animation on (default: false)
+The list shows just the search header with the date and tag an perhaps other 
+data useful to describe the search, like the program.  
 
-+ auto - if false it tells to do not initialize existing items (default: true)
+Clicking this header expands the search to reveal the search fields.  
+This front-end function is wanting and needs to be reviewed and completed. 
 
-+ cell_height - one cell height (default: 60)
+Each search offers three buttons:
 
-+ draggable - allows to override jQuery UI draggable options. (default: {handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'})
+- **Sequence** -  The Sequence button, on hover, displays a textarea with the sequence.  Watch out for what happens if the sequence is really large.  Some truncation may be in order.  
 
-+ handle - draggable handle selector (default: '.grid-stack-item-content')
+- **Search Again** - If the search results still exist, display. If not go to 'edit/search.'
 
-+ height - maximum rows amount. Default is 0 which means no maximum rows
+- **Edit Search**  - This shows the app's search page with fields filled in, ready to fire the search again.
+  
+For both 'Search Again' and 'Edit Search' options the dashboard sends the app a GET request with parameters.  For instance:
 
-+ float - enable floating widgets (default: false)
+    http://vm3:8000/clustal?admin-NATO&editsearch 
 
-+ item_class - widget class (default: 'grid-stack-item')
+That is:
 
-+ min_width - minimal width. If window width is less grid will be shown in one-column mode (default: 768)
+     http://<host>/<app>?<search_id>&<command>
 
-+ placeholder_class - class for placeholder (default: 'grid-stack-placeholder')
+Where /<command/> is one of: 'searchagain' or 'editsearch.'
 
-+ resizable - allows to override jQuery UI resizable options. (default: {autoHide: true, handles: 'se'})
+At this point in the app's view, we get the search data from the DB using the given search tag.  
 
-+ vertical_margin - vertical gap size (default: 20)
+Then it's a matter of displaying the search form pre-loaded with the 
+corresponding field values, as it was when the search run originally. 
+This front end part is also wanting and needs to be reviewed and completed. 
 
-+ width - amount of columns (default: 12)
+In my view, too much is being done 'outside' Django with JavaScript and JQuery.  
 
-Grid attributes:
+My prefered method is to use Django template language to pass the values 
+to any JavaScript of JQuery used to set the field values after the main.html 
+loads. This makes full use of the Django framework where things are easier 
+to layout and recognize (at least for me).   
 
-+ data-gs-animate - turns animation on
+This front-end strategy, however, requires that all search parameters/fields saved for 
+a search have a corresponding HTML element in the form, with both 
+a 'name' and an 'id' attribute given to them.  That is not the case in the 
+apps as they were/are. 
 
-+ data-gs-width - amount of columns
+The 'name' attribute serves to locate the element content when the browser sends the 
+form data to the server. 
 
-+ data-gs-height - maximum rows amount. Default is 0 which means no maximum rows.
+The 'id' attribute serves to address the HTML element from JQuery, CSS, etc., to set it or manipulate it.  
 
-Item attributes
+For example, for editsearch the back-end passes a dictionary to the front-end with the values 
+it needs to stick in the search page.
 
-+ data-gs-x, data-gs-y - element position
+The dictionary keys should be the ids of the HTML fields to set with JQuery.  
+The dictionary values should be the value to insert in the field.  
 
-+ data-gs-width, data-gs-height - element size
+Then your Jquery looks like a bunch of conditional statements where JQuery plugs value X into field Y if Y is present, and if not default behavior occurs.
 
-+ data-gs-max-width, data-gs-min-width, data-gs-max-height, data-gs-min-height - element constraints
+The back-end relinquishes control by passing data to the front-end in the call to render the Django HTML template. 
 
-+ data-gs-no-resize - disable element resizing
+We pass the dictionary 'search_dict' to the template.  This is the front-end, back-end meeting point. 
 
-+ data-gs-no-move - disable element moving
+For example:
 
-+ data-gs-auto-position - tells to ignore data-gs-x and data-gs-y attributes and to place element to the first available position
+    return render(request, 'clustal/main.html', search_dict) 
 
-+ data-gs-locked - the widget will be locked. It means another widgets could not move it during dragging or resizing. The widget is still can be dragged or resized. You need to add data-gs-no-resize and data-gs-no-move attributes to completely lock the widget.
+Example 1: Set the field Gap Extension Penalty in CLUSTAL search page, using JQuery and the field id.
 
+    {% if search_dict.dna_PWGAPEXT %}
 
-Events:
+        $("#dna-PWGAPOPEN").val("{{ search_dict.dna_PWGAPEXT }}");
 
-+ onchange(items) Occurs when widgets change their position/size
+    {% endif %}
 
-    var serialize_widget_map = function (items) {
-        console.log(items);
-    };
-    $('.grid-stack').on('change', function (e, items) {
-            serialize_widget_map(items);
-    });
+Example 2: Insert a search sequence in the CLUSTAL search page. 
 
-+ ondragstart(event, ui)
+This does not even need JQuery and can be done with Django templating directly:
 
-    $('.grid-stack').on('dragstart', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+In 'main.html':
 
-+ ondragstop(event, ui)
+    <legend id="legend-sequence">Query Sequence</legend>
+    <div class="enter-query-text">Enter sequence below in FASTA format: </div>
 
-    $('.grid-stack').on('dragstop', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+    {% if search_dict.sequence %}
 
-+ onresizestart(event, ui)
+        <textarea name="query-sequence" id="query-textarea">{{ search_dict.sequence }}</textarea>
 
-    $('.grid-stack').on('resizestart', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+    {% else %}  
 
-+ onresizestop(event, ui)
+        <textarea name="query-sequence" id="query-textarea"></textarea>
 
-    $('.grid-stack').on('resizestop', function (event, ui) {
-        var grid = this;
-        var element = event.target;
-    });
+    {% endif %}  
 
-API:
+So the template displays the sequence when given one.  
 
-+ add_widget(el, x, y, width, height, auto_position)
+When setting form fields, after setting each field value you need to generate 
+the event that it would be triggered if the user had filled the same form manually. 
+That will cause the correct form behavior and make the re-run search, if unedited, 
+indistinguishable from the original one. 
 
-    Creates new widget and returns it.
+This requires study of the events the form responds to (in clustal-multy.js for CLUSTAL) which contains the JQuery event handlers.  
 
-    Parameters:
+It concerns mostly radio buttons which may change the form's appearance when clicked.
 
-        - el - widget to add
-        - x, y, width, height - widget position/dimensions (Optional)
-        - auto_position - if true then x, y parameters will be ignored and widget will be places on the first available position
+We see however that for the CLUSTAL sequence there is a 'keyup' event handler, which examines and processes 
+the sequence and must be called after setting the sequence. So in Example 2, we must add in the JQuery file:  
 
-        Widget will be always placed even if result height will be more 
-        then grid height. You need to use will_it_fit method before call 
-        add_widget for additional check.
+    {% if search_dict.sequence %}
 
-    $('.grid-stack').gridstack();
+        $('#query-textarea').trigger("keyup");
 
-    var grid = $('.grid-stack').data('gridstack');
-    grid.add_widget(el, 0, 0, 3, 2, true);
+    {% endif %}  
 
-+ batch_update() Initailizes batch updates. You will see no changes until commit method is called.
+Example 3: Set the DNA clustering radio button with JQuery and Django templates. 
 
-+ cell_height() Gets current cell height.
+    {% if search_dict.dna_clustering == "UPGMA" %}
 
-+ cell_height(val)
+        $('#dna-clustering_UPGMA').prop('checked', true).trigger("click");
 
-    Update current cell height. This method rebuilds an internal CSS stylesheet. 
-    Note: You can expect performance issues if call this method too often.
+    {% else %}  
 
-    grid.cell_height(grid.cell_width() * 1.2);
+        $('#dna-clustering_NJ').prop('checked', true).trigger("click");
 
-+ cell_width() Gets current cell width.
+    {% endif %}  
 
-+ commit() Finishes batch updates. Updates DOM nodes. You must call it after batch_update.
-
-+ disable() Disables widgets moving/resizing. This is a shortcut for:
-
-    grid.movable('.grid-stack-item', false);
-    grid.resizable('.grid-stack-item', false);
-
-+ enable() Enables widgets moving/resizing. This is a shortcut for:
-
-    grid.movable('.grid-stack-item', true);
-    grid.resizable('.grid-stack-item', true);
-
-get_cell_from_pixel(position) Get the position of the cell under a pixel on screen.
-
-    Parameters :
-
-        - position - the position of the pixel to resolve in absolute coordinates, as an object with top and leftproperties
-
-        Returns an object with properties x and y i.e. the column and row in the grid.
-
-+ is_area_empty(x, y, width, height) Checks if specified area is empty.
-
-+ locked(el, val) Locks/unlocks widget.
-
-        - el - widget to modify.
-        - val - if true widget will be locked.
-
-+ remove_widget(el, detach_node) Removes widget from the grid.
-
-    Parameters:
-
-        - el - widget to remove.
-        - detach_node - if false DOM node will not be removed from the tree (Optional. Default true).
-
-+ remove_all() Removes all widgets from the grid.
-
-+ resize(el, width, height) Changes widget size
-
-    Parameters:
-
-        - el - widget to resize
-        - width, height - new dimensions. If value is null or undefined it will be ignored.
-
-
-+ move(el, x, y) Changes widget position
-
-    Parameters:
-
-        - el - widget to move
-        - x, y - new position. If value is null or undefined it will be ignored.
-
-+ resizable(el, val) Enables/Disables resizing.
-
-        - el - widget to modify
-        - val - if true widget will be resizable.
-
-+ movable(el, val) Enables/Disables moving.
-
-        - el - widget to modify
-        - val - if true widget will be draggable.
-
-+ update(el, x, y, width, height)
-
-    Parameters:
-
-        - el - widget to move
-        - x, y - new position. If value is null or undefined it will be ignored.
-        - width, height - new dimensions. If value is null or undefined it will be ignored.
-
-                Updates widget position/size.
-                will_it_fit(x, y, width, height, auto_position)
-
-    Returns true if the height of the grid will be less the vertical constraint. 
-    Always returns true if grid does not have height constraint.
-
-    if (grid.will_it_fit(new_node.x, new_node.y, new_node.width, new_node.height, true)) {
-        grid.add_widget(new_node.x, new_node.y, new_node.width, new_node.height, true);
-    } else {
-        alert('Not enough free space to place the widget');
-    }
-
-Utils: 
-
-+ GridStackUI.Utils.sort(nodes, dir, width) Sorts array of nodes
-
-        - nodes - array to sort
-        - dir - 1 for asc, -1 for desc (optional)
-        - width - width of the grid. If undefined the width will be calculated automatically (optional).
-
-
-Save grid to array:
-
-Because gridstack does not track any kind of user-defined widget id there is no reason to make serialization to be part of gridstack API. To serialize grid you can simply do something like this (let us say you store widget id inside data-custom-id attribute):
-
-    var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
-        el = $(el);
-        var node = el.data('_gridstack_node');
-        return {
-            id: el.attr('data-custom-id'),
-            x: node.x,
-            y: node.y,
-            width: node.width,
-            height: node.height
-        };
-    });
-    alert(JSON.stringify(res));
-
-To run apps inside widgets use an iframe with width and height == 100%.  
-
-
-
-
+Finally, avoid dashes '-' in variable or field names.  It's best that objects have the same name in the different languages/frameworks involved, but 
+if you have a name with a dash, you cannot have the same name as a Python variable, because dashes are not permitted. Names are riddled with 
+dashes in the Django app, which I convert to underscores when needed, to retain similarity.   
 
 
 #### Touch devices support
