@@ -465,7 +465,7 @@ For both 'Search Again' and 'Edit Search' options the dashboard sends the app a 
 
 That is:
 
-     http://<host>/<app>?<search_id>&<command>
+     http://<host>/<app>?<search_tag>&<command>
 
 Where /<command/> is one of: 'searchagain' or 'editsearch.'
 
