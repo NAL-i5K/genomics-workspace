@@ -439,20 +439,17 @@ makes it to the final version, as, alternatively, it could be created by the DB 
 a more-or-less pronounceable tag, as aid-memoir for memorable searches, if any.  
 
 Search records are saved to the DB in the code that handles the 
-POST request (views.py) the server receives when it the user clicks 'search.' It calls the function save_history().   
+POST request (*views.py*) the server receives when it the user clicks 'search.' It calls the function *save_history()*.   
 
-The dashboard history mechanism starts by selecting an application 
-in the history navigation bar of the dashboard. 
+The dashboard history mechanism starts by selecting an application in the history navigation bar. 
 
-Main file is dashboard/views.py.
+Main file is *dashboard/views.py*.
 
 It uses bootstrap accordion widget to create a historical list of searches, from searches stored in the history database for that app.  
 
-The list shows just the search header with the date and tag an perhaps other 
-data useful to describe the search, like the program.  
+The list shows just the search header with the date and tag an perhaps other data useful to describe the search, like the program.  
 
-Clicking this header expands the search to reveal the search fields.  
-This front-end function is wanting and needs to be reviewed and completed. 
+Clicking this header expands the search to reveal the search fields. This front-end function is wanting and needs to be reviewed and completed. 
 
 Each search offers three buttons:
 
