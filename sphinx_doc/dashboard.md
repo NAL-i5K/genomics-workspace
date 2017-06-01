@@ -467,36 +467,25 @@ That is:
 
      http://<host>/<app>?<search_tag>&<command>
 
-Where /<command/> is one of: 'searchagain' or 'editsearch.'
+Where &lt;command&gt; is one of: '*searchagain*' or '*editsearch*.'
 
 At this point in the app's view, we get the search data from the DB using the given search tag.  
 
-Then it's a matter of displaying the search form pre-loaded with the 
-corresponding field values, as it was when the search run originally. 
-This front end part is also wanting and needs to be reviewed and completed. 
+Then it's a matter of displaying the search form pre-loaded with the corresponding field values, as it was when the search run originally. This front end part is also wanting and needs to be reviewed and completed. 
 
-In my view, too much is being done 'outside' Django with JavaScript and JQuery.  
+In my view, too much is being done outside Django with JavaScript and JQuery.  
 
-My prefered method is to use Django template language to pass the values 
-to any JavaScript of JQuery used to set the field values after the main.html 
-loads. This makes full use of the Django framework where things are easier 
-to layout and recognize (at least for me).   
+My prefered method is to use Django template language to pass the values to any JavaScript of JQuery used to set the field values after the main.html loads. This makes full use of the Django framework where things are easier to layout and recognize (at least for me).   
 
-This front-end strategy, however, requires that all search parameters/fields saved for 
-a search have a corresponding HTML element in the form, with both 
-a 'name' and an 'id' attribute given to them.  That is not the case in the 
-apps as they were/are. 
+This front-end strategy, however, requires that all search parameters/fields saved for a search have a corresponding HTML element in the form, with both a 'name' and an 'id' attribute given to them.  That is not the case in the apps as they were/are. 
 
-The 'name' attribute serves to locate the element content when the browser sends the 
-form data to the server. 
+The 'name' attribute serves to locate the element content when the browser sends the form data to the server. 
 
 The 'id' attribute serves to address the HTML element from JQuery, CSS, etc., to set it or manipulate it.  
 
-For example, for editsearch the back-end passes a dictionary to the front-end with the values 
-it needs to stick in the search page.
+For example, for editsearch the back-end passes a dictionary to the front-end with the values it needs to stick in the search page.
 
-The dictionary keys should be the ids of the HTML fields to set with JQuery.  
-The dictionary values should be the value to insert in the field.  
+The dictionary keys should be the ids of the HTML fields to set with JQuery. The dictionary values should be the value to insert in the field.  
 
 Then your Jquery looks like a bunch of conditional statements where JQuery plugs value X into field Y if Y is present, and if not default behavior occurs.
 
@@ -537,17 +526,13 @@ In 'main.html':
 
 So the template displays the sequence when given one.  
 
-When setting form fields, after setting each field value you need to generate 
-the event that it would be triggered if the user had filled the same form manually. 
-That will cause the correct form behavior and make the re-run search, if unedited, 
-indistinguishable from the original one. 
+When setting form fields, after setting each field value you need to generate the event that it would be triggered if the user had filled the same form manually. That will cause the correct form behavior and make the re-run search, if unedited, indistinguishable from the original one. 
 
 This requires study of the events the form responds to (in clustal-multy.js for CLUSTAL) which contains the JQuery event handlers.  
 
 It concerns mostly radio buttons which may change the form's appearance when clicked.
 
-We see however that for the CLUSTAL sequence there is a 'keyup' event handler, which examines and processes 
-the sequence and must be called after setting the sequence. So in Example 2, we must add in the JQuery file:  
+We see however that for the CLUSTAL sequence there is a 'keyup' event handler, which examines and processes the sequence and must be called after setting the sequence. So in Example 2, we must add in the JQuery file:  
 
     {% if search_dict.sequence %}
 
@@ -567,9 +552,9 @@ Example 3: Set the DNA clustering radio button with JQuery and Django templates.
 
     {% endif %}  
 
-Finally, avoid dashes '-' in variable or field names.  It's best that objects have the same name in the different languages/frameworks involved, but 
-if you have a name with a dash, you cannot have the same name as a Python variable, because dashes are not permitted. Names are riddled with 
-dashes in the Django app, which I convert to underscores when needed, to retain similarity.   
+Finally, avoid dashes '-' in variable or field names.  It's best that objects have the same name in the different languages/frameworks 
+involved, but if you have a name with a dash, you cannot have the same name as a Python variable, because dashes are not permitted. 
+Names are riddled with dashes in the Django app, which I convert to underscores when needed, to retain similarity.   
 
 
 #### Touch devices support
