@@ -468,17 +468,17 @@ Where &lt;command&gt; is one of: '*searchagain*' or '*editsearch*.'
 
 At this point in the app's view, we get the search data from the DB using the given search tag.  
 
-Then it's a matter of displaying the search form pre-loaded with the corresponding field values, as it was when the search run originally. This front end part is also wanting and needs to be reviewed and completed. 
+Then it's a matter of displaying the search form pre-loaded with the corresponding field values, as it was when the search run originally. *This front end part is also wanting and needs to be reviewed and completed*. 
 
 In my view, too much is being done outside Django with JavaScript and JQuery.  
 
 My prefered method is to use Django template language to pass the values to any JavaScript of JQuery used to set the field values after the main.html loads. This makes full use of the Django framework where things are easier to layout and recognize (at least for me).   
 
-This front-end strategy, however, requires that all search parameters/fields saved for a search have a corresponding HTML element in the form, with both a 'name' and an 'id' attribute given to them.  That is not the case in the apps as they were/are. 
+This front-end strategy, however, requires that all search parameters/fields saved for a search have a corresponding HTML element in the form, with both a '*name*' and an '*id*' attribute given to them.  That is not the case in the apps as they were/are. 
 
-The 'name' attribute serves to locate the element content when the browser sends the form data to the server. 
+The '*name*' attribute serves to locate the element content when the browser sends the form data to the server. 
 
-The 'id' attribute serves to address the HTML element from JQuery, CSS, etc., to set it or manipulate it.  
+The '*id*' attribute serves to address the HTML element from JQuery, CSS, etc., to set it or manipulate it.  
 
 For example, for editsearch the back-end passes a dictionary to the front-end with the values it needs to stick in the search page.
 
@@ -551,7 +551,7 @@ Example 3: Set the DNA clustering radio button with JQuery and Django templates.
 
 Finally, avoid dashes '-' in variable or field names.  It's best that objects have the same name in the different languages/frameworks 
 involved, but if you have a name with a dash, you cannot have the same name as a Python variable, because dashes are not permitted. 
-Names are riddled with dashes in the Django app, which I convert to underscores when needed, to retain similarity.   
+Names are riddled with dashes in the Django app, which I convert to underscores when needed to retain similarity.   
 
 
 #### Touch devices support
