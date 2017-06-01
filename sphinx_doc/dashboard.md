@@ -431,11 +431,11 @@ called enchant. That is,
        sudo yum install aspell-en enchant-aspell
        pip install pyenchant
 
-This must be added to the Django app setup (manual and ansible), if the tag constructor I have devised makes it to the final version, 
-as, alternatively, it could be created by the DB as well. However, get_tag produces a more-or-less pronounceable tag, as aid-memoir for 
+This must be added to the Django app setup (manual and ansible), if the tag constructor devised makes it to the final version, 
+as, alternatively, it could be created by the DB. However, get_tag produces a more-or-less pronounceable tag, as aid-memoir for 
 memorable searches, if any.  
 
-Search records are saved to the DB in the code that handles the POST request (*views.py*) the server receives when it the user clicks 
+Search records are saved to the DB in the code that handles the POST request (*views.py*) the server receives when the user clicks 
 'search.' It calls the function *save_history()*.   
 
 The dashboard history mechanism starts by selecting an application in the history navigation bar. 
@@ -444,9 +444,9 @@ Main file is *dashboard/views.py*.
 
 It uses bootstrap accordion widget to create a historical list of searches, from searches stored in the history database for that app.  
 
-The list shows just the search header with the date and tag an perhaps other data useful to describe the search, like the program.  
+The list shows just the search header with the date and tag and perhaps other data useful to describe the search, like the program.  
 
-Clicking this header expands the search to reveal the search fields. This front-end function is wanting and needs to be reviewed and completed. 
+Clicking the header expands the search to reveal the search fields. *This front-end function is wanting and needs to be reviewed and completed*. 
 
 Each search offers three buttons:
 
@@ -478,7 +478,7 @@ This front-end strategy, however, requires that all search parameters/fields sav
 
 The '*name*' attribute serves to locate the element content when the browser sends the form data to the server. 
 
-The '*id*' attribute serves to address the HTML element from JQuery, CSS, etc., to set it or manipulate it.  
+The '*id*' attribute serves to address the HTML element from JQuery, CSS, etc., to set or manipulate it.  
 
 For example, for editsearch the back-end passes a dictionary to the front-end with the values it needs to stick in the search page.
 
@@ -521,15 +521,18 @@ In 'main.html':
 
     {% endif %}  
 
-So the template displays the sequence when given one.  
+The template displays the sequence when given one.  
 
-When setting form fields, after setting each field value you need to generate the event that it would be triggered if the user had filled the same form manually. That will cause the correct form behavior and make the re-run search, if unedited, indistinguishable from the original one. 
+When setting form fields, after setting each field value or state you need to generate the event that would be triggered if the user had 
+filled the form manually. That will cause the correct form behavior and make the re-run search, if unedited, indistinguishable from the 
+original one. 
 
 This requires study of the events the form responds to (in clustal-multi.js for CLUSTAL) which contains the JQuery event handlers.  
 
 It concerns mostly radio buttons which may change the form's appearance when clicked.
 
-We see however that for the CLUSTAL sequence there is a '*keyup*' event handler, which examines and processes the sequence and must be called after setting the sequence. So for Example 2, we must add in the JQuery file:  
+We see however that for the CLUSTAL sequence there is a '*keyup*' event handler, which examines and processes the sequence and must be 
+called after setting the sequence. So for Example 2, we must add in the JQuery file:  
 
     {% if search_dict.sequence %}
 
@@ -549,9 +552,9 @@ Example 3: Set the DNA clustering radio button with JQuery and Django templates.
 
     {% endif %}  
 
-Finally, avoid dashes '-' in variable or field names.  It's best that objects have the same name in the different languages/frameworks 
-involved, but if you have a name with a dash, you cannot have the same name as a Python variable, because dashes are not permitted. 
-Names are riddled with dashes in the Django app, which I convert to underscores when needed to retain similarity.   
+Finally, avoid dashes '-' in variable or field names or ids.  It's best that objects have the same name in the different 
+languages/frameworks involved, but if you have a name with a dash, you cannot have the same name as a Python variable, because dashes 
+are not permitted. Names are riddled with dashes in the Django app, which I convert to underscores when needed to retain similarity.   
 
 
 #### Touch devices support
