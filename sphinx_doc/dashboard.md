@@ -484,7 +484,7 @@ For example, for editsearch the back-end passes a dictionary to the front-end wi
 
 The dictionary keys should be the ids of the HTML fields to set with JQuery. The dictionary values should be the value to insert in the field.  
 
-Then your Jquery looks like a bunch of conditional statements where JQuery plugs value X into field Y if Y is present, and if not default behavior occurs.
+Then your Jquery looks like a bunch of conditional statements where JQuery plugs value X into field Y, if X is present, and if not default behavior occurs.
 
 The back-end relinquishes control by passing data to the front-end in the call to render the Django HTML template. 
 
