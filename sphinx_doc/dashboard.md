@@ -404,7 +404,7 @@ Due to time shortage, I leave the Dashboard unfinished.
 
 What I have done is to set the strategy to implement a history mechanism for the Django apps, with two examples, BLAST and CLUSTAL.  
 
-The back-end for both BLAST and CLUSTAL is pretty much complete. 
+The back-end for both BLAST and CLUSTAL is pretty much complete. The descriptions below use the CLUSTAL implementation as example.
 
 To be clear, I consider 'back-end': views.py, models.py, and settings.py 
 
@@ -488,7 +488,7 @@ Then your Jquery looks like a bunch of conditional statements where JQuery plugs
 
 The back-end relinquishes control by passing data to the front-end in the call to render the Django HTML template. 
 
-We pass the dictionary 'search_dict' to the template.  This is the front-end, back-end meeting point. 
+We pass the dictionary 'search_dict' to the template, in *views.py*. This is the front-end, back-end meeting point. 
 
 For example:
 
@@ -502,9 +502,9 @@ Example 1: Set the field Gap Extension Penalty in CLUSTAL search page, using JQu
 
     {% endif %}
 
-Example 2: Insert a search sequence in the CLUSTAL search page. 
+Example 2: Insert a search sequence in CLUSTAL search page. 
 
-This does not even need JQuery and can be done with Django templating directly:
+This does not even need JQuery and can be done with Django templates directly:
 
 In 'main.html':
 
@@ -525,11 +525,11 @@ So the template displays the sequence when given one.
 
 When setting form fields, after setting each field value you need to generate the event that it would be triggered if the user had filled the same form manually. That will cause the correct form behavior and make the re-run search, if unedited, indistinguishable from the original one. 
 
-This requires study of the events the form responds to (in clustal-multy.js for CLUSTAL) which contains the JQuery event handlers.  
+This requires study of the events the form responds to (in clustal-multi.js for CLUSTAL) which contains the JQuery event handlers.  
 
 It concerns mostly radio buttons which may change the form's appearance when clicked.
 
-We see however that for the CLUSTAL sequence there is a 'keyup' event handler, which examines and processes the sequence and must be called after setting the sequence. So in Example 2, we must add in the JQuery file:  
+We see however that for the CLUSTAL sequence there is a '*keyup*' event handler, which examines and processes the sequence and must be called after setting the sequence. So for Example 2, we must add in the JQuery file:  
 
     {% if search_dict.sequence %}
 
