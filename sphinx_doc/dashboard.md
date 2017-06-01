@@ -416,9 +416,11 @@ to reconstruct the search form and run it again on demand.
 
 We start with the database schema to save searches.  One per app.
 
-It is in the *models.py* file of the application.  For example: ClustalSearch()
+It is in the *models.py* file of the application.  
 
 It declares a new class to hold search parameters.  
+
+For example: ClustalSearch()
 
 The search tag is the field used as the search id.  
 
@@ -440,9 +442,11 @@ Search records are saved to the DB in the code that handles the
 POST request (views.py) the server receives when it the user clicks 'search.' It calls the function save_history().   
 
 The dashboard history mechanism starts by selecting an application 
-in the history navigation bar of the dashboard. Main file is dashboard/views.py.
+in the history navigation bar of the dashboard. 
 
-It uses the bootstrap accordion widget to create a historical list of searches, from searches stored in the history database for that app.  
+Main file is dashboard/views.py.
+
+It uses bootstrap accordion widget to create a historical list of searches, from searches stored in the history database for that app.  
 
 The list shows just the search header with the date and tag an perhaps other 
 data useful to describe the search, like the program.  
