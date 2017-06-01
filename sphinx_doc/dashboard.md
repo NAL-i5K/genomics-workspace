@@ -402,8 +402,7 @@ email us (or phone us when the helpdesk becomes available). For example:
 
 Due to time shortage, I leave the Dashboard unfinished.  
 
-What I have done is to set the strategy to implement a history 
-mechanism for the Django apps, with two examples, BLAST and CLUSTAL.  
+What I have done is to set the strategy to implement a history mechanism for the Django apps, with two examples, BLAST and CLUSTAL.  
 
 The back-end for both BLAST and CLUSTAL is pretty much complete. 
 
@@ -411,10 +410,9 @@ To be clear, I consider 'back-end': views.py, models.py, and settings.py
 
 I consider 'front-end' .html .css and .js files. 
 
-The strategy consists in saving the search parameters necessary
-to reconstruct the search form and run it again on demand.  
+The strategy consists in saving the search parameters necessary to reconstruct the search form and run it again on demand.  
 
-We start with the database schema to save searches.  One per app.
+We start with the database schema to save searches. One per app.
 
 It is in the *models.py* file of the application.  
 
@@ -424,8 +422,7 @@ For example: ClustalSearch()
 
 The search tag is the field used as the search id.  
 
-The search tag is a unique string id within the app history records
-made by calling *get_tag()*, in *misc/get_tag.py*
+The search tag is a unique string id within the app history records made by calling *get_tag()*, in *misc/get_tag.py*
 
 Important: get_tag() requires an English dictionary Python module
 called enchant. That is, 
@@ -434,12 +431,12 @@ called enchant. That is,
        sudo yum install aspell-en enchant-aspell
        pip install pyenchant
 
-This must be added to the Django app setup (manual and ansible), if the tag constructor I have devised 
-makes it to the final version, as, alternatively, it could be created by the DB as well. However, get_tag produces 
-a more-or-less pronounceable tag, as aid-memoir for memorable searches, if any.  
+This must be added to the Django app setup (manual and ansible), if the tag constructor I have devised makes it to the final version, 
+as, alternatively, it could be created by the DB as well. However, get_tag produces a more-or-less pronounceable tag, as aid-memoir for 
+memorable searches, if any.  
 
-Search records are saved to the DB in the code that handles the 
-POST request (*views.py*) the server receives when it the user clicks 'search.' It calls the function *save_history()*.   
+Search records are saved to the DB in the code that handles the POST request (*views.py*) the server receives when it the user clicks 
+'search.' It calls the function *save_history()*.   
 
 The dashboard history mechanism starts by selecting an application in the history navigation bar. 
 
