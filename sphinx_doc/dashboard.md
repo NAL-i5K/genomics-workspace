@@ -556,6 +556,29 @@ Finally, avoid dashes '-' in variable or field names or ids.  It's best that obj
 languages/frameworks involved, but if you have a name with a dash, you cannot have the same name as a Python variable, because dashes 
 are not permitted. Names are riddled with dashes in the Django app, which I convert to underscores when needed to retain similarity.   
 
+Dashboard files:
+
+    dashboard/views.py
+    dashboard/templates/dashboard/index.html
+    dashboard/templates/dashboard/blast_history.html
+    dashboard/templates/dashboard/clustal_history.html
+    dashboard/static/dashboard/scripts/design.css
+    
+BLAST files:
+
+    blast/views.py
+    blast/models.py 
+    blast/templates/blast/main.html 
+    
+CLUSTAL files:
+
+    clustal/views.py
+    clustal/models.py
+    clustal/templates/clustal/main.html
+    
+    
+    
+    
 
 #### Touch devices support
 
