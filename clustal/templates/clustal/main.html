@@ -54,7 +54,6 @@ $(document).ready(function() {
    {% if search_dict %}
        $('#query-textarea').trigger("keyup");
    {% endif %}
-   alert("{{ search_dict.program }}")
    {% if search_dict.program %}
        $('#program').val('{{ search_dict.program }}');
        {% if search_dict.program == 'clustalo' %}
