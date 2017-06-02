@@ -372,10 +372,6 @@ $(function() { // document ready
 		}
 	});
 
-    if (search_dict) { 
-        alert("Got dict");
-    }
-
 });
 
 

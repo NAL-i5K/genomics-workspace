@@ -458,13 +458,13 @@ Each search offers three buttons:
   
 For both 'Search Again' and 'Edit Search' options the dashboard sends the app a GET request with parameters.  For instance:
 
-    http://vm3:8000/clustal?admin-NATO&editsearch 
+    http://vm3:8000/clustal?admin-NATO&edit 
 
 That is:
 
      http://<host>/<app>?<search_tag>&<command>
 
-Where &lt;command&gt; is one of: '*searchagain*' or '*editsearch*.'
+Where &lt;command&gt; is one of: '*again*' or '*edit*.'
 
 At this point in the app's view, we get the search data from the DB using the given search tag.  
 

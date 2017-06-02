@@ -468,7 +468,7 @@ def save_history(post, task_id, seq_file, user):
 
 def get_search_dict(search):
     d = {}
-    d['tag']                   = search.search_tag
+    d['search_tag']            = search.search_tag
     d['program']               = search.program
     d['sequence']              = search.sequence
     d['pairwise']              = search.pairwise
