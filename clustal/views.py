@@ -73,6 +73,7 @@ def create(request):
                     #
                     #  Edit/search.
                     #
+                    tag = get_tag(request.user.username, ClustalSearch)
                     search_dict = get_search_dict(saved_search)
                     return render(request, 'clustal/main.html', {
                         'search_dict': search_dict,
