@@ -92,6 +92,8 @@ def create(request, iframe=False):
 
         # build blast command
         db_list = ' '.join([db.fasta_file.path_full for db in BlastDb.objects.filter(title__in=set(request.POST.getlist('db-name'))) if db.db_ready()])
+        print(db_list)
+        print(request.POST.getlist('db-name'))
         if not db_list:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
         
