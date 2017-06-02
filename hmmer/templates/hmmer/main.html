@@ -78,7 +78,7 @@ var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
                         <legend id="legend-sequence">Query Sequence / Mutliple sequence alignment</legend>
                         <div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format / in <a target="_blank" href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format">MSA (format descriptions)</a> :</div>
                         <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off" style="font-family: monospace; font-weight:normal;font-size:14px;padding: 6px;margin-top:10px;">{{ clustal_content }}</textarea>
-                        <div><span class="load-example">Or</span> load it from disk </div>
+                        <div><span class="load-example">Or</span> load it from disk <span style=" cursor: pointer; font-weight:bold;" class="load-example-seq">(sequnce example)</span> <span style=" cursor: pointer; font-weight:bold;" class="load-example-aln">(alignment example)</span> </div>
                         <input type="file" name="query-file" class="query-file" id="query-file">
                     </fieldset>
 
