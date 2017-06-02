@@ -24,6 +24,10 @@
             color: #317eac;
             border: 0px;
         }
+        .txt:hover {
+            text-decoration: underline;
+            color: blue;
+        }
     </style>
     <script>
     var dataset_list = {{ blastdb_list|safe }};
@@ -100,7 +104,7 @@ Enter here your input data as
 	<div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:</div>
 	<textarea id="query-textarea" name="query-sequence" rows=6 cols=60 spellcheck="false" autocomplete="off"></textarea>
 	<BR>
-	<span class="load-nucleotide">Or</span> <span class="load-peptide">load</span> it from disk <span style=" cursor: pointer; font-weight:bold;" class="load-nucleotide"> (example) </span> 
+	<span class="load-nucleotide">Or</span> <span class="load-peptide">load</span> it from disk <span style=" cursor: pointer; font-weight:bold;" class="load-nucleotide txt"> (load example) </span> 
 	<input type="file" name="query-file" class="query-file">
         <input type='hidden' id="recheck" value='uniprot_sprot.fasta'>
     <!--
