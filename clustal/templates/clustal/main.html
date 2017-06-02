@@ -47,6 +47,27 @@ html {overflow-y: scroll;}
 {% javascript 'clustal-js' %}
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
 <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function() {
+   $('#query-textarea').trigger("keyup");
+   {% if search_dict %}
+       $('#query-textarea').trigger("keyup");
+   {% endif %}
+   alert("{{ search_dict.program }}")
+   {% if search_dict.program %}
+       $('#program').val('{{ search_dict.program }}');
+       {% if search_dict.program == 'clustalo' %}
+           $('#clustalo_tab').click();
+       {% else %}
+           $('#clustalw_tab').click();
+       {% endif %}
+   {% endif %}
+   
+   //  TODO: Keep adding conditional blocks to set all fields  
+});
+</script>
+
 {% endblock %}
 
 {% block content %}
@@ -65,12 +86,12 @@ html {overflow-y: scroll;}
         <div class="tripal_details">
             {% endif %}
             <FORM METHOD="POST" id="MainClustalForm" NAME="MainClustalForm" ENCTYPE="multipart/form-data">
-                <input type="hidden" name="program" id="program" value="clustalo" id="program">
+                <input type="hidden" name="program" id="program" value="clustalo">
                 {% csrf_token %}
                 <div class="tripal_organism-info-box tripal-info-box">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#clustalo">CLUSTALO</a></li>
-                        <li><a data-toggle="tab" href="#clustalw">CLUSTALW</a></li>
+                        <li class="active"><a data-toggle="tab" href="#clustalo" id="clustalo_tab">CLUSTALO</a></li>
+                        <li><a data-toggle="tab" href="#clustalw" id="clustalw_tab">CLUSTALW</a></li>
                         <li style="float: right;border:0px;"><a href='{% url 'clustal:manual' %}' target="_blank"><span class="glyphicon glyphicon-book"></span> Tutorial</a></li>
                     </ul>
                     <fieldset id="fieldset-query">

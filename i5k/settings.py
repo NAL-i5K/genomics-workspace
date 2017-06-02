@@ -547,7 +547,6 @@ PIPELINE = {
                     'clustal/scripts/jquery.hoverIntent.minified.js',
                     'clustal/scripts/jquery.validate.min.js',
                     'clustal/scripts/clustal-multi.js',
-                    'clustal/scripts/history.js',
             ),
             'output_filename': 'clustal/scripts/clustal-js.min.js',
         },
