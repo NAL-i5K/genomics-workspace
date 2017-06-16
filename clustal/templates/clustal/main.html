@@ -24,6 +24,9 @@ body {
     color: #317eac;
     border: 0px;
 }
+.txt:hover {
+    text-decoration: underline;
+}
 .d_col {padding-bottom: 10px}
 .p_col {padding-bottom: 5px}
 .t_font {font-size:16px}
@@ -78,7 +81,7 @@ html {overflow-y: scroll;}
                         <div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format: </div>
                         <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off"></textarea>
                         <br>
-                        <div><span class="load-example">Or</span> load it from disk </div>
+                        <div><span class="load-example">Or</span> load it from disk <span style=" cursor: pointer; font-weight:bold; color:blue;" class="load-nucleotide txt"> (load example) </span> </div> 
                         <input type="file" name="query-file" class="query-file" id="queryfile">
                     </fieldset>
                     <div class="tab-content">

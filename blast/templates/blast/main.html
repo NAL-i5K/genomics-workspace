@@ -24,6 +24,9 @@
             color: #317eac;
             border: 0px;
         }
+        .txt:hover {
+            text-decoration: underline;
+        }
     </style>
     <script>
     var dataset_list = {{ blastdb_list|safe }};
@@ -100,8 +103,9 @@ Enter here your input data as
 	<div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:</div>
 	<textarea id="query-textarea" name="query-sequence" rows=6 cols=60 spellcheck="false" autocomplete="off"></textarea>
 	<BR>
-	<span class="load-nucleotide">Or</span> <span class="load-peptide">load</span> it from disk 
+	<span class="load-nucleotide">Or</span> <span class="load-peptide">load</span> it from disk <span style=" cursor: pointer; font-weight:bold; color: blue;" class="load-nucleotide txt"> (load example) </span> 
 	<input type="file" name="query-file" class="query-file">
+        <input type='hidden' id="recheck" value='uniprot_sprot.fasta'>
     <!--
 	<div>
 		Set subsequence: From <input TYPE="text" NAME="QUERY_FROM" VALUE="" SIZE="10"> To <input TYPE="text" NAME="QUERY_TO" VALUE="" SIZE="10">
@@ -482,7 +486,7 @@ Enter here your input data as
         
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
+        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low2 complexity</span><br/>
         <input TYPE="checkbox" CLASS="chk_soft_masking" ID="blastx_chk_soft_masking" VALUE="false" NAME="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
@@ -496,6 +500,7 @@ Enter here your input data as
 <!-- BLAST options end -->
    
 	<div>
+                <input TYPE="checkbox" ID="testcheck"><span> aaaa </span><br/>
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
 		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
 	</div>
