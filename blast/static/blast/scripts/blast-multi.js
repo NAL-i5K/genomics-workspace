@@ -104,14 +104,7 @@ $(function() { // document ready
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
-        c = $('#recheck').val();
-        c = c.split(":");
-        for (var i = 0; i < c.length; i++){
-             d = c[i].replace(".", "\\.");
-             o = $('#'.concat(d)).attr('organism');
-             $('#'.concat(o)).attr( "checked", true );
-             $('#'.concat(d)).attr( "checked", true );
-        }	
+
 	var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
 	$('.organism-div').hoverIntent(function() {
 		// show and hide right panel
