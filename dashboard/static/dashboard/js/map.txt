@@ -1,0 +1,80 @@
+
+<script>
+var ADMIN_ZOOM = 12;
+var ADMIN_LATLNG = [37.7749295, -122.41941550000001];
+
+
+
+$(function(){
+        var center = ADMIN_LATLNG;
+        $('#latlong').val(center);
+        $('#map_generator').gmap3({
+          map:{
+            options:{
+              zoom:ADMIN_ZOOM,
+              center: center,
+              mapTypeId: google.maps.MapTypeId.ROADMAP
+            },
+events:{zoom_changed: function(map){$('input#zoom').val( map.getZoom() );}}},
+          marker:{
+            latLng: center,
+            options:{
+              draggable: true
+            },
+            events:{
+dragend: function(marker, event){
+$('input#lat').val( marker.position.lat() );
+$('input#lng').val( marker.position.lng() );
+              }}
+  },
+          infowindow:{
+            options:{
+              size: new google.maps.Size(50,20),
+            },
+            onces: {
+              domready: function(){}}}});
+        $('#test-ok').click(function(){
+          var addr = $('#test-address').val();
+          if ( !addr || !addr.length ) return;
+$("#map_generator").gmap3({
+    getlatlng:{
+        address:  addr,
+        callback: function(results){
+          if ( !results ) return;
+            $(this).gmap3({
+              marker:{
+                latLng:results[0].geometry.location,
+                options:{
+              draggable: true
+                        },
+            events:{
+dragend: function(marker, event){
+$('input#lat').val( marker.position.lat() );
+$('input#lng').val( marker.position.lng() );
+              }},
+              }
+          });
+$(this).gmap3("get").setCenter(results[0].geometry.location);
+newmarker(results[0].geometry.location.lat(),results[0].geometry.location.lng());
+        }
+    }
+});
+        });
+        
+        $('#test-address').keypress(function(e){
+          if (e.keyCode == 13){
+            $('#test-ok').click();
+          }
+        });  
+			  });
+      function newmarker(lat,lng){
+        var tg = $("#target").val(),
+            wh = $("#which").val(),
+            opts = {};
+          opts.first = true;
+       $('#map_generator').gmap3({clear:opts});
+$('input#lat').val( lat );
+$('input#lng').val( lng );
+      }
+
+</script>
