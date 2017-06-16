@@ -100,7 +100,7 @@ def create(request):
         if(request.POST['program'] == 'phmmer'):
             with open(query_filename, 'r') as f:
                 qstr = f.read()
-                if(qstr.count('>') > int(BLAST_QUERY_MAX)):
+                if(qstr.count('>') > int(HMMER_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
                     os.remove(query_filename)
                     return render(request, 'hmmer/invalid_query.html', 
