@@ -9,7 +9,7 @@ from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod, stat, remove
 from sys import platform
-from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting
+from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting, SearchQuery
 from .tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now
@@ -47,13 +47,22 @@ blast_info = {
 
 def create(request, iframe=False):
     #return HttpResponse("BLAST Page: create.")
+    from django.views.debug import get_exception_reporter_filter
+    import inspect
+    import sys
+    fil = get_exception_reporter_filter(request)
+    request_repr = '\n{0}'.format(fil.get_request_repr(request))
+    with open('/tmp/requests', 'a') as f:
+        #f.write(json.dumps(request.POST, indent=4))
+        f.write(json.dumps(request_repr, indent=4))
+
     if request.method == 'GET':
         # build dataset_list = [['Genome Assembly', 'Nucleotide', 'Agla_Btl03082013.genome_new_ids.fa', 'Anoplophora glabripennis'],]
         blastdb_list = sorted([[db.type.dataset_type, db.type.get_molecule_type_display(), db.title, db.organism.display_name, db.description] for db in BlastDb.objects.select_related('organism').select_related('type').filter(is_shown=True) if db.db_ready()], key=lambda x: (x[3], x[1], x[0], x[2]))
         blastdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in groupby(sorted(blastdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
         return render(request, 'blast/main.html', {
-            'title': 'BLAST Query', 
-            'blastdb_list': json.dumps(blastdb_list), 
+            'title': 'BLAST Query',
+            'blastdb_list': json.dumps(blastdb_list),
             'blastdb_type_counts': blastdb_type_counts,
             'iframe': iframe
         })
@@ -94,7 +103,7 @@ def create(request, iframe=False):
         db_list = ' '.join([db.fasta_file.path_full for db in BlastDb.objects.filter(title__in=set(request.POST.getlist('db-name'))) if db.db_ready()])
         if not db_list:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
-        
+
         # check if program is in list for security
         if request.POST['program'] in ['blastn', 'tblastn', 'tblastx', 'blastp', 'blastx']:
 
@@ -118,7 +127,7 @@ def create(request, iframe=False):
                 else:
                     input_opt.append('-'+blast_option)
                 input_opt.append(request.POST[blast_option])
-            
+
             program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, request.POST['program'])
             args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
             args_list[0].extend(input_opt)
@@ -155,6 +164,12 @@ def create(request, iframe=False):
                     json.dump({'status': 'pending', 'seq_count': seq_count}, f)
 
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
+
+            #
+            #  Create a search history record.
+            #
+            save_history(request.POST, query_filename)
+
 
             # debug
             #run_blast_task.delay(task_id, args_list, file_prefix, blast_info).get()
@@ -195,7 +210,7 @@ def retrieve(request, task_id='1'):
                         'task_id': task_id,
                     })
             else: # if .csv file size is 0, no hits found
-                return render(request, 'blast/results_not_existed.html', 
+                return render(request, 'blast/results_not_existed.html',
                 {
                     'title': 'No Hits Found',
                     'isNoHits': True,
@@ -224,7 +239,7 @@ def retrieve(request, task_id='1'):
             raise Http404
         else:
             return HttpResponse(traceback.format_exc())
-        
+
 def read_gff3(request, task_id, dbname):
     output = '##gff-version 3\n'
     try:
@@ -242,12 +257,12 @@ def status(request, task_id):
             with open(status_file_path, 'rb') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
-                    tlist = cache.get('task_list_cache', []) 
-                    num_preceding = -1; 
+                    tlist = cache.get('task_list_cache', [])
+                    num_preceding = -1;
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
-                                num_preceding = index 
+                                num_preceding = index
                                 break
                     statusdata['num_preceding'] = num_preceding
                 elif statusdata['status'] == 'running':
@@ -285,4 +300,34 @@ def user_tasks(request, user_id):
         records = BlastQueryRecord.objects.filter(user__id=user_id, is_shown=True, result_date__gt=(localtime(now())+ timedelta(days=-7)))
         serializer = UserBlastQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
+
+#
+#  Save a search in the search history.
+#
+def save_history(post, seq_file):
+    rec = SearchQuery()
+    with open(seq_file) as f:
+        rec.sequence = f.read()
+    rec.enqueue_date        = datetime.now()
+    rec.soft_masking        = post.get('soft_masking', False)
+    rec.low_complexity      = post.get('low_complexity', False)
+    rec.chk_soft_masking    = post.get('chk_soft_masking', False)
+    rec.penalty             = post.get('penalty', 0)
+    rec.evalue              = float(post.get('evalue', 0))
+    rec.gapopen             = post.get('gapopen', 0)
+    rec.strand              = post.get('strand', '')
+    rec.gapextend           = post.get('gapextend', 0)
+    rec.dataset_checkbox    = json.dumps(post.get('dataset-checkbox', []))
+    rec.click_submit_hidden = post.get('click_submit_hidden', False)
+    rec.program             = post.get('program', '')
+    rec.organism_checkbox   = json.dumps(post.get('organism-checkbox', []))
+    rec.word_size           = post.get('word_size', 0)
+    rec.csrftoken           = post.get('csrfmiddlewaretoken', '')
+    rec.reward              = post.get('reward', 0)
+    rec.query_file          = post.get('query-file', '')
+    rec.max_target_seqs     = post.get('max_target_seqs', 0)
+    rec.db_name             = json.dumps(post.get('db-name', []))
+    rec.save()
+
+
 
