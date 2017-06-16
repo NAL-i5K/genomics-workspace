@@ -1,0 +1,38 @@
+/* === THEME 01 === */
+	/*** change sidebar background ***/
+	.sidebar {
+		background-color: #FF6F60;
+	}		
+	/*** change panel-defaul background ***/
+	.panel-default > .panel-heading {
+		background-color: #FF6F60;
+	}
+	/*** change panel-default background on hover ***/
+	.panel-default > .panel-heading:hover {
+		background-color: #FC3E04;
+	}
+	
+	/*** change list-group-item background ***/
+	.list-group-item {
+		background: #E74C3C;
+	}
+	/*** change list-group-item  background on hover ***/
+	.list-group-item:hover {
+		background: #365167;
+	}
+	/*** change anchor color ***/
+	a.list-group-item {
+		color: #FFF;
+	}
+	/*** change anchor color on hover ***/
+	a.list-group-item:hover {
+		background: #8B88FF;
+		color: #FFF;
+	}	
+	
+	/*** change background and color for active link ***/
+	.solso-active {
+		background: #CC2200 !important;
+		color: #FFF !important;
+	}
+/* === THEME 01 === */
