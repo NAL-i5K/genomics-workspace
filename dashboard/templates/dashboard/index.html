@@ -1,204 +1,65 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>I5K Dashboard</title>
-    <meta charset="utf-8">
+{% extends "app/layout.html" %}
 
-    <!-- META -->
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- END META -->
+{% load staticfiles %}
 
-    <!-- FONTS -->
-    <link href='http://fonts.googleapis.com/css?family=Dosis:400,500,600' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-    <!-- END FONTS -->
+{% block head-scripts %}
+<style>
+    .species-table {
+        width: 100%;
+        margin-bottom:0.5em;
+    }
+    .species-table td {
+        vertical-align: middle; 
+        width:50%;
+    }
+    .dataTables_empty {
+        display: none;
+    }
+</style>
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
+{% endblock %}
 
-    <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    
-    <link rel="stylesheet" type="text/css" href="static/dashboard/css/design.css">
-    <!-- END CSS -->    
-</head>
-<body>
+{% block content %}
+<h2 style="padding-bottom:0.5em;">Blast&nbsp;&nbsp;<a href="{% url "blast:create" %}" role="button" class="btn btn-primary">Launch application</a></h2>
+<table id="queries-blast-{{user.id}}" class="display compact" cellspacing="0" width="100%">
+    <caption>Blast queries</caption>
+    <thead>
+    <tr>
+        <th>Submission time</th>
+        <th>Status</th>
+        <th>Link</th>
+    </tr>
+    </thead>
+</table>
+<hr>
+<h2 style="padding-bottom:0.5em;">Hmmer&nbsp;&nbsp;<a href="{% url "hmmer:create" %}" role="button" class="btn btn-primary">Launch application</a></h2>
+<table id="queries-hmmer-{{user.id}}" class="display compact" cellspacing="0" width="100%">
+    <caption>Hmmer queries</caption>
+    <thead>
+    <tr>
+        <th>Submission time</th>
+        <th>Status</th>
+        <th>Link</th>
+    </tr>
+    </thead>
+</table>
+<hr>
+<h2 style="padding-bottom:0.5em;">Clustal&nbsp;&nbsp;<a href="{% url "clustal:create" %}" role="button" class="btn btn-primary">Launch application</a></h2>
+<table id="queries-clustal-{{user.id}}" class="display compact" cellspacing="0" width="100%">
+    <caption>Clustal queries</caption>
+    <thead>
+    <tr>
+        <th>Submission time</th>
+        <th>Status</th>
+        <th>Link</th>
+    </tr>
+    </thead>
+</table>
+{% endblock%}
 
-<header>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-
-            <div class="brand">
-                <a class="navbar-brand" href="index.html"><span>USDA LOGO</span></a>
-                <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
-            </div>      
-        </div>
-
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        
-        </div>
-    </div>
-    </nav>
-    <!-- END NAVBAR -->
-</header>
-
-<div class="body slide">
-    <!-- SIDEBAR -->
-    <aside class="sidebar show perfectScrollbar">
-        <div id="solso-sidebar">
-        
-            <!-- SIDEBAR ACCORDION MENU -->
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                <!-- SIMPLE PANEL - no Collapse -->
-                <div class="panel panel-default">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="heading1">
-                            <h4 class="panel-title">
-                                <a href="/dashboard" class="single-item">
-                                    <i class="fa fa-dashboard"></i> Dashboard 
-                                </a>
-                            </h4>
-                        </div>
-                    </div>
-                </div>
-                <!-- END SIMPLE PANEL - no Collapse -->
-                
-                <!-- Collapsible Group Item #1  -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading2">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
-                                <i class="fa fa-bar-chart-o"></i> History
-                                <i class="pull-right fa fa-caret-down"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    
-                    <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
-                        <!-- anchors Item #1  -->
-                        <div>
-                            <a href="/blast_hist" class="list-group-item">BLAST</a>
-                            <a href="/hmmer_hist" class="list-group-item">HMMER</a>
-                            <a href="/clustal_hist" class="list-group-item">CLUSTAL</a>
-                            <a href="/apollo_hist" class="list-group-item">APOLLO</a>
-                        </div>
-                        <!-- anchors Item #1  -->
-                    </div>
-                    <ldass="taskadd" maxlength="200" name="issue_list" autocomplete="on"nv>
-                <!-- END Collapsible Group Item #1  -->
-                
-                <!-- Collapsible Group Item #2  -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading3">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse3" aria-expanded="true" aria-controls="collapse3">
-                                <i class="fa fa-table"></i> Tables
-                                <i class="pull-right fa fa-caret-down"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    
-                    <div id="collapse3" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading3">
-                        <!-- anchors Item #2  -->
-                        <div>
-                            <a href="simple-tables.html" class="list-group-item">Simple Tables</a>
-                            <a href="data-tables.html" class="list-group-item">Data Tables</a>
-                            <a href="beauty-tables.html" class="list-group-item">Beauty Tables</a>
-                        </div>
-                        <!-- END anchors Item #2  -->
-                    </div>
-                </div>
-                <!-- END Collapsible Group Item #2  -->
-
-                <!-- Collapsible Group Item #6  -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading7">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-expanded="true" aria-controls="collapse7">
-                                <i class="fa fa-picture-o"></i> Gallery
-                                <i class="pull-right fa fa-caret-down"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    
-                    <div id="collapse7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading7">
-                        <!-- anchors Item #6  -->
-                        <div>
-                            <a href="gallery-1.html" class="list-group-item">Gallery 1</a>
-                            <a href="gallery-2.html" class="list-group-item">Gallery 2</a>
-                            <a href="gallery-3.html" class="list-group-item">Gallery 3</a>
-                            <a href="gallery-4.html" class="list-group-item">Gallery 4</a>
-                            <a href="gallery-5.html" class="list-group-item">Gallery 5</a>
-                        </div>
-                        <!-- END anchors Item #6  -->
-                    </div>
-                </div>
-                <!-- END Collapsible Group Item #6  -->             
-            </div>
-            <!-- END SIDEBAR ACCORDION MENU -->
-        </div>
-    </aside>
-    <!-- END SIDEBAR -->
-
-    
-    <!-- MAIN CONTENT  -->
-    <div class="container-fluid left-border">
-    <div class="row">
-    
-        <h1>Dashboard</h1> 
-    </div>  
-    </div>  
-    <!-- MAIN CONTENT  -->
-</div>  
-
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-    
-<!-- === JAVASCRIPT MANDATORY CODE === -->
-<script>
-    
-    /* === SIDEBAR === */
-    $('.toogle').on('click', function() {
-        $('.body').toggleClass('slide');
-        $('.sidebar').toggleClass('show');
-        $('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
-    });
-    /* === END SIDEBAR === */
-
-    /* === ACCORDION === */
-    $( '#accordion' ).on('click', '.single-item', function(){
-        localStorage.removeItem('collapseID');
-        localStorage.removeItem('activeLink');
-    });
-    
-    $( '#accordion' ).on('click', '.list-group-item', function(){
-        localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
-        localStorage.setItem('activeLink', this);
-    });
-
-    if ( localStorage.collapseID ) {
-        $( '.panel-collapse' ).removeClass('in');
-        $( '#' + localStorage.collapseID ).addClass('in');
-    } else {
-        $( '.panel-collapse' ).removeClass('in');
-    }       
-    
-    if ( localStorage.activeLink ) {
-        $( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
-    }   
-    /* === END ACCORDION === */
-
-</script>
-<!-- === END JAVASCRIPT MANDATORY CODE === -->
-    
-    
-</body>
-</html>
+{% block scripts %}
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+<script src="{% static 'dashboard/scripts/dashboard.js' %}"></script>
+{% endblock %}
