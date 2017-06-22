@@ -15,18 +15,13 @@ admin.autodiscover()
 login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = patterns('',
-
+    
     url(r'^tripal_assembly_data', 'app.views.tripal_assembly_data', name='tripal_assembly_data'),
     url(r'^tripal_gene_prediction', 'app.views.tripal_gene_prediction', name='tripal_gene_prediction'),
     url(r'^tripal_mapped', 'app.views.tripal_mapped', name='tripal_mapped'),
     url(r'^web_login$', 'app.views.web_login', name='web_login'),
     url(r'^web_logout$', 'app.views.web_logout', name='web_logout'),
     url(r'^home$', 'dashboard.views.dashboard', name='dashboard'),
-    url(r'^dashboard$', 'dashboard.views.dashboard', name='dashboard'),
-    url(r'blast_hist', 'dashboard.views.dashboard', name='dashboard'),
-    url(r'hmmer_hist', 'dashboard.views.dashboard', name='dashboard'),
-    url(r'clustal_hist', 'dashboard.views.dashboard', name='dashboard'),
-    url(r'apollo_hist', 'dashboard.views.dashboard', name='dashboard'),
     #url(r'^home/', include('dashboard.urls', namespace='dashboard')),
     #url(r'^contact$', 'app.views.contact', name='contact'),
     url(r'^about', 'app.views.about', name='about'),
@@ -58,7 +53,7 @@ urlpatterns = patterns('',
         },
         name='login'),
     url(r'^logout$', 'app.views.logout_all', name='logout'),
-    url(r'^password_reset$',
+    url(r'^password_reset$', 
         'django.contrib.auth.views.password_reset',
         {
             'template_name': 'app/password_reset.html',
