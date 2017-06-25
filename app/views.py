@@ -19,9 +19,9 @@ from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
 from social.apps.django_app.default.models import UserSocialAuth
-from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN  
-from drupal_sso.models import DrupalUserMapping
-from webapollo_sso.models import PermsRequest, UserMapping
+#from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN  
+#from drupal_sso.models import DrupalUserMapping
+#from webapollo_sso.models import PermsRequest, UserMapping
 from django.contrib.auth.models import User
 from Crypto.Cipher import AES
 import base64
@@ -29,6 +29,7 @@ import i5k.settings
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 
+'''
 def _tripal_login(tripal_login_url, user):
     import urllib2
     import cookielib
@@ -114,6 +115,7 @@ def tripal_mapped(request):
 
     return response
 
+'''
 #weblogin/weblogout for tripal
 def web_login(request):
 

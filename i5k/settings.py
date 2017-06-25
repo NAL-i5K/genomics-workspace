@@ -51,6 +51,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
+    }
+}
+
+'''
+DATABASES = {
+    'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
     'NAME': 'django',
     'USER': 'django',
@@ -59,7 +67,7 @@ DATABASES = {
     'PORT': '5432',
     }
 }
-
+'''
 
 
 LOGIN_URL = '/login'
@@ -190,26 +198,20 @@ INSTALLED_APPS = (
     'blast',
     # 'userprofile',
     # Uncomment the next line to enable the admin:
-    'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
-    #'grappelli',
+    #'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
+    'grappelli',
     'filebrowser',
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'social.apps.django_app.default',
     'captcha',
-    'dashboard',
+    #'dashboard',
     'proxy',
-    #'data',
+    'polls',
     'hmmer',
     'clustal',
-#    'webapollo_sso',
-#    'drupal_sso',
 )
-
-
-
-
 
 # deprecated in Django 1.8
 #from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
@@ -572,7 +574,7 @@ PIPELINE = {
     },
 }
 
-PIPELINE['PIPELINE_ENABLED'] = True
+#PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
 PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
