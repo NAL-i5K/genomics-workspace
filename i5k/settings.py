@@ -208,7 +208,6 @@ INSTALLED_APPS = (
     'captcha',
     #'dashboard',
     'proxy',
-    'polls',
     'hmmer',
     'clustal',
 )
