@@ -1,7 +1,7 @@
 from django.contrib import admin
 from blast.models import *
 from django.forms import ModelForm
-from suit.widgets import AutosizedTextarea
+#from suit.widgets import AutosizedTextarea
 from django.contrib import messages
 
 class BlastQueryRecordAdmin(admin.ModelAdmin):
@@ -16,14 +16,16 @@ class BlastQueryRecordAdmin(admin.ModelAdmin):
     actions_on_bottom = True
 admin.site.register(BlastQueryRecord, BlastQueryRecordAdmin)
 
+'''
 class BlastDbForm(ModelForm):
     class Meta:
         widgets = {
             'description': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
         }
+'''
 
 class BlastDbAdmin(admin.ModelAdmin):
-    form = BlastDbForm
+    #form = BlastDbForm
     list_display = ('title', 'organism', 'type', 'fasta_file', 'fasta_file_exists', 'blast_db_files_exists', 'sequence_set_exists','description', 'is_shown',)
     list_editable = ('is_shown',)
     list_filter = ('organism', 'type', 'is_shown',)
@@ -68,15 +70,16 @@ class BlastDbAdmin(admin.ModelAdmin):
         js = ('blast/scripts/blastdb-admin.js',)
 admin.site.register(BlastDb, BlastDbAdmin)
 
-
+'''
 class OrganismForm(ModelForm):
     class Meta:
         widgets = {
             'description': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
         }
+'''
 
 class OrganismAdmin(admin.ModelAdmin):
-    form = OrganismForm
+    #form = OrganismForm
     list_display = ('display_name', 'short_name', 'tax_id', 'short_description',)
     search_fields = ('display_name', 'short_name', 'tax_id', 'description',)
     actions_on_top = True
@@ -102,11 +105,13 @@ class SequenceTypeAdmin(admin.ModelAdmin):
     actions_on_bottom = True
 admin.site.register(SequenceType, SequenceTypeAdmin)
 
+'''
 class SequenceForm(ModelForm):
     class Meta:
         widgets = {
             'sequence': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
         }
+'''
 
 class SequenceAdmin(admin.ModelAdmin):
     #form = SequenceForm

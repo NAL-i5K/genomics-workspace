@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import User
 from django.forms import ModelForm
-from suit.widgets import AutosizedTextarea
+#from suit.widgets import AutosizedTextarea
 from .models import *
 
 # Define an inline admin descriptor for Employee model
@@ -16,15 +16,16 @@ class ProfileInline(admin.StackedInline):
 class UserAdmin(UserAdmin):
     inlines = (ProfileInline, )
    
-
+'''
 class OrganismForm(ModelForm):
     class Meta:
         widgets = {
             'description': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
         }
+'''
 
 class OrganismAdmin(admin.ModelAdmin):
-    form = OrganismForm
+    #form = ModelForm()
     list_display = ('display_name', 'short_name', 'tax_id', 'short_description',)
     search_fields = ('display_name', 'short_name', 'tax_id', 'description',)
     actions_on_top = True

@@ -1,16 +1,18 @@
 from django.contrib import admin
 from .models import *
 from django.forms import ModelForm
-from suit.widgets import AutosizedTextarea
+#from suit.widgets import AutosizedTextarea
 
+'''
 class HmmerDbForm(ModelForm):
     class Meta:
         widgets = {
             'description': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
         }
+'''
 
 class HmmerDbAdmin(admin.ModelAdmin):
-    form = HmmerDbForm
+    #form = HmmerDbForm
     list_display = ('title', 'organism', 'fasta_file', 'fasta_file_exists', 'description', 'is_shown')
     list_editable = ('is_shown',)
     list_filter = ('organism', 'is_shown',)
@@ -30,6 +32,7 @@ class HmmerQueryRecordAdmin(admin.ModelAdmin):
     ordering = ('-enqueue_date',) # descending
     actions_on_top = True
     actions_on_bottom = True
+
 admin.site.register(HmmerQueryRecord, HmmerQueryRecordAdmin)
 
 
