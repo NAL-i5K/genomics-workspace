@@ -23,122 +23,11 @@ from social.apps.django_app.default.models import UserSocialAuth
 #from drupal_sso.models import DrupalUserMapping
 #from webapollo_sso.models import PermsRequest, UserMapping
 from django.contrib.auth.models import User
-from Crypto.Cipher import AES
-import base64
-import i5k.settings
+#from Crypto.Cipher import AES
+#import base64
+#import i5k.settings
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
-
-'''
-def _tripal_login(tripal_login_url, user):
-    import urllib2
-    import cookielib
-    import json
-    import i5k.settings
-
-    def _get_url_request(url):
-        req = urllib2.Request(url)
-        req.add_header('Content-Type', 'application/json')
-        return req
-
-    def _get_url_open():
-        cookies = cookielib.LWPCookieJar()
-        handlers = [
-            urllib2.HTTPHandler(),
-            urllib2.HTTPSHandler(),
-            urllib2.HTTPCookieProcessor(cookies),
-        ]
-        opener = urllib2.build_opener(*handlers)
-        return opener, cookies
-
-    try:
-
-        user_info = DrupalUserMapping.objects.get(django_user=user)
-        password = user_info.drupal_user_pwd
-        old_user = True
-
-    except DrupalUserMapping.DoesNotExist:
-    
-        old_user = False
-        password = User.objects.make_random_password(length=20)
-
-    data = {"name" : user.username, "pass" : password}
-
-    req = _get_url_request(tripal_login_url)
-    opener, cookies = _get_url_open()
-
-    try:
-
-        response = opener.open(req, json.dumps(data))
-        result = json.loads(response.read())
-        if(old_user==False):
-            DrupalUserMapping.objects.create(django_user=user, drupal_user_pwd=password)
-
-    except:
-        print "login fail"
-        pass
-
-    opener.close()
-
-    return cookies
-
-# tripal submit form
-def tripal_assembly_data(request):
-
-    print DRUPAL_URL + '/datasets/assembly-data'
-    print request.user.username
-    response = HttpResponseRedirect(DRUPAL_URL + '/datasets/assembly-data')
-    cookies = _tripal_login(DRUPAL_URL + '/rest/user/login', request.user)
-
-    for cookie in cookies:
-        response.set_cookie(key=cookie.name, value=cookie.value, domain=DRUPAL_COOKIE_DOMAIN, path=cookie.path)
-
-    return response
-
-def tripal_gene_prediction(request):
-
-    response = HttpResponseRedirect(DRUPAL_URL + '/datasets/gene-prediction')
-    cookies = _tripal_login(DRUPAL_URL + '/rest/user/login', request.user)
-
-    for cookie in cookies:
-        response.set_cookie(key=cookie.name, value=cookie.value, domain=DRUPAL_COOKIE_DOMAIN, path=cookie.path)
-
-    return response
-
-def tripal_mapped(request):
-
-    response = HttpResponseRedirect(DRUPAL_URL + '/datasets/mapped')
-    cookies = _tripal_login(DRUPAL_URL + '/rest/user/login', request.user)
-
-    for cookie in cookies:
-        response.set_cookie(key=cookie.name, value=cookie.value, domain=DRUPAL_COOKIE_DOMAIN, path=cookie.path)
-
-    return response
-
-'''
-#weblogin/weblogout for tripal
-def web_login(request):
-
-        if request.user.is_authenticated() == True:
-            return HttpResponse(json.dumps({'user':request.user.username, 'sessionid': request.session._session_key, 'email':request.user.email}), content_type="application/json")
-        
-        print request.COOKIES
-        username = request.GET['username']
-        password = request.GET['password']
-        #username = userdata['username']
-        #password = userdata['password']
-        user = authenticate(username=username, password=password)
-        if user is not None and user.is_active:
-            login(request, user)
-            print request.session._session_key
-            return HttpResponse(json.dumps({'user':request.user.username, 'sessionid': request.session._session_key, 'email':request.user.email}), content_type="application/json")
-            #return HttpResponse(json.dumps({'sessionid': request.COOKIES['sessionid']}), content_type="application/json")
-        else:
-            return HttpResponse(json.dumps({'error':'login failed'}), content_type="application/json")
-
-def web_logout(request):
-    logout(request)
-    return HttpResponse(json.dumps({}), content_type="application/json")
 
 def home(request):
     assert isinstance(request, HttpRequest)
@@ -184,71 +73,10 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
 
-        import urllib2
-        import cookielib
-        import json
-        import i5k.settings
-
-        def _get_url_request(url):
-            req = urllib2.Request(url)
-            req.add_header('Content-Type', 'application/json')
-            return req
-
-        def _get_url_open():
-            cookies = cookielib.LWPCookieJar()
-            handlers = [
-                urllib2.HTTPHandler(),
-                urllib2.HTTPSHandler(),
-                urllib2.HTTPCookieProcessor(cookies)
-                ]
-            opener = urllib2.build_opener(*handlers)
-            return opener
-
         if form.is_valid():
             new_user = form.save();
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
             
-            try:
-                if new_user is not None:
-                    from webapollo_sso.models import PermsRequest, UserMapping
-                    data = {"firstName" : form.cleaned_data['first_name'], "lastName" : form.cleaned_data['last_name'],
-                            "email": form.cleaned_data['username'], "newPassword" : form.cleaned_data['password1'], "role" : "USER"}
-                    data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-                    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/createUser')
-                    opener = _get_url_open()
-                    response = opener.open(req, json.dumps(data))
-                    result = json.loads(response.read())
-
-                    opener.close()
-
-
-                    if(len(result) == 0):
-                        data = {"userId": form.cleaned_data['username']}
-                        data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-                        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-                        opener = _get_url_open()
-                        response = opener.open(req, json.dumps(data))
-                        users = json.loads(response.read())
-
-                        for user in users:
-                            if(user['username'] == form.cleaned_data['username']):
-                                userId = user['userId']
-                                break
-                    
-                        user_info = UserMapping.objects.create(apollo_user_id=userId,
-                                                               apollo_user_name=form.cleaned_data['username'],
-                                                               apollo_user_pwd=encodeAES(form.cleaned_data['password1']),
-                                                               django_user=User.objects.get(username=form.cleaned_data['username']))
-                        user_info.save()
-
-                        opener.close()
-
-            except:
-                print "apollo is down"
-                pass
-                
             login(request, new_user)
             return HttpResponseRedirect(reverse('dashboard'))
     else:
@@ -266,73 +94,12 @@ def password_change(request,
         post_change_redirect,
         password_change_form,
         current_app=None, extra_context=None):
-    print 'aa'
     post_change_redirect = resolve_url(post_change_redirect)
     if request.method == "POST":
         form = password_change_form(user=request.user, data=request.POST)
         print request.POST['new_password1']
         if form.is_valid():
             form.save()
-
-            import urllib2
-            import cookielib
-            import json
-            import i5k.settings
-
-            def _get_url_request(url):
-                req = urllib2.Request(url)
-                req.add_header('Content-Type', 'application/json')
-                return req
-
-            def _get_url_open():
-                cookies = cookielib.LWPCookieJar()
-                handlers = [
-                    urllib2.HTTPHandler(),
-                    urllib2.HTTPSHandler(),
-                    urllib2.HTTPCookieProcessor(cookies)
-                    ]
-                opener = urllib2.build_opener(*handlers)
-                return opener
-
-            try:
-                new_password = request.POST['new_password1']
-            
-                user_info = UserMapping.objects.get(django_user=request.user)
-                userId = user_info.apollo_user_id
-
-                opener = _get_url_open()
-                response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'), 
-                                   json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
-                result = json.loads(response.read())
-
-                req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-                response = opener.open(req, json.dumps({"userId" : userId}))
-                users = json.loads(response.read())
-
-                firstName = users[0]['firstName']
-                lastName  = users[0]['lastName']
-                username  = users[0]['username']
-                role      = users[0]['role']
-
-                opener.close()
-
-                data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
-                data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-                req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
-                opener = _get_url_open()
-                response = opener.open(req, json.dumps(data))
-                result = json.loads(response.read())
-
-                if(len(result)==0):
-                    user_info.apollo_user_pwd = encodeAES(new_password)
-                    user_info.save()
-
-                opener.close()
-
-            except:
-                print "apollo is down"
-                opener.close()
 
             # Updating the password logs out all other sessions for the user
             # except the current one if
@@ -421,91 +188,3 @@ def logout_all(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
 
-def encodeAES(password):
-    BLOCK_SIZE = 32
-    PADDING = '{'
-    pad = lambda s: s + (BLOCK_SIZE - len(s) % BLOCK_SIZE) * PADDING
-    cipher = AES.new(i5k.settings.SSO_CIPHER)
-    encoded = base64.b64encode(cipher.encrypt(pad(password)))
-    return encoded
-
-def decodeAES(encoded):
-    PADDING = '{'
-    cipher = AES.new(i5k.settings.SSO_CIPHER)
-    decoded  = cipher.decrypt(base64.b64decode(encoded)).rstrip(PADDING)
-    return decoded
-
-def testView(request, uidb64, token, template_name, set_password_form, post_reset_redirect=None, extra_context=None):
-    httpresponse = password_reset_confirm(request, uidb64=uidb64, token=token, template_name=template_name, set_password_form=set_password_form, extra_context=extra_context)
-    if type(httpresponse) == HttpResponseRedirect:
-        import urllib2
-        import cookielib
-        import json
-        import i5k.settings
-
-        def _get_url_request(url):
-            req = urllib2.Request(url)
-            req.add_header('Content-Type', 'application/json')
-            return req
-
-        def _get_url_open():
-            cookies = cookielib.LWPCookieJar()
-            handlers = [
-                urllib2.HTTPHandler(),
-                urllib2.HTTPSHandler(),
-                urllib2.HTTPCookieProcessor(cookies)
-                ]
-            opener = urllib2.build_opener(*handlers)
-            return opener
-
-        #copy from password_reset_confirm
-
-        UserModel = get_user_model()
-        assert uidb64 is not None and token is not None
-        try:
-            uid = force_text(urlsafe_base64_decode(uidb64))
-            user = UserModel._default_manager.get(pk=uid)
-        except(TypeError, ValueError, OverflowError, UserModel.DoesNotExist):
-            user = None
-
-        try:
-	    new_password = request.POST['new_password1']
-	    user_info = UserMapping.objects.get(django_user=user)
-	    userId = user_info.apollo_user_id
-
-	    opener = _get_url_open()
-	    response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'), 
-					   json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
-	    result = json.loads(response.read())
-
-	    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-	    response = opener.open(req, json.dumps({"userId" : userId}))
-	    users = json.loads(response.read())
-
-	    firstName = users[0]['firstName']
-	    lastName  = users[0]['lastName']
-	    username  = users[0]['username']
-	    role      = users[0]['role']
-
-	    opener.close()
-
-	    data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
-	    data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-	    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
-	    opener = _get_url_open()
-	    response = opener.open(req, json.dumps(data))
-	    result = json.loads(response.read())
-
-	    if(len(result)==0):
-                user_info.apollo_user_pwd = encodeAES(new_password)
-		user_info.save()
-
-            opener.close()
-        except:
-            opener.close()
-            pass
-   
-    return httpresponse
-
-        
