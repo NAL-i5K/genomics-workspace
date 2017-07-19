@@ -221,7 +221,7 @@ $(function() { // document ready
 			$('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
 			$('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
 		}
-		query_type = '';
+		// query_type = ''; //issue 403
 		// select first non disabled option
 		$('input.program:not([disabled])').first().prop('checked', true);
 		program_selected = $('input.program:not([disabled])').first().val();
