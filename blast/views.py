@@ -72,7 +72,8 @@ def create(request, iframe=False):
         bin_name = 'bin_linux'
         if platform == 'win32':
             bin_name = 'bin_win'
-
+        elif platform == 'darwin':
+            bin_name = 'bin_mac'
         # write query to file
         if 'query-file' in request.FILES:
             with open(query_filename, 'wb') as query_f:
