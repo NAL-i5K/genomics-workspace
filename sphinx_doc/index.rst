@@ -6,13 +6,8 @@
 Welcome to i5k_doc's documentation!
 ===================================
 
-This is my introduction to this project
+This is our introduction to this project.
 
-Requirements
-
-My project depend on xxx
-
-Contents:
 
 .. toctree::
    :maxdepth: 3
@@ -24,7 +19,7 @@ Contents:
    setup_guide
    app_conf
    webapollo_conf
-   rst/about
+   about
 
 Indices and tables
 ==================
