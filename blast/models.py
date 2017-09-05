@@ -104,6 +104,9 @@ class BlastDb(models.Model):
         #bin_name = '/usr/local/bin'
         if platform == 'win32':
             bin_name = 'bin_win'
+        elif platform == 'darwin':
+            bin_name = 'bin_mac'
+        
         makeblastdb_path = os.path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
         args = [makeblastdb_path, '-in', self.fasta_file.path_full, '-dbtype', self.type.molecule_type, '-hash_index'] # , '-parse_seqids' TODO: make option
         if self.title:
