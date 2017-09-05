@@ -163,3 +163,6 @@ $RECYCLE.BIN/
 
 # Virtual Environment
 py2.7/
+=======
+# Sphinx build docs
+sphinx_doc/_build/
