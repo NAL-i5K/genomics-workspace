@@ -160,3 +160,6 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
+
+# Sphinx build docs
+sphinx_doc/_build/
