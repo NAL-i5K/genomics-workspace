@@ -29,8 +29,9 @@ We recommend to use `Homebrew <https://brew.sh/>`_ as package manager. Installat
 
 Python
 ------------
-MacOS bring 
-pip install virtualenv
+Install virtualenv::
+
+    pip install virtualenv
 
 Build a separate virtualenv::
 
@@ -46,6 +47,7 @@ RabbitMQ
 --------
 
 Install RabbitMQ Server::
+
     brew install rabbitmq
     # Make sure /usr/local/sbin is in your $PATH
     rabbitmq-server
@@ -88,6 +90,7 @@ Python Modules and Packages
 ---------------------------
 
 Install additional Python packages::
+
     cd <virt-env>
     pip install -r requirements.txt
 
@@ -118,6 +121,7 @@ Start development server
 ------------------------
 
 To run developement server::
+
     cd <virt-env>
     python manage.py runserver
 
