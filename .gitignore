@@ -161,5 +161,8 @@ $RECYCLE.BIN/
 # Mac desktop service store files
 .DS_Store
 
+# Virtual Environment
+py2.7/
+
 # Sphinx build docs
 sphinx_doc/_build/
