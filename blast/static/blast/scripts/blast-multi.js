@@ -4,31 +4,36 @@
 /////////////////////
 //var dataset_list = [['Genome Assembly', 'Nucleotide', 'Agla_Btl03082013.genome_new_ids.fa', 'Anoplophora glabripennis'], ['Genome Assembly', 'Nucleotide', 'Aros01112013-genome_new_ids.fa', 'Athalia rosae'], ['Genome Assembly', 'Nucleotide', 'Ccap01172013-genome_new_ids.fa', 'Ceratitis capitata'], ['Genome Assembly', 'Nucleotide', 'Clec_Bbug02212013.genome_new_ids.fa', 'Cimex lectularius'], ['Genome Assembly', 'Nucleotide', 'diaci1.1_new_ids.fa', 'Diaphorina citri'], ['Genome Assembly', 'Nucleotide', 'Edan07162013.scaffolds_new_ids.fa', 'Ephemera danica'], ['Genome Assembly', 'Nucleotide', 'Eaff_11172013.genome_new_ids.fa', 'Eurytemora affinis'], ['Genome Assembly', 'Nucleotide', 'Focc_FINAL.scaffolds_new_ids.fa', 'Frankliniella occidentalis'], ['Genome Assembly', 'Nucleotide', 'Lful_Scha04012013-genome_new_ids.fa', 'Ladona fulva'], ['Genome Assembly', 'Nucleotide', 'Ldec.genome.10062013_new_ids.fa', 'Leptinotarsa decemlineata'], ['Genome Assembly', 'Nucleotide', 'Ofas.scaffolds_new_ids.fa', 'Oncopeltus fasciatus'], ['Genome Assembly', 'Nucleotide', 'Oabi11242013.genome_new_ids.fa', 'Orussus abietinus'], ['Genome Assembly', 'Nucleotide', 'Pven10162013.scaffolds_new_ids.fa', 'Pachypsylla venusta'], ['Genome Assembly', 'Nucleotide', 'Ptep01282013.genome_new_ids.fa', 'Parasteatoda tepidariorum'], ['Genome Assembly', 'Nucleotide', 'Tpre_FINAL.scaffolds_new_ids.fa', 'Trichogramma pretiosum'], ['Transcript', 'Nucleotide', 'AGLA_new_ids.fna', 'Anoplophora glabripennis'], ['Transcript', 'Nucleotide', 'AROS_new_ids.fna', 'Athalia rosae'], ['Transcript', 'Nucleotide', 'CCAP_new_ids.fna', 'Ceratitis capitata'], ['Transcript', 'Nucleotide', 'CLEC_new_ids.fna', 'Cimex lectularius'], ['Transcript', 'Nucleotide', 'maker_genes_diaci1.1_transcripts_NALmod_new_ids.fasta', 'Diaphorina citri'], ['Transcript', 'Nucleotide', 'EDAN_new_ids.fna', 'Ephemera danica'], ['Transcript', 'Nucleotide', 'EAFF_new_ids.fna', 'Eurytemora affinis'], ['Transcript', 'Nucleotide', 'FOCC_new_ids.fna', 'Frankliniella occidentalis'], ['Transcript', 'Nucleotide', 'LFUL_new_ids.fna', 'Ladona fulva'], ['Transcript', 'Nucleotide', 'LDEC_new_ids.fna', 'Leptinotarsa decemlineata'], ['Transcript', 'Nucleotide', 'OFAS_new_ids.fna', 'Oncopeltus fasciatus'], ['Transcript', 'Nucleotide', 'OABI_new_ids.fna', 'Orussus abietinus'], ['Transcript', 'Nucleotide', 'PVEN_new_ids.fna', 'Pachypsylla venusta'], ['Transcript', 'Nucleotide', 'PTEP_new_ids.fna', 'Parasteatoda tepidariorum'], ['Transcript', 'Nucleotide', 'TPRE_new_ids.fna', 'Trichogramma pretiosum'], ['Protein', 'Peptide', 'AGLA_new_ids.faa', 'Anoplophora glabripennis'], ['Protein', 'Peptide', 'AROS_new_ids.faa', 'Athalia rosae'], ['Protein', 'Peptide', 'CCAP_new_ids.faa', 'Ceratitis capitata'], ['Protein', 'Peptide', 'CLEC_new_ids.faa', 'Cimex lectularius'], ['Protein', 'Peptide', 'maker_genes_diaci1.1_proteins_NALmod_new_ids.fasta', 'Diaphorina citri'], ['Protein', 'Peptide', 'EDAN_new_ids.faa', 'Ephemera danica'], ['Protein', 'Peptide', 'EAFF_new_ids.faa', 'Eurytemora affinis'], ['Protein', 'Peptide', 'FOCC_new_ids.faa', 'Frankliniella occidentalis'], ['Protein', 'Peptide', 'LFUL_new_ids.faa', 'Ladona fulva'], ['Protein', 'Peptide', 'LDEC_new_ids.faa', 'Leptinotarsa decemlineata'], ['Protein', 'Peptide', 'OFAS_new_ids.faa', 'Oncopeltus fasciatus'], ['Protein', 'Peptide', 'OABI_new_ids.faa', 'Orussus abietinus'], ['Protein', 'Peptide', 'PVEN_new_ids.faa', 'Pachypsylla venusta'], ['Protein', 'Peptide', 'PTEP_new_ids.faa', 'Parasteatoda tepidariorum'], ['Protein', 'Peptide', 'TPRE_new_ids.faa', 'Trichogramma pretiosum']];
 // Sort dataset_list by organism
-
-var dataset_dict = {};
-var organism_list = [];
-var alphabet_list = [];
-var dataset_list_count = dataset_list.length;
-for (var i = 0; i < dataset_list_count; i++) {
-    var entry = dataset_list[i];
-	var data_type = entry[0];
-	var alphabet = entry[1];
-	var file_name = entry[2];
-	var organism_name = entry[3];
-	var description = entry[4];
-    if (!(organism_name in dataset_dict)) {
-		dataset_dict[organism_name] = {};
-		organism_list.push(organism_name);
-		//console.log(organism_name);
+function preprocess(dataset_list) {
+	var dataset_dict = {};
+	var organism_list = [];
+	var alphabet_list = [];
+	var dataset_list_count = dataset_list.length;
+	for (var i = 0; i < dataset_list_count; i++) {
+		var entry = dataset_list[i];
+		var data_type = entry[0];
+		var alphabet = entry[1];
+		var file_name = entry[2];
+		var organism_name = entry[3];
+		var description = entry[4];
+		if (!(organism_name in dataset_dict)) {
+			dataset_dict[organism_name] = {};
+			organism_list.push(organism_name);
+			//console.log(organism_name);
+		}
+		if (!(alphabet in dataset_dict[organism_name])) {
+			dataset_dict[organism_name][alphabet] = [];
+		}
+		if ($.inArray(alphabet, alphabet_list) < 0) {
+			alphabet_list.push(alphabet);
+		}
+		dataset_dict[organism_name][alphabet].push([file_name, data_type, description]); // add info
 	}
-	if (!(alphabet in dataset_dict[organism_name])) {
-		dataset_dict[organism_name][alphabet] = [];
-	}
-	if ($.inArray(alphabet, alphabet_list) < 0) {
-		alphabet_list.push(alphabet);
-	}
-	dataset_dict[organism_name][alphabet].push([file_name, data_type, description]); // add info
+	return [dataset_dict, organism_list, alphabet_list];
 }
+
+[dataset_dict, organism_list, alphabet_list] = preprocess(dataset_list);
+
 // for IE6,7,8
 if (!Array.prototype.indexOf) {
   Array.prototype.indexOf = function (obj, fromIndex) {
@@ -56,10 +61,10 @@ $(function() { // document ready
 		// organism-checkbox
 		var $organism_checkbox = $('<input>', {
 			'organism': organism_id,
-                        'id': organism_id,
+            'id': organism_id,
 			'type': 'checkbox',
 			'class': 'organism-checkbox ' + organism_id,
-                        'name': 'organism-checkbox[]',
+            'name': 'organism-checkbox[]',
 		});
 		var $organism_div = $('<div/>', {
 			'organism': organism_id,
@@ -71,7 +76,6 @@ $(function() { // document ready
 			'style': 'display: none',
 		}).appendTo('#box-datasets');
 		$('<div class="dataset-title">' + organism_list[i] + '</div>').appendTo($organism_datasets_div);
-		var dataset_i = 1;
 		for (var j = 0; j < alphabet_list_count; j++) {
 			if (alphabet_list[j] in dataset_dict[organism_list[i]]) {
 				var alphabet_class = alphabet_list[j].toLowerCase();
@@ -88,7 +92,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
-                                                'id': file_name,
+                        'id': file_name,
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -96,7 +100,6 @@ $(function() { // document ready
 					var $organism_datasets_checkbox_div = $('<div/>').append($organism_datasets_checkbox).append(data_type + ' - ' + description);
 					var $organism_datasets_label = $('<label/>').append($organism_datasets_checkbox_div);
 					$alphabet_fieldset.append($organism_datasets_label);
-					//dataset_i++;
 				}
 			}
 		}
