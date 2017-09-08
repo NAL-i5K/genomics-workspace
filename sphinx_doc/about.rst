@@ -1,12 +1,4 @@
-About i5k Workplace
-===================
+About i5k Workplace at NAL
+==========================
 
-About i5k
----------
-
-we are i5k group
-
-Contact
--------
-
-xxxx
+The i5k Workspace at NAL is a platform for communities around ‘orphaned’ arthropod genome projects to access, visualize, curate and disseminate their data. For more information, please see `website of i5k Workspace@NAL <https://i5k.nal.usda.gov/>`_.
