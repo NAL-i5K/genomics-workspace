@@ -7,9 +7,7 @@ Note: The following variables may be used in path names; substitute as appropria
 
    <user>      :  the name of the user doing a set up. 
    <user-home> :  the user's home directory, e.g., /home/<user>
-   <app-home>  :  the root directory of the i5K application, e.g., /app/local/i5k
-   <virt-env>  :  the root directory of the virtualenv this set up creates. 
-   <git-home>  :  the directory containing the genomics-workspace, e.g. <user-home>/git
+   <git-home>  :  the directory containing the genomics-workspace, and `.git/` folder for `git` will be there.
 
 Project Applications 
 --------------------
@@ -74,8 +72,7 @@ Install pip and virtualenv::
 
 Build a separate virtualenv::
 
-    # Make root dir for virtualenv and cd into it:
-    cd genomics-workspace
+    cd <git-home>
     
     # Create a virtual environment called py2.7 and activate:
     virtualenv py2.7 
@@ -181,7 +178,7 @@ Install PostgreSQL::
     exit
 
     # Config in pg_hba.conf:
-    cd <virt-env> 
+    cd <git-home> 
     export PATH=/usr/pgsql-9.5/bin:$PATH
 
     # Restart:
@@ -193,7 +190,7 @@ Python Modules and Packages
 
 Install additional Python packages::
 
-    cd <virt-env>
+    cd <git-home>
     pip install -r requirements.txt
  
 
@@ -214,12 +211,12 @@ Configure the celery::
     sudo cp celerybeat.sysconfig /etc/sysconfig/celerybeat
     
     # Sudo edit '/etc/sysconfig/celeryd' as follows: 
-    CELERYD_CHDIR="<virt-env>"
-    CELERYD_MULTI="<virt-env>/py2.7/bin/celery multi"
+    CELERYD_CHDIR="<git-home>"
+    CELERYD_MULTI="<git-home>/py2.7/bin/celery multi"
     
     # Sudo edit '/etc/sysconfig/celerybeat' as follows:
-    CELERYBEAT_CHDIR="<virt-env>"
-    CELERY_BIN="<virt-env>/py2.7/bin/celery"
+    CELERYBEAT_CHDIR="<git-home>"
+    CELERY_BIN="<git-home>/py2.7/bin/celery"
 
     # Set as daemon:
     sudo chkconfig celeryd on
@@ -231,7 +228,7 @@ Migrate Schema to to PostgreSQL
 
 Run migrate::
 
-    cd <virt-env>
+    cd <git-home>
     # create log files
     sudo mkdir /var/log/django/
     sudo touch /var/log/django/django.log
@@ -246,7 +243,8 @@ Start development server
 ------------------------
 
 To run developement server::
-    cd <virt-env>
+
+    cd <git-home>
     python manage.py runserver
 
 Apache (for production server)

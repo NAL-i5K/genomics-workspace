@@ -32,7 +32,7 @@ There are five tables for creating BLAST DB and browsing in I5K-blast.
 
   * Choose ``Organsim``
   * Choose ``Type`` (Sequence type)
-  * Type location of fasta file in ``FASTA file path``
+  * Type location of fasta file in ``FASTA file path`` (It should be in ``<git-home>/media/blast/db/``)
   * Type ``Title`` name. (showed in HMMER page)
   * Type ``Descriptions``.
   * Check ``is shown``, if not check, this database would show in HMMER page.
