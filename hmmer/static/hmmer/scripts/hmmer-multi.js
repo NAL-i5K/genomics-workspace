@@ -72,7 +72,6 @@ $(function() { // document ready
 			'style': 'display: none',
 		}).appendTo('#box-datasets');
 		$('<div class="dataset-title">' + organism_list[i] + '</div>').appendTo($organism_datasets_div);
-		//var dataset_i = 1;
 		for (var j = 0; j < alphabet_list_count; j++) {
 			if (alphabet_list[j] in dataset_dict[organism_list[i]]) {
 				var alphabet_class = alphabet_list[j].toLowerCase();
@@ -96,7 +95,6 @@ $(function() { // document ready
 					var $organism_datasets_checkbox_div = $('<div/>').append($organism_datasets_checkbox).append(data_type + ' - ' + description);
 					var $organism_datasets_label = $('<label/>').append($organism_datasets_checkbox_div);
 					$alphabet_fieldset.append($organism_datasets_label);
-					//dataset_i++;
 				}
 			}
 		}
