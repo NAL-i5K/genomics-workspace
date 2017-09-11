@@ -1,0 +1,183 @@
+/*** ESSENTIAL STYLES ***/
+.sf-menu, .sf-menu * {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+.sf-menu li {
+	position: relative;
+}
+.sf-menu ul {
+	position: absolute;
+	display: none;
+	top: 100%;
+	left: 0;
+	z-index: 99;
+}
+.sf-menu > li {
+	float: left;
+}
+.sf-menu li:hover > ul,
+.sf-menu li.sfHover > ul {
+	display: block;
+}
+
+.sf-menu a {
+	display: block;
+	position: relative;
+}
+.sf-menu ul ul {
+	top: 0;
+	left: 100%;
+}
+
+
+/*** DEMO SKIN ***/
+.sf-menu {
+	float: left;
+	margin-bottom: 1em;
+	margin-top: -10px;
+}
+.sf-menu ul {
+	box-shadow: 2px 2px 6px rgba(0,0,0,.2);
+	min-width: 12em; /* allow long menu items to determine submenu width */
+	*width: 12em; /* no auto sub width for IE7, see white-space comment below */
+}
+.sf-menu a {
+	border-left: 1px solid #fff;
+	border-top: 1px solid #dFeEFF; /* fallback colour must use full shorthand */
+	border-top: 1px solid rgba(255,255,255,.5);
+	padding: .5em;
+	text-decoration: none;
+	zoom: 1; /* IE7 */
+}
+.sf-menu li {
+	white-space: nowrap; /* no need for Supersubs plugin */
+	*white-space: normal; /* ...unless you support IE7 (let it wrap) */
+	-webkit-transition: background .2s;
+	transition: background .2s;
+}
+.sf-menu li  ul {
+	border-top-right-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.sf-menu li ul li {
+	background: #f9f9f9;
+    border-bottom: 1px solid #d9d9d9;
+    border-left: 1px solid #d9d9d9;
+    border-right: 1px solid #d9d9d9;
+}
+.sf-menu ul ul li {
+}
+.sf-menu li:hover,
+.sf-menu li.sfHover {
+	color: #a34900;
+    text-decoration: underline;
+	/* only transition out, not in */
+	-webkit-transition: none;
+	transition: none;
+}
+
+/*** arrows (for all except IE7) **/
+.sf-arrows .sf-with-ul {
+	padding-right: 1.7em;
+	*padding-right: 1em; /* no CSS arrows for IE7 (lack pseudo-elements) */
+}
+/* styling for both css and generated arrows */
+.sf-arrows .sf-with-ul:after {
+	content: '';
+	position: absolute;
+	top: 50%;
+	right: 1em;
+	margin-top: -3px;
+	height: 0;
+	width: 0;
+	/* order of following 3 rules important for fallbacks to work */
+	border: 5px solid transparent;
+	border-top-color: #dFeEFF; /* edit this to suit design (no rgba in IE8) */
+	border-top-color: #ef6c00;
+}
+
+/* styling for right-facing arrows */
+.sf-arrows ul .sf-with-ul:after {
+	margin-top: -5px;
+	margin-right: -3px;
+	border-color: transparent;
+	border-left-color: #dFeEFF; /* edit this to suit design (no rgba in IE8) */
+	border-left-color: #ef6c00;
+}
+.sf-menu > li:first-child > a {
+    padding-left: 0em;
+}
+
+body {
+  margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+}
+.pull-left {
+    float: left !important;
+}
+a {
+  color: #ef6c00;
+  text-decoration: none;
+}
+.container {
+    margin-right: auto;
+    margin-left: auto;
+    padding-left: 15px;
+    padding-right: 15px;
+}
+.header { width: 100%; float: left; height: 65px; }
+.logo {
+    padding-right: 15px;
+    padding-top: 9px;
+    margin-right: 0;
+    padding-left: 0;
+    float: left !important;
+    margin-top: 8px;
+    margin-bottom: 8px;
+}
+.logo img {
+    height: 32px;
+}
+.name {
+      font-size: 14px;
+    font-weight: bold;
+    padding: 15px 15px;
+    line-height: 20px;
+    height: 50px;
+}
+.name {
+    font-size: 14px;
+    font-weight: bold;
+    padding: 15px 15px;
+    margin-left: -15px;
+    color: #777;
+    float: left;
+    line-height: 20px;
+    height: 50px;
+    width: 335px;
+}
+.usda-name {
+  display: block;
+    font-size: 16px;
+    color: #4b4b4b;
+}
+.site-title {
+    margin-top: 18px;
+    font-size: 30px;
+    float: right;
+    color: #4b4b4b;
+    font-weight: bold;
+    line-height: 1;
+}
+.i5k-login {
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+}
+
+/* footer styling */
+body { margin: 0; padding: 0; }
+footer { padding: 15px; background: #2e3a40; color: #dcf3ff; width: 100% !important; text-align: center; }
+a { color: #ef6c00; text-decoration: none; }
+a:hover, a:focus { color: #a34900; text-decoration: underline; }
