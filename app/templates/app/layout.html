@@ -7,13 +7,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{{ title }} | i5k - App{% endblock %}</title>
     <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-    <link rel="stylesheet" href="css/HeaderFooter.css" media="screen">
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'>
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Inconsolata:400,700'>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
-    {% stylesheet 'app-layout' %}
     {% block head-scripts %}{% endblock %}
+    {% stylesheet 'app-layout' %}
     {% if isAnalyticsEnabled %}
+    <style>
+    #django a:hover { color: green; } 
+    </style>
     <script type="text/javascript" src="{% static 'app/scripts/analytics.js' %}" async></script>
     <script type="text/javascript" id="_fed_an_ua_tag" src="https://nal.usda.gov/sites/all/themes/Universal-Federated-Analytics.1.0.js?agency=USDA&subagency=ARS-NAL"></script>
     {% endif%}
