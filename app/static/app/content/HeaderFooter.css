@@ -110,24 +110,29 @@
     padding-left: 0em;
 }
 
-body {
+d-body {
   margin: 0; padding: 0; font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
-.pull-left {
+.d-pull-left {
     float: left !important;
 }
-a {
+.d-header { width: 100%; float: left; height: 65px; }
+
+.header-a {
   color: #ef6c00;
   text-decoration: none;
+  font-size: 16px
 }
-.container {
+.header-a:hover, .header-a:focus { color: #a34900; text-decoration: underline; }
+
+.d-container {
     margin-right: auto;
     margin-left: auto;
     padding-left: 15px;
     padding-right: 15px;
 }
-.header { width: 100%; float: left; height: 65px; }
-.logo {
+
+.d-logo {
     padding-right: 15px;
     padding-top: 9px;
     margin-right: 0;
@@ -136,17 +141,17 @@ a {
     margin-top: 8px;
     margin-bottom: 8px;
 }
-.logo img {
+.d-logo img {
     height: 32px;
 }
-.name {
+.d-name {
       font-size: 14px;
     font-weight: bold;
     padding: 15px 15px;
     line-height: 20px;
     height: 50px;
 }
-.name {
+.d-name {
     font-size: 14px;
     font-weight: bold;
     padding: 15px 15px;
@@ -157,12 +162,12 @@ a {
     height: 50px;
     width: 335px;
 }
-.usda-name {
+.d-usda-name {
   display: block;
     font-size: 16px;
     color: #4b4b4b;
 }
-.site-title {
+.d-site-title {
     margin-top: 18px;
     font-size: 30px;
     float: right;
@@ -170,14 +175,14 @@ a {
     font-weight: bold;
     line-height: 1;
 }
-.i5k-login {
+.d-i5k-login {
     float: right;
     font-size: 16px;
     font-weight: bold;
 }
 
 /* footer styling */
-body { margin: 0; padding: 0; }
-footer { padding: 15px; background: #2e3a40; color: #dcf3ff; width: 100% !important; text-align: center; }
-a { color: #ef6c00; text-decoration: none; }
-a:hover, a:focus { color: #a34900; text-decoration: underline; }
+.d-body { margin: 0; padding: 0; }
+.d-footer { padding: 15px; background: #2e3a40; color: #dcf3ff; width: 100% !important; text-align: center; font-size: 85%; font-face: "Helvetica Neue",Helvetica,Arial,sans-serif;}
+.footer-a { color: #ef6c00; text-decoration: none; }
+.footer-a:hover, .footer-a:focus { color: #a34900; text-decoration: underline; }
