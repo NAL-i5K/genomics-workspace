@@ -431,7 +431,7 @@ CELERY_DISABLE_RATE_LIMITS = True
 #CELERY_ENABLE_UTC = True
 
 # Use virtual environment or not
-USE_VIRTUALENV = False
+USE_VIRTUALENV = True
 VIRTUALENV_ROOT = 'virtualenv/py2.7'
 
 USE_CACHE = False
@@ -480,7 +480,8 @@ PIPELINE = {
         'app-layout': {
             'source_filenames': (
                 'app/content/site.css',
-                'app/content/bootstrap.min.css',
+                'app/content/bootstrap.min.css',                
+                'app/content/HeaderFooter.css',                
             ),
             'output_filename': 'app/content/app-layout.min.css',
         },
@@ -498,6 +499,7 @@ PIPELINE = {
                 'blast/css/bootstrap-select.min.css',
                 'blast/css/bootstrap-switch.min.css',
                 'blast/css/blast-results.css',
+                'app/content/HeaderFooter.css',                
             ),
             'output_filename': 'blast/css/blast-results.min.css',
         },
@@ -520,6 +522,8 @@ PIPELINE = {
                 'app/scripts/jquery-1.11.1.min.js',
                 'app/scripts/bootstrap.min.js',
                 'app/scripts/respond.min.js',
+                'app/scripts/superfish.min.js',
+                'app/scripts/hoverIntent.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
@@ -626,7 +630,7 @@ LOGIN_ENABLED = True
 ANALYTICS_ENABLED = False
 
 # Use settings for production
-USE_PROD_SETTINGS = False
+USE_PROD_SETTINGS = True
 if USE_PROD_SETTINGS:
     from settings_prod import *
 
