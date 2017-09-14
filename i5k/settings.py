@@ -7,7 +7,7 @@ PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 DEBUG = True
 # deprecated in Django 1.8
 #TEMPLATE_DEBUG = DEBUG
-TEST_RUNNER = 'django.test.runner.DiscoverRunner'
+TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
 # template settings for Django 1.8
 TEMPLATES = [
