@@ -10,7 +10,7 @@
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'>
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Inconsolata:400,700'>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
-    {% block head-scripts %}{% endblock %}
+    <script>window.jsErrors=[];window.onerror=function(errorMessage){window.jsErrors[window.jsErrors.length]=errorMessage;}</script>{% block head-scripts %}{% endblock %}
     {% stylesheet 'app-layout' %}
     {% if isAnalyticsEnabled %}
     <style>
@@ -20,6 +20,7 @@
     <script type="text/javascript" id="_fed_an_ua_tag" src="https://nal.usda.gov/sites/all/themes/Universal-Federated-Analytics.1.0.js?agency=USDA&subagency=ARS-NAL"></script>
     {% endif%}
 </head>
+
 {% include "app/header.html" %}
 <body  {% block bodyclass %}{% endblock %}">
 {% block content-body %}{% endblock %}
@@ -27,8 +28,8 @@
 {% block content-fluid %}
         <div class="container body-content">
 {% block content %}{% endblock %}
-       </div>
 {% include "app/footer.html" %}
+       </div>
 {% endblock %}
     </div>
 
