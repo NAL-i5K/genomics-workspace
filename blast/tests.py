@@ -5,12 +5,18 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 
-seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
+peptide_seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\\n"
         ">OFAS004830-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTETDRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGKPMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDSQRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFDVSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRALRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRGTLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINPDEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNTTIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGVPQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAERYKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNETIMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERGPVIEEAD\\n"
         ">OFAS004738-PA:polypeptide ,Heat shock protein 70-1\\n"
         "MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKGETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAGAIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSLKGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHLAEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFYTKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQNLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLSLGIETAGGVMTKIIERNTRI"
+)
+
+nucleotide_seq = ( ">M.tuberculosis H37Rv|Rv2565|Rv2565\\n"
+        "MTTARRRPKRRGTDARTALRNVPILADIDDEQLERLATTVERRHVPANQWLFHAGEPADSIYIVDSGRFVAVAPEGHVFAEMASGDSIGDLGVIAGAARSAGVRALRDGVVWRIAAETFTDMLEATPLLQSAMLRAMARMLRQSRPAKTARRPRVIGVVSNGDTAAAPMVDAIATSLDSHGRTAVIAPPVETTSAVQEYDELVEAFSETLDRAERSNDWVLVVADRGAGDLWRHYVSAQSDRLVVLVDQRYPPDAVDSLATQRPVHLITCLAEPDPSWWDRLAPVSHHPANSDGFGALARRIAGRSLGLVMAGGGARGLAHFGVYQELTEAGVVIDRFGGTSSGAIASAAFALGMDAGDAIAAAREFIAGSDPLGDYTIPISALTRGGRVDRLVQGFFGNTLIEHLPRGFFSVSADMITGDQIIHRRGSVSGAVRASISIPGLIPPVHNGEQLLVDGGLLNNLPANVMCADTDGEVICVDLRRTFVPSKGFGLLPPIVTPPGLLRRLLTGTDNALPPLQETLLRAFDLAASTANLRELPRVAAIIEPDVSKIGVLNFKQIDAALEAGRMAARAALQAQPDLVR\\n"
+        ">TCALIF_07877-PA protein Name:'Similar to Actin, muscle (Manduca sexta)' AED:0.01 eAED:0.01 QI:143|1|0.5|1|1|1|2|0|376\\n"
+        "MCDEDVAALVVDNGSGMCKAGFAGDDAPRAVFPSIVGRPRHQGVMVGMGQKDAYVGDEAQSKRGILTLKYPVEHGIITNWDDMEKIWHHTFYNELRVAPEEQPVLLTEAPLNPKANREKMTQIMFETFNMPAMYVAIQAVLSLYASGRTTGIVMDSGDGVSHTVPIYEGYALPHAILRLDLAGRELTNYLMKILTERGYSFTTTAEREIVRDIKEKLCYVALDFEQEMATAAASTSLEKSYELPDGQVITIGNERFRAPEALFQPSFLGMESCGIHETTYNSIMKCDVDIRKDLYANTVMSGGTTMYPGIADRMQKEITALAPSTIKIKIIAPPERKYSVWIGGSILASLSTFQQMWISKQEYDECGPSIVHRKCF\\n"
 )
 
 class FrontEndTestCase(SimpleTestCase):
@@ -51,70 +57,114 @@ class TestClickAll(FrontEndTestCase):
         self.assertEqual(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(), False)
         self.assertEqual(bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")), False)
 
-class TestInputSequenceSimple(FrontEndTestCase):
+class TestNucleotideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
-        # Don't use send_keys(seq), since it's too slow
-        self.driver.execute_script("$('#query-textarea').val('" + seq + "').keyup();")
-        blastn_radio = self.driver.find_element_by_css_selector("input.program.blastn")
-        tblastn_radio = self.driver.find_element_by_css_selector("input.program.tblastn")
-        tblastx_radio = self.driver.find_element_by_css_selector("input.program.tblastx")
-        blastp_radio = self.driver.find_element_by_css_selector("input.program.blastp")
-        blastx_radio = self.driver.find_element_by_css_selector("input.program.blastx")
-        self.assertEqual(bool(blastn_radio.get_attribute("disabled")), True)
-        self.assertEqual(blastn_radio.is_selected(), False)
-        self.assertEqual(bool(tblastn_radio.get_attribute("disabled")), False)
-        self.assertEqual(tblastn_radio.is_selected(), True)
-        self.assertEqual(bool(tblastx_radio.get_attribute("disabled")), True)
-        self.assertEqual(tblastx_radio.is_selected(), False)
-        self.assertEqual(bool(blastp_radio.get_attribute("disabled")), False)
-        self.assertEqual(blastp_radio.is_selected(), False)
-        self.assertEqual(bool(blastx_radio.get_attribute("disabled")), True)
-        self.assertEqual(blastx_radio.is_selected(), False)
+        # Don't use send_keys(peptide_seq), since it's too slow
+        self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup();")
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
+        reset_button = self.driver.find_element_by_css_selector("input.btn_reset")
+        reset_button.click()
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
-class TestInputSequenceComplex(FrontEndTestCase):
+class TestNucleotideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
-        # Don't use send_keys(seq), since it's too slow
-        self.driver.execute_script("$('#query-textarea').val('" + seq + "').keyup(); $('#query-textarea').val('').keyup();")
-        blastn_radio = self.driver.find_element_by_css_selector("input.program.blastn")
-        tblastn_radio = self.driver.find_element_by_css_selector("input.program.tblastn")
-        tblastx_radio = self.driver.find_element_by_css_selector("input.program.tblastx")
-        blastp_radio = self.driver.find_element_by_css_selector("input.program.blastp")
-        blastx_radio = self.driver.find_element_by_css_selector("input.program.blastx")
-        self.assertEqual(bool(blastn_radio.get_attribute("disabled")), False)
-        self.assertEqual(blastn_radio.is_selected(), True)
-        self.assertEqual(bool(tblastn_radio.get_attribute("disabled")), False)
-        self.assertEqual(tblastn_radio.is_selected(), False)
-        self.assertEqual(bool(tblastx_radio.get_attribute("disabled")), False)
-        self.assertEqual(tblastx_radio.is_selected(), False)
-        self.assertEqual(bool(blastp_radio.get_attribute("disabled")), False)
-        self.assertEqual(blastp_radio.is_selected(), False)
-        self.assertEqual(bool(blastx_radio.get_attribute("disabled")), False)
-        self.assertEqual(blastx_radio.is_selected(), False)
-        # .send_keys(seq)
+        # Don't use send_keys(peptide_seq), since it's too slow
+        self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup(); $('#query-textarea').val('').keyup();")
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
-class TestLoadExampleSequence(FrontEndTestCase):
+class TestPeptideSequenceSimple(FrontEndTestCase):
+    def test_input_sequence(self):
+        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
+        # Insert sample peptide into textarea
+        # Don't use send_keys(peptide_seq), since it's too slow
+        self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup();")
+        checkProgramOptions(self.driver, self.assertEqual, selected=[False, True, False, False, False], disabled=[True, False, True, False, True])
+        reset_button = self.driver.find_element_by_css_selector("input.btn_reset")
+        reset_button.click()
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+
+class TestPeptideSequenceComplex(FrontEndTestCase):
+    def test_input_sequence(self):
+        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
+        # Insert sample peptide into textarea
+        # Don't use send_keys(peptide_seq), since it's too slow
+        self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup(); $('#query-textarea').val('').keyup();")
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+
+class TestLoadExamplePeptideSequence(FrontEndTestCase):
     def test_load_example_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-nucleotide.txt")))
         self.driver.find_element_by_css_selector("span.load-nucleotide.txt").click()
-        blastn_radio = self.driver.find_element_by_css_selector("input.program.blastn")
-        tblastn_radio = self.driver.find_element_by_css_selector("input.program.tblastn")
-        tblastx_radio = self.driver.find_element_by_css_selector("input.program.tblastx")
-        blastp_radio = self.driver.find_element_by_css_selector("input.program.blastp")
-        blastx_radio = self.driver.find_element_by_css_selector("input.program.blastx")
-        self.assertEqual(bool(blastn_radio.get_attribute("disabled")), True)
-        self.assertEqual(blastn_radio.is_selected(), False)
-        self.assertEqual(bool(tblastn_radio.get_attribute("disabled")), False)
-        self.assertEqual(tblastn_radio.is_selected(), True)
-        self.assertEqual(bool(tblastx_radio.get_attribute("disabled")), True)
-        self.assertEqual(tblastx_radio.is_selected(), False)
-        self.assertEqual(bool(blastp_radio.get_attribute("disabled")), False)
-        self.assertEqual(blastp_radio.is_selected(), False)
-        self.assertEqual(bool(blastx_radio.get_attribute("disabled")), True)
-        self.assertEqual(blastx_radio.is_selected(), False)
+        checkProgramOptions(self.driver, self.assertEqual, selected=[False, True, False, False, False], disabled=[True, False, True, False, True])
+
+class TestClickSequenceType(FrontEndTestCase):
+    def test_click_sequence_type(self):
+        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input.all-dataset-checkbox.nucleotide.genome-assembly")))
+        assembly = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
+        transcript = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
+        protein = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.protein.peptide")
+        # select
+        assembly.click()
+        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
+        self.assertEqual(assembly.is_selected(), True)
+        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
+        self.assertEqual(transcript.is_selected(), False)
+        self.assertEqual(bool(protein.get_attribute("disabled")), True)
+        self.assertEqual(protein.is_selected(), False)
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, True, True])
+        # unselect
+        assembly.click()
+        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
+        self.assertEqual(assembly.is_selected(), False)
+        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
+        self.assertEqual(transcript.is_selected(), False)
+        self.assertEqual(bool(protein.get_attribute("disabled")), False)
+        self.assertEqual(protein.is_selected(), False)
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+        # select
+        transcript.click()
+        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
+        self.assertEqual(assembly.is_selected(), False)
+        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
+        self.assertEqual(transcript.is_selected(), True)
+        self.assertEqual(bool(protein.get_attribute("disabled")), True)
+        self.assertEqual(protein.is_selected(), False)
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, True, True])
+        # unselect
+        transcript.click()
+        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
+        self.assertEqual(assembly.is_selected(), False)
+        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
+        self.assertEqual(transcript.is_selected(), False)
+        self.assertEqual(bool(protein.get_attribute("disabled")), False)
+        self.assertEqual(protein.is_selected(), False)
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+
+def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False]):
+    blastn_radio = driver.find_element_by_css_selector("input.program.blastn")
+    tblastn_radio = driver.find_element_by_css_selector("input.program.tblastn")
+    tblastx_radio = driver.find_element_by_css_selector("input.program.tblastx")
+    blastp_radio = driver.find_element_by_css_selector("input.program.blastp")
+    blastx_radio = driver.find_element_by_css_selector("input.program.blastx")
+    # check if selected
+    assertEqual(blastn_radio.is_selected(), selected[0])
+    assertEqual(tblastn_radio.is_selected(), selected[1])
+    assertEqual(tblastx_radio.is_selected(), selected[2])
+    assertEqual(blastp_radio.is_selected(), selected[3])
+    assertEqual(blastx_radio.is_selected(), selected[4])
+    # check if disabled
+    assertEqual(bool(blastn_radio.get_attribute("disabled")), disabled[0])
+    assertEqual(bool(tblastn_radio.get_attribute("disabled")), disabled[1])
+    assertEqual(bool(tblastx_radio.get_attribute("disabled")), disabled[2])
+    assertEqual(bool(blastp_radio.get_attribute("disabled")), disabled[3])
+    assertEqual(bool(blastx_radio.get_attribute("disabled")), disabled[4])
