@@ -498,6 +498,7 @@ MCDEDVAALVVDNGSGMCKAGFAGDDAPRAVFPSIVGRPRHQGVMVGMGQKDAYVGDEAQSKRGILTLKYPVEHGIITNW
     
     $('.btn_reset').click(function() {
         $('#query-textarea').val('');
+        $('#query-textarea').keyup();
         $('.all-organism-checkbox').prop("checked", false).attr("checked", false);
         $('.all-organism-checkbox').change();
         $('.program').attr('disabled', false).removeClass('disabled-radio');
