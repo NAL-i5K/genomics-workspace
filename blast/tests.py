@@ -13,10 +13,9 @@ peptide_seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKGETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAGAIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSLKGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHLAEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFYTKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQNLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLSLGIETAGGVMTKIIERNTRI"
 )
 
-nucleotide_seq = ( ">M.tuberculosis H37Rv|Rv2565|Rv2565\\n"
-        "MTTARRRPKRRGTDARTALRNVPILADIDDEQLERLATTVERRHVPANQWLFHAGEPADSIYIVDSGRFVAVAPEGHVFAEMASGDSIGDLGVIAGAARSAGVRALRDGVVWRIAAETFTDMLEATPLLQSAMLRAMARMLRQSRPAKTARRPRVIGVVSNGDTAAAPMVDAIATSLDSHGRTAVIAPPVETTSAVQEYDELVEAFSETLDRAERSNDWVLVVADRGAGDLWRHYVSAQSDRLVVLVDQRYPPDAVDSLATQRPVHLITCLAEPDPSWWDRLAPVSHHPANSDGFGALARRIAGRSLGLVMAGGGARGLAHFGVYQELTEAGVVIDRFGGTSSGAIASAAFALGMDAGDAIAAAREFIAGSDPLGDYTIPISALTRGGRVDRLVQGFFGNTLIEHLPRGFFSVSADMITGDQIIHRRGSVSGAVRASISIPGLIPPVHNGEQLLVDGGLLNNLPANVMCADTDGEVICVDLRRTFVPSKGFGLLPPIVTPPGLLRRLLTGTDNALPPLQETLLRAFDLAASTANLRELPRVAAIIEPDVSKIGVLNFKQIDAALEAGRMAARAALQAQPDLVR\\n"
-        ">TCALIF_07877-PA protein Name:'Similar to Actin, muscle (Manduca sexta)' AED:0.01 eAED:0.01 QI:143|1|0.5|1|1|1|2|0|376\\n"
-        "MCDEDVAALVVDNGSGMCKAGFAGDDAPRAVFPSIVGRPRHQGVMVGMGQKDAYVGDEAQSKRGILTLKYPVEHGIITNWDDMEKIWHHTFYNELRVAPEEQPVLLTEAPLNPKANREKMTQIMFETFNMPAMYVAIQAVLSLYASGRTTGIVMDSGDGVSHTVPIYEGYALPHAILRLDLAGRELTNYLMKILTERGYSFTTTAEREIVRDIKEKLCYVALDFEQEMATAAASTSLEKSYELPDGQVITIGNERFRAPEALFQPSFLGMESCGIHETTYNSIMKCDVDIRKDLYANTVMSGGTTMYPGIADRMQKEITALAPSTIKIKIIAPPERKYSVWIGGSILASLSTFQQMWISKQEYDECGPSIVHRKCF\\n"
+nucleotide_seq = ( 
+    ">Scaffold1\\n"
+    "GAAAAGTTAATTGTAAACTTTAATAAATAAATATTTTTTTAAAAACGAGTGTCGTTAAGACAAATTTATAACTTATATATATATAATTTGTTGAAGCCCTGAGAAGCGGTCAAGAGTGAGGTAATTTAGAAAAACGCATTTTTATTTGTTTGCCCGCGTTTCGACCTTTATTCGGGTCATCTTCAGGGCGTGGGTAAATAAGAAATGGCACCGCAAGAATAGCACCACACTTTATGTAAGTATAAAATACTTGGTTCAAAGTTCATATTTATATCTGTATTGCATTTTTTCAAATCAACATGTTTTGTAATTTACCCAGGCCCCGAAGATGACCCGGATAAAGGTCGAAACGCTGGCAAAACAAGAAAAATTGTGTTTTTCTAAAATGCCTCATTCTTCACCGCTCCTCTCGACTTCAAGAAATAATAAAATTATTTCATTTTACCATCA"
 )
 
 class FrontEndTestCase(SimpleTestCase):
@@ -61,7 +60,7 @@ class TestNucleotideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
-        # Insert sample peptide into textarea
+        # Insert sample nucleotide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
         self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup();")
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
@@ -73,7 +72,7 @@ class TestNucleotideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
-        # Insert sample peptide into textarea
+        # Insert sample nucleotide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
         self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup(); $('#query-textarea').val('').keyup();")
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
@@ -99,11 +98,18 @@ class TestPeptideSequenceComplex(FrontEndTestCase):
         self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup(); $('#query-textarea').val('').keyup();")
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
-class TestLoadExamplePeptideSequence(FrontEndTestCase):
+class TestLoadExampleNucleotideSequence(FrontEndTestCase):
     def test_load_example_sequence(self):
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-nucleotide.txt")))
         self.driver.find_element_by_css_selector("span.load-nucleotide.txt").click()
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
+
+class TestLoadExamplePeptideSequence(FrontEndTestCase):
+    def test_load_example_sequence(self):
+        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-peptide.txt")))
+        self.driver.find_element_by_css_selector("span.load-peptide.txt").click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[False, True, False, False, False], disabled=[True, False, True, False, True])
 
 class TestClickSequenceType(FrontEndTestCase):
