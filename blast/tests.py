@@ -119,42 +119,24 @@ class TestClickSequenceType(FrontEndTestCase):
         assembly = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
         transcript = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
         protein = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.protein.peptide")
-        # select
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
+        # select assembly
         assembly.click()
-        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
-        self.assertEqual(assembly.is_selected(), True)
-        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
-        self.assertEqual(transcript.is_selected(), False)
-        self.assertEqual(bool(protein.get_attribute("disabled")), True)
-        self.assertEqual(protein.is_selected(), False)
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[True, False, False], disabled=[False, False, True])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, True, True])
-        # unselect
+        # unselect assembly
         assembly.click()
-        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
-        self.assertEqual(assembly.is_selected(), False)
-        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
-        self.assertEqual(transcript.is_selected(), False)
-        self.assertEqual(bool(protein.get_attribute("disabled")), False)
-        self.assertEqual(protein.is_selected(), False)
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
-        # select
+        # select transcript
         transcript.click()
-        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
-        self.assertEqual(assembly.is_selected(), False)
-        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
-        self.assertEqual(transcript.is_selected(), True)
-        self.assertEqual(bool(protein.get_attribute("disabled")), True)
-        self.assertEqual(protein.is_selected(), False)
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, True, False], disabled=[False, False, True])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, True, True])
-        # unselect
+        # unselect transcript
         transcript.click()
-        self.assertEqual(bool(assembly.get_attribute("disabled")), False)
-        self.assertEqual(assembly.is_selected(), False)
-        self.assertEqual(bool(transcript.get_attribute("disabled")), False)
-        self.assertEqual(transcript.is_selected(), False)
-        self.assertEqual(bool(protein.get_attribute("disabled")), False)
-        self.assertEqual(protein.is_selected(), False)
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+        # protein.click()
 
 def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False]):
     blastn_radio = driver.find_element_by_css_selector("input.program.blastn")
@@ -174,3 +156,16 @@ def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False
     assertEqual(bool(tblastx_radio.get_attribute("disabled")), disabled[2])
     assertEqual(bool(blastp_radio.get_attribute("disabled")), disabled[3])
     assertEqual(bool(blastx_radio.get_attribute("disabled")), disabled[4])
+
+def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disabled=[False, False, False]):
+    assembly = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
+    transcript = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
+    protein = driver.find_element_by_css_selector("input.all-dataset-checkbox.protein.peptide")
+    # check if selected
+    assertEqual(assembly.is_selected(), selected[0])
+    assertEqual(transcript.is_selected(), selected[1])
+    assertEqual(protein.is_selected(), selected[2])
+    # check if disabled
+    assertEqual(bool(assembly.get_attribute("disabled")), disabled[0])
+    assertEqual(bool(transcript.get_attribute("disabled")), disabled[1])
+    assertEqual(bool(protein.get_attribute("disabled")), disabled[2])
