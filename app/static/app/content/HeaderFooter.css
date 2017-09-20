@@ -186,3 +186,41 @@ d-body {
 .d-footer { padding: 15px; background: #2e3a40; color: #dcf3ff; width: 100% !important; text-align: center; font-size: 85%; font-face: "Helvetica Neue",Helvetica,Arial,sans-serif;}
 .footer-a { color: #ef6c00; text-decoration: none; }
 .footer-a:hover, .footer-a:focus { color: #a34900; text-decoration: underline; }
+
+
+.sf-menu .has-sub > a {
+    padding-right: 1.7em;
+}
+.sf-menu .has-sub > a::after {
+    content: '';
+    top: 50%;
+    right: 1em;
+    margin-top: -3px;
+    height: 0;
+    width: 0;
+    border: 5px solid transparent;
+    border-top-color: #ef6c00;
+    position: absolute;
+}
+.sf-menu li ul .has-sub a:after {
+    margin-top: -5px;
+    margin-right: -3px;
+    border-color: transparent;
+    border-left-color: #dFeEFF;
+    border-left-color: #ef6c00;
+}
+a.d-name:hover {
+    text-decoration: none;
+    color: #5e5e5e;
+}
+.d-i5k-login {
+    float: right;
+    font-size: 16px;
+    font-weight: bold;
+    margin: 10px 22px 10px 0px;
+}
+.sf-menu {
+    float: left;
+    margin-bottom: 1em;
+    margin-top: 0px;
+}
