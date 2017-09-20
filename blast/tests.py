@@ -138,6 +138,18 @@ class TestClickSequenceType(FrontEndTestCase):
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
         # protein.click()
 
+class TestHoverIntent(FrontEndTestCase):
+    def test_hover_intent(self):
+        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
+        all_checkbox = self.driver.find_element_by_class_name("all-organism-checkbox")
+        element = self.driver.find_element_by_id("anoplophora-glabripennis")
+        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
+        hover.perform()
+        self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), False)
+        WebDriverWait(self.driver, 1).until(EC.visibility_of_element_located((By.ID, "Agla_Btl03082013.genome_new_ids.fa")))
+        self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), True)
+
 def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False]):
     blastn_radio = driver.find_element_by_css_selector("input.program.blastn")
     tblastn_radio = driver.find_element_by_css_selector("input.program.tblastn")
