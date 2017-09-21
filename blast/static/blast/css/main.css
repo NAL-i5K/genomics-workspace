@@ -404,3 +404,17 @@ input[type="checkbox"].input-validation-error {
 #box-organism label div {
     padding: 2px 0px 2px;
 }
+
+.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+    box-shadow: inset 0 -2px 0 #317eac;
+    color: #317eac;
+    border: 0px;
+}
+
+.txt {
+  cursor: pointer;
+}
+
+.txt:hover {
+    text-decoration: underline;
+}
