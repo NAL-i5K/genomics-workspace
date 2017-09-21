@@ -10,12 +10,9 @@
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'>
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Inconsolata:400,700'>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
-    <script>window.jsErrors=[];window.onerror=function(errorMessage){window.jsErrors[window.jsErrors.length]=errorMessage;}</script>{% block head-scripts %}{% endblock %}
     {% stylesheet 'app-layout' %}
+    <script>window.jsErrors=[];window.onerror=function(errorMessage){window.jsErrors[window.jsErrors.length]=errorMessage;}</script>{% block head-scripts %}{% endblock %}    
     {% if isAnalyticsEnabled %}
-    <style>
-    #django a:hover { color: green; } 
-    </style>
     <script type="text/javascript" src="{% static 'app/scripts/analytics.js' %}" async></script>
     <script type="text/javascript" id="_fed_an_ua_tag" src="https://nal.usda.gov/sites/all/themes/Universal-Federated-Analytics.1.0.js?agency=USDA&subagency=ARS-NAL"></script>
     {% endif%}
