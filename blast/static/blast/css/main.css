@@ -418,3 +418,8 @@ input[type="checkbox"].input-validation-error {
 .txt:hover {
     text-decoration: underline;
 }
+
+#load-examples {
+    font-weight:bold;
+    color: blue;
+}
