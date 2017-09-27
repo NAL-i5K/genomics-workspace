@@ -3,6 +3,7 @@ import celery
 from celery import Celery
 import subprocess
 import multiprocessing
+from threading import Timer
 
 class CeleryTestCase(SimpleTestCase):
     def test_rabbitmq_run(self):
@@ -19,7 +20,15 @@ class CeleryTestCase(SimpleTestCase):
         self.assertIsNotNone(d)
 
     def test_celery_beat_run(self):
-        pass
+        kill = lambda process: process.kill()
+        my_command = subprocess.Popen(['celery', '-A', 'i5k', 'beat'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        my_timer = Timer(5, kill, [my_command])
+        try:
+            my_timer.start()
+            stdout, stderr = my_command.communicate()
+        finally:
+            my_timer.cancel()
+        self.assertNotEqual(stdout, '')
 
     def test_celery_worker_process(self):
         app = Celery('i5k')
