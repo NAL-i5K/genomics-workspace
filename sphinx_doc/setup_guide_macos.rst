@@ -44,7 +44,7 @@ Build a separate virtualenv::
 RabbitMQ
 --------
 
-Install RabbitMQ Server::
+Install and run RabbitMQ Server::
 
     brew install rabbitmq
     # Make sure /usr/local/sbin is in your $PATH
@@ -97,8 +97,10 @@ Celery
 
 Configure celery::
 
-    # Run celery manually:
+    # Run celery manually
     celery -A i5k worker --loglevel=info
+    # Run celery beat maually as well
+    celery -A i5k beat --loglevel=info
 
 Migrate Schema to to PostgreSQL
 ------------------------------- 
