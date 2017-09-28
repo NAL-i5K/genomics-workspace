@@ -32,9 +32,16 @@ class CeleryTestCase(SimpleTestCase):
 
     def test_celery_worker_process(self):
         app = Celery('i5k')
-        keys = celery.app.control.inspect(app=app).stats().keys()
-        num_node = len(keys)
-        self.assertEqual(num_node, 1)
+        queues = celery.app.control.inspect(app=app).active_queues()
+        is_run = False
+        for inst in queues:
+            for j, queue in enumerate(queues[inst]):
+                if queue['name'] == 'i5k':
+                    is_run = True
+                    instance = inst
+                    q_index = j
+                    break
+        self.assertEqual(is_run, True)
         num_cpu = multiprocessing.cpu_count()
-        num_prpocess = len(celery.app.control.inspect().stats()[keys[0]]['pool']['processes'])
+        num_prpocess = len(celery.app.control.inspect(app=app).stats()[instance]['pool']['processes'])
         self.assertEqual(num_prpocess, num_cpu)
