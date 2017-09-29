@@ -22,7 +22,13 @@ class FrontEndTestCase(SimpleTestCase):
     @classmethod
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
-        self.driver = webdriver.Chrome()
+        # headless chrome driver
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1200x600')
+        self.driver = webdriver.Chrome(chrome_options=options)
+        # To use with header
+        # self.driver = webdriver.Chrome()
         # Or use different webdriver
         # self.driver = webdriver.PhantomJS()
         # self.driver = webdriver.Firefox()
