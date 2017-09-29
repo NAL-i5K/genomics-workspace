@@ -2,7 +2,6 @@ from django.test import SimpleTestCase
 import celery
 from celery import Celery
 import subprocess
-import multiprocessing
 from threading import Timer
 
 class CeleryTestCase(SimpleTestCase):
@@ -42,6 +41,5 @@ class CeleryTestCase(SimpleTestCase):
                     q_index = j
                     break
         self.assertEqual(is_run, True)
-        num_cpu = multiprocessing.cpu_count()
         num_prpocess = len(celery.app.control.inspect(app=app).stats()[instance]['pool']['processes'])
-        self.assertEqual(num_prpocess, num_cpu)
+        self.assertEqual(num_prpocess, 3)
