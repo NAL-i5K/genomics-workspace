@@ -101,7 +101,6 @@ class BlastDb(models.Model):
         from sys import platform
         from subprocess import Popen, PIPE
         bin_name = 'bin_linux'
-        #bin_name = '/usr/local/bin'
         if platform == 'win32':
             bin_name = 'bin_win'
         elif platform == 'darwin':

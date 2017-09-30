@@ -1,9 +1,15 @@
-from django.test import SimpleTestCase
+import os
+from shutil import copyfile
+from django.test import SimpleTestCase, TestCase
+from django.conf import settings
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
+from filebrowser.base import FileObject
+from .models import SequenceType, BlastDb
+from app.models import Organism
 
 peptide_seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\\n"
@@ -187,3 +193,35 @@ def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disab
     assertEqual(bool(assembly.get_attribute("disabled")), disabled[0])
     assertEqual(bool(transcript.get_attribute("disabled")), disabled[1])
     assertEqual(bool(protein.get_attribute("disabled")), disabled[2])
+
+class OrganismModelTest(TestCase):
+    def setUp(self):
+        Organism.objects.create(display_name='abc', short_name='ac', tax_id=123)
+        organism = Organism.objects.get(short_name='ac')
+        sequence = SequenceType.objects.create(molecule_type='prot', dataset_type='abc')
+        files_to_remove = [
+            'AGLA_new_ids.faa',
+            'AGLA_new_ids.faa.pog',
+            'AGLA_new_ids.faa.phd',
+            'AGLA_new_ids.faa.psd',
+            'AGLA_new_ids.faa.phi',
+            'AGLA_new_ids.faa.psi',
+            'AGLA_new_ids.faa.phr',
+            'AGLA_new_ids.faa.psq',
+            'AGLA_new_ids.faa.pin',
+        ]
+        self.files = files_to_remove
+        for file in files_to_remove:
+            if os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)):
+                os.remove(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file))
+        copyfile(os.path.join(settings.PROJECT_ROOT, 'example/blastdb/AGLA_new_ids.faa'), os.path.join(settings.PROJECT_ROOT, 'media/blast/db/AGLA_new_ids.faa'))
+        BlastDb.objects.create(fasta_file=FileObject('/blast/db/AGLA_new_ids.faa'), organism=organism, type=sequence, is_shown=False)
+
+    def test_makeblastdb(self):
+        organism = Organism.objects.get(short_name='ac')
+        blastdb = BlastDb.objects.get(organism=organism)
+        returncode, error, output = blastdb.makeblastdb()
+        self.assertEqual(returncode, 0)
+        self.assertEqual(error, '')
+        for file in self.files:
+            self.assertEqual(os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)), True)
