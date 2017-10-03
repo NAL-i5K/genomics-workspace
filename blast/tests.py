@@ -8,7 +8,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
-from .models import SequenceType, BlastDb
+from .models import SequenceType, BlastDb, Sequence
 from app.models import Organism
 
 peptide_seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
@@ -196,7 +196,7 @@ def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disab
 
 class OrganismModelTest(TestCase):
     def setUp(self):
-        Organism.objects.create(display_name='abc', short_name='ac', tax_id=123)
+        Organism.objects.create(display_name='abc', short_name='ac', tax_id=217634)
         organism = Organism.objects.get(short_name='ac')
         sequence = SequenceType.objects.create(molecule_type='prot', dataset_type='abc')
         files_to_remove = [
@@ -215,7 +215,7 @@ class OrganismModelTest(TestCase):
             if os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)):
                 os.remove(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file))
         copyfile(os.path.join(settings.PROJECT_ROOT, 'example/blastdb/AGLA_new_ids.faa'), os.path.join(settings.PROJECT_ROOT, 'media/blast/db/AGLA_new_ids.faa'))
-        BlastDb.objects.create(fasta_file=FileObject('/blast/db/AGLA_new_ids.faa'), organism=organism, type=sequence, is_shown=False)
+        BlastDb.objects.create(fasta_file=FileObject('/blast/db/AGLA_new_ids.faa'), organism=organism, type=sequence, is_shown=False, title='test')
 
     def test_makeblastdb(self):
         organism = Organism.objects.get(short_name='ac')
@@ -225,3 +225,16 @@ class OrganismModelTest(TestCase):
         self.assertEqual(error, '')
         for file in self.files:
             self.assertEqual(os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)), True)
+
+    def test_index_fasta(self):
+        organism = Organism.objects.get(short_name='ac')
+        blastdb = BlastDb.objects.get(organism=organism)
+        returncode, error, output = blastdb.index_fasta()
+        self.assertEqual(returncode, 0)
+        self.assertEqual(error, '')
+        self.assertEqual(blastdb.title, 'test')
+        all_sequence = Sequence.objects.all()
+        self.assertEqual(len(all_sequence), 22035)
+        for s in all_sequence:
+            self.assertEqual(s.blast_db.title, 'test')
+    
