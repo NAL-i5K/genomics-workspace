@@ -61,7 +61,7 @@
 {% else %}
     <div class="tripal_details">
 {% endif %}
-<FORM METHOD="POST" id="MainBlastForm" NAME="MainBlastForm" ENCTYPE="multipart/form-data">
+<form method="post" id="MainBlastForm" name="MainBlastForm" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="tripal_organism-info-box tripal-info-box">
 <!--<a href="docs/blast_databases.html">-->
@@ -508,7 +508,7 @@ Enter here your input data as
 	</div>
 
 </div>
-</FORM>
+</form>
 </div>
 
 {% if user.is_authenticated %}
