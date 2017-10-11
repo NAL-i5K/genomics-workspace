@@ -98,7 +98,7 @@ Celery
 Configure celery::
 
     # Run celery manually
-    celery -A i5k worker --loglevel=info
+    celery -A i5k worker --loglevel=info --concurrency=3
     # Run celery beat maually as well
     celery -A i5k beat --loglevel=info
 
