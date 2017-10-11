@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, url, include
+from django.conf import settings
 from blast import views
 from .api import *
 from rest_framework import routers, serializers, viewsets
@@ -23,5 +24,11 @@ urlpatterns = patterns('',
     url(r'^api/', include(router.urls)),
     #url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
     #url(r'^api-docs/', include('rest_framework_swagger.urls')),
-    url('^user-tasks/(?P<user_id>[0-9]+)$', views.user_tasks),
+    url(r'^user-tasks/(?P<user_id>[0-9]+)$', views.user_tasks),
 )
+
+if settings.DEBUG:
+    from blast import test_views
+    urlpatterns += patterns('',
+        url(r'^test/$', test_views.test_main)
+    )
