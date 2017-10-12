@@ -273,7 +273,7 @@ class BlastAdminTestCase(LiveServerTestCase):
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test_setup_is_shown(self):
         self.driver.get('%s%s' % (self.live_server_url, '/admin/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 5) # wait at most 5 seconds to let page load, or timeout exception
         wait.until(EC.presence_of_element_located((By.ID, 'id_username')))
         username_input = self.driver.find_element_by_name('username')
         username_input.send_keys(self.username)
