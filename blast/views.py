@@ -111,12 +111,11 @@ def create(request, iframe=False):
             for blast_option in blast_customized_options[request.POST['program']]:
                 if blast_option == 'low_complexity':
                     if request.POST['program'] == 'blastn':
-                        input_opt.append('-dust')
+                        input_opt.extend(['-dust', request.POST['low_complexity']])
                     else:
-                        input_opt.append('-seg')
+                        input_opt.extend(['-seg', request.POST['low_complexity']])
                 else:
-                    input_opt.append('-'+blast_option)
-                input_opt.append(request.POST[blast_option])
+                    input_opt.extend(['-'+blast_option, request.POST[blast_option]])
             
             program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, request.POST['program'])
             args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
@@ -129,13 +128,9 @@ def create(request, iframe=False):
                 if ext == '.html':
                     args.append('-html')
                 if int(outfmt.split()[0]) > 4:
-                    args.append('-max_target_seqs')
-                    args.append(max_target_seqs)
+                    args.extend(['-max_target_seqs', max_target_seqs])
                 else:
-                    args.append('-num_descriptions')
-                    args.append(max_target_seqs)
-                    args.append('-num_alignments')
-                    args.append(max_target_seqs)
+                    args.extend(['-num_descriptions', max_target_seqs, '-num_alignments', max_target_seqs])
                 args_list.append(args)
 
             record = BlastQueryRecord()
