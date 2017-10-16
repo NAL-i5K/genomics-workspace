@@ -249,6 +249,7 @@ class BlastAdminTestCase(LiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(BlastAdminTestCase, self).setUpClass()
+        settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
