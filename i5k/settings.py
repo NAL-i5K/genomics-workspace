@@ -189,10 +189,10 @@ INSTALLED_APPS = (
     'app',
     'blast',
     # 'userprofile',
-    # Uncomment the next line to enable the admin:
     'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
     #'grappelli',
     'filebrowser',
+    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
@@ -472,7 +472,8 @@ REST_FRAMEWORK = {
 }
 
 # django-pipeline
-STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
+if not DEBUG:
+    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 # django-pipeline 1.6
 
 PIPELINE = {
