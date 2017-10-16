@@ -17,7 +17,7 @@ from app.models import Organism
 
 display_name = 'test'
 short_name = 'test'
-tax_id = 217634
+tax_id = 79782
 dataset_type = 'abc'
 title = 'test'
 test_files = [
