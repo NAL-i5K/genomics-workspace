@@ -52,14 +52,14 @@ class FrontEndTestCase(SimpleTestCase):
         # headless chrome driver
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
-        options.add_argument('window-size=1200x600')
+        options.add_argument('window-size=1280x800')
         self.driver = webdriver.Chrome(chrome_options=options)
         # To use with header
         # self.driver = webdriver.Chrome()
         # Or use different webdriver
         # self.driver = webdriver.PhantomJS()
         # self.driver = webdriver.Firefox()
-        self.driver.set_window_size(1024, 768)
+        # self.driver.set_window_size(1280, 800)
         self.driver.get("http://127.0.0.1:8000/blast/test/")
         WebDriverWait(self.driver, 2)
 
