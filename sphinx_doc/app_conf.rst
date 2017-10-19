@@ -6,9 +6,6 @@ Introduction
 
 I5K BLAST Tutorial is on https://i5k.nal.usda.gov/content/blast-tutorial
 
-Install & Configuration
-~~~~~~~~~~~~~~~~~~~~~~~
-Install `BLAST <http://blast.ncbi.nlm.nih.gov/Blast.cgi>`_ and append Blast_bin directory in environment variable ``PATH``.
 
 BLAST DB Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
@@ -18,11 +15,11 @@ There are five tables for creating BLAST DB and browsing in I5K-blast.
 
   * Display name should be scientific name.
   * Short name are used by system as a abbreviation.
-  * Descriptions and NCBI taxa ID are automatically filled. 
+  * Descriptions and NCBI taxa ID are automatically filled.
 
 .. image:: add_organism.png
 
-* Add Sequence types: 
+* Add Sequence types:
 
   * Used to classify BLAST DBs in distinct catagories.
   * Provide two kinds of molecule type for choosing, Nucleotide/Peptide.
@@ -36,7 +33,7 @@ There are five tables for creating BLAST DB and browsing in I5K-blast.
   * Type ``Title`` name. (showed in HMMER page)
   * Type ``Descriptions``.
   * Check ``is shown``, if not check, this database would show in HMMER page.
-  * Save 
+  * Save
 
 .. image:: add_blastdb.png
 
@@ -54,7 +51,7 @@ Install `HMMER <http://hmmer.org/>`_ and append HMMER_bin directory in evironmen
 
 HMMER DB Configuration
 ~~~~~~~~~~~~~~~~~~~~~~
-Like Blast, HMMER databases must be configured then they could be searched. 
+Like Blast, HMMER databases must be configured then they could be searched.
 
 Go django admin page and click Hmmer on left-menubar. You need to create HMMER db instance (Hmmer dbs) for each fasta file.
 
@@ -63,7 +60,7 @@ Go django admin page and click Hmmer on left-menubar. You need to create HMMER d
 * Type ``Title`` name. (showed in HMMER page)
 * Type ``Descriptions``.
 * Check ``is shown``, if not check, this database would show in HMMER page.
-* Save 
+* Save
 
 .. image:: hmmer_add.png
 
@@ -120,4 +117,4 @@ Coonection to Drupal summit data function.
 
 WebApollo SSO
 -------------
-Complete introduction locate in Section 4. 
+Complete introduction locate in Section 4.
