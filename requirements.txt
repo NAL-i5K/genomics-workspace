@@ -17,3 +17,4 @@ requests-oauthlib==0.6.1
 wsgiref==0.1.2
 selenium==3.5.0
 django-suit==0.2.18
+six>=1.10.0
