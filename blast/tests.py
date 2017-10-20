@@ -233,7 +233,7 @@ class BlastModelTest(TestCase):
         self.assertEqual(returncode, 0)
         self.assertEqual(error, '')
         for file in self.files:
-            self.assertEqual(path.exists(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)), True)
+            self.assertEqual(path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)), True)
 
     def test_index_fasta(self):
         organism = Organism.objects.get(short_name=short_name)
@@ -366,10 +366,9 @@ class BlastAdminTestCase(LiveServerTestCase):
 
 def prepare_test_fasta_file():
     for file in test_files:
-        if path.exists(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)):
-            remove(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file))
-    copyfile(path.join(settings.PROJECT_ROOT, 'example/blastdb/clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media/blast/db/clec_peptide_example_BLASTdb.fa'))
-
+        if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
+            remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
+    copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
 class TestBlastBinary(SimpleTestCase):
     def test_blastp(self):
         program = 'blastp'
@@ -378,7 +377,7 @@ class TestBlastBinary(SimpleTestCase):
     def test_blastn(self):
         program = 'blastn'
         run_blast(program, self.assertEqual)
-    
+
     def test_tblastn(self):
         program = 'tblastn'
         run_blast(program, self.assertEqual)
@@ -386,7 +385,7 @@ class TestBlastBinary(SimpleTestCase):
     def test_tblastx(self):
         program = 'tblastx'
         run_blast(program, self.assertEqual)
-    
+
     def test_blastx(self):
         program = 'blastx'
         run_blast(program, self.assertEqual)
@@ -397,7 +396,7 @@ def run_blast(program, assertEqual):
 
 def generate_blast_args(program):
     input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
-    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')        
+    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
     asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
     if program == 'blastp':
         query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
