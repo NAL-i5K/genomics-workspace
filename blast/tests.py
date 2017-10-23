@@ -1,11 +1,13 @@
-import os
-from shutil import copyfile
+from os import path, makedirs, remove
+from shutil import copyfile, rmtree
+from sys import platform
+from subprocess import Popen, PIPE
+from django.conf import settings
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.contrib.auth import get_user_model
 from django.contrib.staticfiles.testing import LiveServerTestCase
 # For newer django version
 # from django.test import LiveServerTestCase
-from django.conf import settings
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -231,7 +233,7 @@ class BlastModelTest(TestCase):
         self.assertEqual(returncode, 0)
         self.assertEqual(error, '')
         for file in self.files:
-            self.assertEqual(os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)), True)
+            self.assertEqual(path.exists(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)), True)
 
     def test_index_fasta(self):
         organism = Organism.objects.get(short_name=short_name)
@@ -364,6 +366,165 @@ class BlastAdminTestCase(LiveServerTestCase):
 
 def prepare_test_fasta_file():
     for file in test_files:
-        if os.path.exists(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)):
-            os.remove(os.path.join(settings.PROJECT_ROOT, 'media/blast/db/', file))
-    copyfile(os.path.join(settings.PROJECT_ROOT, 'example/blastdb/clec_peptide_example_BLASTdb.fa'), os.path.join(settings.PROJECT_ROOT, 'media/blast/db/clec_peptide_example_BLASTdb.fa'))
+        if path.exists(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file)):
+            remove(path.join(settings.PROJECT_ROOT, 'media/blast/db/', file))
+    copyfile(path.join(settings.PROJECT_ROOT, 'example/blastdb/clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media/blast/db/clec_peptide_example_BLASTdb.fa'))
+
+class TestBlastBinary(SimpleTestCase):
+    def test_blastp(self):
+        program = 'blastp'
+        run_blast(program, self.assertEqual)
+
+    def test_blastn(self):
+        program = 'blastn'
+        run_blast(program, self.assertEqual)
+    
+    def test_tblastn(self):
+        program = 'tblastn'
+        run_blast(program, self.assertEqual)
+
+    def test_tblastx(self):
+        program = 'tblastx'
+        run_blast(program, self.assertEqual)
+    
+    def test_blastx(self):
+        program = 'blastx'
+        run_blast(program, self.assertEqual)
+
+def run_blast(program, assertEqual):
+    args_list = generate_blast_args(program)
+    run_commands(args_list, assertEqual)
+
+def generate_blast_args(program):
+    input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
+    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')        
+    asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
+    if program == 'blastp':
+        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
+        options = {
+            'max_target_seqs': '100',
+            'evalue': '10.0',
+            'word_size': '6',
+            'matrix': 'BLOSUM62',
+            'threshold': '11',
+            'gapopen': '11',
+            'gapextend': '1',
+            'low_complexity': 'no',
+            'soft_masking': 'false',
+        }
+    elif program == 'blastn':
+        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
+        options = {
+            'max_target_seqs': '100',
+            'evalue': '10.0',
+            'word_size': '11',
+            'reward': '2',
+            'penalty': '-3',
+            'gapopen': '5',
+            'gapextend': '2',
+            'strand': 'both',
+            'low_complexity': 'yes',
+            'soft_masking': 'true',
+        }
+    elif program == 'tblastn':
+        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
+        options = {
+            'max_target_seqs': '100',
+            'evalue': '10.0',
+            'word_size': '6',
+            'matrix': 'BLOSUM62',
+            'threshold': '13',
+            'gapopen': '11',
+            'gapextend': '1',
+            'low_complexity': 'yes',
+            'soft_masking': 'false',
+        }
+    elif program == 'tblastx':
+        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
+        options = {
+            'max_target_seqs': '100',
+            'evalue': '10.0',
+            'word_size': '3',
+            'matrix': 'BLOSUM62',
+            'threshold': '13',
+            'strand': 'both',
+            'low_complexity': 'yes',
+            'soft_masking': 'false',
+        }
+    elif program == 'blastx':
+        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
+        options = {
+            'max_target_seqs': '100',
+            'evalue': '10.0',
+            'word_size': '6',
+            'matrix': 'BLOSUM62',
+            'threshold': '12',
+            'strand': 'both',
+            'gapopen': '11',
+            'gapextend': '1',
+            'low_complexity': 'no',
+            'soft_masking': 'false',
+        }
+    if path.exists(output_file_dir):
+        rmtree(output_file_dir)
+    makedirs(output_file_dir)
+    bin_name = 'bin_linux'
+    if platform == 'win32':
+        bin_name = 'bin_win'
+    elif platform == 'darwin':
+        bin_name = 'bin_mac'
+    program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, program)
+    blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
+                                'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
+                                'tblastx':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'strand', 'low_complexity', 'soft_masking'],
+                                'blastp':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
+                                'blastx':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'strand', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking']}
+    input_opt = []
+    max_target_seqs = options.get('max_target_seqs','50')
+    for blast_option in blast_customized_options[program]:
+        if blast_option == 'low_complexity':
+            if program == 'blastn':
+                input_opt.extend(['-dust', options['low_complexity']])
+            else:
+                input_opt.extend(['-seg', options['low_complexity']])
+        else:
+            input_opt.extend(['-'+blast_option, options[blast_option]])
+
+    args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
+    args_list[0].extend(input_opt)
+    blast_formatter_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'blast_formatter')
+    blast_col_name = 'qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qcovs qlen slen qframe sframe'
+    blast_info = {
+        'col_types': ['str', 'str', 'float', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'int', 'int', 'int', 'int', 'int', 'int'],
+        'col_names': blast_col_name.split(),
+        'ext': {
+            '.0': '0',
+            '.html': '0',
+            '.1': '1',
+            '.3': '3',
+            '.xml': '5',
+            '.tsv': '6 ' + blast_col_name,
+            '.csv': '10 ' + blast_col_name,
+        },
+    }
+    for ext, outfmt in blast_info['ext'].items():
+        args = [blast_formatter_path, '-archive', asn_filename, '-outfmt', outfmt, '-out', output_file_dir + 'test_' + program + ext]
+        if ext == '.html':
+            args.append('-html')
+        if int(outfmt.split()[0]) > 4:
+            args.extend(['-max_target_seqs', max_target_seqs])
+        else:
+            args.extend(['-num_descriptions', max_target_seqs, '-num_alignments', max_target_seqs])
+        args_list.append(args)
+    return args_list
+
+def run_commands(args_list, assertEqual):
+    for args in args_list:
+        p = Popen(args, stdin=PIPE, stdout=PIPE)
+        p.wait()
+        assertEqual(p.returncode, 0)

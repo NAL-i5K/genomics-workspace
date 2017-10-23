@@ -132,7 +132,6 @@ def create(request, iframe=False):
                 else:
                     args.extend(['-num_descriptions', max_target_seqs, '-num_alignments', max_target_seqs])
                 args_list.append(args)
-
             record = BlastQueryRecord()
             record.task_id = task_id
             if request.user.is_authenticated():
