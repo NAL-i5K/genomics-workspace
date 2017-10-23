@@ -27,6 +27,7 @@ class CeleryTestCase(SimpleTestCase):
             stdout, stderr = my_command.communicate()
         finally:
             my_timer.cancel()
+        self.assertEqual("Seems we're already running?" in stderr, True)
         self.assertNotEqual(stdout, '')
 
     def test_celery_worker_process(self):
@@ -38,7 +39,6 @@ class CeleryTestCase(SimpleTestCase):
                 if queue['name'] == 'i5k':
                     is_run = True
                     instance = inst
-                    q_index = j
                     break
         self.assertEqual(is_run, True)
         num_prpocess = len(celery.app.control.inspect(app=app).stats()[instance]['pool']['processes'])
