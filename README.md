@@ -1,5 +1,8 @@
-<!--Under active development, not safe for consumption!
-===================================================-->
+# Genomic-Workspace
+
+[![Build Status](https://travis-ci.org/NAL-i5K/genomics-workspace.svg?branch=master)](https://travis-ci.org/NAL-i5K/genomics-workspace)
+[![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
+
 Live site
 =========
 https://i5k.nal.usda.gov/webapp/blast/
