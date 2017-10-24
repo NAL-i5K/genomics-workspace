@@ -166,3 +166,8 @@ py2.7/
 
 # Sphinx build docs
 sphinx_doc/_build/
+
+# blast binaries
+blast/bin_linux/
+blast/bin_win/
+blast/bin_mac/
