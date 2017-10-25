@@ -74,6 +74,7 @@ before_test:
   - psql -c "create user django with password 'django1234';" -U postgres
   - psql -c "grant all on database django to django;" -U postgres
   - psql -c "ALTER USER django CREATEDB;" -U postgres
+  - python setup.py
   - ps: $celeryProcess = Start-Process "celery" "-A i5k worker --loglevel=info --concurrency=3" -PassThru
   - ps: $celeryBeatProcess = Start-Process "celery" "beat -A i5k --loglevel=info" -PassThru
   - python manage.py makemigrations
