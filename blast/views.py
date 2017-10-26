@@ -50,8 +50,8 @@ def create(request, iframe=False):
         blastdb_list = sorted([[db.type.dataset_type, db.type.get_molecule_type_display(), db.title, db.organism.display_name, db.description] for db in BlastDb.objects.select_related('organism').select_related('type').filter(is_shown=True) if db.db_ready()], key=lambda x: (x[3], x[1], x[0], x[2]))
         blastdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in groupby(sorted(blastdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
         return render(request, 'blast/main.html', {
-            'title': 'BLAST Query', 
-            'blastdb_list': json.dumps(blastdb_list), 
+            'title': 'BLAST Query',
+            'blastdb_list': json.dumps(blastdb_list),
             'blastdb_type_counts': blastdb_type_counts,
             'iframe': iframe
         })
@@ -83,7 +83,7 @@ def create(request, iframe=False):
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
-        
+
         if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
             return render(request, 'blast/invalid_query.html', {'title': 'Your query size is ' + str(path.getsize(query_filename)) + ' bytes, but exceeds our query size limit of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' kbytes,  Please try again with a smaller query size.',})
 
@@ -93,7 +93,7 @@ def create(request, iframe=False):
         db_list = ' '.join([db.fasta_file.path_full for db in BlastDb.objects.filter(title__in=set(request.POST.getlist('db-name'))) if db.db_ready()])
         if not db_list:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
-        
+
         # check if program is in list for security
         if request.POST['program'] in ['blastn', 'tblastn', 'tblastx', 'blastp', 'blastx']:
 
@@ -116,7 +116,7 @@ def create(request, iframe=False):
                         input_opt.extend(['-seg', request.POST['low_complexity']])
                 else:
                     input_opt.extend(['-'+blast_option, request.POST[blast_option]])
-            
+
             program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, request.POST['program'])
             args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
             args_list[0].extend(input_opt)
@@ -188,7 +188,7 @@ def retrieve(request, task_id='1'):
                         'task_id': task_id,
                     })
             else: # if .csv file size is 0, no hits found
-                return render(request, 'blast/results_not_existed.html', 
+                return render(request, 'blast/results_not_existed.html',
                 {
                     'title': 'No Hits Found',
                     'isNoHits': True,
@@ -217,7 +217,7 @@ def retrieve(request, task_id='1'):
             raise Http404
         else:
             return HttpResponse(traceback.format_exc())
-        
+
 def read_gff3(request, task_id, dbname):
     output = '##gff-version 3\n'
     try:
@@ -235,12 +235,12 @@ def status(request, task_id):
             with open(status_file_path, 'rb') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
-                    tlist = cache.get('task_list_cache', []) 
-                    num_preceding = -1; 
+                    tlist = cache.get('task_list_cache', [])
+                    num_preceding = -1;
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
-                                num_preceding = index 
+                                num_preceding = index
                                 break
                     statusdata['num_preceding'] = num_preceding
                 elif statusdata['status'] == 'running':

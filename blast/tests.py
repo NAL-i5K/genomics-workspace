@@ -378,7 +378,7 @@ class TestBlastBinary(SimpleTestCase):
     def test_blastn(self):
         program = 'blastn'
         run_blast(program, self.assertEqual)
-    
+
     def test_tblastn(self):
         program = 'tblastn'
         run_blast(program, self.assertEqual)
@@ -386,7 +386,7 @@ class TestBlastBinary(SimpleTestCase):
     def test_tblastx(self):
         program = 'tblastx'
         run_blast(program, self.assertEqual)
-    
+
     def test_blastx(self):
         program = 'blastx'
         run_blast(program, self.assertEqual)
@@ -397,7 +397,7 @@ def run_blast(program, assertEqual):
 
 def generate_blast_args(program):
     input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
-    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')        
+    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
     asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
     if program == 'blastp':
         query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')

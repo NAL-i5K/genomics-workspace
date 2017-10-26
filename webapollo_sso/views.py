@@ -219,7 +219,7 @@ def get_my_organism(request):
     user = json.loads(response.read())[0]
 
     '''
-    cache results of 'findAllOrganisms' in 
+    cache results of 'findAllOrganisms' in
     session variable 'allOrganism' in first time query.
     '''
     if('allOrganism' in request.session):
@@ -231,7 +231,7 @@ def get_my_organism(request):
 
     result = {}
     user_groups = map(lambda x:x['name'], user['groups'])
-   
+
     '''
     return objects format(dictionary)
     key, (organism_commonName)_(orgnism_id)
@@ -249,7 +249,7 @@ def get_my_organism(request):
                 result[organism['commonName']+"_"+str(organism['id'])] = [False,is_pending_request,short_name]
 
     opener.close()
-    
+
     return HttpResponse(json.dumps(OrderedDict(sorted(result.items()))), content_type="application/json")
 
 @login_required
@@ -270,7 +270,7 @@ def get_my_request(request):
     data.update({"userId" : request.session['apollo_user_id']})
     response = opener.open(req, json.dumps(data))
     user = json.loads(response.read())[0]
-   
+
     if('allOrganism' in request.session):
         organisms = request.session['allOrganism']
     else:
@@ -387,7 +387,7 @@ def make_request(request):
 
     try:
         if(action == "RELEASE" or action == "REQUEST"):
-            perm_request = PermsRequest.objects.create(action=action, oid=oid, oname=oname, 
+            perm_request = PermsRequest.objects.create(action=action, oid=oid, oname=oname,
                     user_apply=request.user, status="PENDING", apply_desc=apply_desc)
             perm_request.save()
         return HttpResponse(json.dumps({}), content_type="application/json")
@@ -398,7 +398,7 @@ def make_request(request):
 @login_required
 def handle_request(request):
     '''
-    Approve/Deny other's request 
+    Approve/Deny other's request
     '''
     action = request.POST['action'] #decision
     oid    = request.POST['oid'] #organism id
@@ -412,7 +412,7 @@ def handle_request(request):
     perm_request.reply_desc = reply_desc
     perm_request.user_reply = request.user #who did this decision
 
-    
+
     if(perm_request.action == "REQUEST" and action=="ACCEPT"):
         #ask for permission and get approved
         perm_request.status = "ACCEPTED"
@@ -616,14 +616,14 @@ def update_user(request):
         except UserMapping.DoesNotExist:
             #for secure
             #return HttpResponse(json.dumps({'error':'User not existed'}), content_type="application/json")
-            
+
             #password = encodeAES(User.objects.make_random_password(length=20)) if new_password == '' else encodeAES(new_password)
             user_info = UserMapping.objects.create(apollo_user_id=user_id,
                                                    apollo_user_name=email,
                                                    apollo_user_pwd=encodeAES(password),
                                                    django_user=User.objects.get(username=django_username) if(django_username != '') else None)
             user_info.save()
-            
+
 
     return HttpResponse(json.dumps(result), content_type="application/json")
 
@@ -665,7 +665,7 @@ def create_group_for_organism(request):
     '''
     Used in Group(Admin), Detail tab, Create button.
     Create GROUP_(name)_ADMIN and GROUP_(name)_USER at the same time.
-    GROUP_(name)_ADMIN with no priviledge. 
+    GROUP_(name)_ADMIN with no priviledge.
     GROUP_(name)_USER with WRITE/EXPORT/READ
     '''
     full_name =  request.POST['fullName']
@@ -679,10 +679,10 @@ def create_group_for_organism(request):
     data2 = {"name" : group_user}
     data2.update(_get_my_priviledge(request))
 
-    data_admin_perms = {"name": group_admin, "organism" : full_name, 
+    data_admin_perms = {"name": group_admin, "organism" : full_name,
             "ADMINISTRATE" : False, "WRITE" : False, "EXPORT" : False, "READ" : False}
     data_admin_perms.update(_get_my_priviledge(request))
-    data_user_perms = {"name": group_user, "organism" : full_name, 
+    data_user_perms = {"name": group_user, "organism" : full_name,
             "ADMINISTRATE" : False, "WRITE" : True,  "EXPORT" : True,  "READ" : True}
     data_user_perms.update(_get_my_priviledge(request))
 
@@ -716,7 +716,7 @@ def delete_group_for_organism(request):
     '''
     Used in Group(Admin), Detail tab, delete button.
     Delete GROUP_(name)_ADMIN and GROUP_(name)_USER at the same time.
-    ''' 
+    '''
     oname = request.POST['oname']
     group_admin = '_'.join(["GROUP", oname, "ADMIN"])
     group_user  = '_'.join(["GROUP", oname, "USER"])
@@ -765,7 +765,7 @@ def check_organism_exist(request):
     '''
     Used in Group(Admin) page, Detail tab, Organism Name inputbox, called in AJAX
     check whether organism(fullname) exist or not.
-    ''' 
+    '''
     organism_name = request.POST['oname']
 
     req = _get_url_request(_APOLLO_URL+'/organism/findAllOrganisms')
@@ -823,7 +823,7 @@ def apollo_connect(request):
 def get_pending_request_admin(request):
     '''
     Used in PendingReq(Admin)
-    List all pending request 
+    List all pending request
     '''
     perm_request_array = PermsRequest.objects.filter(status="PENDING").all()
 
@@ -833,10 +833,10 @@ def get_pending_request_admin(request):
             apollo_name = _django_user_to_apollo_name(perm_request.user_apply)
             if apollo_name == None:
                 continue
-            result.append({'apollo_name':apollo_name, 
-                'action':perm_request.action, 
-                'oname':perm_request.oname, 
-                'desc':perm_request.apply_desc, 
+            result.append({'apollo_name':apollo_name,
+                'action':perm_request.action,
+                'oname':perm_request.oname,
+                'desc':perm_request.apply_desc,
                 'date':perm_request.apply_date.strftime("%Y-%m-%d %H:%M:%S")})
 
         return HttpResponse(json.dumps(result), content_type="application/json")
@@ -868,7 +868,7 @@ def get_my_reqhist(request):
 def update_group_permissions(request):
     '''
     Used in Group(Admin), Organism tab, permission button
-    currently update read/write/export 
+    currently update read/write/export
     '''
     read_p = request.POST['read_p']
     write_p = request.POST['write_p']
@@ -977,7 +977,7 @@ def get_short_name(request, display_name, OID=-1):
         short_name = short_name.upper()
     except Organism.DoesNotExist:
         short_name = None
-    
+
     #make short_name in cache
     request.session[display_name] = short_name
     if(OID != -1):
