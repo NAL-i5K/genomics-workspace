@@ -9,6 +9,7 @@ services:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
   - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - export PATH=$PATH:$(pwd)
@@ -33,5 +34,8 @@ before_script:
 
 # command to run tests
 script:
-  - python manage.py test i5k.tests --noinput
-  - python manage.py test blast.tests --noinput
+  - coverage run --source=./ manage.py test i5k.tests --noinput
+  - coverage run --source=./ manage.py test blast.tests --noinput
+
+after_success:
+  - coveralls
