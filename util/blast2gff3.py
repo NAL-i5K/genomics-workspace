@@ -28,7 +28,7 @@ def blast2gff3(blast_program='blastn', csv_path='C:\\Users\\clee\\Desktop\\Works
             content_groups.append(list(g))      # Store group iterator as a list
 
         for hsps in content_groups:
-        
+
             hsp_plus_strand = []
             hsp_minus_strand = []
             hsp_unknown_strand = []
@@ -54,7 +54,7 @@ def blast2gff3(blast_program='blastn', csv_path='C:\\Users\\clee\\Desktop\\Works
                 tmp_col15_strand = get_strand(hsp[11], hsp[12])
                 if tmp_col15_strand == '-': hsp[11], hsp[12] = hsp[12], hsp[11]
                 tmp_col13_query_start = hsp[11]
-                tmp_col14_query_end = hsp[12]           
+                tmp_col14_query_end = hsp[12]
 
                 tmp_hsp = [gff_col1_sseqid, gff_col2_source, gff_col3_type, gff_col4_start, gff_col5_end, gff_col6_score, gff_col7_strand, gff_col8_phase, gff_col9_class_name, tmp_col10_qseqid, tmp_col11_name, tmp_col12_target, tmp_col13_query_start, tmp_col14_query_end, tmp_col15_strand, 0, 0, 0]
                 # Identify sequence strand and put it in a specified track
@@ -175,7 +175,7 @@ def check_query_overlap(arr_hsps_input):
     for arr_hsp_input in arr_hsps_input:
         if arr_hsp_input[12] < pre_query_end and pre_query_end - arr_hsp_input[12] > define_overlap_base_for_query:
             arr_hsp_input[15] = 1
-        
+
         pre_query_end = arr_hsp_input[13]
 
         arr_hsps_output.append(arr_hsp_input)
@@ -208,20 +208,20 @@ def make_gff(arr_hsps_input):
 
         if arr_hsp_input[4] > max_ref_end:
             max_ref_end = arr_hsp_input[4]
-    
+
     # Congratulations! All HSPs here are perfect (i.e.,no overlapping and all consecutive) and can be linked together with a track
-    if (is_query_seq_overlap or is_ref_seq_overlap or is_query_seq_non_consecutive) == 0: 
+    if (is_query_seq_overlap or is_ref_seq_overlap or is_query_seq_non_consecutive) == 0:
         sub_ID_num = 1 # The suffix number of match_part HSPs in a track
 
         # Generate the match record
-        tmp_match = [arr_hsps_input[0][0], 
-                     arr_hsps_input[0][1], 
-                     'match', 
-                     min_ref_start, 
-                     max_ref_end, 
-                     arr_hsps_input[0][5], 
-                     arr_hsps_input[0][6], 
-                     arr_hsps_input[0][7], 
+        tmp_match = [arr_hsps_input[0][0],
+                     arr_hsps_input[0][1],
+                     'match',
+                     min_ref_start,
+                     max_ref_end,
+                     arr_hsps_input[0][5],
+                     arr_hsps_input[0][6],
+                     arr_hsps_input[0][7],
                      'ID='+arr_hsps_input[0][9]+'%04d;Name='%ID_num+arr_hsps_input[0][10]+'0001;Target='+arr_hsps_input[0][11]+' '+str(arr_hsps_input[0][12])+' '+str(arr_hsps_input[0][13])+' '+arr_hsps_input[0][14]]
 
         # Put tmp_match into hsp_output
@@ -229,16 +229,16 @@ def make_gff(arr_hsps_input):
 
         # Generate the match_part record
         for arr_hsp_input in arr_hsps_input:
-            tmp_match_part = [arr_hsp_input[0], 
-                                  arr_hsp_input[1], 
-                                  'match_part', 
-                                  arr_hsp_input[3], 
-                                  arr_hsp_input[4], 
-                                  arr_hsp_input[5], 
-                                  arr_hsp_input[6], 
-                                  arr_hsp_input[7], 
+            tmp_match_part = [arr_hsp_input[0],
+                                  arr_hsp_input[1],
+                                  'match_part',
+                                  arr_hsp_input[3],
+                                  arr_hsp_input[4],
+                                  arr_hsp_input[5],
+                                  arr_hsp_input[6],
+                                  arr_hsp_input[7],
                                   'ID='+arr_hsp_input[9]+'%04d_%04d;Parent='%(ID_num, sub_ID_num)+arr_hsp_input[9]+'%04d;Target='%ID_num+arr_hsp_input[11]+' '+str(arr_hsp_input[12])+' '+str(arr_hsp_input[13])+' '+arr_hsp_input[14]]
-        
+
             # Put tmp_match_part into hsp_output
             arr_hsps_output.append(tmp_match_part)
 
@@ -253,28 +253,28 @@ def make_gff(arr_hsps_input):
             if arr_hsp_input[16] == 1:
                 name_num += 1
                 # Generate the match record
-                tmp_match = [arr_hsp_input[0], 
-                                  arr_hsp_input[1], 
-                                  'match', 
-                                  arr_hsp_input[3], 
-                                  arr_hsp_input[4], 
-                                  arr_hsp_input[5], 
-                                  arr_hsp_input[6], 
-                                  arr_hsp_input[7], 
+                tmp_match = [arr_hsp_input[0],
+                                  arr_hsp_input[1],
+                                  'match',
+                                  arr_hsp_input[3],
+                                  arr_hsp_input[4],
+                                  arr_hsp_input[5],
+                                  arr_hsp_input[6],
+                                  arr_hsp_input[7],
                                   'ID='+arr_hsp_input[9]+'%04d;Name='%ID_num+arr_hsp_input[10]+'%04d;Target='%name_num+arr_hsp_input[11]+' '+str(arr_hsp_input[12])+' '+str(arr_hsp_input[13])+' '+arr_hsp_input[14]]
 
                 # Put tmp_match into hsp_output
                 arr_hsps_output.append(tmp_match)
 
                 # Generate the match_part record
-                tmp_match_part = [arr_hsp_input[0], 
-                                       arr_hsp_input[1], 
-                                       'match_part', 
-                                       arr_hsp_input[3], 
-                                       arr_hsp_input[4], 
-                                       arr_hsp_input[5], 
-                                       arr_hsp_input[6], 
-                                       arr_hsp_input[7], 
+                tmp_match_part = [arr_hsp_input[0],
+                                       arr_hsp_input[1],
+                                       'match_part',
+                                       arr_hsp_input[3],
+                                       arr_hsp_input[4],
+                                       arr_hsp_input[5],
+                                       arr_hsp_input[6],
+                                       arr_hsp_input[7],
                                        'ID='+arr_hsp_input[9]+'%04d_0001;Parent='%ID_num+arr_hsp_input[9]+'%04d;Target='%ID_num+arr_hsp_input[11]+' '+str(arr_hsp_input[12])+' '+str(arr_hsp_input[13])+' '+arr_hsp_input[14]]
 
                 # Put tmp_match_part into hsp_output
@@ -283,28 +283,28 @@ def make_gff(arr_hsps_input):
             # Use the same track here in the conditions of query sequences overlapping or non-consecutive
             else:
                 # Generate the match record
-                tmp_match = [arr_hsp_input[0], 
-                                  arr_hsp_input[1], 
-                                  'match', 
-                                  arr_hsp_input[3], 
-                                  arr_hsp_input[4], 
-                                  arr_hsp_input[5], 
-                                  arr_hsp_input[6], 
-                                  arr_hsp_input[7], 
+                tmp_match = [arr_hsp_input[0],
+                                  arr_hsp_input[1],
+                                  'match',
+                                  arr_hsp_input[3],
+                                  arr_hsp_input[4],
+                                  arr_hsp_input[5],
+                                  arr_hsp_input[6],
+                                  arr_hsp_input[7],
                                   'ID='+arr_hsp_input[9]+'%04d;Name='%ID_num+arr_hsp_input[10]+'0001;Target='+arr_hsp_input[11]+' '+str(arr_hsp_input[12])+' '+str(arr_hsp_input[13])+' '+arr_hsp_input[14]]
 
                 # Put tmp_match into hsp_output
                 arr_hsps_output.append(tmp_match)
 
                 # Generate the match_part record
-                tmp_match_part = [arr_hsp_input[0], 
-                                       arr_hsp_input[1], 
-                                       'match_part', 
-                                       arr_hsp_input[3], 
-                                       arr_hsp_input[4], 
-                                       arr_hsp_input[5], 
-                                       arr_hsp_input[6], 
-                                       arr_hsp_input[7], 
+                tmp_match_part = [arr_hsp_input[0],
+                                       arr_hsp_input[1],
+                                       'match_part',
+                                       arr_hsp_input[3],
+                                       arr_hsp_input[4],
+                                       arr_hsp_input[5],
+                                       arr_hsp_input[6],
+                                       arr_hsp_input[7],
                                        'ID='+arr_hsp_input[9]+'%04d_0001;Parent='%ID_num+arr_hsp_input[9]+'%04d;Target='%ID_num+arr_hsp_input[11]+' '+str(arr_hsp_input[12])+' '+str(arr_hsp_input[13])+' '+arr_hsp_input[14]]
 
                 # Put tmp_match_part into hsp_output
@@ -332,7 +332,7 @@ def output_gff(arr_hsps_input, out_path):
         for hsp in arr_hsps_input:
             tmp_str = jBrowse_ref_name+"\t"+hsp[1]+"\t"+hsp[2]+"\t"+str(hsp[3])+"\t"+str(hsp[4])+"\t"+str(hsp[5])+"\t"+hsp[6]+"\t"+str(hsp[7])+"\t"+hsp[8]+"\n"
             fp.write(tmp_str)
-    
+
         fp.close()
         return 1
 
@@ -342,7 +342,7 @@ def output_gff(arr_hsps_input, out_path):
 #This function will generate an additional column of BLAST_DB which is queried by sseqid (the 2nd column in csv).
 def output_csv(in_csv_path='C:\\Users\\clee\\Desktop\\Works\\blast2gff3\\python\\6a991080e94a4174bbd2ac09ba840251\\6a991080e94a4174bbd2ac09ba840251.csv', blast_out_col_types = [str, str, float, int, int, int, int, int, int, int, int, int, int, int, int, float, int, int, int]):
     ###########################################################################################################################################
-    ## The hyperlinks for linking jBrowse should be formed as the format like: 
+    ## The hyperlinks for linking jBrowse should be formed as the format like:
     ## http://gmod-dev.nal.usda.gov:8080/[ORGANISM]/jbrowse/?task_id=[TASK_ID]&dbname=[BLAST_DB]
     ## example: http://gmod-dev.nal.usda.gov:8080/cercap/jbrowse/?task_id=5a37a3e9994e4cac93a10621fe97e6f6&dbname=Ccap01172013-genome_new_ids
     ###########################################################################################################################################
