@@ -34,7 +34,7 @@ class Organism(models.Model):
     short_name = models.CharField(max_length=20, unique=True, help_text='This is used for file names and variable names in code') # used in code or filenames
     description = models.TextField(blank=True) # optional
     tax_id = models.PositiveIntegerField('NCBI Taxonomy ID', null=True, blank=True, help_text='This is passed into makeblast') # ncbi tax id
-    
+
     def natural_key(self):
         return (self.short_name,)
 
@@ -50,8 +50,8 @@ class SequenceType(models.Model):
     molecule_type = models.CharField(max_length=4, default='nucl', choices=(
         ('nucl', 'Nucleotide'),
         ('prot', 'Peptide'))) # makeblastdb -dbtype
-    dataset_type = models.CharField(max_length=50, unique=True) # 
-    
+    dataset_type = models.CharField(max_length=50, unique=True)
+
     def natural_key(self):
         return (self.dataset_type,)
 
@@ -67,26 +67,26 @@ class BlastDbManager(models.Manager):
 
 class BlastDb(models.Model):
     objects = BlastDbManager()
-    organism = models.ForeignKey(app.models.Organism) # 
-    type = models.ForeignKey(SequenceType) # 
-    #fasta_file = models.FileField(upload_to='blastdb') # upload file
+    organism = models.ForeignKey(app.models.Organism)
+    type = models.ForeignKey(SequenceType)
+    # fasta_file = models.FileField(upload_to='blastdb') # upload file
     fasta_file = FileBrowseField('FASTA file path', max_length=200, directory='blast/db/', extensions='FASTA', format='FASTA')
     title = models.CharField(max_length=200, unique=True, help_text='This is passed into makeblast -title') # makeblastdb -title
-    description = models.TextField(blank=True) # shown in blast db selection ui
+    description = models.TextField(blank=True)  # shown in blast db selection ui
     is_shown = models.BooleanField(default=None, help_text='Display this database in the BLAST submit form') # to temporarily remove from blast db selection ui
-    #sequence_count = models.PositiveIntegerField(null=True, blank=True) # number of sequences in this fasta
-    
+    # sequence_count = models.PositiveIntegerField(null=True, blank=True)  # number of sequences in this fasta
+
     # properties
     def fasta_file_exists(self):
         return os.path.isfile(self.fasta_file.path_full)
     fasta_file_exists.boolean = True
     fasta_file_exists.short_description = 'fasta file exists'
-    
+
     def blast_db_files_exists(self):
         return all([os.path.isfile(self.fasta_file.path_full + '.' + self.type.molecule_type[0] + ext) for ext in  ['hd', 'hi', 'hr', 'in', 'og', 'sd', 'si', 'sq']])
     blast_db_files_exists.boolean = True
     blast_db_files_exists.short_description = 'blast db files exists'
-    
+
     def sequence_set_exists(self):
         return self.sequence_set.count() > 0
     sequence_set_exists.boolean = True
@@ -105,7 +105,7 @@ class BlastDb(models.Model):
             bin_name = 'bin_win'
         elif platform == 'darwin':
             bin_name = 'bin_mac'
-        
+
         makeblastdb_path = os.path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
         args = [makeblastdb_path, '-in', self.fasta_file.path_full, '-dbtype', self.type.molecule_type, '-hash_index'] # , '-parse_seqids' TODO: make option
         if self.title:
@@ -128,27 +128,26 @@ class BlastDb(models.Model):
             with open(self.fasta_file.path_full, 'rb') as f:
                 offset = 0
                 id = ''
-                #header = ''
+                # header = ''
                 length = 0
                 seq_start_pos = 0
-                seq_end_pos = 0
                 for line in f:
                     stripped = line.strip()
                     if len(stripped) > 0:
-                        if stripped[0] == '>': # header
-                            if length > 0: # not first sequence, add previous sequence to db
+                        if stripped[0] == '>':  # header
+                            if length > 0:  # not first sequence, add previous sequence to db
                                 sequence_list.append(Sequence(blast_db=self, id=id, length=length, seq_start_pos=seq_start_pos, seq_end_pos=offset))
-                                #seq_count += 1
-                            seq_start_pos = offset + line.find('>') # white chars before '>'
-                            #header = stripped[1:] # exclue '>'
+                                # seq_count += 1
+                            seq_start_pos = offset + line.find('>')  # white chars before '>'
+                            # header = stripped[1:] # exclue '>'
                             id = stripped.split(None, 1)[0][1:]
                             length = 0
-                        else: # sequence
+                        else:  # sequence
                             length += len(stripped)
                     offset += len(line)
-                if length > 0: # add last sequence
+                if length > 0:  # add last sequence
                     sequence_list.append(Sequence(blast_db=self, id=id, length=length, seq_start_pos=seq_start_pos, seq_end_pos=offset))
-                    #seq_count += 1
+                    # seq_count += 1
             if len(sequence_list) > 0:
                 Sequence.objects.bulk_create(sequence_list)
             return 0, '', '%d sequences added.' % len(sequence_list)
@@ -171,11 +170,11 @@ class Sequence(models.Model):
     SELECT [key], blast_db_id, id, length, seq_start_pos, seq_end_pos, modified_date FROM blast_sequence
     '''
     key = models.AutoField(primary_key=True)
-    blast_db = models.ForeignKey(BlastDb, verbose_name='BLAST DB') # 
-    id = models.CharField(max_length=200, unique=True) # gi|45478711|ref|NC_005816.1|
-    length = models.PositiveIntegerField() # 
-    seq_start_pos = models.BigIntegerField() # used for file.seek(offset), marks start of '>'
-    seq_end_pos = models.BigIntegerField() # used to calculate file.read(size)
+    blast_db = models.ForeignKey(BlastDb, verbose_name='BLAST DB')
+    id = models.CharField(max_length=200, unique=True)  # gi|45478711|ref|NC_005816.1|
+    length = models.PositiveIntegerField()
+    seq_start_pos = models.BigIntegerField()  # used for file.seek(offset), marks start of '>'
+    seq_end_pos = models.BigIntegerField()  # used to calculate file.read(size)
     modified_date = models.DateTimeField(auto_now_add=True)
 
     def fasta_seq(self):
@@ -210,7 +209,7 @@ class Sequence(models.Model):
 
 class JbrowseSetting(models.Model):
     'Used to link databases to Jbrowse'
-    blast_db = models.OneToOneField(BlastDb, verbose_name='reference', unique=True, help_text='The BLAST database used as the reference in Jbrowse') # 
+    blast_db = models.OneToOneField(BlastDb, verbose_name='reference', unique=True, help_text='The BLAST database used as the reference in Jbrowse') #
     url = models.URLField('Jbrowse URL', unique=True, help_text='The URL to Jbrowse using this reference')
 
     def __unicode__(self):

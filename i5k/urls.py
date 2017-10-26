@@ -15,7 +15,7 @@ admin.autodiscover()
 login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = patterns('',
-    
+
     url(r'^tripal_assembly_data', 'app.views.tripal_assembly_data', name='tripal_assembly_data'),
     url(r'^tripal_gene_prediction', 'app.views.tripal_gene_prediction', name='tripal_gene_prediction'),
     url(r'^tripal_mapped', 'app.views.tripal_mapped', name='tripal_mapped'),
@@ -53,7 +53,7 @@ urlpatterns = patterns('',
         },
         name='login'),
     url(r'^logout$', 'app.views.logout_all', name='logout'),
-    url(r'^password_reset$', 
+    url(r'^password_reset$',
         'django.contrib.auth.views.password_reset',
         {
             'template_name': 'app/password_reset.html',
