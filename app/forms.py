@@ -34,7 +34,7 @@ class BootStrapPasswordChangeForm(PasswordChangeForm):
                                         'class':'form-control',
                                         'placeholder': 'New password',
                                     })
-                                  ) 
+                                  )
     def clean_new_password1(self):
         new_password1 = self.cleaned_data.get("new_password1")
         if len(new_password1) < 8:
@@ -55,7 +55,7 @@ class BootStrapSetPasswordForm(SetPasswordForm):
         new_password1 = self.cleaned_data.get("new_password1")
         if len(new_password1) < 8:
             raise forms.ValidationError('Password must be at least 8 characters long and must contain at least one letter and at least one digit.')
-        
+
         first_isalpha = new_password1[0].isalpha()
         if all(c.isalpha() == first_isalpha for c in new_password1):
             raise forms.ValidationError('Password must be at least 8 characters long and must contain at least one letter and at least one digit.')
@@ -75,7 +75,7 @@ class InfoChangeForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['first_name', 'last_name', 'email', 'institution']
-    
+
     def __init__(self, *args, **kw):
         super(InfoChangeForm, self).__init__(*args, **kw)
         self.fields['first_name'].initial = self.instance.user.first_name
@@ -103,7 +103,7 @@ class SetInstitutionForm(forms.ModelForm):
     class Meta:
         model = Profile
         fields = ['institution']
-    
+
     def __init__(self, *args, **kw):
         super(SetInstitutionForm, self).__init__(*args, **kw)
         self.fields['institution'].widget.attrs.update({'class': 'form-control', 'placeholder': 'e.g. National Agricultural Library'})
@@ -135,9 +135,9 @@ class RegistrationForm(UserCreationForm):
         first_isalpha = password1[0].isalpha()
         if all(c.isalpha() == first_isalpha for c in password1):
             raise forms.ValidationError('Password must be at least 8 characters long and must contain at least one letter and at least one digit.')
-        
+
         return password1
-    
+
     def clean_email(self):
         email = self.cleaned_data.get("email")
         if User.objects.filter(email=email):

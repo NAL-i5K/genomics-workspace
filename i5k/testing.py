@@ -1,4 +1,4 @@
-from django.test import TransactionTestCase     
+from django.test import TransactionTestCase
 from django.test.runner import DiscoverRunner
 
 # Custom DiscoverRunner as stated in https://stackoverflow.com/a/26396157/5363040
@@ -14,7 +14,7 @@ class MyDiscoverRunner(DiscoverRunner):
         will be added to the test suite.
 
         If any of the tests in the test suite inherit from
-        ``django.test.TransactionTestCase``, databases will be setup. 
+        ``django.test.TransactionTestCase``, databases will be setup.
         Otherwise, databases will not be set up.
 
         Returns the number of tests that failed.
@@ -22,7 +22,7 @@ class MyDiscoverRunner(DiscoverRunner):
         self.setup_test_environment()
         suite = self.build_suite(test_labels, extra_tests)
         # ----------------- First Addition --------------
-        need_databases = any(isinstance(test_case, TransactionTestCase) 
+        need_databases = any(isinstance(test_case, TransactionTestCase)
                              for test_case in suite)
         old_config = None
         if need_databases:

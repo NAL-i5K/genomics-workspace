@@ -99,4 +99,4 @@ class UserViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = UserSerializer
     lookup_field = 'pk'
 
-        
+
