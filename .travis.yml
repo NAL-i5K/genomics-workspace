@@ -24,7 +24,8 @@ before_script:
   - sudo touch /var/log/django/i5k.log
   - sudo chmod 666 /var/log/django/i5k.log
   - python manage.py makemigrations
-  - python manage.py migrate &
+  - python manage.py migrate
+  - python setup.py
   - celery -A i5k worker --loglevel=info --concurrency=3 &
   - celery beat -A i5k --loglevel=info &
   - python manage.py collectstatic --noinput
