@@ -2,6 +2,7 @@
 
 [![Build Status](https://travis-ci.org/NAL-i5K/genomics-workspace.svg?branch=master)](https://travis-ci.org/NAL-i5K/genomics-workspace/?branch=master)
 [![](https://ci.appveyor.com/api/projects/status/4m6nngj0vrd21st6/branch/master?svg=true)](https://ci.appveyor.com/project/hsiaoyi0504/genomics-workspace/branch/master)
+[![Coverage Status](https://coveralls.io/repos/github/NAL-i5K/genomics-workspace/badge.svg?branch=master)](https://coveralls.io/github/NAL-i5K/genomics-workspace?branch=master)
 [![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
 
 Live site
