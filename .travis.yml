@@ -9,6 +9,7 @@ services:
 # command to install dependencies
 install:
   - pip install -r requirements.txt
+  - pip install coveralls
   - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - export PATH=$PATH:$(pwd)
@@ -24,7 +25,8 @@ before_script:
   - sudo touch /var/log/django/i5k.log
   - sudo chmod 666 /var/log/django/i5k.log
   - python manage.py makemigrations
-  - python manage.py migrate &
+  - python manage.py migrate
+  - python setup.py
   - celery -A i5k worker --loglevel=info --concurrency=3 &
   - celery beat -A i5k --loglevel=info &
   - python manage.py collectstatic --noinput
@@ -32,5 +34,8 @@ before_script:
 
 # command to run tests
 script:
-  - python manage.py test i5k.tests --noinput
-  - python manage.py test blast.tests --noinput
+  - coverage run --source=./ manage.py test i5k.tests --noinput
+  - coverage run --source=./ manage.py test blast.tests --noinput
+
+after_success:
+  - coveralls
