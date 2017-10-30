@@ -1,7 +1,7 @@
-Setup Guide (MacOS)
-===================
+Setup Guide (Windows)
+====================
 
-This setup guide is tested in MacOS Sierra (10.12.6) with django 1.8.12.
+This setup guide is for Windows. It's tested in Windwos 8.1 with django 1.8.12
 
 Note: The following variables may be used in path names; substitute as appropriate::
 
@@ -9,76 +9,93 @@ Note: The following variables may be used in path names; substitute as appropria
    <user-home> :  the user's home directory, e.g., /home/<user>
    <git-home>  :  the directory containing the genomics-workspace, and `.git/` folder for `git` will be there.
 
+Install Git
+-----------
+
+* Download: http://git-scm.com/downloads
+
 Project Applications
 --------------------
 
-Clone or refresh the genomics-workspace::
+* Download genomics-workspace to a location of your choice, we will use ``C:\`` as an example in the following steps.
+* use administrator and run::
 
-    git clone https://github.com/NAL-i5K/genomics-workspace
+   git clone https://github.com/NAL-i5K/genomics-workspace.git
+   # Or if the  repository exists:
+   cd <git-home>
+   git fetch
 
-    # Or if the  repository exists:
-    cd <git-home>
-    git fetch
+Microsoft Visual C++
+--------------------
 
-Homebrew
---------
+* Install Microsoft Visual C++ 9.0 (if you don't have).
 
-We recommend to use `Homebrew <https://brew.sh/>`_ as package manager. Installation steps can be found at `https://brew.sh/ <https://brew.sh/>`_.
+* Download from: http://www.microsoft.com/en-us/download/details.aspx?id=44266
 
 Python
 ------------
-Install virtualenv::
 
-    pip install virtualenv
+* Download from https://www.python.org/downloads/
+
+* The default installation location is ``C:\Python27``, if you did not use the default, modify the following steps accordingly.
+
+* Install pip (if you don't have pip)
+
+   * Download ``get-pip.py``: https://bootstrap.pypa.io/get-pip.py
+   * Run ``C:\Python27\python get-pip.py``
+   * ``pip.exe`` should now be in ``C:\Python27\Scripts``
+
+* Make sure ``C:\Python27`` and ``C:\Python27\Scripts`` are in your ``PATH`` environment variable.
+
+* Install ``virtualenv``::
+
+   pip install virtualenv
 
 Build a separate virtualenv::
 
-    # Make root dir for virtualenv and cd into it:
-    cd genomics-workspace
-
+    cd <git-home>
     # Create a virtual environment called py2.7 and activate:
     virtualenv py2.7
-    source py2.7/bin/activate
+    # C:\genomics-workspace\py2.7\Scripts\activate
 
 
 RabbitMQ
 --------
 
-Install and run RabbitMQ Server::
+* Before installing the RabbitMQ server, we need to install Erlang, and it can be downloaded from http://www.erlang.org/download.html
 
-    brew install rabbitmq
-    # Make sure /usr/local/sbin is in your $PATH
-    rabbitmq-server
+* Download RabbitMQ from http://www.rabbitmq.com/download.html
+
+* Start the RabbitMQ service after installation
+
+* Make sure ``C:\Program Files\RabbitMQ Server\rabbitmq_server-3.6.12\sbin`` is in your ``PATH``.
 
 
 Memcached
 ---------
 
-Install and activate memcached::
-
-   brew install memcached
-   memcached
-
+* Tutorial: https://commaster.net/content/installing-memcached-windows
 
 Database
 --------
 
-Install PostgreSQL::
+Install PostgreSQL, download from * Download: https://www.postgresql.org/download/windows/
 
-    brew postgres
-    psql postgres
+* During installation you will needs to set a password for the ``postgres`` superuser, and a connection port (default: 5432) which will be needed in later steps.
+* Create a user and a database for django-blast, as an example, we will create a user ``django``, and grant all privileges to ``django`` using the command line tool ``psql``.
+* ``psql`` should be at ``Start Menu -> All programs -> PostgreSQL 9.3 -> SQL Shell (psql)``
+* Log in, accept the default values by pressing ``enter``, and give it the password for ``postgres`` which was set during installation.
+* After logging in, you should see the command prompt ``postgres=#``. Run the following commands, and change ``myPassword`` to something else
+* At the prompt ``postgres=#`` enter::
 
-    # At the prompt 'postgres=#' enter:
-    create database django;
-    create user django;
-    grant all on database django to django;
-
+    CREATE USER django WITH PASSWORD 'django1234';
+    CREATE DATABASE django
+    GRANT ALL PRIVILEGES ON DATABASE django TO django;`
+    ALTER USER django CREATEDB;`
     # Connect to django database:
     \c django
-
     # Create extension hstore:
     create extension hstore;
-
     # Exit psql and postgres user:
     \q
     exit
@@ -92,36 +109,41 @@ Install additional Python packages::
     cd <git-home>
     pip install -r requirements.txt
 
-Chrome Driver
--------------
-* Install ChromeDriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
 
-* Add to PATH
+ChromeDriver
+------------
+* install ChromeDriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
+
+* add to PATH
 
 Celery
 ------
-
-Configure celery::
+Configure the celery::
 
     # Run celery manually
     celery -A i5k worker --loglevel=info --concurrency=3
     # Run celery beat maually as well
     celery -A i5k beat --loglevel=info
 
+
 Migrate Schema to to PostgreSQL
 -------------------------------
 
 Run migrate::
 
-    cd <git-home>
-    # create log files
-    sudo mkdir /var/log/django/
-    sudo touch /var/log/django/django.log
-    sudo chmod 666 /var/log/django/django.log
-    sudo touch /var/log/django/i5k.log
-    sudo chmod 666 /var/log/django/i5k.log
-    python manage.py makemigrations
-    python manage.py migrate
+   cd <git-home>
+   `mkdir C:\\var\\log\\django\\`
+   `ECHO >> C:\\var\\log\\django\\django.log`
+   `ECHO >> C:\\var\\log\\django\\i5k.log`
+   `mkdir C:\\[Path to genomics-workspace]\\genomics-workspace\\media\\blast\\db\\`
+   # create log files
+   sudo mkdir /var/log/django/
+   sudo touch /var/log/django/django.log
+   sudo touch /var/log/django/i5k.log
+   sudo chmod 666 /var/log/django/django.log
+   sudo chmod 666 /var/log/i5k/i5k.log
+   python manage.py makemigrations
+   python manage.py migrate
 
 
 Install BLAST binary
@@ -141,14 +163,11 @@ To run developement server::
     python manage.py collectstatic
     python manage.py runserver
 
-
 ================================================================================
 
 This section documents the procedure to load organisms into the BLAST database.
 
-PRE-REQUISITES.
-
-::
+PRE-REQUISITES::
 
     Storage: At least 32 GB of disk space.
     Memory:  At least 10 GB of memory in the system or VM.
@@ -227,7 +246,9 @@ Navigate to:
 
    Home » BLAST » BLAST databases
 
-On this screen for each organism::
+On this screen for each organism:
+
+::
 
     1. From the top three dropdown lists, select the organism, the type of database type being
        loaded, and 'yes' for 'is_shown.'
