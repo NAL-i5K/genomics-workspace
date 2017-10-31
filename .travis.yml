@@ -34,8 +34,8 @@ before_script:
 
 # command to run tests
 script:
-  - coverage run --source=./ manage.py test i5k.tests --noinput
-  - coverage run --source=./ manage.py test blast.tests --noinput
+  - coverage run --source=./ manage.py test i5k --noinput
+  - coverage run --source=./ manage.py test blast --noinput
 
 after_success:
   - coveralls

@@ -5,9 +5,7 @@ from subprocess import Popen, PIPE
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.testing import LiveServerTestCase
-# For newer django version
-# from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By

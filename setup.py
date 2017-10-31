@@ -29,17 +29,17 @@ if exists(extracted_blast_path):
 # download the blast binary
 if platform == 'win32':
     urllib.request.urlretrieve(
-        ('ftp://ftp.ncbi.nlm.nih.gov/blast/executables/'
+        ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
             'blast+/2.6.0/ncbi-blast-2.6.0+-x64-win64.tar.gz'),
         local_file_path)
 elif platform == 'darwin':
     urllib.request.urlretrieve(
-        ('ftp://ftp.ncbi.nlm.nih.gov/blast/executables/'
+        ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
             'blast+/2.6.0/ncbi-blast-2.6.0+-x64-macosx.tar.gz'),
         local_file_path)
 else:  # for linux
     urllib.request.urlretrieve(
-        ('ftp://ftp.ncbi.nlm.nih.gov/blast/executables/'
+        ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
             'blast+/2.6.0/ncbi-blast-2.6.0+-x64-linux.tar.gz'),
         local_file_path)
 # extract tar.gz file
