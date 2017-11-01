@@ -45,6 +45,7 @@ nucleotide_seq = (
     "GAAAAGTTAATTGTAAACTTTAATAAATAAATATTTTTTTAAAAACGAGTGTCGTTAAGACAAATTTATAACTTATATATATATAATTTGTTGAAGCCCTGAGAAGCGGTCAAGAGTGAGGTAATTTAGAAAAACGCATTTTTATTTGTTTGCCCGCGTTTCGACCTTTATTCGGGTCATCTTCAGGGCGTGGGTAAATAAGAAATGGCACCGCAAGAATAGCACCACACTTTATGTAAGTATAAAATACTTGGTTCAAAGTTCATATTTATATCTGTATTGCATTTTTTCAAATCAACATGTTTTGTAATTTACCCAGGCCCCGAAGATGACCCGGATAAAGGTCGAAACGCTGGCAAAACAAGAAAAATTGTGTTTTTCTAAAATGCCTCATTCTTCACCGCTCCTCTCGACTTCAAGAAATAATAAAATTATTTCATTTTACCATCA"
 )
 
+
 class FrontEndTestCase(LiveServerTestCase):
     @classmethod
     def setUpClass(self):
@@ -67,6 +68,7 @@ class FrontEndTestCase(LiveServerTestCase):
         super(FrontEndTestCase, self).tearDownClass()
         self.driver.close()
 
+
 class TestClickAll(FrontEndTestCase):
     def test_click_all_organism(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
@@ -88,10 +90,12 @@ class TestClickAll(FrontEndTestCase):
         self.assertEqual(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(), False)
         self.assertEqual(bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")), False)
 
+
 class TestNucleotideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample nucleotide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
@@ -100,6 +104,7 @@ class TestNucleotideSequenceSimple(FrontEndTestCase):
         reset_button = self.driver.find_element_by_css_selector("input.btn_reset")
         reset_button.click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+
 
 class TestNucleotideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
@@ -114,7 +119,8 @@ class TestNucleotideSequenceComplex(FrontEndTestCase):
 class TestPeptideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
@@ -124,20 +130,24 @@ class TestPeptideSequenceSimple(FrontEndTestCase):
         reset_button.click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
+
 class TestPeptideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
         self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup(); $('#query-textarea').val('').keyup();")
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
+
 class TestLoadExampleNucleotideSequence(FrontEndTestCase):
     def test_load_example_sequence(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-nucleotide.txt")))
         self.driver.find_element_by_css_selector("span.load-nucleotide.txt").click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
@@ -153,7 +163,8 @@ class TestLoadExamplePeptideSequence(FrontEndTestCase):
 class TestClickSequenceType(FrontEndTestCase):
     def test_click_sequence_type(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input.all-dataset-checkbox.nucleotide.genome-assembly")))
         assembly = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
         transcript = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
@@ -175,12 +186,21 @@ class TestClickSequenceType(FrontEndTestCase):
         transcript.click()
         checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
-        # protein.click()
+        # select protein
+        protein.click()
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, True], disabled=[True, True, False])
+        checkProgramOptions(self.driver, self.assertEqual, selected=[False, False, False, True, False], disabled=[True, True, True, False, False])
+        # unselect protein
+        protein.click()
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+
 
 class TestHoverIntent(FrontEndTestCase):
     def test_hover_intent(self):
         self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
         all_checkbox = self.driver.find_element_by_class_name("all-organism-checkbox")
         element = self.driver.find_element_by_id("anoplophora-glabripennis")
@@ -189,6 +209,7 @@ class TestHoverIntent(FrontEndTestCase):
         self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), False)
         WebDriverWait(self.driver, 1).until(EC.visibility_of_element_located((By.ID, "Agla_Btl03082013.genome_new_ids.fa")))
         self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), True)
+
 
 def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False]):
     blastn_radio = driver.find_element_by_css_selector("input.program.blastn")
@@ -209,6 +230,7 @@ def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False
     assertEqual(bool(blastp_radio.get_attribute("disabled")), disabled[3])
     assertEqual(bool(blastx_radio.get_attribute("disabled")), disabled[4])
 
+
 def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disabled=[False, False, False]):
     assembly = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
     transcript = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
@@ -221,6 +243,7 @@ def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disab
     assertEqual(bool(assembly.get_attribute("disabled")), disabled[0])
     assertEqual(bool(transcript.get_attribute("disabled")), disabled[1])
     assertEqual(bool(protein.get_attribute("disabled")), disabled[2])
+
 
 class BlastModelTest(TestCase):
     def setUp(self):
@@ -251,6 +274,7 @@ class BlastModelTest(TestCase):
         self.assertEqual(len(all_sequence), 395)
         for s in all_sequence:
             self.assertEqual(s.blast_db.title, 'test')
+
 
 class BlastAdminTestCase(LiveServerTestCase):
     @classmethod
