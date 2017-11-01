@@ -2,6 +2,8 @@
 from os import path
 import sys
 import os
+import socket
+
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
 DEBUG = True
@@ -572,7 +574,7 @@ PIPELINE = {
         },
     },
 }
-if not DEBUG: 
+if not DEBUG:
     PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
@@ -617,7 +619,6 @@ EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
-import socket
 try:
     HOSTNAME = socket.gethostname()
 except:
@@ -630,6 +631,5 @@ ANALYTICS_ENABLED = False
 USE_PROD_SETTINGS = False
 if USE_PROD_SETTINGS:
     from settings_prod import *
-
 
 sys.path.append('%s/misc' % path.dirname(path.abspath(path.dirname(__file__))))

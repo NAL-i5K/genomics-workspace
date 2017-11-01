@@ -45,10 +45,11 @@ nucleotide_seq = (
     "GAAAAGTTAATTGTAAACTTTAATAAATAAATATTTTTTTAAAAACGAGTGTCGTTAAGACAAATTTATAACTTATATATATATAATTTGTTGAAGCCCTGAGAAGCGGTCAAGAGTGAGGTAATTTAGAAAAACGCATTTTTATTTGTTTGCCCGCGTTTCGACCTTTATTCGGGTCATCTTCAGGGCGTGGGTAAATAAGAAATGGCACCGCAAGAATAGCACCACACTTTATGTAAGTATAAAATACTTGGTTCAAAGTTCATATTTATATCTGTATTGCATTTTTTCAAATCAACATGTTTTGTAATTTACCCAGGCCCCGAAGATGACCCGGATAAAGGTCGAAACGCTGGCAAAACAAGAAAAATTGTGTTTTTCTAAAATGCCTCATTCTTCACCGCTCCTCTCGACTTCAAGAAATAATAAAATTATTTCATTTTACCATCA"
 )
 
-class FrontEndTestCase(SimpleTestCase):
+class FrontEndTestCase(LiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
+        settings.DEBUG = True
         # headless chrome driver
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
@@ -60,8 +61,6 @@ class FrontEndTestCase(SimpleTestCase):
         # self.driver = webdriver.PhantomJS()
         # self.driver = webdriver.Firefox()
         # self.driver.set_window_size(1280, 800)
-        self.driver.get("http://127.0.0.1:8000/blast/test/")
-        WebDriverWait(self.driver, 2)
 
     @classmethod
     def tearDownClass(self):
@@ -70,7 +69,7 @@ class FrontEndTestCase(SimpleTestCase):
 
 class TestClickAll(FrontEndTestCase):
     def test_click_all_organism(self):
-        # self.driver.get(self.driver.current_url)
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
         # click the checkbox for all-organism
@@ -91,6 +90,7 @@ class TestClickAll(FrontEndTestCase):
 
 class TestNucleotideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample nucleotide into textarea
@@ -103,6 +103,7 @@ class TestNucleotideSequenceSimple(FrontEndTestCase):
 
 class TestNucleotideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample nucleotide into textarea
@@ -112,6 +113,7 @@ class TestNucleotideSequenceComplex(FrontEndTestCase):
 
 class TestPeptideSequenceSimple(FrontEndTestCase):
     def test_input_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
@@ -124,6 +126,7 @@ class TestPeptideSequenceSimple(FrontEndTestCase):
 
 class TestPeptideSequenceComplex(FrontEndTestCase):
     def test_input_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
@@ -133,6 +136,7 @@ class TestPeptideSequenceComplex(FrontEndTestCase):
 
 class TestLoadExampleNucleotideSequence(FrontEndTestCase):
     def test_load_example_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-nucleotide.txt")))
         self.driver.find_element_by_css_selector("span.load-nucleotide.txt").click()
@@ -140,6 +144,7 @@ class TestLoadExampleNucleotideSequence(FrontEndTestCase):
 
 class TestLoadExamplePeptideSequence(FrontEndTestCase):
     def test_load_example_sequence(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-peptide.txt")))
         self.driver.find_element_by_css_selector("span.load-peptide.txt").click()
@@ -147,6 +152,7 @@ class TestLoadExamplePeptideSequence(FrontEndTestCase):
 
 class TestClickSequenceType(FrontEndTestCase):
     def test_click_sequence_type(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input.all-dataset-checkbox.nucleotide.genome-assembly")))
         assembly = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
@@ -173,6 +179,7 @@ class TestClickSequenceType(FrontEndTestCase):
 
 class TestHoverIntent(FrontEndTestCase):
     def test_hover_intent(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
         all_checkbox = self.driver.find_element_by_class_name("all-organism-checkbox")
@@ -367,6 +374,7 @@ def prepare_test_fasta_file():
         if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
             remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
     copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
+
 class TestBlastBinary(SimpleTestCase):
     def test_blastp(self):
         program = 'blastp'
