@@ -30,7 +30,6 @@ before_script:
   - celery -A i5k worker --loglevel=info --concurrency=3 &
   - celery beat -A i5k --loglevel=info &
   - python manage.py collectstatic --noinput
-  - python manage.py runserver &
 
 # command to run tests
 script:

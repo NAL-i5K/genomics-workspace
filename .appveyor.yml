@@ -80,7 +80,6 @@ before_test:
   - python manage.py makemigrations
   - python manage.py migrate
   - python manage.py collectstatic --noinput
-  - ps: $serverProcess = Start-Process "python" "manage.py runserver" -PassThru
 
 test_script:
   - python manage.py test i5k.tests --noinput
