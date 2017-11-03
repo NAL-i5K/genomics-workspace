@@ -193,6 +193,11 @@ Install additional Python packages::
     cd <git-home>
     pip install -r requirements.txt
 
+Chrome Driver
+-------------
+* Install ChromeDriver from https://sites.google.com/a/chromium.org/chromedriver/downloads
+
+* Add to PATH
 
 Celery
 ------
@@ -254,6 +259,7 @@ Start development server
 To run developement server::
 
     cd <git-home>
+    python manage.py collectstatic
     python manage.py runserver
 
 Apache (for production server)

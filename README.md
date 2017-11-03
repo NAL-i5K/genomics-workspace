@@ -36,4 +36,4 @@ The results page is an interactive data viewer, query and subject coverage graph
 Screenshots
 ===========
 BLAST Results
-![BLAST Results](https://raw.githubusercontent.com/hotdogee/django-blast/doc/doc/images/blast-results-dynamic.gif)
+![BLAST Results](sphinx_doc/img/blast-results-dynamic.gif)
