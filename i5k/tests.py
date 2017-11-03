@@ -4,16 +4,28 @@ from celery import Celery
 import subprocess
 from threading import Timer
 from sys import platform
-import os
+from os import environ
+from os.path import join, exists
+from i5k import settings
+
+class PostInstallTestCase(SimpleTestCase):
+    def test_remove_downloaded_blast(self):
+        local_file_path = join(settings.PROJECT_ROOT, 'blast.tar.gz')
+        self.assertEqual(exists(local_file_path), False)
 
 class CeleryTestCase(SimpleTestCase):
     def test_rabbitmq_run(self):
-        # example output of `rabbitmq status` command can be found at https://www.rabbitmq.com/troubleshooting.html
+        # example output of `rabbitmq status` command can be found
+        # at https://www.rabbitmq.com/troubleshooting.html
         try:
             if platform == 'win32':
-                p = subprocess.check_output(['rabbitmqctl.bat', 'status'], stderr=subprocess.STDOUT, shell=True, env={'PATH': os.environ['PATH']})
+                p = subprocess.check_output(
+                    ['rabbitmqctl.bat', 'status'],
+                    stderr=subprocess.STDOUT,
+                    shell=True, env={'PATH': environ['PATH']})
             else:
-                p = subprocess.check_output(['rabbitmqctl', 'status'], stderr=subprocess.STDOUT)
+                p = subprocess.check_output(
+                    ['rabbitmqctl', 'status'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             p = e.output
         first_line = p.split('\n')[1]
@@ -26,7 +38,9 @@ class CeleryTestCase(SimpleTestCase):
 
     def test_celery_beat_run(self):
         kill = lambda process: process.kill()
-        my_command = subprocess.Popen(['celery', '-A', 'i5k', 'beat'], stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        my_command = subprocess.Popen(
+            ['celery', '-A', 'i5k', 'beat'],
+            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         my_timer = Timer(5, kill, [my_command])
         try:
             my_timer.start()
