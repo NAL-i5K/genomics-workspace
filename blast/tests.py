@@ -5,9 +5,7 @@ from subprocess import Popen, PIPE
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, override_settings
 from django.contrib.auth import get_user_model
-from django.contrib.staticfiles.testing import LiveServerTestCase
-# For newer django version
-# from django.test import LiveServerTestCase
+from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -494,7 +492,7 @@ def generate_blast_args(program):
         else:
             input_opt.extend(['-'+blast_option, options[blast_option]])
 
-    args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
+    args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '2']]
     args_list[0].extend(input_opt)
     blast_formatter_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'blast_formatter')
     blast_col_name = 'qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qcovs qlen slen qframe sframe'

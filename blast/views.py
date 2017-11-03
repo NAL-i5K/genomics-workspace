@@ -22,6 +22,7 @@ import stat as Perm
 from copy import deepcopy
 from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
+from multiprocessing import cpu_count
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -118,7 +119,8 @@ def create(request, iframe=False):
                     input_opt.extend(['-'+blast_option, request.POST[blast_option]])
 
             program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, request.POST['program'])
-            args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '4']]
+            num_threads = '4' if cpu_count() >= 4 else str(cpu_count())
+            args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', num_threads]]
             args_list[0].extend(input_opt)
 
             # convert to multiple formats
