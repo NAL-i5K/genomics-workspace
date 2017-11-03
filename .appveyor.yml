@@ -83,8 +83,11 @@ before_test:
 
 test_script:
   - python manage.py test i5k.tests --noinput
-  # TODO: blast tests finished but can't exit on AppVeyor
-  # - python manage.py test blast.tests --noinput
+  # TODO: blast tests not all run on AppVeyor
+  # It seems that LiveServerTestCase can't be run on windows server
+  # https://code.djangoproject.com/ticket/21227
+  - python manage.py test blast.tests.BlastModelActionTest --noinput
+  - python manage.py test blast.tests.TestBlastBinary --noinput
   - ps: Write-Host "Test scripts are finished ..."
 
 deploy: false
