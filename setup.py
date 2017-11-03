@@ -15,6 +15,7 @@ elif platform == 'darwin':
     bin_name = 'bin_mac'
 
 bin_path = join(PROJECT_ROOT, 'blast/', bin_name + '/')
+
 # delete old files if exist
 if exists(bin_path):
     rmtree(bin_path)
@@ -26,6 +27,7 @@ if exists(local_file_path):
 extracted_blast_path = join(PROJECT_ROOT, 'ncbi-blast-2.7.1+')
 if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
+
 # download the blast binary
 if platform == 'win32':
     urllib.request.urlretrieve(
@@ -42,9 +44,15 @@ else:  # for linux
         ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
             'blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz'),
         local_file_path)
+
 # extract tar.gz file
 tar = tarfile.open(local_file_path, "r:gz")
 tar.extractall()
 tar.close()
+
 # move bin file to specific path
 move(join(extracted_blast_path, 'bin'), bin_path)
+
+# remove downloaded .gz file
+if exists(local_file_path):
+    remove(local_file_path)
