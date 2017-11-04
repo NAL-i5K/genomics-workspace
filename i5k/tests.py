@@ -6,7 +6,7 @@ from threading import Timer
 from sys import platform
 from os import environ
 from os.path import join, exists
-from i5k import settings
+from django.conf import settings
 
 class PostInstallTestCase(SimpleTestCase):
     def test_remove_downloaded_blast(self):
