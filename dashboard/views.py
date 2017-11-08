@@ -34,6 +34,7 @@ def dashboard(request):
                 print 'search found: %s %s' % (search.search_tag, search.task_id)
             if 'searchagain' in request.GET:
                 print 'SEARCHAGAIN'
+                print(search.task_id)
                 return redirect('/blast/%s' % search.task_id)
             elif 'editsearch' in request.GET:
                 print 'EDITSEARCH'

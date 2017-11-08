@@ -51,15 +51,10 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'django',
-    'USER': 'django',
-    'PASSWORD': 'django1234',
-    'HOST': 'localhost',
-    'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
     }
 }
-
 
 
 LOGIN_URL = '/login'
@@ -181,7 +176,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.postgres',
+    #'django.contrib.postgres',
     'axes',
     'rest_framework',
     'rest_framework_swagger',
@@ -201,8 +196,8 @@ INSTALLED_APPS = (
     'dashboard',
     'proxy',
     #'data',
-    'hmmer',
-    'clustal',
+    #'hmmer',
+    #'clustal',
 #    'webapollo_sso',
 #    'drupal_sso',
 )
@@ -285,13 +280,13 @@ SUIT_CONFIG = {
             {'model': 'jbrowsesetting'},
             {'model': 'sequence'},
         )},
-        {'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
-            {'model': 'hmmerdb'},
-            {'model': 'hmmerqueryrecord'},
-        )},
-        {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
-            {'model': 'clustalqueryrecord'},
-        )},
+        #{'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
+        #    {'model': 'hmmerdb'},
+        #    {'model': 'hmmerqueryrecord'},
+        #)},
+        #{'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
+        #    {'model': 'clustalqueryrecord'},
+        #)},
         {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
             {'model': 'usersocialauth'},
             {'model': 'nonce'},
@@ -569,7 +564,7 @@ PIPELINE = {
     },
 }
 
-PIPELINE['PIPELINE_ENABLED'] = True
+#PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
 PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'

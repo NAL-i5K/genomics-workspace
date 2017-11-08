@@ -63,6 +63,7 @@ def create(request, iframe=False):
         f.write(request_repr)
     replay = False  #  True if it's a history search being replayed.
     if request.method == 'GET':
+        print('GET')
         blastdb_list = sorted([[db.type.dataset_type, db.type.get_molecule_type_display(), db.title, db.organism.display_name, db.description] for db in BlastDb.objects.select_related('organism').select_related('type').filter(is_shown=True) if db.db_ready()], key=lambda x: (x[3], x[1], x[0], x[2]))
         blastdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in groupby(sorted(blastdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
         if 'search_id' in request.GET and request.GET['search_id']:
@@ -89,13 +90,13 @@ def create(request, iframe=False):
                     'gapopen':         saved_search.gapopen,
                     'strand':          saved_search.strand,
                     'ga_box':          saved_search.ga_box,
-                    'transcript_box':  saved_search.transcript_box,
-                    'peptide_box':     saved_search.peptide_box,
+                    #'transcript_box':  saved_search.transcript_box,
+                    #'peptide_box':     saved_search.peptide_box,
                     'gapextend':       saved_search.gapextend,
                     'word_size':       saved_search.word_size,
                     'max_target_seqs': saved_search.max_target_seqs,
                     'sequence1':       sequence_list[0],
-                    'sequence2':       sequence_list[1],
+                    #'sequence2':       sequence_list[1],
                     'title': 'BLAST Query',
                     'blastdb_list': json.dumps(blastdb_list),
                     'blastdb_type_counts': blastdb_type_counts,
@@ -112,6 +113,7 @@ def create(request, iframe=False):
             #f.write('\n\n\n')
             #f.write(str(blastdb_type_counts))
         #tag = get_tag(request.GET['USER'])
+        print("search again")
         tag = get_tag('vagrant', BlastSearch)
         return render(request, 'blast/main.html', {
             'title': 'BLAST Query',
@@ -371,8 +373,8 @@ def save_history(post, task_id, seq_file):
     rec.strand           = post.get('strand', '')
     rec.gapextend        = post.get('gapextend', 0)
     rec.ga_box           = post.get('genome_assembly_box', False)
-    rec.transcript_box   = post.get('transcript_box', False)
-    rec.peptide_box      = post.get('peptide_box', False)
+    #rec.transcript_box   = post.get('transcript_box', False)
+    #rec.peptide_box      = post.get('peptide_box', False)
     rec.program          = post.get('program', '')
     rec.word_size        = post.get('word_size', 0)
     rec.reward           = post.get('reward', 0)
