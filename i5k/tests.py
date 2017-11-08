@@ -8,10 +8,16 @@ from os import environ
 from os.path import join, exists
 from i5k import settings
 
+
 class PostInstallTestCase(SimpleTestCase):
     def test_remove_downloaded_blast(self):
         local_file_path = join(settings.PROJECT_ROOT, 'blast.tar.gz')
         self.assertEqual(exists(local_file_path), False)
+
+    def test_remove_downloaded_hmmer(self):
+        local_file_path = join(settings.PROJECT_ROOT, 'hmmer.tar.gz')
+        self.assertEqual(exists(local_file_path), False)
+
 
 class CeleryTestCase(SimpleTestCase):
     def test_rabbitmq_run(self):
@@ -22,7 +28,10 @@ class CeleryTestCase(SimpleTestCase):
                 p = subprocess.check_output(
                     ['rabbitmqctl.bat', 'status'],
                     stderr=subprocess.STDOUT,
-                    shell=True, env={'PATH': environ['PATH']})
+                    shell=True,
+                    env={
+                        'PATH': environ['PATH']
+                    })
             else:
                 p = subprocess.check_output(
                     ['rabbitmqctl', 'status'], stderr=subprocess.STDOUT)
@@ -40,7 +49,8 @@ class CeleryTestCase(SimpleTestCase):
         kill = lambda process: process.kill()
         my_command = subprocess.Popen(
             ['celery', '-A', 'i5k', 'beat'],
-            stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+            stdout=subprocess.PIPE,
+            stderr=subprocess.PIPE)
         my_timer = Timer(5, kill, [my_command])
         try:
             my_timer.start()
@@ -61,5 +71,7 @@ class CeleryTestCase(SimpleTestCase):
                     instance = inst
                     break
         self.assertEqual(is_run, True)
-        num_prpocess = len(celery.app.control.inspect(app=app).stats()[instance]['pool']['processes'])
+        num_prpocess = len(
+            celery.app.control.inspect(
+                app=app).stats()[instance]['pool']['processes'])
         self.assertEqual(num_prpocess, 3)
