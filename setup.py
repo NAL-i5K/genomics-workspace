@@ -79,7 +79,8 @@ if platform == 'darwin':
         rmtree(extracted_hmmer_path)
 
     urllib.request.urlretrieve(
-        'http://eddylab.org/software/hmmer3/3.1b2/hmmer-3.1b2-macosx-intel.tar.gz',
+        ('http://eddylab.org/software/hmmer3',
+         '/3.1b2/hmmer-3.1b2-macosx-intel.tar.gz'),
         hmmer_local_file_path)
 
     tar = tarfile.open(hmmer_local_file_path, "r:gz")

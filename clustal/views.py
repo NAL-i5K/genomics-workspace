@@ -1,8 +1,6 @@
 from __future__ import absolute_import
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import Http404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
