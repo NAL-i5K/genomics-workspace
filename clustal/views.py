@@ -185,8 +185,6 @@ def create(request):
                                   '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln']
                                   + option_params)
 
-                print args_list
-
                 args_list_log = []
                 args_list_log.append(['clustalo', '--infile='+path.basename(query_filename),
                                       '--guidetree-out=' + task_id + '.ph',
