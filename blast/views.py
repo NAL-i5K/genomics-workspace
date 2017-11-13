@@ -81,22 +81,30 @@ def create(request, iframe=False):
                 sequence_list = saved_search.sequence.split('\n')
                 print "Blast create: tag = %s" % saved_search.search_tag
                 print 'sequence %s' %  sequence_list
+                print 'word size %s' % saved_search.word_size
+                print 'blastdb_list %s' % blastdb_list
+                print 'blastdb_type_counts %s' % blastdb_type_counts
                 return render(request, 'blast/main.html', {
                     'tag':             saved_search.search_tag,
                     'soft_masking':    saved_search.soft_masking,
                     'enqueue_date':    saved_search.enqueue_date,
                     'low_complexity':  saved_search.low_complexity,
+                    'reward':          saved_search.reward,
                     'penalty':         saved_search.penalty,
                     'evalue':          saved_search.evalue,
                     'gapopen':         saved_search.gapopen,
                     'strand':          saved_search.strand,
-                    'ga_box':          saved_search.ga_box,
+                    #'ga_box':          saved_search.ga_box,
+                    'program':    saved_search.program,
                     #'transcript_box':  saved_search.transcript_box,
                     #'peptide_box':     saved_search.peptide_box,
                     'gapextend':       saved_search.gapextend,
                     'word_size':       saved_search.word_size,
                     'max_target_seqs': saved_search.max_target_seqs,
                     'sequence1':       sequence_list[0],
+                    'organism':        saved_search.organisms[1:-2], #remove ""
+                    'matrix':          saved_search.matrix,
+                    'threshold':       saved_search.threshold,
                     #'sequence2':       sequence_list[1],
                     'title': 'BLAST Query',
                     'blastdb_list': json.dumps(blastdb_list),
@@ -160,6 +168,7 @@ def create(request, iframe=False):
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) # ensure the standalone dequeuing process can access the file
 
         # build blast command
+        print(request.POST.getlist('db-name'));
         db_list = ' '.join([db.fasta_file.path_full for db in BlastDb.objects.filter(title__in=set(request.POST.getlist('db-name'))) if db.db_ready()])
         if not db_list:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
@@ -372,12 +381,16 @@ def save_history(post, task_id, seq_file):
     rec.gapopen          = post.get('gapopen', 0)
     rec.strand           = post.get('strand', '')
     rec.gapextend        = post.get('gapextend', 0)
-    rec.ga_box           = post.get('genome_assembly_box', False)
+    #rec.ga_box           = post.get('genome_assembly_box', False)
     #rec.transcript_box   = post.get('transcript_box', False)
     #rec.peptide_box      = post.get('peptide_box', False)
     rec.program          = post.get('program', '')
     rec.word_size        = post.get('word_size', 0)
     rec.reward           = post.get('reward', 0)
     rec.max_target_seqs  = post.get('max_target_seqs', 0)
-    rec.organisms        = json.dumps(post.get('db-name', []))
+    org = post.getlist('db-name', [])
+    orgs = ','.join(org)
+    rec.organisms        = json.dumps(orgs)
+    rec.threshold        = post.get('threshold', 0)
+    rec.matrix           = post.get('matrix', '')
     rec.save()
