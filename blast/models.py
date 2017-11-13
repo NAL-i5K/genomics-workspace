@@ -224,9 +224,9 @@ class BlastSearch(models.Model):
     soft_masking    = models.BooleanField()
     low_complexity  = models.BooleanField()
     penalty         = models.IntegerField()
-    tr_box          = models.BooleanField(default=False)
-    ga_box          = models.BooleanField(default=False)
-    pep_box         = models.BooleanField(default=False)
+    #tr_box          = models.BooleanField(default=False)
+    #ga_box          = models.BooleanField(default=False)
+    #pep_box         = models.BooleanField(default=False)
     evalue          = models.DecimalField(max_digits=10, decimal_places=5)
     gapopen         = models.IntegerField()
     strand          = models.CharField(max_length=10)
@@ -236,6 +236,8 @@ class BlastSearch(models.Model):
     reward          = models.IntegerField()
     max_target_seqs = models.IntegerField()
     organisms       = models.TextField(null=True)
+    matrix          = models.CharField(max_length=10, null=True)
+    threshold       = models.IntegerField(null=True)
 
     def __unicode__(self):
         return self.search_tag

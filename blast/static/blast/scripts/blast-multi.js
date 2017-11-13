@@ -56,9 +56,10 @@ $(function() { // document ready
 		// organism-checkbox
 		var $organism_checkbox = $('<input>', {
 			'organism': organism_id,
+                        'id': organism_id,
 			'type': 'checkbox',
 			'class': 'organism-checkbox ' + organism_id,
-            'name': 'organism-checkbox[]',
+                        'name': 'organism-checkbox[]',
 		});
 		var $organism_div = $('<div/>', {
 			'organism': organism_id,
@@ -87,6 +88,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
+                                                'id': file_name.split('.')[0],
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -99,6 +101,25 @@ $(function() { // document ready
 			}
 		}
 	}
+
+    hist_checkbox = $("#hist_checkbox").val();
+    hist_check_array = hist_checkbox.split(',');
+    for(var i = 0; i < hist_check_array.length; i++){
+        c = '#' + hist_check_array[i].split(".")[0]
+        $(c).prop("checked", true);
+        $('#'+$(c).attr('organism')).prop("checked", true);
+    };
+
+    //$('.program.tblastn').prop("checked", true);
+    //$('#blastx').prop("checked", true);
+ 
+    //$('#test').prop("checked", true);
+    //$('#test2').prop("checked", true);
+ 
+    //$('.organism-checkbox.aethina-tumida').prop('checked', true);
+    //$('#aethina-tumida').prop("checked", true);
+    //$('#bactrocera-cucurbitae').prop("checked", true);
+    //$('#uniprot_sprot').prop("checked", true);
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
@@ -199,9 +220,9 @@ $(function() { // document ready
 		}
 		chooseProgram();
 	}
-	
-	var program_selected = 'blastn';
-	var chooseProgram = _.debounce(function () {
+
+       
+        function disableProgram(){
 		$('.program').attr('disabled', false).removeClass('disabled-radio');
 		if (db_type == 'nucleotide') {
 			$('.blastp').attr('disabled', 'disabled').addClass('disabled-radio');
@@ -219,6 +240,13 @@ $(function() { // document ready
 			$('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
 			$('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
 		}
+	
+
+        }
+	
+	var program_selected = 'blastn';
+	var chooseProgram = _.debounce(function () {
+                disableProgram();
 		query_type = '';
 		// select first non disabled option
 		$('input.program:not([disabled])').first().prop('checked', true);
@@ -553,7 +581,148 @@ MCDEDVAALVVDNGSGMCKAGFAGDDAPRAVFPSIVGRPRHQGVMVGMGQKDAYVGDEAQSKRGILTLKYPVEHGIITNW
             });
         }
     });
-        
+
+
+    hist_program = $("#hist_program").val();
+    if (hist_program == ''){
+    }
+    if ( hist_program == 'blastn' ){
+        $(".blastn-parms #word_size").val($("#hist_word_size").val());
+        $(".blastn-parms #evalue").val($("#hist_evalue").val());
+        $(".blastn-parms #reward").val($("#hist_reward").val());
+        $(".blastn-parms #penalty").val($("#hist_penalty").val());
+        $(".blastn-parms #gapopen").val($("#hist_gapopen").val());
+        $(".blastn-parms #gapextend").val($("#hist_gapextend").val());
+        check_low_complexity = $("#hist_low_complexity").val();
+        check_soft_masking = $("#hist_soft_masking").val();
+        if ( check_low_complexity === 'False'){
+            $('#blastn_chk_low_complexity').prop("checked", false).attr("checked", false);
+            $('#low_complexity_hidden').val('no');
+        }
+        if ( check_soft_masking === 'False'){
+            $('#blastn_chk_soft_masking').prop("checked", false).attr("checked", false);
+            $('#soft_masking_hidden').val('no');
+        }
+        //$('#query-textarea').val($("#hist_sequence1").val());
+        $(".blastn-parms #strand").val($("#hist_strand").val());
+        $(".blastn-parms #max_target_seqs").val($("#hist_max_target_seqs").val());
+        db_type = 'nucleotide';
+        query_type = 'nucleotide';
+        disableProgram();
+        $('#blastn').prop("checked", true);
+    } else if (hist_program == 'tblastn' ){
+        $(".tblastn-parms #word_size").val($("#hist_word_size").val());
+        $(".tblastn-parms #evalue").val($("#hist_evalue").val());
+        $(".tblastn-parms #gapopen").val($("#hist_gapopen").val());
+        $(".tblastn-parms #gapextend").val($("#hist_gapextend").val());
+        $(".tblastn-parms #threshold").val($("#hist_threshold").val());
+        check_low_complexity = $("#hist_low_complexity").val();
+        check_soft_masking = $("#hist_soft_masking").val();
+        if ( check_low_complexity === 'False'){
+            $('#tblastn_chk_low_complexity').prop("checked", false).attr("checked", false);
+            $('#low_complexity_hidden').val('no');
+        }
+        if ( check_soft_masking === 'False'){
+            $('#tblastn_chk_soft_masking').prop("checked", false).attr("checked", false);
+            $('#soft_masking_hidden').val('no');
+        }
+        //$('#query-textarea').val($("#hist_sequence1").val());
+        $(".tblastn-parms #max_target_seqs").val($("#hist_max_target_seqs").val());
+        $(".tblastn-parms #matrix").val($("#hist_matrix").val());
+        db_type = 'nucleotide';
+        query_type = 'peptide';
+        disableProgram();
+        $('#tblastn').prop("checked", true);
+        //add_blast_options($('input.program:checked').val().toUpperCase()); 
+    } else if (hist_program == 'tblastx' ){
+        $(".tblastx-parms #word_size").val($("#hist_word_size").val());
+        $(".tblastx-parms #evalue").val($("#hist_evalue").val());
+        $(".tblastx-parms #threshold").val($("#hist_threshold").val());
+        check_low_complexity = $("#hist_low_complexity").val();
+        check_soft_masking = $("#hist_soft_masking").val();
+        if ( check_low_complexity === 'False'){
+            $('#tblastx_chk_low_complexity').prop("checked", false).attr("checked", false);
+            $('#low_complexity_hidden').val('no');
+        }
+        if ( check_soft_masking === 'False'){
+            $('#tblastx_chk_soft_masking').prop("checked", false).attr("checked", false);
+            $('#soft_masking_hidden').val('no');
+        }
+        //$('#query-textarea').val($("#hist_sequence1").val());
+        $(".tblastx-parms #max_target_seqs").val($("#hist_max_target_seqs").val());
+        $(".tblastx-parms #matrix").val($("#hist_matrix").val());
+        $(".tblastx-parms #strand").val($("#hist_strand").val());
+        db_type = 'nucleotide';
+        query_type = 'nucleotide';
+        disableProgram();
+        $('#tblastx').prop("checked", true);
+        //add_blast_options($('input.program:checked').val().toUpperCase()); 
+    } else if (hist_program == 'blastp' ){
+        $(".blastp-parms #word_size").val($("#hist_word_size").val());
+        $(".blastp-parms #evalue").val($("#hist_evalue").val());
+        $(".blastp-parms #gapopen").val($("#hist_gapopen").val());
+        $(".blastp-parms #gapextend").val($("#hist_gapextend").val());
+        $(".blastp-parms #threshold").val($("#hist_threshold").val());
+        check_low_complexity = $("#hist_low_complexity").val();
+        check_soft_masking = $("#hist_soft_masking").val();
+        if ( check_low_complexity === 'False'){
+            $('#blastp_chk_low_complexity').prop("checked", false).attr("checked", false);
+            $('#low_complexity_hidden').val('no');
+        }
+        if ( check_soft_masking === 'False'){
+            $('#blastp_chk_soft_masking').prop("checked", false).attr("checked", false);
+            $('#soft_masking_hidden').val('no');
+        }
+        //$('#query-textarea').val($("#hist_sequence1").val());
+        $(".blastp-parms #max_target_seqs").val($("#hist_max_target_seqs").val());
+        $(".blastp-parms #matrix").val($("#hist_matrix").val());
+        db_type = 'peptide';
+        query_type = 'peptide';
+        disableProgram();
+        $('#blastp').prop("checked", true);
+        //add_blast_options($('input.program:checked').val().toUpperCase()); 
+    } else if (hist_program == 'blastx' ){
+        $(".blastx-parms #word_size").val($("#hist_word_size").val());
+        $(".blastx-parms #evalue").val($("#hist_evalue").val());
+        $(".blastx-parms #gapopen").val($("#hist_gapopen").val());
+        $(".blastx-parms #gapextend").val($("#hist_gapextend").val());
+        $(".blastx-parms #threshold").val($("#hist_threshold").val());
+        check_low_complexity = $("#hist_low_complexity").val();
+        check_soft_masking = $("#hist_soft_masking").val();
+        if ( check_low_complexity === 'False'){
+            $('#blastx_chk_low_complexity').prop("checked", false).attr("checked", false);
+            $('#low_complexity_hidden').val('no');
+        }
+        if ( check_soft_masking === 'False'){
+            $('#blastx_chk_soft_masking').prop("checked", false).attr("checked", false);
+            $('#soft_masking_hidden').val('no');
+        }
+        //$('#query-textarea').val($("#hist_sequence1").val());
+        $(".blastx-parms #max_target_seqs").val($("#hist_max_target_seqs").val());
+        $(".blastx-parms #matrix").val($("#hist_matrix").val());
+        $(".blastx-parms #strand").val($("#hist_strand").val());
+        db_type = 'peptide';
+        query_type = 'nucleotide';
+        disableProgram();
+        $('#blastp').prop("checked", true);
+        //add_blast_options($('input.program:checked').val().toUpperCase()); 
+    }  
+
+    if (hist_program != ''){
+	hist_checkbox = $("#hist_checkbox").val();
+	hist_check_array = hist_checkbox.split(',');
+	for(var i = 0; i < hist_check_array.length; i++){
+	    c = '#' + hist_check_array[i].split(".")[0]
+	    $(c).prop("checked", true);
+	    $('#'+$(c).attr('organism')).prop("checked", true);
+	};
+        $('#query-textarea').val($("#hist_sequence1").val());
+        add_blast_options($('input.program:checked').val().toUpperCase());
+    }
+
+
+
+
 });
 
 function On_Submit(){
