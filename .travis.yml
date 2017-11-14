@@ -34,9 +34,10 @@ before_script:
 
 # command to run tests
 script:
-  - coverage run --source=./ manage.py test i5k --noinput
-  - coverage run --source=./ manage.py test blast --noinput
-  - coverage run --source=./ manage.py test clustal --noinput
+  - coverage run --source= ./manage.py test i5k --noinput
+  - coverage run --source= ./manage.py test blast --noinput
+  - coverage run --source= ./manage.py test hmmer --noinput
+  - coverage run --source= ./manage.py test clustal --noinput
 
 after_success:
   - coveralls
