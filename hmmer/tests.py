@@ -204,3 +204,48 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
         self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+
+
+class UploadFileTestCase(LiveServerTestCase):
+    def setUp(self):
+        settings.DEBUG = True
+        Organism.objects.create(
+            display_name=display_name, short_name=short_name,
+            tax_id=tax_id)
+        organism = Organism.objects.get(short_name=short_name)
+        prepare_test_fasta_file()
+        self.files = test_files
+        HmmerDB.objects.create(
+            fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
+            organism=organism, is_shown=True, title=title)
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1280x800')
+        self.driver = webdriver.Chrome(chrome_options=options)
+        # To use with header
+        # self.driver = webdriver.Chrome()
+        # Or use different webdriver
+        # self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.Firefox()
+        # self.driver.set_window_size(1280, 800)
+
+    def tearDown(self):
+        self.driver.close()
+
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
+        wait = WebDriverWait(self.driver, 10)
+        organism_checkbox_xpath = '//input[@organism="' + display_name + '"]'
+        wait.until(EC.element_to_be_clickable((By.XPATH, organism_checkbox_xpath)))
+        element = self.driver.find_element_by_xpath(organism_checkbox_xpath)
+        all_checkbox = self.driver.find_element_by_class_name('all-organism-checkbox')
+        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
+        hover.perform()
+        wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@value="' + title + '"]')))
+        self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
+        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        self.driver.find_element_by_name('query-file').send_keys(example_file_path)
+        self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
+        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
