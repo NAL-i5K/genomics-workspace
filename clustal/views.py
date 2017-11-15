@@ -76,7 +76,7 @@ def create(request):
 
         is_color = False
         # check if program is in list for security
-        if request.POST['program'] in ['clustalw','clustalo']:
+        if request.POST['program'] in ['clustalw', 'clustalo']:
 
             option_params = []
             args_list = []
@@ -114,7 +114,7 @@ def create(request):
                     if request.POST['SCORE'] != "":
                         option_params.append('-SCORE='+request.POST['SCORE'])
 
-                #prarmeters setting for mutliple alignment
+                # prarmeters setting for mutliple alignment
                 if request.POST['sequenceType'] == "dna":
                     if request.POST['DNAMATRIX'] != "":
                         option_params.append('-DNAMATRIX='+request.POST['DNAMATRIX'])
@@ -146,12 +146,12 @@ def create(request):
                     if request.POST['protein-CLUSTERING'] != "":
                         option_params.append('-CLUSTERING='+request.POST['protein-CLUSTERING'])
 
-                #parameters setting of  Output
+                # parameters setting of output
                 is_color = True if request.POST['OUTPUT'] == 'clustal' else False
                 option_params.append('-OUTPUT='+request.POST['OUTPUT'])
                 option_params.append('-OUTORDER='+request.POST['OUTORDER'])
 
-                args_list.append([path.join(program_path,'clustalw2'), '-infile='+query_filename,
+                args_list.append([path.join(program_path, 'clustalw2'), '-infile='+query_filename,
                                   '-OUTFILE='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id+'.aln'),
                                   '-type=protein'])
 

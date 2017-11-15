@@ -8,19 +8,27 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from hmmer.models import HmmerDB
+from app.models import Organism
+from filebrowser.base import FileObject
 
+tax_id = 79782
 display_name = 'test'
 short_name = 'test'
 title = 'clec_peptide_example_BLASTdb.fa'
 test_files = [
     'clec_peptide_example_BLASTdb.fa',
 ]
+query = (
+    '>Sample_Query_CLEC000107-RA\n'
+    'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAK'
+    'LDQETEELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKME'
+    'RVLGKIRRNVTQAEGCRNYQSKNYSKSIQQ*'
+)
 
 
 class HmmerAdminTestCase(LiveServerTestCase):
-    @classmethod
-    def setUpClass(self):
-        super(HmmerAdminTestCase, self).setUpClass()
+    def setUp(self):
         settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
@@ -41,10 +49,8 @@ class HmmerAdminTestCase(LiveServerTestCase):
         # self.driver = webdriver.Firefox()
         # self.driver.set_window_size(1280, 800)
 
-    @classmethod
-    def tearDownClass(self):
+    def tearDown(self):
         self.driver.close()
-        super(HmmerAdminTestCase, self).tearDownClass()
 
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
@@ -84,12 +90,6 @@ class HmmerAdminTestCase(LiveServerTestCase):
         self.driver.find_element_by_id('id_is_shown').click()
         self.driver.find_element_by_name('_save').click()
         self.driver.find_element_by_name('_save').click()
-        query = (
-            '>Sample_Query_CLEC000107-RA\n'
-            'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAK'
-            'LDQETEELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKME'
-            'RVLGKIRRNVTQAEGCRNYQSKNYSKSIQQ*'
-        )
         send_query(query, self.driver, self.live_server_url)
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
@@ -116,3 +116,91 @@ def prepare_test_fasta_file():
         if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
             remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
     copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
+
+
+class LoadSeqExampleTestCase(LiveServerTestCase):
+    def setUp(self):
+        Organism.objects.create(
+            display_name=display_name, short_name=short_name,
+            tax_id=tax_id)
+        organism = Organism.objects.get(short_name=short_name)
+        prepare_test_fasta_file()
+        self.files = test_files
+        HmmerDB.objects.create(
+            fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
+            organism=organism, is_shown=True, title=title)
+        # headless chrome driver
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1280x800')
+        self.driver = webdriver.Chrome(chrome_options=options)
+        # To use with header
+        # self.driver = webdriver.Chrome()
+        # Or use different webdriver
+        # self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.Firefox()
+        # self.driver.set_window_size(1280, 800)
+
+    def tearDown(self):
+        self.driver.close()
+
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
+        wait = WebDriverWait(self.driver, 10)
+        organism_checkbox_xpath = '//input[@organism="' + display_name + '"]'
+        wait.until(EC.element_to_be_clickable((By.XPATH, organism_checkbox_xpath)))
+        element = self.driver.find_element_by_xpath(organism_checkbox_xpath)
+        all_checkbox = self.driver.find_element_by_class_name('all-organism-checkbox')
+        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
+        hover.perform()
+        wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@value="' + title + '"]')))
+        self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
+        self.driver.find_element_by_class_name('load-example-seq').click()
+        self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
+        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+
+
+class LoadAlignExampleTestCase(LiveServerTestCase):
+    def setUp(self):
+        Organism.objects.create(
+            display_name=display_name, short_name=short_name,
+            tax_id=tax_id)
+        organism = Organism.objects.get(short_name=short_name)
+        prepare_test_fasta_file()
+        self.files = test_files
+        HmmerDB.objects.create(
+            fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
+            organism=organism, is_shown=True, title=title)
+        # headless chrome driver
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1280x800')
+        self.driver = webdriver.Chrome(chrome_options=options)
+        # To use with header
+        # self.driver = webdriver.Chrome()
+        # Or use different webdriver
+        # self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.Firefox()
+        # self.driver.set_window_size(1280, 800)
+
+    def tearDown(self):
+        self.driver.close()
+
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
+        wait = WebDriverWait(self.driver, 10)
+        organism_checkbox_xpath = '//input[@organism="' + display_name + '"]'
+        wait.until(EC.element_to_be_clickable((By.XPATH, organism_checkbox_xpath)))
+        element = self.driver.find_element_by_xpath(organism_checkbox_xpath)
+        all_checkbox = self.driver.find_element_by_class_name('all-organism-checkbox')
+        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
+        hover.perform()
+        wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@value="' + title + '"]')))
+        self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
+        self.driver.find_element_by_class_name('load-example-aln').click()
+        self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
+        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
