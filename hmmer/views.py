@@ -222,7 +222,7 @@ def retrieve(request, task_id='1'):
                         else:
                             report.append(line + "<br>")
 
-            if r.result_status in set(['SUCCESS', ]):
+            if r.result_status == 'SUCCESS':
                 return render(
                     request,
                     'hmmer/result.html', {
