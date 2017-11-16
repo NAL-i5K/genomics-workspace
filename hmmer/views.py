@@ -157,8 +157,8 @@ def create(request):
             with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
                 json.dump({'status': 'pending', 'seq_count': seq_count,
                            'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')],
-                           'program':request.POST['program'],
-                           'params':option_params,
+                           'program': request.POST['program'],
+                           'params': option_params,
                            'input': path.basename(query_filename)}, f)
         args_list = generate_hmmer_args_list(request.POST['program'], program_path, query_filename, option_params, db_list)
         run_hmmer_task.delay(task_id, args_list, file_prefix)

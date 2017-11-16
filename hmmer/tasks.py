@@ -4,14 +4,13 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from subprocess import Popen, PIPE, call
 from datetime import datetime, timedelta
-from os import path, chdir, getcwd
+from os import path, chdir
 from pytz import utc
 from celery.utils.log import get_task_logger
-from celery.signals import task_sent, task_success, task_failure
+# from celery.signals import task_sent, task_success, task_failure
 from django.core.cache import cache
 from django.conf import settings
 import json
-import time
 from hmmer.models import HmmerQueryRecord
 
 logger = get_task_logger(__name__)
@@ -23,7 +22,8 @@ if settings.USE_CACHE:
     acquire_lock = lambda: cache.add(LOCK_ID, 'true', LOCK_EXPIRE)
     release_lock = lambda: cache.delete(LOCK_ID)
 
-@shared_task() # ignore_result=True
+
+@shared_task()  # ignore_result=True
 def run_hmmer_task(task_id, args_list, file_prefix):
     import django
     django.setup()
@@ -37,12 +37,11 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.dequeue_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
-
     # update status from 'pending' to 'running' for frontend
     with open('status.json', 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
-        db_list = statusdata['db_list']
+        # db_list = statusdata['db_list']
 
     with open('status.json', 'w') as f:
         json.dump(statusdata, f)
@@ -53,22 +52,22 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     result_status = 'SUCCESS'
     for args in args_list:
         Popen(args, stdin=None, stdout=PIPE).wait()
-        if('hmmbuild' in args[0]):
+        if 'hmmbuild' in args[0]:
             if not path.isfile(args[3]):
-                result_status= 'FAILURE'
+                result_status = 'FAILURE'
                 break
-        elif('hmmsearch' in args[0]):
+        elif 'hmmsearch' in args[0]:
             merge_result_command = merge_result_command + ' ' + args[2]
             if not path.isfile(args[2]):
-                result_status= 'FAILURE'
+                result_status = 'FAILURE'
                 break
-        elif('phmmer' in args[0]):
-             merge_result_command = merge_result_command + ' ' + args[2]
-             if not path.isfile(args[2]):
-                result_status= 'FAILURE'
+        elif 'phmmer' in args[0]:
+            merge_result_command = merge_result_command + ' ' + args[2]
+            if not path.isfile(args[2]):
+                result_status = 'FAILURE'
                 break
 
-    merge_result_command = merge_result_command + ' > ' + file_prefix + ".merge"
+    merge_result_command = merge_result_command + ' > ' + file_prefix + '.merge'
 
     if(result_status == 'SUCCESS'):
         call(merge_result_command, shell=True)
