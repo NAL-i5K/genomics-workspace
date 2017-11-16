@@ -160,17 +160,7 @@ def create(request):
                            'program':request.POST['program'],
                            'params':option_params,
                            'input': path.basename(query_filename)}, f)
-        args_list = []
-        if request.POST['program'] == 'hmmsearch':
-            args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
-                path.basename(query_filename) + '.hmm', path.basename(query_filename)])
-            for idx, db in enumerate(db_list.split()):
-                args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
-                        + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
-        else:  # phmmer
-            for idx, db in enumerate(db_list.split()):
-                args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
-                        + option_params + [path.basename(query_filename), path.basename(db)])
+        args_list = generate_hmmer_args_list(request.POST['program'], program_path, query_filename, option_params, db_list)
         run_hmmer_task.delay(task_id, args_list, file_prefix)
         return redirect('hmmer:retrieve', task_id)
 
@@ -196,13 +186,13 @@ def retrieve(request, task_id='1'):
             out_txt = []
             report = ["<br>"]
 
-            #1mb limitation
+            # 1mb limitation
             if path.isfile(dir_prefix + '.merge') and path.getsize(dir_prefix + '.merge') > 1024000:
                 out_txt = 'The Hmmer reports exceed 1 Megabyte, please download it.'
                 isExceed = True
             else:
                 isExceed = False
-                #'[ok]' is the end line of each hmmer output (delimiter for different dbs)
+                # '[ok]' is the end line of each hmmer output (delimiter for different dbs)
                 with open(dir_prefix + ".merge", 'r') as content_file:
                     for line in content_file:
                         line = line.rstrip('\n')
@@ -220,7 +210,7 @@ def retrieve(request, task_id='1'):
                         'output': url_prefix + '.merge',
                         'status': path.join(url_base_prefix, 'status.json'),
                         'input': file_in,
-                        'options': db_list, #for interation in result page
+                        'options': db_list,  # for interation in result page
                         'report': out_txt,
                         'task_id': task_id,
                         'isExceed': isExceed
@@ -304,3 +294,18 @@ def user_tasks(request, user_id):
         records = HmmerQueryRecord.objects.filter(user__id=user_id, result_date__gt=(localtime(now())+ timedelta(days=-7)))
         serializer = UserHmmerQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
+
+
+def generate_hmmer_args_list(program, program_path, query_filename, option_params, db_list):
+    args_list = []
+    if program == 'hmmsearch':
+        args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
+            path.basename(query_filename) + '.hmm', path.basename(query_filename)])
+        for idx, db in enumerate(db_list.split()):
+            args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
+                    + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
+    else:  # phmmer
+        for idx, db in enumerate(db_list.split()):
+            args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
+                    + option_params + [path.basename(query_filename), path.basename(db)])
+    return args_list
