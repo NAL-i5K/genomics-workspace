@@ -7,7 +7,12 @@
 
 Live site
 =========
-https://i5k.nal.usda.gov/webapp/blast/
+
+### BLAST: https://i5k.nal.usda.gov/webapp/blast/
+
+### HMMER: https://i5k.nal.usda.gov/webapp/hmmer/
+
+### Clustal: https://i5k.nal.usda.gov/webapp/clustal/
 
 Backend
 =======
