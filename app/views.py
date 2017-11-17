@@ -1,4 +1,5 @@
-import requests, json
+import requests
+import json
 from datetime import datetime
 from django.shortcuts import render, resolve_url, redirect
 from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
@@ -19,7 +20,7 @@ from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
 from social.apps.django_app.default.models import UserSocialAuth
-from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN  
+from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN
 from drupal_sso.models import DrupalUserMapping
 from webapollo_sso.models import PermsRequest, UserMapping
 from django.contrib.auth.models import User
@@ -28,12 +29,10 @@ import base64
 import i5k.settings
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
+import urllib2
+import cookielib
 
 def _tripal_login(tripal_login_url, user):
-    import urllib2
-    import cookielib
-    import json
-    import i5k.settings
 
     def _get_url_request(url):
         req = urllib2.Request(url)
@@ -57,7 +56,7 @@ def _tripal_login(tripal_login_url, user):
         old_user = True
 
     except DrupalUserMapping.DoesNotExist:
-    
+
         old_user = False
         password = User.objects.make_random_password(length=20)
 
@@ -119,7 +118,7 @@ def web_login(request):
 
         if request.user.is_authenticated() == True:
             return HttpResponse(json.dumps({'user':request.user.username, 'sessionid': request.session._session_key, 'email':request.user.email}), content_type="application/json")
-        
+
         print request.COOKIES
         username = request.GET['username']
         password = request.GET['password']
@@ -182,11 +181,6 @@ def register(request):
     if request.method == 'POST':
         form = RegistrationForm(request.POST)
 
-        import urllib2
-        import cookielib
-        import json
-        import i5k.settings
-
         def _get_url_request(url):
             req = urllib2.Request(url)
             req.add_header('Content-Type', 'application/json')
@@ -205,10 +199,9 @@ def register(request):
         if form.is_valid():
             new_user = form.save();
             new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
-            
+
             try:
                 if new_user is not None:
-                    from webapollo_sso.models import PermsRequest, UserMapping
                     data = {"firstName" : form.cleaned_data['first_name'], "lastName" : form.cleaned_data['last_name'],
                             "email": form.cleaned_data['username'], "newPassword" : form.cleaned_data['password1'], "role" : "USER"}
                     data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
@@ -234,7 +227,7 @@ def register(request):
                             if(user['username'] == form.cleaned_data['username']):
                                 userId = user['userId']
                                 break
-                    
+
                         user_info = UserMapping.objects.create(apollo_user_id=userId,
                                                                apollo_user_name=form.cleaned_data['username'],
                                                                apollo_user_pwd=encodeAES(form.cleaned_data['password1']),
@@ -246,7 +239,7 @@ def register(request):
             except:
                 print "apollo is down"
                 pass
-                
+
             login(request, new_user)
             return HttpResponseRedirect(reverse('dashboard'))
     else:
@@ -272,10 +265,6 @@ def password_change(request,
         if form.is_valid():
             form.save()
 
-            import urllib2
-            import cookielib
-            import json
-            import i5k.settings
 
             def _get_url_request(url):
                 req = urllib2.Request(url)
@@ -294,12 +283,12 @@ def password_change(request,
 
             try:
                 new_password = request.POST['new_password1']
-            
+
                 user_info = UserMapping.objects.get(django_user=request.user)
                 userId = user_info.apollo_user_id
 
                 opener = _get_url_open()
-                response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'), 
+                response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
                                    json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
                 result = json.loads(response.read())
 
@@ -380,7 +369,7 @@ def set_institution(request):
 @login_required
 def info_change(request):
     isOAuth = checkOAuth(request.user)
-    try: 
+    try:
         p = Profile.objects.select_related('user').get(user=request.user)
         msg = ''
         errors = []
@@ -436,10 +425,6 @@ def decodeAES(encoded):
 def testView(request, uidb64, token, template_name, set_password_form, post_reset_redirect=None, extra_context=None):
     httpresponse = password_reset_confirm(request, uidb64=uidb64, token=token, template_name=template_name, set_password_form=set_password_form, extra_context=extra_context)
     if type(httpresponse) == HttpResponseRedirect:
-        import urllib2
-        import cookielib
-        import json
-        import i5k.settings
 
         def _get_url_request(url):
             req = urllib2.Request(url)
@@ -472,7 +457,7 @@ def testView(request, uidb64, token, template_name, set_password_form, post_rese
 	    userId = user_info.apollo_user_id
 
 	    opener = _get_url_open()
-	    response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'), 
+	    response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
 					   json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
 	    result = json.loads(response.read())
 
@@ -503,7 +488,7 @@ def testView(request, uidb64, token, template_name, set_password_form, post_rese
         except:
             opener.close()
             pass
-   
+
     return httpresponse
 
-        
+
