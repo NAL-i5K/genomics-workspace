@@ -189,9 +189,8 @@ def retrieve(request, task_id='1'):
                         'results_info': results_info,
                         'task_id': task_id,
                     })
-            else: # if .csv file size is 0, no hits found
-                return render(request, 'blast/results_not_existed.html',
-                {
+            else:  # if .csv file size is 0, no hits found
+                return render(request, 'blast/results_not_existed.html', {
                     'title': 'No Hits Found',
                     'isNoHits': True,
                     'isExpired': False,

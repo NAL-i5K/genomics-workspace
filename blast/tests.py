@@ -3,23 +3,22 @@ from shutil import copyfile, rmtree
 from sys import platform
 from subprocess import Popen, PIPE
 from django.conf import settings
-from django.test import SimpleTestCase, TestCase, override_settings
+from django.test import SimpleTestCase, TestCase, LiveServerTestCase, override_settings
 from django.contrib.auth import get_user_model
-from django.test import LiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
-from .models import SequenceType, BlastDb, Sequence
+from blast.models import SequenceType, BlastDb, Sequence
 from app.models import Organism
 
 display_name = 'test'
 short_name = 'test'
 tax_id = 79782
 dataset_type = 'abc'
-title = 'test'
+title = 'clec_peptide_example_BLASTdb.fa'
 test_files = [
     'clec_peptide_example_BLASTdb.fa',
     'clec_peptide_example_BLASTdb.fa.pog',
@@ -32,7 +31,7 @@ test_files = [
     'clec_peptide_example_BLASTdb.fa.pin',
 ]
 
-peptide_seq = ( ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
+peptide_seq = (">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\\n"
         ">OFAS004830-PA:polypeptide ,Heat shock protein 70-2\\n"
         "MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTETDRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGKPMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDSQRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFDVSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRALRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRGTLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINPDEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNTTIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGVPQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAERYKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNETIMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERGPVIEEAD\\n"
@@ -45,10 +44,12 @@ nucleotide_seq = (
     "GAAAAGTTAATTGTAAACTTTAATAAATAAATATTTTTTTAAAAACGAGTGTCGTTAAGACAAATTTATAACTTATATATATATAATTTGTTGAAGCCCTGAGAAGCGGTCAAGAGTGAGGTAATTTAGAAAAACGCATTTTTATTTGTTTGCCCGCGTTTCGACCTTTATTCGGGTCATCTTCAGGGCGTGGGTAAATAAGAAATGGCACCGCAAGAATAGCACCACACTTTATGTAAGTATAAAATACTTGGTTCAAAGTTCATATTTATATCTGTATTGCATTTTTTCAAATCAACATGTTTTGTAATTTACCCAGGCCCCGAAGATGACCCGGATAAAGGTCGAAACGCTGGCAAAACAAGAAAAATTGTGTTTTTCTAAAATGCCTCATTCTTCACCGCTCCTCTCGACTTCAAGAAATAATAAAATTATTTCATTTTACCATCA"
 )
 
-class FrontEndTestCase(SimpleTestCase):
+
+class FrontEndTestCase(LiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
+        settings.DEBUG = True
         # headless chrome driver
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
@@ -60,18 +61,17 @@ class FrontEndTestCase(SimpleTestCase):
         # self.driver = webdriver.PhantomJS()
         # self.driver = webdriver.Firefox()
         # self.driver.set_window_size(1280, 800)
-        self.driver.get("http://127.0.0.1:8000/blast/test/")
-        WebDriverWait(self.driver, 2)
 
     @classmethod
     def tearDownClass(self):
-        super(FrontEndTestCase, self).tearDownClass()
         self.driver.close()
+        super(FrontEndTestCase, self).tearDownClass()
 
-class TestClickAll(FrontEndTestCase):
-    def test_click_all_organism(self):
-        # self.driver.get(self.driver.current_url)
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class ClickAllTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        wait = WebDriverWait(self.driver, 2)  # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
         # click the checkbox for all-organism
         all_checkbox = self.driver.find_element_by_class_name("all-organism-checkbox")
@@ -80,74 +80,121 @@ class TestClickAll(FrontEndTestCase):
         organism_checkboxs = self.driver.find_elements_by_class_name("organism-checkbox")
         for c in organism_checkboxs:
             self.assertEqual(c.is_selected(), True)
-        self.assertEqual(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(), True)
-        self.assertEqual(bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")), True)
+        self.assertEqual(
+            self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(),
+            True)
+        self.assertEqual(
+            bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")),
+            True)
         # unselect the checkbox for all-organism
         all_checkbox.click()
         for c in organism_checkboxs:
             self.assertEqual(c.is_selected(), False)
-        self.assertEqual(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(), False)
-        self.assertEqual(bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")), False)
+        self.assertEqual(
+            self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly").is_selected(),
+            False)
+        self.assertEqual(
+            bool(self.driver.find_element_by_css_selector("input.all-dataset-checkbox.peptide.protein").get_attribute("disabled")),
+            False)
 
-class TestNucleotideSequenceSimple(FrontEndTestCase):
-    def test_input_sequence(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class NucleotideSequenceSimpleTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample nucleotide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
-        self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup();")
-        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
+        self.driver.execute_script(
+            "$('#query-textarea').val(\"" + nucleotide_seq
+            + "\").keyup();")
+        checkProgramOptions(
+            self.driver, self.assertEqual,
+            selected=[True, False, False, False, False],
+            disabled=[False, True, False, True, False])
         reset_button = self.driver.find_element_by_css_selector("input.btn_reset")
         reset_button.click()
-        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+        checkProgramOptions(
+            self.driver, self.assertEqual,
+            selected=[True, False, False, False, False],
+            disabled=[False, False, False, False, False])
 
-class TestNucleotideSequenceComplex(FrontEndTestCase):
-    def test_input_sequence(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class NucleotideSequenceComplexTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample nucleotide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
-        self.driver.execute_script("$('#query-textarea').val(\"" + nucleotide_seq + "\").keyup(); $('#query-textarea').val('').keyup();")
-        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+        self.driver.execute_script(
+            "$('#query-textarea').val(\"" + nucleotide_seq
+            + "\").keyup(); $('#query-textarea').val('').keyup();")
+        checkProgramOptions(
+            self.driver, self.assertEqual,
+            selected=[True, False, False, False, False],
+            disabled=[False, False, False, False, False])
 
-class TestPeptideSequenceSimple(FrontEndTestCase):
-    def test_input_sequence(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class PeptideSequenceSimpleTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
         self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup();")
-        checkProgramOptions(self.driver, self.assertEqual, selected=[False, True, False, False, False], disabled=[True, False, True, False, True])
+        checkProgramOptions(
+            self.driver, self.assertEqual,
+            selected=[False, True, False, False, False],
+            disabled=[True, False, True, False, True])
         reset_button = self.driver.find_element_by_css_selector("input.btn_reset")
         reset_button.click()
-        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
+        checkProgramOptions(
+            self.driver, self.assertEqual,
+            selected=[True, False, False, False, False],
+            disabled=[False, False, False, False, False])
 
-class TestPeptideSequenceComplex(FrontEndTestCase):
-    def test_input_sequence(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class PeptideSequenceComplexTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.ID, "query-textarea")))
         # Insert sample peptide into textarea
         # Don't use send_keys(peptide_seq), since it's too slow
         self.driver.execute_script("$('#query-textarea').val('" + peptide_seq + "').keyup(); $('#query-textarea').val('').keyup();")
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
-class TestLoadExampleNucleotideSequence(FrontEndTestCase):
-    def test_load_example_sequence(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class LoadExampleNucleotideSequenceTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-nucleotide.txt")))
         self.driver.find_element_by_css_selector("span.load-nucleotide.txt").click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, True, False, True, False])
 
-class TestLoadExamplePeptideSequence(FrontEndTestCase):
-    def test_load_example_sequence(self):
+
+class LoadExamplePeptideSequenceTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
         wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "span.load-peptide.txt")))
         self.driver.find_element_by_css_selector("span.load-peptide.txt").click()
         checkProgramOptions(self.driver, self.assertEqual, selected=[False, True, False, False, False], disabled=[True, False, True, False, True])
 
-class TestClickSequenceType(FrontEndTestCase):
-    def test_click_sequence_type(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class ClickSequenceTypeTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CSS_SELECTOR, "input.all-dataset-checkbox.nucleotide.genome-assembly")))
         assembly = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
         transcript = self.driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
@@ -169,11 +216,21 @@ class TestClickSequenceType(FrontEndTestCase):
         transcript.click()
         checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
         checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
-        # protein.click()
+        # select protein
+        protein.click()
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, True], disabled=[True, True, False])
+        checkProgramOptions(self.driver, self.assertEqual, selected=[False, False, False, True, False], disabled=[True, True, True, False, False])
+        # unselect protein
+        protein.click()
+        checkSeqenceTypes(self.driver, self.assertEqual, selected=[False, False, False], disabled=[False, False, False])
+        checkProgramOptions(self.driver, self.assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False])
 
-class TestHoverIntent(FrontEndTestCase):
-    def test_hover_intent(self):
-        wait = WebDriverWait(self.driver, 2) # wait at most 2 seconds to let page load, or timeout exception
+
+class HoverIntentTestCase(FrontEndTestCase):
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/test/'))
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 2)
         wait.until(EC.element_to_be_clickable((By.CLASS_NAME, "all-organism-checkbox")))
         all_checkbox = self.driver.find_element_by_class_name("all-organism-checkbox")
         element = self.driver.find_element_by_id("anoplophora-glabripennis")
@@ -182,6 +239,7 @@ class TestHoverIntent(FrontEndTestCase):
         self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), False)
         WebDriverWait(self.driver, 1).until(EC.visibility_of_element_located((By.ID, "Agla_Btl03082013.genome_new_ids.fa")))
         self.assertEqual(self.driver.find_element_by_id("Agla_Btl03082013.genome_new_ids.fa").is_displayed(), True)
+
 
 def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False, False], disabled=[False, False, False, False, False]):
     blastn_radio = driver.find_element_by_css_selector("input.program.blastn")
@@ -202,10 +260,15 @@ def checkProgramOptions(driver, assertEqual, selected=[True, False, False, False
     assertEqual(bool(blastp_radio.get_attribute("disabled")), disabled[3])
     assertEqual(bool(blastx_radio.get_attribute("disabled")), disabled[4])
 
-def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disabled=[False, False, False]):
-    assembly = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.genome-assembly")
-    transcript = driver.find_element_by_css_selector("input.all-dataset-checkbox.nucleotide.transcript")
-    protein = driver.find_element_by_css_selector("input.all-dataset-checkbox.protein.peptide")
+
+def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False],
+                      disabled=[False, False, False]):
+    assembly = driver.find_element_by_css_selector(
+        "input.all-dataset-checkbox.nucleotide.genome-assembly")
+    transcript = driver.find_element_by_css_selector(
+        "input.all-dataset-checkbox.nucleotide.transcript")
+    protein = driver.find_element_by_css_selector(
+        "input.all-dataset-checkbox.protein.peptide")
     # check if selected
     assertEqual(assembly.is_selected(), selected[0])
     assertEqual(transcript.is_selected(), selected[1])
@@ -215,14 +278,20 @@ def checkSeqenceTypes(driver, assertEqual, selected=[False, False, False], disab
     assertEqual(bool(transcript.get_attribute("disabled")), disabled[1])
     assertEqual(bool(protein.get_attribute("disabled")), disabled[2])
 
-class BlastModelTest(TestCase):
+
+class BlastModelActionTestCase(TestCase):
     def setUp(self):
-        Organism.objects.create(display_name=display_name, short_name=short_name, tax_id=tax_id)
-        organism = Organism.objects.get(short_name=display_name)
-        sequence = SequenceType.objects.create(molecule_type='prot', dataset_type=dataset_type)
+        Organism.objects.create(
+            display_name=display_name, short_name=short_name,
+            tax_id=tax_id)
+        organism = Organism.objects.get(short_name=short_name)
+        sequence = SequenceType.objects.create(
+            molecule_type='prot', dataset_type=dataset_type)
         prepare_test_fasta_file()
         self.files = test_files
-        BlastDb.objects.create(fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'), organism=organism, type=sequence, is_shown=False, title=title)
+        BlastDb.objects.create(
+            fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
+            organism=organism, type=sequence, is_shown=False, title=title)
 
     def test_makeblastdb(self):
         organism = Organism.objects.get(short_name=short_name)
@@ -231,7 +300,9 @@ class BlastModelTest(TestCase):
         self.assertEqual(returncode, 0)
         self.assertEqual(error, '')
         for file in self.files:
-            self.assertEqual(path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)), True)
+            self.assertEqual(
+                path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)),
+                True)
 
     def test_index_fasta(self):
         organism = Organism.objects.get(short_name=short_name)
@@ -239,11 +310,12 @@ class BlastModelTest(TestCase):
         returncode, error, output = blastdb.index_fasta()
         self.assertEqual(returncode, 0)
         self.assertEqual(error, '')
-        self.assertEqual(blastdb.title, 'test')
+        self.assertEqual(blastdb.title, title)
         all_sequence = Sequence.objects.all()
         self.assertEqual(len(all_sequence), 395)
         for s in all_sequence:
-            self.assertEqual(s.blast_db.title, 'test')
+            self.assertEqual(s.blast_db.title, title)
+
 
 class BlastAdminTestCase(LiveServerTestCase):
     @classmethod
@@ -253,7 +325,10 @@ class BlastAdminTestCase(LiveServerTestCase):
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
-        User.objects.create_superuser(username=self.username, password=self.password, email='test@test.com')
+        User.objects.create_superuser(
+            username=self.username,
+            password=self.password,
+            email='test@test.com')
         # headless chrome driver
         options = webdriver.ChromeOptions()
         options.add_argument('headless')
@@ -268,13 +343,15 @@ class BlastAdminTestCase(LiveServerTestCase):
 
     @classmethod
     def tearDownClass(self):
-        super(BlastAdminTestCase, self).tearDownClass()
         self.driver.close()
+        super(BlastAdminTestCase, self).tearDownClass()
+
 
     @override_settings(CELERY_ALWAYS_EAGER=True)
-    def test_setup_is_shown(self):
+    def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/admin/'))
-        wait = WebDriverWait(self.driver, 5) # wait at most 5 seconds to let page load, or timeout exception
+        # wait at most 5 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 5)
         wait.until(EC.presence_of_element_located((By.ID, 'id_username')))
         username_input = self.driver.find_element_by_name('username')
         username_input.send_keys(self.username)
@@ -285,12 +362,13 @@ class BlastAdminTestCase(LiveServerTestCase):
         self.driver.get('%s%s' % (self.live_server_url, '/admin/app/organism/add/'))
         display_name_input = self.driver.find_element_by_id('id_display_name')
         short_name_input = self.driver.find_element_by_id('id_short_name')
-        description_input = self.driver.find_element_by_id('id_description')
-        tax_id_input = self.driver.find_element_by_id('id_tax_id')
+        # TODO: check functionality of automatically fetching tax_id and
+        # description
+        # description_input = self.driver.find_element_by_id('id_description')
+        # tax_id_input = self.driver.find_element_by_id('id_tax_id')
         display_name_input.send_keys(display_name)
         # check auto fill-in short name should be the same as display name
         self.assertEqual(short_name_input.get_attribute('value'), display_name)
-        # TODO: check functionality of automatically fetching tax_id and description
         short_name_input.clear()
         short_name_input.send_keys(short_name)
         self.driver.find_element_by_name('_save').click()
@@ -320,6 +398,7 @@ class BlastAdminTestCase(LiveServerTestCase):
         fasta_file_input = self.driver.find_element_by_id('id_fasta_file')
         fasta_file_input.send_keys('/media/blast/db/clec_peptide_example_BLASTdb.fa')
         title_input = self.driver.find_element_by_id('id_title')
+        title_input.clear()
         title_input.send_keys(title)
         self.driver.find_element_by_name('_save').click()
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-fasta_file_exists > img').get_attribute('alt'), 'true')
@@ -345,29 +424,26 @@ class BlastAdminTestCase(LiveServerTestCase):
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-sequence_set_exists > img').get_attribute('alt'), 'true')
         self.driver.find_element_by_id('id_form-0-is_shown').click()
         self.driver.find_element_by_name('_save').click()
-        self.driver.get('%s%s' % (self.live_server_url, '/blast/'))
-        wait.until(EC.element_to_be_clickable((By.ID, 'test')))
-        element = self.driver.find_element_by_id('test')
-        all_checkbox = self.driver.find_element_by_class_name('all-organism-checkbox')
-        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
-        hover.perform()
-        wait.until(EC.element_to_be_clickable((By.ID, 'clec_peptide_example_BLASTdb.fatest')))
-        self.driver.find_element_by_id('clec_peptide_example_BLASTdb.fatest').click()
-        example_query = ( '>Sample_Query_CLEC000107-RA\n'
-        'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAKLDQET'
-        'EELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKMERVLGKIRRNV'
-        'TQAEGCRNYQSKNYSKSIQQ*')
-        self.driver.find_element_by_id('query-textarea').send_keys(example_query)
-        self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+        # test valid query
+        query = (
+            '>Sample_Query_CLEC000107-RA\n'
+            'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAK'
+            'LDQETEELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKME'
+            'RVLGKIRRNVTQAEGCRNYQSKNYSKSIQQ*'
+        )
+        send_query(query, self.driver, self.live_server_url)
         wait = WebDriverWait(self.driver, 10)
         wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
+
 
 def prepare_test_fasta_file():
     for file in test_files:
         if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
             remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
     copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
-class TestBlastBinary(SimpleTestCase):
+
+
+class BlastBinaryTestCase(SimpleTestCase):
     def test_blastp(self):
         program = 'blastp'
         run_blast(program, self.assertEqual)
@@ -388,9 +464,11 @@ class TestBlastBinary(SimpleTestCase):
         program = 'blastx'
         run_blast(program, self.assertEqual)
 
+
 def run_blast(program, assertEqual):
     args_list = generate_blast_args(program)
     run_commands(args_list, assertEqual)
+
 
 def generate_blast_args(program):
     input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
@@ -525,3 +603,90 @@ def run_commands(args_list, assertEqual):
         p = Popen(args, stdin=PIPE, stdout=PIPE)
         p.wait()
         assertEqual(p.returncode, 0)
+
+class QueryTestCase(LiveServerTestCase):
+    @classmethod
+    def setUpClass(self):
+        super(QueryTestCase, self).setUpClass()
+        settings.DEBUG = True
+        Organism.objects.create(
+            display_name=display_name, short_name=short_name,
+            tax_id=tax_id)
+        organism = Organism.objects.get(short_name=short_name)
+        sequence = SequenceType.objects.create(
+            molecule_type='prot', dataset_type=dataset_type)
+        prepare_test_fasta_file()
+        self.files = test_files
+        BlastDb.objects.create(
+            fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
+            organism=organism, type=sequence, is_shown=False, title=title)
+        organism = Organism.objects.get(short_name=short_name)
+        blastdb = BlastDb.objects.get(organism=organism)
+        returncode, error, output = blastdb.makeblastdb()
+        returncode, error, output = blastdb.index_fasta()
+        blastdb.is_shown = True
+        blastdb.save()
+        options = webdriver.ChromeOptions()
+        options.add_argument('headless')
+        options.add_argument('window-size=1280x800')
+        self.driver = webdriver.Chrome(chrome_options=options)
+        # To use with header
+        # self.driver = webdriver.Chrome()
+        # Or use different webdriver
+        # self.driver = webdriver.PhantomJS()
+        # self.driver = webdriver.Firefox()
+        # self.driver.set_window_size(1280, 800)
+
+    @classmethod
+    def tearDownClass(self):
+        self.driver.close()
+        super(QueryTestCase, self).tearDownClass()
+
+class ValidQueryTestCase(QueryTestCase):
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        query = ( '>Sample_Query_CLEC000107-RA\n'
+        'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAKLDQET'
+        'EELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKMERVLGKIRRNV'
+        'TQAEGCRNYQSKNYSKSIQQ*')
+        send_query(query, self.driver, self.live_server_url)
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
+
+class QueryWithNoHitTestCase(QueryTestCase):
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        send_query('abc123', self.driver, self.live_server_url)
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
+        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'No Hits Found')
+
+def send_query(query, driver, live_server_url):
+    driver.get('%s%s' % (live_server_url, '/blast/'))
+    wait = WebDriverWait(driver, 10)
+    wait.until(EC.element_to_be_clickable((By.ID, 'test')))
+    element = driver.find_element_by_id('test')
+    all_checkbox = driver.find_element_by_class_name('all-organism-checkbox')
+    hover = ActionChains(driver).move_to_element(all_checkbox).move_to_element(element)
+    hover.perform()
+    wait.until(EC.element_to_be_clickable((By.ID, title)))
+    driver.find_element_by_id(title).click()
+    driver.find_element_by_id('query-textarea').send_keys(query)
+    driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+
+class UploadFileTestCase(QueryTestCase):
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        self.driver.get('%s%s' % (self.live_server_url, '/blast/'))
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.element_to_be_clickable((By.ID, 'test')))
+        element = self.driver.find_element_by_id('test')
+        all_checkbox = self.driver.find_element_by_class_name('all-organism-checkbox')
+        hover = ActionChains(self.driver).move_to_element(all_checkbox).move_to_element(element)
+        hover.perform()
+        wait.until(EC.element_to_be_clickable((By.ID, title)))
+        self.driver.find_element_by_id(title).click()
+        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        self.driver.find_element_by_name('query-file').send_keys(example_file_path)
+        self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
+        wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
