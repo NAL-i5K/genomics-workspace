@@ -1,11 +1,10 @@
 from __future__ import absolute_import
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import Http404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
+from sys import platform
 from os import path, makedirs, chmod
 from .tasks import run_clustal_task
 from .models import ClustalQueryRecord
@@ -16,11 +15,13 @@ import json
 import traceback
 import stat as Perm
 
+
 def manual(request):
     '''
     Manual page of Clustal
     '''
     return render(request, 'clustal/manual.html', {'title':'Clustal Manual'})
+
 
 def create(request):
     '''
@@ -61,6 +62,8 @@ def create(request):
         # ensure the standalone dequeuing process can access the file
 
         bin_name = 'bin_linux'
+        if platform == 'darwin':
+            bin_name = 'bin_mac'
         program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name)
 
         # count number of query sequence by counting '>'

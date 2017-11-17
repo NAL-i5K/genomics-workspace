@@ -1,13 +1,11 @@
 from __future__ import absolute_import
-from django.shortcuts import render
-from django.shortcuts import redirect
-from django.http import Http404
-from django.http import HttpResponse
+from django.shortcuts import render, redirect
+from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
-from os import path, makedirs, chmod
-import os
+from os import path, makedirs, chmod, remove, symlink
+from sys import platform
 from .tasks import run_hmmer_task
 from .models import HmmerQueryRecord, HmmerDB
 from datetime import datetime, timedelta
@@ -20,11 +18,12 @@ from itertools import groupby
 from subprocess import Popen, PIPE
 from i5k.settings import HMMER_QUERY_MAX
 
+
 def manual(request):
     '''
     Manual page of Hmmer
     '''
-    return render(request, 'hmmer/manual.html',{'title':'HMMER Manual'}) 
+    return render(request, 'hmmer/manual.html',{'title':'HMMER Manual'})
 
 def create(request):
     '''
@@ -47,7 +46,7 @@ def create(request):
         '''
         clustal_content = []
         if ("clustal_task_id" in request.GET):
-            clustal_aln = path.join(settings.MEDIA_ROOT, 'clustal', 
+            clustal_aln = path.join(settings.MEDIA_ROOT, 'clustal',
                                     'task', request.GET['clustal_task_id'],
                                     request.GET['clustal_task_id'] + ".aln")
 
@@ -73,7 +72,7 @@ def create(request):
             makedirs(task_dir)
 
         chmod(task_dir,
-              Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)  
+              Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can open files in the directory
         # change directory to task directory
 
@@ -91,10 +90,12 @@ def create(request):
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
 
         chmod(query_filename,
-              Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)  
+              Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
 
         bin_name = 'bin_linux'
+        if platform == 'darwin':
+            bin_name = 'bin_mac'
         program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
 
         if(request.POST['program'] == 'phmmer'):
@@ -102,9 +103,9 @@ def create(request):
                 qstr = f.read()
                 if(qstr.count('>') > int(HMMER_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
-                    os.remove(query_filename)
-                    return render(request, 'hmmer/invalid_query.html', 
-                            {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', }) 
+                    remove(query_filename)
+                    return render(request, 'hmmer/invalid_query.html',
+                            {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', })
 
         '''
         Format validation by hmmsearch fast mode
@@ -112,14 +113,14 @@ def create(request):
         But you need find a good to check format in front-end
         '''
         if(request.POST['program'] == 'hmmsearch'):
-            p = Popen([path.join(program_path, "hmmbuild"),"--fast", '--amino', 
-                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task',  "hmmbuild.test"), query_filename], 
+            p = Popen([path.join(program_path, "hmmbuild"),"--fast", '--amino',
+                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task',  "hmmbuild.test"), query_filename],
                       stdout=PIPE, stderr=PIPE)
             p.wait()
             result = p.communicate()[1]
             if(result != ''):
-                return render(request, 'hmmer/invalid_query.html', 
-                             {'title': 'Invalid MSA format', 
+                return render(request, 'hmmer/invalid_query.html',
+                             {'title': 'Invalid MSA format',
                               'info' :'<a href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format" target="_blank"> \
                                       Valid MSA format descriptions </a>' })
 
@@ -128,7 +129,7 @@ def create(request):
         db_list = ' '.join(
             [db.fasta_file.path_full for db in HmmerDB.objects.filter(title__in=set(request.POST.getlist('db-name')))])
         for db in db_list.split(' '):
-            os.symlink(db, path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, db[db.rindex('/') + 1:]))
+            symlink(db, path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, db[db.rindex('/') + 1:]))
 
         if not db_list:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
@@ -158,24 +159,24 @@ def create(request):
                     seq_count = 1
                 with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
                    json.dump({'status': 'pending', 'seq_count': seq_count,
-                               'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')], 
-                               'program':request.POST['program'], 
-                               'params':option_params, 
-                               'input':os.path.basename(query_filename)}, f)
+                               'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')],
+                               'program':request.POST['program'],
+                               'params':option_params,
+                               'input': path.basename(query_filename)}, f)
 
             args_list = []
             if (request.POST['program'] == 'hmmsearch'):
                 #hmmsearch
-                args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary', 
-                    os.path.basename(query_filename) + '.hmm', os.path.basename(query_filename)])
+                args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
+                    path.basename(query_filename) + '.hmm', path.basename(query_filename)])
                 for idx, db in enumerate(db_list.split()):
-                    args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out'] 
-                            + option_params + [os.path.basename(query_filename) + '.hmm', os.path.basename(db)])
+                    args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
+                            + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
             else:
                 #phmmer
                 for idx, db in enumerate(db_list.split()):
-                    args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out'] 
-                            + option_params + [os.path.basename(query_filename), os.path.basename(db)])
+                    args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
+                            + option_params + [path.basename(query_filename), path.basename(db)])
 
             run_hmmer_task.delay(task_id, args_list, file_prefix)
 
