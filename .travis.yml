@@ -10,6 +10,7 @@ services:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
+  - pip install codecov
   - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - export PATH=$PATH:$(pwd)
@@ -38,3 +39,4 @@ script:
 
 after_success:
   - coveralls
+  - codecov
