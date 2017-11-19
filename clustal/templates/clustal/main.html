@@ -84,6 +84,12 @@ html {overflow-y: scroll;}
                         <div><span class="load-example">Or</span> load it from disk <span style=" cursor: pointer; font-weight:bold; color:blue;" class="load-nucleotide txt"> (load example) </span> </div> 
                         <input type="file" name="query-file" class="query-file" id="queryfile">
                     </fieldset>
+
+<fieldset id="fieldset-search-tag">
+        <legend>Search Tag</legend>
+    <INPUT TYPE="text" VALUE="{{ tag }}" id="tag" name="tag">
+</fieldset>
+
                     <div class="tab-content">
                         <div id="clustalo" class="tab-pane fade in active">
                             <fieldset id="fieldset-omega" class="t_font">

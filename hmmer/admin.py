@@ -32,4 +32,10 @@ class HmmerQueryRecordAdmin(admin.ModelAdmin):
     actions_on_bottom = True
 admin.site.register(HmmerQueryRecord, HmmerQueryRecordAdmin)
 
+class HmmerSearchAdmin(admin.ModelAdmin):
+    list_display = ('task_id', 'sequence',)
+    search_fields = ('task_id', 'sequence',)
+    actions_on_top = True
+    actions_on_bottom = True
+admin.site.register(HmmerSearch, HmmerSearchAdmin)
 

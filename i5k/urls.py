@@ -22,6 +22,7 @@ urlpatterns = [
     url(r'^home$', 'dashboard.views.dashboard', name='dashboard'),
     url(r'^dashboard$', 'dashboard.views.dashboard', name='dashboard'),
     url(r'blast_hist', 'dashboard.views.dashboard', name='dashboard'),
+    url(r'hmmer_hist', 'dashboard.views.dashboard', name='dashboard'),
     # url(r'^home/', include('dashboard.urls', namespace='dashboard')),
     # url(r'^contact$', 'app.views.contact', name='contact'),
     url(r'^about', 'app.views.about', name='about'),
@@ -128,14 +129,13 @@ urlpatterns = [
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
-    # BLAST
-    url(r'^blast/', include('blast.urls', namespace='blast')),
-    # BLAST
     # url(r'^data/', include('data.urls', namespace='data')),
-    # url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
-    # url(r'^clustal/', include('clustal.urls', namespace='clustal')),
+    url(r'^blast/', include('blast.urls', namespace='blast')),
+    url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
+    url(r'^clustal/', include('clustal.urls', namespace='clustal')),
     # url(r'^sso/', include('webapollo_sso.urls', namespace='sso')),
 ]
+
 
 if settings.DEBUG:
     urlpatterns += [
