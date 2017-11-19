@@ -27,4 +27,19 @@ class HmmerDB(models.Model):
 
     fasta_file_exists.boolean = True
     fasta_file_exists.short_description = 'fasta file exists'
+
+
+class HmmerSearch(models.Model):
+    task_id         = models.CharField(null=True, max_length=50)
+    search_tag      = models.CharField(max_length=64)
+    enqueue_date    = models.DateTimeField()
+    sequence        = models.TextField(null=True)
+    program         = models.CharField(max_length=10)
+    cut_off         = models.CharField(max_length=10)
+    significane_seq = models.DecimalField(max_digits=10, decimal_places=5)
+    significane_hit = models.DecimalField(max_digits=10, decimal_places=5)
+    report_seq      = models.DecimalField(max_digits=10, decimal_places=5)
+    report_hit      = models.DecimalField(max_digits=10, decimal_places=5)
+    organisms       = models.TextField(null=True)
+
 # Create your models here.

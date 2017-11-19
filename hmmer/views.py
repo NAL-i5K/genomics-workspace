@@ -9,16 +9,21 @@ from uuid import uuid4
 from os import path, makedirs, chmod
 import os
 from .tasks import run_hmmer_task
-from .models import HmmerQueryRecord, HmmerDB
+from .models import HmmerQueryRecord, HmmerDB, HmmerSearch
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
+from misc.logger import i5kLogger
+from misc.get_tag import get_tag
+from pytz import timezone
 import json
 import traceback
 import stat as Perm
 from itertools import groupby
 from subprocess import Popen, PIPE
 from i5k.settings import HMMER_QUERY_MAX
+
+log = i5kLogger()
 
 def manual(request):
     '''
@@ -41,7 +46,29 @@ def create(request):
         hmmerdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in
                                     groupby(sorted(hmmerdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
 
-
+        if 'search_id' in request.GET and request.GET['search_id']:
+            print 'hmmer edit search'
+            tag = request.GET['search_id']
+            saved_search = HmmerSearch.objects.filter(search_tag=tag)
+            if saved_search:
+                saved_search = saved_search[0]
+                sequence_list = saved_search.sequence.split('\n')
+                print 'sequence %s' %  sequence_list
+                print 'program %s' % saved_search.program,
+                return render(request, 'hmmer/main.html', {
+                    'tag':             saved_search.search_tag,
+                    'sequence':        sequence_list[0],
+                    'program':         saved_search.program,
+                    'cut_off':         saved_search.cut_off,
+                    'significane_seq': float(saved_search.significane_seq),
+                    'significane_hit': float(saved_search.significane_hit),
+                    'report_seq':      float(saved_search.report_seq),
+                    'report_hit':      float(saved_search.report_hit),
+                    'organism':        saved_search.organisms[1:-2],
+                    'title': 'HMMER Query',
+                    'hmmerdb_list': json.dumps(hmmerdb_list),
+                    'hmmerdb_type_counts': hmmerdb_type_counts,
+                })
         '''
         Redirect from clustal result
         '''
@@ -55,11 +82,13 @@ def create(request):
                 for line in content_file:
                     clustal_content.append(line)
 
+        tag = get_tag('vagrant', HmmerSearch)
         return render(request, 'hmmer/main.html', {
             'title': 'HMMER Query',
             'hmmerdb_list': json.dumps(hmmerdb_list),
             'hmmerdb_type_counts': hmmerdb_type_counts,
             'clustal_content': "".join(clustal_content),
+            'tag':tag
         })
 
     elif request.method == 'POST':
@@ -178,6 +207,8 @@ def create(request):
                             + option_params + [os.path.basename(query_filename), os.path.basename(db)])
 
             run_hmmer_task.delay(task_id, args_list, file_prefix)
+
+            save_history(request.POST, task_id, query_filename)
 
             return redirect('hmmer:retrieve', task_id)
         else:
@@ -313,3 +344,21 @@ def user_tasks(request, user_id):
         records = HmmerQueryRecord.objects.filter(user__id=user_id, result_date__gt=(localtime(now())+ timedelta(days=-7)))
         serializer = UserHmmerQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
+
+def save_history(post, task_id, seq_file):
+    rec = HmmerSearch()
+    with open(seq_file) as f:
+        rec.sequence = f.read()
+    rec.task_id          = task_id
+    rec.search_tag       = post.get('tag')
+    rec.enqueue_date     = datetime.now()
+    rec.program          = post.get('program', '')
+    rec.cut_off          = post.get('cut_off', '')
+    rec.significane_seq  = post.get('significane_seq', '0')
+    rec.significane_hit  = post.get('significane_hit', '0')
+    rec.report_seq       = post.get('report_seq', '0')
+    rec.report_hit       = post.get('report_hit', '0')
+    org = post.getlist('db-name', [])
+    orgs = ','.join(org)
+    rec.organisms        = json.dumps(orgs)
+    rec.save()

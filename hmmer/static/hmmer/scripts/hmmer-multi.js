@@ -57,6 +57,7 @@ $(function() { // document ready
 		// organism-checkbox
 		var $organism_checkbox = $('<input>', {
 			'organism': organism_id,
+                        'id': organism_id,
 			'type': 'checkbox',
 			'class': 'organism-checkbox ' + organism_id,
             'name': 'organism-checkbox[]',
@@ -89,6 +90,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
+                                                'id': file_name.split('.')[0],
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -101,6 +103,16 @@ $(function() { // document ready
 			}
 		}
 	}
+
+
+	hist_checkbox = $("#hist_checkbox").val();
+	hist_check_array = hist_checkbox.split(',');
+	for(var i = 0; i < hist_check_array.length; i++){
+	    c = '#' + hist_check_array[i].split(".")[0]
+	    $(c).prop("checked", true);
+	    $('#'+$(c).attr('organism')).prop("checked", true);
+	};
+
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
@@ -488,6 +500,7 @@ $(function() { // document ready
 
     $('.cutoff').change(function(){
         if($('.cutoff:checked').val() == 'bitscore'){
+            if ( $('#hist_cut_off').val() == 'bitscore' ) return;
             $('#s_sequence').val('25');
             $('#s_hit').val('22');
             $('#r_sequence').val('7');
@@ -495,6 +508,7 @@ $(function() { // document ready
         }
 
         if($('.cutoff:checked').val() == 'evalue'){
+            if ( $('#hist_cut_off').val() == 'evalue' )return;
             $('#s_sequence').val('0.01');
             $('#s_hit').val('0.03');
             $('#r_sequence').val('0.01');
@@ -503,6 +517,8 @@ $(function() { // document ready
     });
 
     $('.btn_reset').click(function() {
+        $("#hist_program").val('');
+        $("#hist_cut_off").val('');
         query_type = '';
         $('.program').attr('disabled', false).removeClass('disabled-radio');
         $('#query-textarea').val('');
@@ -510,7 +526,7 @@ $(function() { // document ready
         $('.all-organism-checkbox').change();
         $(".query-file").val('');
         $('label.error').remove();
-		$('.cutoff').change();
+	$('.cutoff').change();
     });
 
     $('#queries-tab').click(function() {
@@ -548,7 +564,29 @@ $(function() { // document ready
             });
         }
     });
-	checktxt();
+
+    hist_program = $("#hist_program").val();
+    if ( hist_program == '' ){
+    }else if ( hist_program == 'phmmer' ){
+        $('.program.phmmer').prop("checked", true);        
+    }else if ( hist_program == 'hmmsearch' ){  
+        $('.program.hmmsearch').prop("checked", true);
+    }
+
+    if (hist_program != ''){
+        $("#s_sequence").val($("#hist_significane_seq").val());
+        $("#s_hit").val($("#hist_significane_hit").val());
+        $("#r_sequence").val($("#hist_report_seq").val());
+        $("#r_hit").val($("#hist_report_hit").val());
+        if ( $('#hist_cut_off').val() == 'evalue' ){
+            $('.cutoff.evalue').prop("checked", true);
+        }else if ( $('#hist_cut_off').val() == 'bitscore' ){
+            $('.cutoff.bitscore').prop("checked", true);
+        }
+        $('#query-textarea').val($("#hist_sequence").val());
+    }
+
+    checktxt();
 });
 
 function On_Submit(){

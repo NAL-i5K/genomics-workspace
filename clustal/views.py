@@ -8,13 +8,17 @@ from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod
 from .tasks import run_clustal_task
-from .models import ClustalQueryRecord
+from .models import ClustalQueryRecord, ClustalSearch
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
+from misc.logger import i5kLogger
+from misc.get_tag import get_tag
 import json
 import traceback
 import stat as Perm
+
+log = i5kLogger()
 
 def manual(request):
     '''
@@ -28,7 +32,59 @@ def create(request):
     * Max number of query sequences: 600 sequences
     '''
     if request.method == 'GET':
+
+        if 'search_id' in request.GET and request.GET['search_id']:
+            tag = request.GET['search_id']
+            saved_search = ClustalSearch.objects.filter(search_tag=tag)
+            if saved_search:
+                saved_search = saved_search[0]
+                sequence_list = saved_search.sequence.split('\n')
+                return render(request, 'blast/main.html', {
+                    'tag':               saved_search.search_tag,
+                    'sequence':          sequence_listp[0],
+                    'program':           saved_search.program,
+                    'pairwise':          saved_search.pairwise,
+                    'pwdnamatrix':       saved_search.pwdnamatrix,
+                    'dna_pwgapopen':     saved_search.dna_pwgapopen,
+                    'dna_pwgapext':      saved_search.dna_pwgapext,
+                    'pwmatrix':          saved_search.pwmatrix,
+                    'protein_pwgapopen': saved_search.protein_pwgapopen,
+                    'protein_pwgapext':  saved_search.protein_pwgapext,
+                    'ktuple':            saved_search.ktuple,
+                    'window':            saved_search.window,
+                    'pairgap':           saved_search.pairgap,
+                    'topdiags':          saved_search.topdiags,
+                    'score':             saved_search.score,
+                    'dnamatrix':         saved_search.dnamatrix,
+                    'dna_gapopen':       saved_search.dna_gapopen,
+                    'dna_gapext':        saved_search.dna_gapext,
+                    'dna_gapdist':       saved_search.dna_gapdist,
+                    'dna_iteration':     saved_search.dna_iteration,
+                    'dna_numiter':       saved_search.dna_numiter,
+                    'dna_clustering':    saved_search.dna_clustering,
+                    'matrix':            saved_search.matrix,
+                    'protein_gapopen':   saved_search.protein_gapopen,
+                    'protein_gapext':    saved_search.protein_gapext,
+                    'protein_gapdist':   saved_search.protein_gapdist,
+                    'protein_iteration': saved_search.protein_iteration,
+                    'protein_numiter':   saved_search.protein_numiter,
+                    'protein_clustering': saved_search.protein_clustering,
+                    'output':            saved_search.output,
+                    'outorder':          saved_search.outorder,
+                    'dealing_input':     saved_search.dealing_input,
+                    'clustering_guide_tree':  saved_search.clustering_guide_tree,
+                    'clustering_guide_iter':  saved_search.clustering_guide_iter,
+                    'combined_iter':     saved_search.combined_iter,
+                    'max_gt_iter':       saved_search.max_gt_iter,
+                    'max_hmm_iter':      saved_search.max_hmm_iter,
+                    'omega_output':      saved_search.omega_output,
+                    'omega_order':       saved_search.omega_order,
+                    'title':           'Clustal Query',
+                })
+
+        tag = get_tag('vagrant', ClustalSearch)
         return render(request, 'clustal/main.html', {
+            'tag': tag,
             'title': 'Clustal Query',
         })
     elif request.method == 'POST':
@@ -352,4 +408,48 @@ def user_tasks(request, user_id):
         return JSONResponse(serializer.data)
 
 
-
+def save_history(post, task_id, seq_file):
+    rec = ClustalSearch()
+    with open(seq_file) as f:
+        rec.sequence = f.read()
+    
+    rec.task_id    = task_id,
+    rec.search_tag = post.get('tag')
+    rec.program    = post.get('program', '')
+    rec.pairwise      =  post.get('pairwise', '')
+    rec.pwdnamatrix   =  post.get('pwdnamatrix', '') 
+    rec.dna_pwgapopen =  post.get('dna_pwgapopen', '')
+    rec.dna_pwgapext  =  post.get('dna_pwgapext', '')
+    rec.pwmatrix      =  post.get('pwmatrix', '')
+    rec.protein_pwgapopen =  post.get('protein_pwgapopen', '')
+    rec.protein_pwgapext  =  post.get('protein_pwgapext', '')
+    rec.ktuple        =  post.get('ktuple', '')
+    rec.window        =  post.get('window', '')
+    rec.pairgap       =  post.get('pairgap', '')
+    rec.topdiags      =  post.get('topdiags', '')
+    rec.score         =  post.get('score', '')
+    rec.dnamatrix     =  post.get('dnamatrix', '')
+    rec.dna_gapopen   =  post.get('dna_gapopen', '')
+    rec.dna_gapext    =  post.get('dna_gapext', '')
+    rec.dna_gapdist   =  post.get('dna_gapdist', '')
+    rec.dna_iteration =  post.get('dna_iteration', '')
+    rec.dna_numiter   =  post.get('dna_numiter', '')
+    rec.dna_clustering       =  post.get('dna_clustering', '')
+    rec.matrix               =  post.get('matrix', '')
+    rec.protein_gapopen      =  post.get('protein_gapopen', '')
+    rec.protein_gapext       =  post.get('protein_gapext', '') 
+    rec.protein_gapdist      =  post.get('protein_gapdist', '')
+    rec.protein_iteration    =  post.get('protein_iteration', '')
+    rec.protein_numiter      =  post.get('protein_numiter', '')
+    rec.protein_clustering   =  post.get('protein_clustering', '')
+    rec.output               =  post.get('output', '')
+    rec.outorder             =  post.get('outorder', '')
+    rec.dealing_input        =  post.get('dealing_input', '')
+    rec.clustering_guide_tree =  post.get('clustering_guide_tree', '')
+    rec.clustering_guide_iter =  post.get('clustering_guide_iter', '')
+    rec.combined_iter         =  post.get('combined_iter', '')
+    rec.max_gt_iter           =  post.get('max_gt_iter', '')
+    rec.max_hmm_iter          =  post.get('max_hmm_iter', '')
+    rec.omega_output          =  post.get('omega_output', '')
+    rec.omega_order           =  post.get('omega_order', '')
+ 
