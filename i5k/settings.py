@@ -198,8 +198,8 @@ INSTALLED_APPS = (
     'dashboard',
     'proxy',
     #'data',
-    #'hmmer',
-    #'clustal',
+    'hmmer',
+    'clustal',
 #    'webapollo_sso',
 #    'drupal_sso',
 )
