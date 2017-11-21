@@ -276,10 +276,10 @@ def status(request, task_id):
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
-                    num_preceding = -1;
+                    num_preceding = -1
                     if tlist:
-                        for index, tuple in enumerate(tlist):
-                            if task_id in tuple:
+                        for index, t in enumerate(tlist):
+                            if task_id in t:
                                 num_preceding = index
                                 break
                     statusdata['num_preceding'] = num_preceding

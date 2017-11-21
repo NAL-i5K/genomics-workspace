@@ -1,5 +1,5 @@
 # Generate files used in blast/tests.py
-# Usage (at the root of the repo): python make_blastdb_for_tests.py 
+# Usage (at the root of the repo): python make_blastdb_for_tests.py
 from os.path import abspath, dirname, join
 from sys import platform
 from subprocess import Popen, PIPE

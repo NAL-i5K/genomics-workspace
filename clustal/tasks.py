@@ -37,7 +37,6 @@ def run_clustal_task(task_id, args_list, file_prefix):
     record.dequeue_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
-    
     # update status from 'pending' to 'running' for frontend
     with open('status.json', 'r') as f:
         statusdata = json.load(f)

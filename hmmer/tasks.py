@@ -4,14 +4,13 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from subprocess import Popen, PIPE, call
 from datetime import datetime, timedelta
-from os import path, chdir, getcwd
+from os import path, chdir
 from pytz import utc
 from celery.utils.log import get_task_logger
-from celery.signals import task_sent, task_success, task_failure
+# from celery.signals import task_sent, task_success, task_failure
 from django.core.cache import cache
 from django.conf import settings
 import json
-import time
 from hmmer.models import HmmerQueryRecord
 
 logger = get_task_logger(__name__)
@@ -23,7 +22,8 @@ if settings.USE_CACHE:
     acquire_lock = lambda: cache.add(LOCK_ID, 'true', LOCK_EXPIRE)
     release_lock = lambda: cache.delete(LOCK_ID)
 
-@shared_task() # ignore_result=True
+
+@shared_task()  # ignore_result=True
 def run_hmmer_task(task_id, args_list, file_prefix):
     import django
     django.setup()
@@ -55,17 +55,17 @@ def run_hmmer_task(task_id, args_list, file_prefix):
         Popen(args, stdin=None, stdout=PIPE).wait()
         if('hmmbuild' in args[0]):
             if not path.isfile(args[3]):
-                result_status= 'FAILURE'
+                result_status = 'FAILURE'
                 break
         elif('hmmsearch' in args[0]):
             merge_result_command = merge_result_command + ' ' + args[2]
             if not path.isfile(args[2]):
-                result_status= 'FAILURE'
+                result_status = 'FAILURE'
                 break
         elif('phmmer' in args[0]):
-             merge_result_command = merge_result_command + ' ' + args[2]
-             if not path.isfile(args[2]):
-                result_status= 'FAILURE'
+            merge_result_command = merge_result_command + ' ' + args[2]
+            if not path.isfile(args[2]):
+                result_status = 'FAILURE'
                 break
 
     merge_result_command = merge_result_command + ' > ' + file_prefix + ".merge"
@@ -84,11 +84,12 @@ def run_hmmer_task(task_id, args_list, file_prefix):
 
     with open('status.json', 'wb') as f:
         json.dump(statusdata, f)
-        #json.dump({'status': 'done', 'db_list': db_list}, f)
+        # json.dump({'status': 'done', 'db_list': db_list}, f)
 
-    return task_id # passed to 'result' argument of task_success_handler
+    return task_id  # passed to 'result' argument of task_success_handler
 
-@periodic_task(run_every=(crontab(hour='0', minute='10'))) # Execute daily at midnight
+
+@periodic_task(run_every=(crontab(hour='0', minute='10')))  # Execute daily at midnight
 def remove_files():
     from shutil import rmtree
     logger.info('removing expired files (under test, not working actually)')
@@ -97,6 +98,8 @@ def remove_files():
         if path.exists(task_path):
             rmtree(task_path)
             logger.info('removed directory %s' % (task_path))
+
+
 '''
 @task_sent.connect
 def task_sent_handler(sender=None, task_id=None, task=None, args=None,

@@ -48,7 +48,7 @@ def test_main(request):
     ['Protein', 'Peptide', 'TPRE_new_ids.faa', 'Trichogramma pretiosum', '']]
     blastdb_type_counts = {'genome_assembly': 15, 'protein': 15, 'transcript': 15}
     return render(request, 'blast/main.html', {
-        'title': 'BLAST Query', 
+        'title': 'BLAST Query',
         'blastdb_list': json.dumps(blastdb_list),
         'blastdb_type_counts': blastdb_type_counts,
         'iframe': False
