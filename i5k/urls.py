@@ -1,39 +1,37 @@
 from datetime import datetime
-from django.conf.urls import patterns, include, url
+from django.conf import settings
+from django.conf.urls import include, url
 from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
-
 # Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from django.contrib.sites.models import Site
 from django.contrib.auth.views import login
 from django.contrib.auth.decorators import user_passes_test
 
 admin.autodiscover()
-#admin.site.unregister(Site)
-#from filebrowser.sites import site
+# admin.site.unregister(Site)
+# from filebrowser.sites import site
 
-login_forbidden =  user_passes_test(lambda u: u.is_anonymous(), '/home')
+login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
-urlpatterns = patterns('',
-
+urlpatterns = [
     url(r'^tripal_assembly_data', 'app.views.tripal_assembly_data', name='tripal_assembly_data'),
     url(r'^tripal_gene_prediction', 'app.views.tripal_gene_prediction', name='tripal_gene_prediction'),
     url(r'^tripal_mapped', 'app.views.tripal_mapped', name='tripal_mapped'),
     url(r'^web_login$', 'app.views.web_login', name='web_login'),
     url(r'^web_logout$', 'app.views.web_logout', name='web_logout'),
     url(r'^home$', 'dashboard.views.dashboard', name='dashboard'),
-    #url(r'^home/', include('dashboard.urls', namespace='dashboard')),
-    #url(r'^contact$', 'app.views.contact', name='contact'),
+    # url(r'^home/', include('dashboard.urls', namespace='dashboard')),
+    # url(r'^contact$', 'app.views.contact', name='contact'),
     url(r'^about', 'app.views.about', name='about'),
     url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
-    #url(r'^admin/filebrowser/', include(site.urls)),
-    #url(r'^grappelli/', include('grappelli.urls')),
+    # url(r'^admin/filebrowser/', include(site.urls)),
+    # url(r'^grappelli/', include('grappelli.urls')),
     # Uncomment the admin/doc line below to enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^proxy/', include('proxy.urls', namespace='proxy')),
-    #url(r'^webapollo/', include('webapollo.urls', namespace='webapollo')),
+    # url(r'^webapollo/', include('webapollo.urls', namespace='webapollo')),
 
     # user authentication
     url(r'^set_institution$', 'app.views.set_institution', name='set_institution'),
@@ -131,19 +129,19 @@ urlpatterns = patterns('',
     # BLAST
     url(r'^blast/', include('blast.urls', namespace='blast')),
     # BLAST
-    #url(r'^data/', include('data.urls', namespace='data')),
+    # url(r'^data/', include('data.urls', namespace='data')),
 
     url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
     url(r'^clustal/', include('clustal.urls', namespace='clustal')),
     url(r'^sso/', include('webapollo_sso.urls', namespace='sso')),
-)
-from django.conf import settings
+]
+
 if settings.DEBUG:
-    urlpatterns += patterns('',
+    urlpatterns += [
         url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.MEDIA_ROOT,
         }),
         url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
             'document_root': settings.STATIC_ROOT,
         }),
-    )
+    ]
