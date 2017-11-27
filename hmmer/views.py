@@ -98,23 +98,22 @@ def create(request):
             bin_name = 'bin_mac'
         program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
 
-        if(request.POST['program'] == 'phmmer'):
+        if request.POST['program'] == 'phmmer':
             with open(query_filename, 'r') as f:
                 qstr = f.read()
-                if(qstr.count('>') > int(HMMER_QUERY_MAX)):
+                if qstr.count('>') > int(HMMER_QUERY_MAX):
                     query_cnt = str(qstr.count('>'))
                     remove(query_filename)
                     return render(request, 'hmmer/invalid_query.html',
                             {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', })
-
-        '''
-        Format validation by hmmsearch fast mode
-        If the machine can't perform it in short time, it could be marked.
-        But you need find a good to check format in front-end
-        '''
-        if(request.POST['program'] == 'hmmsearch'):
-            p = Popen([path.join(program_path, "hmmbuild"),"--fast", '--amino',
-                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task',  "hmmbuild.test"), query_filename],
+        elif request.POST['program'] == 'hmmsearch':
+            '''
+            Format validation by hmmsearch fast mode
+            If the machine can't perform it in short time, it could be marked.
+            But you need find a good to check format in front-end
+            '''
+            p = Popen([path.join(program_path, "hmmbuild"), "--fast", '--amino',
+                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename],
                       stdout=PIPE, stderr=PIPE)
             p.wait()
             result = p.communicate()[1]
@@ -123,7 +122,8 @@ def create(request):
                              {'title': 'Invalid MSA format',
                               'info' :'<a href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format" target="_blank"> \
                                       Valid MSA format descriptions </a>' })
-
+        else:  # check if program is in list for security
+            raise Http404
 
         # build hmmer command
         db_list = ' '.join(
@@ -134,55 +134,35 @@ def create(request):
         if not db_list:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
 
-
-        # check if program is in list for security
-        if request.POST['program'] in ['phmmer', 'hmmsearch']:
-            option_params = []
-            if (request.POST['cutoff'] == 'evalue'):
-                option_params.extend(['--incE', request.POST['s_sequence'], '--incdomE', request.POST['s_hit']])
-                option_params.extend(['-E', request.POST['r_sequence'], '--domE', request.POST['r_hit']])
-            elif (request.POST['cutoff'] == 'bitscore'):
-                option_params.extend(['--incT', request.POST['s_sequence'], '--incdomT', request.POST['s_hit']])
-                option_params.extend(['-T', request.POST['r_sequence'], '--domT', request.POST['r_hit']])
-
-            record = HmmerQueryRecord()
-            record.task_id = task_id
-            if request.user.is_authenticated():
-                record.user = request.user
-            record.save()
-
-            # generate status.json for frontend statu checking
-            with open(query_filename, 'r') as f:
-                qstr = f.read()
-                seq_count = qstr.count('>')
-                if (seq_count == 0):
-                    seq_count = 1
-                with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
-                   json.dump({'status': 'pending', 'seq_count': seq_count,
-                               'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')],
-                               'program':request.POST['program'],
-                               'params':option_params,
-                               'input': path.basename(query_filename)}, f)
-
-            args_list = []
-            if (request.POST['program'] == 'hmmsearch'):
-                #hmmsearch
-                args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
-                    path.basename(query_filename) + '.hmm', path.basename(query_filename)])
-                for idx, db in enumerate(db_list.split()):
-                    args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
-                            + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
-            else:
-                #phmmer
-                for idx, db in enumerate(db_list.split()):
-                    args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
-                            + option_params + [path.basename(query_filename), path.basename(db)])
-
-            run_hmmer_task.delay(task_id, args_list, file_prefix)
-
-            return redirect('hmmer:retrieve', task_id)
+        if request.POST['cutoff'] == 'evalue':
+            option_params = ['--incE', request.POST['s_sequence'], '--incdomE', request.POST['s_hit'],
+                             '-E', request.POST['r_sequence'], '--domE', request.POST['r_hit']]
+        elif request.POST['cutoff'] == 'bitscore':
+            option_params = ['--incT', request.POST['s_sequence'], '--incdomT', request.POST['s_hit'],
+                             '-T', request.POST['r_sequence'], '--domT', request.POST['r_hit']]
         else:
             raise Http404
+
+        record = HmmerQueryRecord()
+        record.task_id = task_id
+        if request.user.is_authenticated():
+            record.user = request.user
+        record.save()
+        # generate status.json for frontend statu checking
+        with open(query_filename, 'r') as f:
+            qstr = f.read()
+            seq_count = qstr.count('>')
+            if (seq_count == 0):
+                seq_count = 1
+            with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
+                json.dump({'status': 'pending', 'seq_count': seq_count,
+                           'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')],
+                           'program': request.POST['program'],
+                           'params': option_params,
+                           'input': path.basename(query_filename)}, f)
+        args_list = generate_hmmer_args_list(request.POST['program'], program_path, query_filename, option_params, db_list)
+        run_hmmer_task.delay(task_id, args_list, file_prefix)
+        return redirect('hmmer:retrieve', task_id)
 
 
 def retrieve(request, task_id='1'):
@@ -206,13 +186,13 @@ def retrieve(request, task_id='1'):
             out_txt = []
             report = ["<br>"]
 
-            #1mb limitation
+            # 1mb limitation
             if path.isfile(dir_prefix + '.merge') and path.getsize(dir_prefix + '.merge') > 1024000:
                 out_txt = 'The Hmmer reports exceed 1 Megabyte, please download it.'
                 isExceed = True
             else:
                 isExceed = False
-                #'[ok]' is the end line of each hmmer output (delimiter for different dbs)
+                # '[ok]' is the end line of each hmmer output (delimiter for different dbs)
                 with open(dir_prefix + ".merge", 'r') as content_file:
                     for line in content_file:
                         line = line.rstrip('\n')
@@ -222,7 +202,7 @@ def retrieve(request, task_id='1'):
                         else:
                             report.append(line + "<br>")
 
-            if r.result_status in set(['SUCCESS', ]):
+            if r.result_status == 'SUCCESS':
                 return render(
                     request,
                     'hmmer/result.html', {
@@ -230,7 +210,7 @@ def retrieve(request, task_id='1'):
                         'output': url_prefix + '.merge',
                         'status': path.join(url_base_prefix, 'status.json'),
                         'input': file_in,
-                        'options': db_list, #for interation in result page
+                        'options': db_list,  # for interation in result page
                         'report': out_txt,
                         'task_id': task_id,
                         'isExceed': isExceed
@@ -276,7 +256,7 @@ def status(request, task_id):
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
-                    num_preceding = -1;
+                    num_preceding = -1
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
@@ -314,3 +294,18 @@ def user_tasks(request, user_id):
         records = HmmerQueryRecord.objects.filter(user__id=user_id, result_date__gt=(localtime(now())+ timedelta(days=-7)))
         serializer = UserHmmerQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
+
+
+def generate_hmmer_args_list(program, program_path, query_filename, option_params, db_list):
+    args_list = []
+    if program == 'hmmsearch':
+        args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
+            path.basename(query_filename) + '.hmm', path.basename(query_filename)])
+        for idx, db in enumerate(db_list.split()):
+            args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
+                    + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
+    else:  # phmmer
+        for idx, db in enumerate(db_list.split()):
+            args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
+                    + option_params + [path.basename(query_filename), path.basename(db)])
+    return args_list
