@@ -23,6 +23,7 @@ urlpatterns = [
     url(r'^dashboard$', 'dashboard.views.dashboard', name='dashboard'),
     url(r'blast_hist', 'dashboard.views.dashboard', name='dashboard'),
     url(r'hmmer_hist', 'dashboard.views.dashboard', name='dashboard'),
+    url(r'clustal_hist', 'dashboard.views.dashboard', name='dashboard'),
     # url(r'^home/', include('dashboard.urls', namespace='dashboard')),
     # url(r'^contact$', 'app.views.contact', name='contact'),
     url(r'^about', 'app.views.about', name='about'),
