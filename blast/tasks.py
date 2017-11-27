@@ -29,7 +29,7 @@ if settings.USE_CACHE:
 def run_blast_task(task_id, args_list, file_prefix, blast_info):
     import django
     django.setup()
-    
+
     logger.info("blast_task_id: %s" % (task_id,))
 
     # update dequeue time
@@ -214,12 +214,12 @@ def task_success_handler(sender=None, result=None, **kwds):
             blast_task_id = result
             tlist = cache.get(CACHE_ID, [])
             if tlist and blast_task_id:
-                for tuple in tlist:
-                    if blast_task_id in tuple:
-                        tlist.remove(tuple)
-                        logger.info('[task_success] task removed from queue: %s' % (blast_task_id) )
+                for t in tlist:
+                    if blast_task_id in t:
+                        tlist.remove(t)
+                        logger.info('[task_success] task removed from queue: %s' % (blast_task_id))
                         break
-                logger.info('[task_success] task done: %s. queue length: %s' % (blast_task_id, len(tlist)) )
+                logger.info('[task_success] task done: %s. queue length: %s' % (blast_task_id, len(tlist)))
                 cache.set(CACHE_ID, tlist)
             else:
                 logger.info('[task_success] no queue list or blast task id.')

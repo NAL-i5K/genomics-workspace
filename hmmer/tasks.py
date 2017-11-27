@@ -83,11 +83,12 @@ def run_hmmer_task(task_id, args_list, file_prefix):
 
     with open('status.json', 'wb') as f:
         json.dump(statusdata, f)
-        #json.dump({'status': 'done', 'db_list': db_list}, f)
+        # json.dump({'status': 'done', 'db_list': db_list}, f)
 
-    return task_id # passed to 'result' argument of task_success_handler
+    return task_id  # passed to 'result' argument of task_success_handler
 
-@periodic_task(run_every=(crontab(hour='0', minute='10'))) # Execute daily at midnight
+
+@periodic_task(run_every=(crontab(hour='0', minute='10')))  # Execute daily at midnight
 def remove_files():
     from shutil import rmtree
     logger.info('removing expired files (under test, not working actually)')
@@ -96,6 +97,8 @@ def remove_files():
         if path.exists(task_path):
             rmtree(task_path)
             logger.info('removed directory %s' % (task_path))
+
+
 '''
 @task_sent.connect
 def task_sent_handler(sender=None, task_id=None, task=None, args=None,
