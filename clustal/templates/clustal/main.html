@@ -72,8 +72,8 @@ html {overflow-y: scroll;}
                 {% csrf_token %}
                 <div class="tripal_organism-info-box tripal-info-box">
                     <ul class="nav nav-tabs">
-                        <li class="active"><a data-toggle="tab" href="#clustalo">CLUSTALO</a></li>
-                        <li><a data-toggle="tab" href="#clustalw">CLUSTALW</a></li>
+                        <li class="active"><a data-toggle="tab" id='clustalo_tab' href="#clustalo">CLUSTALO</a></li>
+                        <li><a data-toggle="tab" id='clustalw_tab' href="#clustalw">CLUSTALW</a></li>
                         <li style="float: right;border:0px;"><a href='{% url 'clustal:manual' %}' target="_blank"><span class="glyphicon glyphicon-book"></span> Tutorial</a></li>
                     </ul>
                     <fieldset id="fieldset-query">
@@ -140,7 +140,7 @@ html {overflow-y: scroll;}
                                     <div class="p_col">Number of Combined Iterations</div>
                                     <div>
                                         <select name="combined_iter">
-                                            <option value="0">Default</option>
+                                            <option value="default">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -154,7 +154,7 @@ html {overflow-y: scroll;}
                                     <div class="p_col">Max Guide Tree Iterations</div>
                                     <div>
                                         <select name="max_gt_iter">
-                                            <option value="">Default</option>
+                                            <option value="default">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -168,7 +168,7 @@ html {overflow-y: scroll;}
                                     <div class="p_col">Max HMM Iterations</div>
                                     <div>
                                         <select name="max_hmm_iter">
-                                            <option value="">Default</option>
+                                            <option value="default">Default</option>
                                             <option value="0">0</option>
                                             <option value="1">1</option>
                                             <option value="2">2</option>
@@ -234,8 +234,8 @@ html {overflow-y: scroll;}
                                 <div class="d_col">
                                     <div class="p_col">DNA weight matrix</div>
                                     <div>
-                                        <select name="PWDNAMATRIX">
-                                            <option value="">Default</option>
+                                        <select name="pwdnamatrix">
+                                            <option value="default">Default</option>
                                             <option value="IUB">IUB</option>
                                             <option value="ClustalW">ClustalW</option>
                                         </select>
@@ -244,13 +244,13 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         Gap Open Penalty
-                                        <input type="text" name="dna-PWGAPOPEN" checked="checked" size=10>
+                                        <input type="text" name="dna_pwgapopen" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Gap Extension Penalty
-                                        <input type="text" name="dna-PWGAPEXT" size=10>
+                                        <input type="text" name="dna_pwgapext" size=10>
                                     </label>
                                 </div>
                             </fieldset>
@@ -260,8 +260,8 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <div style="padding-bottom: 5px">Protein weight matrix</div>
                                     <div>
-                                        <select name="PWMATRIX">
-                                            <option value="">Default</option>
+                                        <select name="pwmatrix">
+                                            <option value="default">Default</option>
                                             <option value="Blosum">Blosum</option>
                                             <option value="PAM">PAM</option>
                                             <option value="GONNET">GONNET</option>
@@ -272,13 +272,13 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         Gap Open Penalty
-                                        <input type="text" name="protein-PWGAPOPEN" size=10>
+                                        <input type="text" name="protein_pwgapopen" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Gap Extension Penalty
-                                        <input type="text" name="protein-PWGAPEXT" size=10>
+                                        <input type="text" name="protein_pwgapext" size=10>
                                     </label>
                                 </div>
                             </fieldset>
@@ -288,37 +288,37 @@ html {overflow-y: scroll;}
                                 <div class="p_col">
                                     <label>
                                         K-tuple (word) Size
-                                        <input type="text" name="KTUPLE" size=10>
+                                        <input type="text" name="ktuple" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Window Size
-                                        <input type="text" name="WINDOW" size=10>
+                                        <input type="text" name="window" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Gap Penalty
-                                        <input type="text" name="PAIRGAP" size=10>
+                                        <input type="text" name="pairgap" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">
                                     <label>
                                         Number of Top Diagonals
-                                        <input type="text" name="TOPDIAGS" size=10>
+                                        <input type="text" name="topdiags" size=10>
                                     </label>
                                 </div>
                                 <div class="p_col">Scoring Method</div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="SCORE" value="percent" checked>
+                                        <input type="radio" name="score" value="percent" checked>
                                         Percent
                                     </label>
                                 </div>
                                 <div>
                                     <label>
-                                        <input type="radio" name="SCORE" value="absolute">
+                                        <input type="radio" name="score" value="absolute">
                                         Absolute
                                     </label>
                                 </div>
@@ -331,8 +331,8 @@ html {overflow-y: scroll;}
                                 </div>
 
                                 <div class="p_col">
-                                    <select name="DNAMATRIX">
-                                        <option value="">Default</option>
+                                    <select name="dnamatrix">
+                                        <option value="default">Default</option>
                                         <option value="IUB">IUB</option>
                                         <option value="clustalw">ClustalW</option></select>
                                 </div>
@@ -341,23 +341,23 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Gap Opening Penalty
-                                            <input type="text" name="dna-GAPOPEN" size=10>
+                                            <input type="text" name="dna_gapopen" size=10>
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Extension Penalty
-                                            <input type="text" name="dna-GAPEXT" size=10>
+                                            <input type="text" name="dna_gapext" size=10>
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Separation Penalty
-                                            <input type="text" name="dna-GAPDIST" size=10>
+                                            <input type="text" name="dna_gapdist" size=10>
                                         </label>
                                     </div>
                                     Output
-                                    <select name="dna-ITERATION">
+                                    <select name="dna_iteration">
                                         <option value="none">None</option>
                                         <option value="tree">Tree</option>
                                         <option value="alignment">Alignment</option>
@@ -365,19 +365,19 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Maximum Number of Iterations
-                                            <input type="text" name="dna-NUMITER" size=10>
+                                            <input type="text" name="dna_numiter" size=10>
                                         </label>
                                     </div>
                                     <div class="p_col">Clustering</div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="dna-CLUSTERING" value="NJ" checked>
+                                            <input type="radio" name="dna_clustering" value="NJ" checked>
                                             Neighbour Joining
                                         </label>
                                     </div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="dna-CLUSTERING" value="UPGMA">
+                                            <input type="radio" name="dna_clustering" value="UPGMA">
                                             UPGMA
                                         </label>
                                     </div>
@@ -390,8 +390,8 @@ html {overflow-y: scroll;}
                                     </div>
 
                                     <div class="p_col">
-                                        <select name="MATRIX">
-                                            <option value="">Default</option>
+                                        <select name="matrix">
+                                            <option value="default">Default</option>
                                             <option value="Blosum">Blosum</option>
                                             <option value="PAM">PAM</option>
                                             <option value="GONNET">GONNET</option>
@@ -402,23 +402,23 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Gap Opening Penalty
-                                            <input type="text" name="protein-GAPOPEN" size=10>
+                                            <input type="text" name="protein_gapopen" size=10>
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Extension Penalty
-                                            <input type="text" name="protein-GAPEXT" size=10>
+                                            <input type="text" name="protein_gapext" size=10>
                                         </label>
                                     </div>
                                     <div>
                                         <label>
                                             Gap Separation Penalty
-                                            <input type="text" name="protein-GAPDIST" size=10>
+                                            <input type="text" name="protein_gapdist" size=10>
                                         </label>
                                     </div>
                                     Output
-                                    <select name="protein-ITERATION">
+                                    <select name="protein_iteration">
                                         <option value="none">None</option>
                                         <option value="tree">Tree</option>
                                         <option value="alignment">Alignment</option>
@@ -426,19 +426,19 @@ html {overflow-y: scroll;}
                                     <div>
                                         <label>
                                             Maximum Number of Iterations
-                                            <input type="text" name="protein-NUMITER" size=10>
+                                            <input type="text" name="protein_numiter" size=10>
                                         </label>
                                     </div>
                                     <div class="p_col">Clustering</div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="protein-CLUSTERING" value="NJ" checked>
+                                            <input type="radio" name="protein_clustering" value="NJ" checked>
                                             Neighbour Joining
                                         </label>
                                     </div>
                                     <div>
                                         <label>
-                                            <input type="radio" name="protein-CLUSTERING" value="UPGMA">
+                                            <input type="radio" name="protein_clustering" value="UPGMA">
                                             UPGMA
                                         </label>
                                     </div>
@@ -447,14 +447,14 @@ html {overflow-y: scroll;}
                                 <fieldset id="fieldset-output" class="t_font">
                                     <legend>Output</legend>
                                     <div>Format</div>
-                                    <select name="OUTPUT" style="width: 100px">
+                                    <select name="output" style="width: 100px">
                                         <option value="clustal">Clustal&nbsp;&nbsp; </option>
                                         <option value="phylip">PHYLIP</option>
                                         <option value="fasta">FASTA</option>
                                     </select>
                                     <div>Out Order</div>
-                                    <select name="OUTORDER">
-                                        <option value="Aligned">Aligned</option>
+                                    <select name="outorder">
+                                        <option value="aligned">Aligned</option>
                                         <option value="input">Input</option>
                                     </select>
                                 </fieldset>
@@ -463,6 +463,52 @@ html {overflow-y: scroll;}
                         </div>
                     </div>
                 </FORM>
+
+<input type="hidden" ID="hist_program" name="hist_program" VALUE="{{ program }}">
+<input type="hidden" ID="hist_sequence" name="hist_sequence" VALUE="{{ sequence }}">
+<input type="hidden" ID="hist_dealing_input" name="hist_dealing_input" VALUE="{{ dealing_input }}">
+<input type="hidden" ID="hist_clustering_guide_tree" name="hist_clustering_guide_tree" VALUE="{{ clustering_guide_tree }}">
+<input type="hidden" ID="hist_clustering_guide_iter" name="hist_clustering_guide_iter" VALUE="{{ clustering_guide_iter }}">
+<input type="hidden" ID="hist_combined_iter" name="hist_combined_iter" VALUE="{{ combined_iter }}">
+<input type="hidden" ID="hist_max_gt_iter" name="hist_max_gt_iter" VALUE="{{ max_gt_iter }}">
+<input type="hidden" ID="hist_max_hmm_iter" name="hist_max_hmm_iter" VALUE="{{ max_hmm_iter }}">
+<input type="hidden" ID="hist_omega_output" name="hist_omega_output" VALUE="{{ omega_output }}">
+<input type="hidden" ID="hist_omega_order" name="hist_omega_order" VALUE="{{ omega_order }}">
+<input type="hidden" ID="hist_pairwise" VALUE="{{ pairwise }}">
+<input type="hidden" ID="hist_sequence_type" VALUE="{{ sequence_type }}">
+<input type="hidden" ID="hist_dnamatrix" VALUE="{{ dnamatrix }}">
+<input type="hidden" ID="hist_dna_gapopen" VALUE="{{ dna_gapopen }}">
+<input type="hidden" ID="hist_dna_gapext" VALUE="{{ dna_gapext }}">
+<input type="hidden" ID="hist_dna_gapdist" VALUE="{{ dna_gapdist }}">
+<input type="hidden" ID="hist_dna_iteration" VALUE="{{ dna_iteration }}">
+<input type="hidden" ID="hist_dna_numiter" VALUE="{{ dna_numiter }}">
+<input type="hidden" ID="hist_dna_clustering" VALUE="{{ dna_clustering }}">
+<input type="hidden" ID="hist_output" VALUE="{{ output }}">
+<input type="hidden" ID="hist_outorder" VALUE="{{ outorder }}">
+<input type="hidden" ID="hist_pwdnamatrix" VALUE="{{ pwdnamatrix }}">
+<input type="hidden" ID="hist_dna_pwgapopen" VALUE="{{ dna_pwgapopen }}">
+<input type="hidden" ID="hist_dna_pwgapext" VALUE="{{ dna_pwgapext }}">
+<input type="hidden" ID="hist_pwmatrix" VALUE="{{ pwmatrix }}">
+<input type="hidden" ID="hist_protein_pwgapopen" VALUE="{{ protein_pwgapopen }}">
+<input type="hidden" ID="hist_protein_pwgapext" VALUE="{{ protein_pwgapext }}">
+
+<input type="hidden" ID="hist_matrix" VALUE="{{ matrix }}">
+<input type="hidden" ID="hist_protein_gapopen" VALUE="{{ protein_gapopen }}">
+<input type="hidden" ID="hist_protein_gapext" VALUE="{{ protein_gapext }}">
+<input type="hidden" ID="hist_protein_gapdist" VALUE="{{ protein_gapdist }}">
+<input type="hidden" ID="hist_protein_iteration" VALUE="{{ protein_iteration }}">
+<input type="hidden" ID="hist_protein_numiter" VALUE="{{ protein_numiter }}">
+<input type="hidden" ID="hist_protein_clustering" VALUE="{{ protein_clustering }}">
+
+<input type="hidden" ID="hist_ktuple" VALUE="{{ ktuple }}">
+<input type="hidden" ID="hist_window" VALUE="{{ window }}">
+<input type="hidden" ID="hist_pairgap" VALUE="{{ pairgap }}">
+<input type="hidden" ID="hist_topdiags" VALUE="{{ topdiags }}">
+<input type="hidden" ID="hist_score" VALUE="{{ score }}">
+
+
+
+
             </div>
 
             {% if user.is_authenticated %}
