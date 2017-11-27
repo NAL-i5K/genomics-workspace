@@ -37,12 +37,11 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.dequeue_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
-
     # update status from 'pending' to 'running' for frontend
     with open('status.json', 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
-        db_list = statusdata['db_list']
+        # db_list = statusdata['db_list']
 
     with open('status.json', 'w') as f:
         json.dump(statusdata, f)
@@ -53,22 +52,22 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     result_status = 'SUCCESS'
     for args in args_list:
         Popen(args, stdin=None, stdout=PIPE).wait()
-        if('hmmbuild' in args[0]):
+        if 'hmmbuild' in args[0]:
             if not path.isfile(args[3]):
                 result_status = 'FAILURE'
                 break
-        elif('hmmsearch' in args[0]):
+        elif 'hmmsearch' in args[0]:
             merge_result_command = merge_result_command + ' ' + args[2]
             if not path.isfile(args[2]):
                 result_status = 'FAILURE'
                 break
-        elif('phmmer' in args[0]):
+        elif 'phmmer' in args[0]:
             merge_result_command = merge_result_command + ' ' + args[2]
             if not path.isfile(args[2]):
                 result_status = 'FAILURE'
                 break
 
-    merge_result_command = merge_result_command + ' > ' + file_prefix + ".merge"
+    merge_result_command = merge_result_command + ' > ' + file_prefix + '.merge'
 
     if(result_status == 'SUCCESS'):
         call(merge_result_command, shell=True)

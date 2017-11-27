@@ -346,7 +346,6 @@ class BlastAdminTestCase(LiveServerTestCase):
         self.driver.close()
         super(BlastAdminTestCase, self).tearDownClass()
 
-
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/admin/'))

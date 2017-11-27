@@ -10,9 +10,11 @@ services:
 install:
   - pip install -r requirements.txt
   - pip install coveralls
+  - pip install codecov
   - wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip
   - unzip chromedriver_linux64.zip
   - export PATH=$PATH:$(pwd)
+
 before_script:
   - psql -c 'create database django;' -U postgres
   - psql -c 'create user django;' -U postgres
@@ -33,8 +35,11 @@ before_script:
 
 # command to run tests
 script:
-  - coverage run --source=./ manage.py test i5k --noinput
-  - coverage run --source=./ manage.py test blast --noinput
+  - coverage run --source= ./manage.py test i5k --noinput
+  - coverage run --source= ./manage.py test blast --noinput
+  - coverage run --source= ./manage.py test hmmer --noinput
+  - coverage run --source= ./manage.py test clustal --noinput
 
 after_success:
   - coveralls
+  - codecov
