@@ -208,7 +208,10 @@ def create(request):
 
             run_hmmer_task.delay(task_id, args_list, file_prefix)
 
-            save_history(request.POST, task_id, query_filename)
+            if request.user.is_authenticated():
+                save_history(request.POST, task_id, request.user, query_filename)
+            else:
+                save_history(request.POST, task_id, None, query_filename)
 
             return redirect('hmmer:retrieve', task_id)
         else:
@@ -345,7 +348,7 @@ def user_tasks(request, user_id):
         serializer = UserHmmerQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
 
-def save_history(post, task_id, seq_file):
+def save_history(post, task_id, user, seq_file):
     rec = HmmerSearch()
     with open(seq_file) as f:
         rec.sequence = f.read()
@@ -353,6 +356,7 @@ def save_history(post, task_id, seq_file):
     rec.search_tag       = post.get('tag')
     rec.enqueue_date     = datetime.now()
     rec.program          = post.get('program', '')
+    rec.user             = user
     rec.cut_off          = post.get('cut_off', '')
     rec.significane_seq  = post.get('significane_seq', '0')
     rec.significane_hit  = post.get('significane_hit', '0')
