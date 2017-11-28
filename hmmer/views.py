@@ -191,7 +191,10 @@ def create(request):
                            'input': path.basename(query_filename)}, f)
         args_list = generate_hmmer_args_list(request.POST['program'], program_path, query_filename, option_params, db_list)
         run_hmmer_task.delay(task_id, args_list, file_prefix)
-        save_history(request.POST, task_id, query_filename)
+        if request.user.is_authenticated():
+            save_history(request.POST, task_id, request.user, query_filename)
+        else:
+            save_history(request.POST, task_id, None, query_filename)
         return redirect('hmmer:retrieve', task_id)
 
 
@@ -341,7 +344,7 @@ def generate_hmmer_args_list(program, program_path, query_filename, option_param
     return args_list
 
 
-def save_history(post, task_id, seq_file):
+def save_history(post, task_id, user, seq_file):
     rec = HmmerSearch()
     with open(seq_file) as f:
         rec.sequence = f.read()
@@ -349,6 +352,7 @@ def save_history(post, task_id, seq_file):
     rec.search_tag       = post.get('tag')
     rec.enqueue_date     = datetime.now()
     rec.program          = post.get('program', '')
+    rec.user             = user
     rec.cut_off          = post.get('cut_off', '')
     rec.significane_seq  = post.get('significane_seq', '0')
     rec.significane_hit  = post.get('significane_hit', '0')
