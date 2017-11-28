@@ -34,7 +34,6 @@ def dashboard(request):
                 print 'search found: %s %s' % (search.search_tag, search.task_id)
             if 'searchagain' in request.GET:
                 print 'SEARCHAGAIN'
-                print(search.task_id)
                 if request.GET['app'] == 'blast':
                     return redirect('/blast/%s' % search.task_id)
                 elif request.GET['app'] == 'hmmer':
@@ -53,7 +52,7 @@ def dashboard(request):
                 return render(request, 'dashboard/index.html')
         if request.path == '/blast_hist':
             search_list = []
-            for obj in BlastSearch.objects.all():
+            for obj in BlastSearch.objects.filter(user=request.user):
                 search_dict = {}
                 id_num += 1
                 orgs = json.loads(obj.organisms)
@@ -83,7 +82,7 @@ def dashboard(request):
             return render(request, 'dashboard/blast_hist.html', { 'search_list': search_list})
         elif request.path == '/hmmer_hist':
            search_list = []
-           for obj in HmmerSearch.objects.all():
+           for obj in HmmerSearch.objects.filter(user=request.user):
                search_dict = {}
                id_num += 1
                orgs = json.loads(obj.organisms)
@@ -95,23 +94,27 @@ def dashboard(request):
                search_dict['id_str']          = 'collapsible' + str(id_num)
                search_dict['task_id']         = obj.task_id
                search_dict['search_tag']      = obj.search_tag
+               search_dict['enqueue_date']    = obj.enqueue_date
+               search_dict['program']         = obj.program
+               search_dict['sequence']        = seq
+               search_dict['organisms']       = orgs
                search_list.append(search_dict)
                pass
            return render(request, 'dashboard/hmmer_hist.html', { 'search_list': search_list})
         elif request.path == '/clustal_hist':
            search_list = []
-           for obj in ClustalSearch.objects.all():
+           for obj in ClustalSearch.objects.filter(user=request.user):
                search_dict = {}
                id_num += 1
-               #orgs = json.loads(obj.organisms)
-               #orglist = orgs.split()
-               #forgs = orglist[0]
                seq = (obj.sequence[:20] + '..') if len(obj.sequence) > 20 else obj.sequence
                date_str = obj.enqueue_date.strftime('%b %d %H:%M:%S')
                search_dict['search_head']     = '%s  -  %s  -  %s' % (obj.search_tag, date_str, obj.program)
                search_dict['id_str']          = 'collapsible' + str(id_num)
                search_dict['task_id']         = obj.task_id
                search_dict['search_tag']      = obj.search_tag
+               search_dict['enqueue_date']    = obj.enqueue_date
+               search_dict['program']         = obj.program
+               search_dict['sequence']        = obj.sequence
                search_list.append(search_dict)
                pass
            return render(request, 'dashboard/clustal_hist.html', { 'search_list': search_list})

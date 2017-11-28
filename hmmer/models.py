@@ -35,6 +35,7 @@ class HmmerSearch(models.Model):
     enqueue_date    = models.DateTimeField()
     sequence        = models.TextField(null=True)
     program         = models.CharField(max_length=10)
+    user            = models.ForeignKey(User, null=True, blank=True)
     cut_off         = models.CharField(max_length=10)
     significane_seq = models.DecimalField(max_digits=10, decimal_places=5)
     significane_hit = models.DecimalField(max_digits=10, decimal_places=5)
