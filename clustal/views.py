@@ -246,8 +246,6 @@ def create(request):
                                       '--guidetree-out=' + task_id + '.ph',
                                       '--outfile=' + task_id +'.aln'] + option_params)
 
-            print(args_list)
-
             record = ClustalQueryRecord()
             record.task_id = task_id
             if request.user.is_authenticated():
@@ -267,8 +265,10 @@ def create(request):
 
             run_clustal_task.delay(task_id, args_list, file_prefix)
 
-
-            save_history(request.POST, task_id, query_filename)
+            if request.user.is_authenticated():
+                save_history(request.POST, task_id, request.user, query_filename)
+            else:
+                save_history(request.POST, task_id, None, query_filename)
 
             return redirect('clustal:retrieve', task_id)
         else:
@@ -414,7 +414,7 @@ def user_tasks(request, user_id):
         return JSONResponse(serializer.data)
 
 
-def save_history(post, task_id, seq_file):
+def save_history(post, task_id, user, seq_file):
     rec = ClustalSearch()
     with open(seq_file) as f:
         rec.sequence = f.read()
@@ -423,6 +423,7 @@ def save_history(post, task_id, seq_file):
     rec.search_tag = post.get('tag')
     rec.enqueue_date = datetime.now()
     rec.program    = post.get('program', '')
+    rec.user       = user
     rec.pairwise      =  post.get('pairwise', '')
     rec.protein_pwgapopen =  post.get('protein_pwgapopen') if post.get('protein_pwgapopen') != '' else 0
     rec.protein_pwgapext  =  post.get('protein_pwgapext') if post.get('protein_pwgapext') != '' else 0
