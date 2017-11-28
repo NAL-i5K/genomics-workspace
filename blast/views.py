@@ -232,7 +232,10 @@ def create(request, iframe=False):
             #
             #  Create a search history record.
             #
-            save_history(request.POST, task_id, query_filename)
+            if request.user.is_authenticated():
+                save_history(request.POST, task_id, request.user, query_filename)
+            else:
+                save_history(request.POST, task_id, None, query_filename)
 
 
             # debug
@@ -367,13 +370,14 @@ def user_tasks(request, user_id):
 #
 #  Save a search in the search history.
 #
-def save_history(post, task_id, seq_file):
+def save_history(post, task_id, user, seq_file):
     rec = BlastSearch()
     with open(seq_file) as f:
         rec.sequence     = f.read()
     rec.task_id          = task_id
     rec.search_tag       = post.get('tag')
     rec.enqueue_date     = datetime.now()
+    rec.user             = user
     rec.soft_masking     = post.get('chk_soft_masking', False)
     rec.low_complexity   = post.get('chk_low_complexity', False)
     rec.penalty          = post.get('penalty', 0)
