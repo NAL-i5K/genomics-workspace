@@ -61,11 +61,12 @@ if exists(blast_local_file_path):
 if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
-if platform == 'darwin':
+if platform == 'win32':
+    pass
+elif platform == 'darwin':
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 
-    # delete old files if exist
     if exists(hmmer_bin_path):
         rmtree(hmmer_bin_path)
 
@@ -79,7 +80,7 @@ if platform == 'darwin':
         rmtree(extracted_hmmer_path)
 
     urllib.request.urlretrieve(
-        ('http://eddylab.org/software/hmmer3',
+        ('http://eddylab.org/software/hmmer3'
          '/3.1b2/hmmer-3.1b2-macosx-intel.tar.gz'),
         hmmer_local_file_path)
 
@@ -95,6 +96,7 @@ if platform == 'darwin':
     if exists(extracted_hmmer_path):
         rmtree(extracted_hmmer_path)
 
+    # installation of clustal
     clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
 
     if exists(clustal_bin_path):
@@ -103,8 +105,54 @@ if platform == 'darwin':
 
     clustalo_path = join(clustal_bin_path, 'clustalo')
 
-    # installation of clustal
     urllib.request.urlretrieve(
         'http://www.clustal.org/omega/clustal-omega-1.2.3-macosx',
+        clustalo_path)
+    chmod(clustalo_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
+
+else:  # for linux
+    # installation of hmmer
+    hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
+
+    if exists(hmmer_bin_path):
+        rmtree(hmmer_bin_path)
+
+    hmmer_local_file_path = join(PROJECT_ROOT, 'hmmer.tar.gz')
+
+    if exists(hmmer_local_file_path):
+        remove(hmmer_local_file_path)
+
+    extracted_hmmer_path = join(PROJECT_ROOT, 'hmmer-3.1b2-linux-intel-x86_64')
+    if exists(extracted_hmmer_path):
+        rmtree(extracted_hmmer_path)
+
+    urllib.request.urlretrieve(
+        ('http://eddylab.org/software/hmmer3'
+         '/3.1b2/hmmer-3.1b2-linux-intel-x86_64.tar.gz'),
+        hmmer_local_file_path)
+
+    tar = tarfile.open(hmmer_local_file_path, "r:gz")
+    tar.extractall()
+    tar.close()
+
+    move(join(extracted_hmmer_path, 'binaries'), hmmer_bin_path)
+
+    if exists(hmmer_local_file_path):
+        remove(hmmer_local_file_path)
+
+    if exists(extracted_hmmer_path):
+        rmtree(extracted_hmmer_path)
+
+    # installation of clustal
+    clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
+
+    if exists(clustal_bin_path):
+        rmtree(clustal_bin_path)
+    mkdir(clustal_bin_path)
+
+    clustalo_path = join(clustal_bin_path, 'clustalo')
+
+    urllib.request.urlretrieve(
+        'http://www.clustal.org/omega/clustalo-1.2.4-Ubuntu-x86_64',
         clustalo_path)
     chmod(clustalo_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
