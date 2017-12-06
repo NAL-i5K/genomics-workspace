@@ -444,24 +444,19 @@ def prepare_test_fasta_file():
 
 class BlastBinaryTestCase(SimpleTestCase):
     def test_blastp(self):
-        program = 'blastp'
-        run_blast(program, self.assertEqual)
+        run_blast('blastp', self.assertEqual)
 
     def test_blastn(self):
-        program = 'blastn'
-        run_blast(program, self.assertEqual)
+        run_blast('blastn', self.assertEqual)
 
     def test_tblastn(self):
-        program = 'tblastn'
-        run_blast(program, self.assertEqual)
+        run_blast('tblastn', self.assertEqual)
 
     def test_tblastx(self):
-        program = 'tblastx'
-        run_blast(program, self.assertEqual)
+        run_blast('tblastx', self.assertEqual)
 
     def test_blastx(self):
-        program = 'blastx'
-        run_blast(program, self.assertEqual)
+        run_blast('blastx', self.assertEqual)
 
 
 def run_blast(program, assertEqual):
@@ -470,11 +465,11 @@ def run_blast(program, assertEqual):
 
 
 def generate_blast_args(program):
-    input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
+    input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'blastdb/')
     output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
     asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
     if program == 'blastp':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        query_filename = path.join(input_file_dir, 'Cimex_sample_pep_query.faa')
         db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
         options = {
             'max_target_seqs': '100',
@@ -488,7 +483,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'blastn':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -503,7 +498,7 @@ def generate_blast_args(program):
             'soft_masking': 'true',
         }
     elif program == 'tblastn':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        query_filename = path.join(input_file_dir, 'Cimex_sample_pep_query.faa')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -517,7 +512,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'tblastx':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -530,7 +525,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'blastx':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
         options = {
             'max_target_seqs': '100',

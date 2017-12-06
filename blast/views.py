@@ -61,7 +61,7 @@ def create(request, iframe=False):
 
     elif request.method == 'POST':
         # setup file paths
-        task_id = uuid4().hex # TODO: Create from hash of input to check for duplicate inputs
+        task_id = uuid4().hex  # TODO: Create from hash of input to check for duplicate inputs
         file_prefix = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, task_id)
         query_filename = file_prefix + '.in'
         asn_filename = file_prefix + '.asn'

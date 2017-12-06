@@ -62,7 +62,7 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 if platform == 'win32':
-    pass
+    pass  # currently, we don't support winodws with hmmer and clustal
 elif platform == 'darwin':
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
