@@ -1,6 +1,7 @@
+from __future__ import absolute_import
 from os import path, remove
 from shutil import copyfile
-from django.test import LiveServerTestCase, override_settings
+from django.test import SimpleTestCase, LiveServerTestCase, override_settings
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from selenium import webdriver
@@ -11,6 +12,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from hmmer.models import HmmerDB
 from app.models import Organism
 from filebrowser.base import FileObject
+from hmmer.views import generate_hmmer_args
 
 tax_id = 79782
 display_name = 'test'
@@ -249,3 +251,17 @@ class UploadFileTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
         self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+
+
+class HmmerViewFunctionTestCase(SimpleTestCase):
+    def test_generate_hmmer_args(self):
+        args = generate_hmmer_args('phmmer', '/test/hmmer/bin_mac',
+                                   '/test/hmmer/task/123/test123.in',
+                                   ['--incE', u'0.01', '--incdomE', u'0.03',
+                                    '-E', u'0.01', '--domE', u'0.03'],
+                                   ['/test/test.fa'])
+        self.assertEqual(args,
+                         [['/test/hmmer/bin_mac/phmmer', '-o',
+                           '0.out', '--incE', u'0.01', '--incdomE', u'0.03',
+                           '-E', u'0.01', '--domE', u'0.03',
+                           'test123.in', 'test.fa']])
