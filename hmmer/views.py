@@ -5,7 +5,6 @@ from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod, remove, symlink
-from sys import platform
 from hmmer.tasks import run_hmmer_task
 from hmmer.models import HmmerQueryRecord, HmmerDB
 from datetime import datetime, timedelta
@@ -17,6 +16,7 @@ import stat as Perm
 from itertools import groupby
 from subprocess import Popen, PIPE
 from i5k.settings import HMMER_QUERY_MAX
+from util.get_bin_name import get_bin_name
 
 
 def manual(request):
@@ -82,7 +82,7 @@ def create(request):
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, task_id + '.in')
             with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
@@ -91,9 +91,7 @@ def create(request):
               Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
 
-        bin_name = 'bin_linux'
-        if platform == 'darwin':
-            bin_name = 'bin_mac'
+        bin_name = get_bin_name()  # Note that currently we didn't support HMMER on windows
         program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
 
         if request.POST['program'] == 'phmmer':
