@@ -6,14 +6,12 @@ from sys import platform
 from shutil import rmtree, move
 import tarfile
 from six.moves import urllib
+from util.get_bin_name import get_bin_name
+
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
-bin_name = 'bin_linux'
-if platform == 'win32':
-    bin_name = 'bin_win'
-elif platform == 'darwin':
-    bin_name = 'bin_mac'
+bin_name = get_bin_name()
 
 blast_bin_path = join(PROJECT_ROOT, 'blast', bin_name + '/')
 

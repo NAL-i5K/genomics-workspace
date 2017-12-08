@@ -1,16 +1,12 @@
 # Generate files used in blast/tests.py
 # Usage (at the root of the repo): python make_blastdb_for_tests.py
 from os.path import abspath, dirname, join
-from sys import platform
 from subprocess import Popen, PIPE
+from util.get_bin_name import get_bin_name
 
 PROJECT_ROOT = dirname(dirname(abspath(__file__)))
 
-bin_name = 'bin_linux'
-if platform == 'win32':
-    bin_name = 'bin_win'
-elif platform == 'darwin':
-    bin_name = 'bin_mac'
+bin_name = get_bin_name()
 
 makeblastdb_path = join(PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
 blastdb_example_dir = join(PROJECT_ROOT, 'example', 'blastdb/')

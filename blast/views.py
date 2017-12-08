@@ -3,33 +3,29 @@ from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse
-from django.template import RequestContext
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
-from os import path, makedirs, chmod, stat, remove
-from sys import platform
-from .models import BlastQueryRecord, BlastDb, Sequence, JbrowseSetting
-from .tasks import run_blast_task
+from os import path, makedirs, chmod, remove
+from blast.models import BlastQueryRecord, BlastDb
+from blast.tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now
 from pytz import timezone
-import subprocess
 import json
-import csv
 import traceback
 import stat as Perm
-from copy import deepcopy
 from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
 from multiprocessing import cpu_count
+from util.get_bin_name import get_bin_name
 
 blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
                             'tblastx':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'strand', 'low_complexity', 'soft_masking'],
                             'blastp':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
                             'blastx':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'strand', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking']}
-#blast_col_name = 'qseqid sseqid evalue qlen slen length nident mismatch positive gapopen gaps qstart qend sstart send bitscore qcovs qframe sframe'
+# blast_col_name = 'qseqid sseqid evalue qlen slen length nident mismatch positive gapopen gaps qstart qend sstart send bitscore qcovs qframe sframe'
 blast_col_name = 'qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qcovs qlen slen qframe sframe'
 blast_col_names_display = 'Query sequence ID,Subject sequence ID,Percentage of identical matches,Alignment length,Number of mismatches,Number of gap openings,Start of alignment in query,End of alignment in query,Start of alignment in subject,End of alignment in subject,Expect value,Bit score,Number of identical matches,Query coverage per subject,Query sequence length,Subject sequence length,Query frame,Subject frame'.split(',')
 blast_info = {
@@ -45,6 +41,7 @@ blast_info = {
         '.csv': '10 ' + blast_col_name,
     },
 }
+
 
 def create(request, iframe=False):
     if request.method == 'GET':
@@ -68,11 +65,7 @@ def create(request, iframe=False):
         if not path.exists(path.dirname(query_filename)):
             makedirs(path.dirname(query_filename))
         chmod(path.dirname(query_filename), Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) # ensure the standalone dequeuing process can open files in the directory
-        bin_name = 'bin_linux'
-        if platform == 'win32':
-            bin_name = 'bin_win'
-        elif platform == 'darwin':
-            bin_name = 'bin_mac'
+        bin_name = get_bin_name()
         # write query to file
         if 'query-file' in request.FILES:
             with open(query_filename, 'wb') as query_f:

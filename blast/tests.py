@@ -13,6 +13,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
 from blast.models import SequenceType, BlastDb, Sequence
 from app.models import Organism
+from util.get_bin_name import get_bin_name
 
 display_name = 'test'
 short_name = 'test'
@@ -542,11 +543,7 @@ def generate_blast_args(program):
     if path.exists(output_file_dir):
         rmtree(output_file_dir)
     makedirs(output_file_dir)
-    bin_name = 'bin_linux'
-    if platform == 'win32':
-        bin_name = 'bin_win'
-    elif platform == 'darwin':
-        bin_name = 'bin_mac'
+    bin_name = get_bin_name()
     program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, program)
     blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                                 'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],

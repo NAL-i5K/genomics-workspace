@@ -4,16 +4,16 @@ from django.http import Http404, HttpResponse
 from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
-from sys import platform
 from os import path, makedirs, chmod
-from .tasks import run_clustal_task
-from .models import ClustalQueryRecord
+from clustal.tasks import run_clustal_task
+from clustal.models import ClustalQueryRecord
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
 import json
 import traceback
 import stat as Perm
+from util.get_bin_name import get_bin_name
 
 
 def manual(request):
@@ -60,10 +60,7 @@ def create(request):
 
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
-
-        bin_name = 'bin_linux'
-        if platform == 'darwin':
-            bin_name = 'bin_mac'
+        bin_name = get_bin_name()  # note that we didn't support Clustal on windows yet
         program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name)
 
         # count number of query sequence by counting '>'
@@ -82,7 +79,7 @@ def create(request):
             args_list = []
 
             if request.POST['program'] == 'clustalw':
-                #clustalw
+                # clustalw
                 option_params.append("-type="+request.POST['sequenceType'])
 
                 #parameters setting for full option or fast option
@@ -212,6 +209,7 @@ def create(request):
             return redirect('clustal:retrieve', task_id)
         else:
             raise Http404
+
 
 def retrieve(request, task_id='1'):
     '''

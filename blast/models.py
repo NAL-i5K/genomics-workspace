@@ -1,10 +1,13 @@
+from subprocess import Popen, PIPE
+import os.path
 from django.db import models
 from django.contrib.auth.models import User
 from filebrowser.fields import FileBrowseField
 from django.core.urlresolvers import reverse
-import os.path
 from django.conf import settings
 import app.models
+from util.get_bin_name import get_bin_name
+
 
 class BlastQueryRecord(models.Model):
     task_id = models.CharField(max_length=32, primary_key=True) # ex. 128c8661c25d45b8-9ca7809a09619db9
@@ -24,9 +27,11 @@ class BlastQueryRecord(models.Model):
     class Meta:
         verbose_name = 'BLAST result'
 
+
 class OrganismManager(models.Manager):
     def get_by_natural_key(self, short_name):
         return self.get(short_name=short_name)
+
 
 class Organism(models.Model):
     objects = OrganismManager()
@@ -41,9 +46,11 @@ class Organism(models.Model):
     def __unicode__(self):
         return self.display_name
 
+
 class SequenceTypeManager(models.Manager):
     def get_by_natural_key(self, dataset_type):
         return self.get(dataset_type=dataset_type)
+
 
 class SequenceType(models.Model):
     objects = SequenceTypeManager()
@@ -61,9 +68,11 @@ class SequenceType(models.Model):
     class Meta:
         verbose_name = 'sequence type'
 
+
 class BlastDbManager(models.Manager):
     def get_by_natural_key(self, fasta_file):
         return self.get(title=fasta_file)
+
 
 class BlastDb(models.Model):
     objects = BlastDbManager()
@@ -98,14 +107,7 @@ class BlastDb(models.Model):
     def makeblastdb(self):
         if not os.path.isfile(self.fasta_file.path_full):
             return 1, 'FASTA file not found', ''
-        from sys import platform
-        from subprocess import Popen, PIPE
-        bin_name = 'bin_linux'
-        if platform == 'win32':
-            bin_name = 'bin_win'
-        elif platform == 'darwin':
-            bin_name = 'bin_mac'
-
+        bin_name = get_bin_name()
         makeblastdb_path = os.path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
         args = [makeblastdb_path, '-in', self.fasta_file.path_full, '-dbtype', self.type.molecule_type, '-hash_index'] # , '-parse_seqids' TODO: make option
         if self.title:
@@ -163,6 +165,7 @@ class BlastDb(models.Model):
     class Meta:
         verbose_name = 'BLAST database'
 
+
 class Sequence(models.Model):
     '''
     Contents of this table should be generated programmatically
@@ -206,6 +209,7 @@ class Sequence(models.Model):
 
     class Meta:
         unique_together = ('blast_db', 'id')
+
 
 class JbrowseSetting(models.Model):
     'Used to link databases to Jbrowse'
