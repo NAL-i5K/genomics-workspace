@@ -268,7 +268,7 @@ class HmmerViewFunctionTestCase(SimpleTestCase):
                          [['/test/hmmer/bin_mac/phmmer', '-o',
                            '0.out', '--incE', u'0.01', '--incdomE', u'0.03',
                            '-E', u'0.01', '--domE', u'0.03',
-                           'test123.in', 'test.fa']])
+                           '/test/hmmer/task/123/test123.in', '/test/test.fa']])
 
 
 class HmmerBinaryTestCase(SimpleTestCase):

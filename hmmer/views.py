@@ -297,13 +297,13 @@ def generate_hmmer_args(program, program_path, query_filename,
     if program == 'hmmsearch':
         args.append([path.join(program_path, 'hmmbuild'), '--amino',
                           '-o', 'hmm.sumary',
-                          path.basename(query_filename) + '.hmm',
-                          path.basename(query_filename)])
+                          query_filename + '.hmm',
+                          query_filename])
         for idx, db in enumerate(db_list):
             args.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
-                         + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
+                         + option_params + [query_filename + '.hmm', db])
     else:  # phmmer
         for idx, db in enumerate(db_list):
             args.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
-                         + option_params + [path.basename(query_filename), path.basename(db)])
+                         + option_params + [query_filename, db])
     return args
