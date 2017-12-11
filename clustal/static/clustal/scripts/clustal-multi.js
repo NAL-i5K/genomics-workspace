@@ -99,7 +99,7 @@ $(function() { // document ready
 		if($('#texterror').length){
 			$('#texterror').remove();
 		}
-        $('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
+        	$('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
 		if (qtype == '') {
 			$('.enter-query-text').before("<label id='texterror' class=\"error\">No sequence found!</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
@@ -116,16 +116,19 @@ $(function() { // document ready
 		} else if (qtype == 'peptide') {
 			$('.enter-query-text').html('Your sequence is detected as peptide:');
 			$('.sequenceType.protein').prop('checked', true);
+                        $('.sequenceType.dna').attr('disabled', true);
 			$('.sequenceType').change();
 		}
 	}
 
-	function checktxt() {
+	function checktxt(change) {
 		if ($('#query-textarea').val() == '') {
 			setQueryType('');
 			return false;
 		}else if(validateFasta($('#query-textarea').val()) == 1) {
-			setQueryType('nucleotide');
+                        if (change != false){
+			   setQueryType('nucleotide');
+                        }
 			return true;
 		}else if(validateFasta($('#query-textarea').val()) == 2) {
 			setQueryType('peptide');
@@ -356,7 +359,7 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
 
 	$('#clustalw_submit').click(function() {
 		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
+			if (checktxt(false) && $("#MainClustalForm").valid()) {
 				$('#program').val('clustalw');
 				$('#MainClustalForm').submit();
 			}
@@ -365,7 +368,7 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
 
 	$('#clustalo_submit').click(function() {
 		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
+			if (checktxt(false) && $("#MainClustalForm").valid()) {
 				$('#program').val('clustalo');
 				$('#MainClustalForm').submit();
 			}
