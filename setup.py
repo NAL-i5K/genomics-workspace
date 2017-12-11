@@ -6,6 +6,7 @@ from sys import platform
 from shutil import rmtree, move
 import tarfile
 from six.moves import urllib
+import pip
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
@@ -62,8 +63,11 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 if platform == 'win32':
-    pass
+    # installation of pyenchant
+    pip.main(['install', 'https://pypi.python.org/packages/py2.py3.cp27.cp26.cp32.cp33.cp34.pp27/p/pyenchant/pyenchant-1.6.6-py2.py3.cp27.cp26.cp32.cp33.cp34.pp27-none-win32.whl'])
 elif platform == 'darwin':
+    # installation of pyenchant
+    pip.main(['install', 'https://pypi.python.org/packages/py2.py3.cp27.cp26.cp32.cp33.cp34.pp27/p/pyenchant/pyenchant-1.6.6-py2.py3.cp27.cp26.cp32.cp33.cp34.pp27-none-macosx_10_6_intel.macosx_10_9_intel.whl'])
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 
@@ -111,6 +115,8 @@ elif platform == 'darwin':
     chmod(clustalo_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
 
 else:  # for linux
+    # installation of pyenchant
+    pip.main(['install', 'pyenchant==1.6.11'])
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 
