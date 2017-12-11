@@ -37,7 +37,8 @@ def create(request):
         task_id = uuid4().hex
         task_dir = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id)
         # file_prefix only for task...
-        file_prefix = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)
+        file_prefix = path.join(settings.MEDIA_ROOT, 'clustal', 'task',
+                                task_id, task_id)
         if not path.exists(task_dir):
             makedirs(task_dir)
         chmod(task_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
@@ -53,7 +54,7 @@ def create(request):
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id + '.in')
             with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'clustal/invalid_query.html', {'title': '',})
@@ -82,7 +83,7 @@ def create(request):
                 # clustalw
                 option_params.append("-type="+request.POST['sequenceType'])
 
-                #parameters setting for full option or fast option
+                # parameters setting for full option or fast option
                 if request.POST['pairwise'] == "full":
                     if request.POST['sequenceType'] == "dna":
                         if request.POST['PWDNAMATRIX'] != "":
@@ -156,8 +157,7 @@ def create(request):
                 args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename),
                                      '-OUTFILE='+task_id+'.aln', '-type=protein'])
 
-            else:
-                #clustalo
+            else:  # clustalo
                 if request.POST['dealing_input'] == "yes":
                     option_params.append("--dealign")
                 if request.POST['clustering_guide_tree'] != "no":
@@ -194,7 +194,7 @@ def create(request):
             record.save()
 
             # generate status.json for frontend status checking
-            with open(query_filename, 'r') as f: # count number of query sequence by counting '>'
+            with open(query_filename, 'r') as f:  # count number of query sequence by counting '>'
                 qstr = f.read()
                 seq_count = qstr.count('>')
                 if (seq_count == 0):
@@ -203,7 +203,6 @@ def create(request):
                     json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'],
                                'cmd': " ".join(args_list_log[0]), 'is_color': is_color,
                                'query_filename': path.basename(query_filename)}, f)
-
             run_clustal_task.delay(task_id, args_list, file_prefix)
 
             return redirect('clustal:retrieve', task_id)
@@ -303,6 +302,7 @@ def retrieve(request, task_id='1'):
         else:
             return HttpResponse(traceback.format_exc())
 
+
 def status(request, task_id):
     '''
     function for front-end to check task status
@@ -329,9 +329,12 @@ def status(request, task_id):
     else:
         return HttpResponse('Invalid Post')
 
+
 # to-do: integrate with existing router of restframework
 from rest_framework.renderers import JSONRenderer
 from .serializers import UserClustalQueryRecordSerializer
+
+
 class JSONResponse(HttpResponse):
     """
     An HttpResponse that renders its content into JSON.
@@ -340,6 +343,7 @@ class JSONResponse(HttpResponse):
         content = JSONRenderer().render(data)
         kwargs['content_type'] = 'application/json'
         super(JSONResponse, self).__init__(content, **kwargs)
+
 
 def user_tasks(request, user_id):
     """

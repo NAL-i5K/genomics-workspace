@@ -144,11 +144,9 @@ else:  # for linux
     # installation of clustal
     clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
 
-    if exists(clustal_bin_path):
-        rmtree(clustal_bin_path)
-    mkdir(clustal_bin_path)
-
     clustalo_path = join(clustal_bin_path, 'clustalo')
+    if exists(clustalo_path):
+        remove(clustalo_path)
 
     urllib.request.urlretrieve(
         'http://www.clustal.org/omega/clustalo-1.2.4-Ubuntu-x86_64',

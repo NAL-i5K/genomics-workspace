@@ -299,7 +299,7 @@ def run_hmmer(program, assertEqual):
     chmod(db_file,
           Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
     bin_name = get_bin_name()
-    if bin_name == 'win32':
+    if bin_name == 'bin_win':
         return
     program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
     option_params = ['--incE', u'0.01', '--incdomE', u'0.03', '-E', u'0.01', '--domE', u'0.03']

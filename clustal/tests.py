@@ -1,10 +1,14 @@
 from django.conf import settings
-from django.test import LiveServerTestCase, override_settings
+from django.test import SimpleTestCase, LiveServerTestCase, override_settings
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
-from os import path
+from os import path, mkdir
+from subprocess import Popen, PIPE
+from shutil import rmtree
+from util.get_bin_name import get_bin_name
+
 
 class ClustalLoadExampleTestCase(LiveServerTestCase):
     def setUp(self):
@@ -23,18 +27,20 @@ class ClustalLoadExampleTestCase(LiveServerTestCase):
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/clustal/'))
-        wait = WebDriverWait(self.driver, 5)  # wait at most 2 seconds to let page load, or timeout exception
+        # wait at most 2 seconds to let page load, or timeout exception
+        wait = WebDriverWait(self.driver, 5)
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'txt')))
         self.driver.find_element_by_class_name('txt').click()
         self.driver.find_element_by_id('clustalo_submit').click()
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'CLUSTAL Success')
+        self.assertEqual(self.driver.find_element_by_tag_name('h2').text,
+                         'CLUSTAL Success')
 
     def tearDown(self):
         self.driver.close()
 
 
-class UploadFileTestCase(LiveServerTestCase):
+class ClustalUploadFileTestCase(LiveServerTestCase):
     def setUp(self):
         settings.DEBUG = True
         options = webdriver.ChromeOptions()
@@ -60,3 +66,48 @@ class UploadFileTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
         self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'CLUSTAL Success')
+
+
+class ClustalBinaryTestCase(SimpleTestCase):
+    def test_clustalo(self):
+        test_dir = path.join(settings.PROJECT_ROOT, 'test_clustal')
+        if not path.exists(test_dir):
+            mkdir(test_dir)
+        bin_name = get_bin_name()
+        if bin_name == 'win32':
+            return
+        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name, 'clustalo')
+        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        out_file_path = path.join(test_dir, 'test.out')
+        ph_file_path = path.join(test_dir, 'test.ph')
+        args = [program_path, '--infile=' + example_file_path,
+                '--outfile=' + out_file_path,
+                '--guidetree-out=' + ph_file_path,
+                '--full', '--full-iter', '--iterations=0',
+                '--outfmt=clu', '--output-order=tree-order']
+        try:
+            p = Popen(args, stdin=PIPE, stdout=PIPE)
+            p.wait()
+            self.assertEqual(p.returncode, 0)
+        finally:
+            rmtree(test_dir)
+
+    def test_clustalw(self):
+        test_dir = path.join(settings.PROJECT_ROOT, 'test_clustal')
+        if not path.exists(test_dir):
+            mkdir(test_dir)
+        bin_name = get_bin_name()
+        if bin_name == 'bin_win' or bin_name == 'bin_mac':
+            return
+        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name, 'clustalw2')
+        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        out_file_path = path.join(test_dir, 'test.out')
+        args = [program_path, '-infile=' + example_file_path,
+                '-OUTFILE=' + out_file_path,
+                '-type=protein']
+        try:
+            p = Popen(args, stdin=PIPE, stdout=PIPE)
+            p.wait()
+            self.assertEqual(p.returncode, 0)
+        finally:
+            rmtree(test_dir)

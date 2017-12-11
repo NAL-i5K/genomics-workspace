@@ -2,7 +2,7 @@ from __future__ import absolute_import
 from celery import shared_task
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
-from subprocess import Popen, PIPE, call
+from subprocess import Popen, PIPE
 from datetime import datetime, timedelta
 from os import path, chdir, getcwd, devnull
 from pytz import utc
@@ -11,7 +11,6 @@ from celery.signals import task_sent, task_success, task_failure
 from django.core.cache import cache
 from django.conf import settings
 import json
-import time
 from clustal.models import ClustalQueryRecord
 
 logger = get_task_logger(__name__)
@@ -67,9 +66,9 @@ def run_clustal_task(task_id, args_list, file_prefix):
     with open('status.json', 'wb') as f:
         json.dump(statusdata, f)
 
-    return task_id # passed to 'result' argument of task_success_handler
+    return task_id  # passed to 'result' argument of task_success_handler
 
-@periodic_task(run_every=(crontab(hour='0', minute='10'))) # Execute daily at midnight
+@periodic_task(run_every=(crontab(hour='0', minute='10')))  # Execute daily at midnight
 def remove_files():
     from shutil import rmtree
     logger.info('removing expired files (under test, not working actually)')
