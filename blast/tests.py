@@ -1,6 +1,5 @@
 from os import path, makedirs, remove
 from shutil import copyfile, rmtree
-from sys import platform
 from subprocess import Popen, PIPE
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, LiveServerTestCase, override_settings
