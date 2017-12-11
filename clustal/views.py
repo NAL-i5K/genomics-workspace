@@ -138,6 +138,8 @@ def create(request):
             option_params = []
             args_list = []
 
+            print(request.POST['sequenceType'])
+
             if request.POST['program'] == 'clustalw':
                 #clustalw
                 option_params.append("-type="+request.POST['sequenceType'])
@@ -425,12 +427,26 @@ def save_history(post, task_id, user, seq_file):
     rec.program    = post.get('program', '')
     rec.user       = user
     rec.pairwise      =  post.get('pairwise', '')
+    rec.sequence_type =  post.get('sequenceType', '')
+
+    # DNA FULL
+    rec.pwdnamatrix   =  post.get('pwdnamatrix', '')
     rec.protein_pwgapopen =  post.get('protein_pwgapopen') if post.get('protein_pwgapopen') != '' else 0
     rec.protein_pwgapext  =  post.get('protein_pwgapext') if post.get('protein_pwgapext') != '' else 0
+
+    # PROTEIN FULL
+    rec.pwmatrix      =  post.get('pwmatrix', '')
+    rec.dna_pwgapopen =  post.get('dna_pwgapopen') if post.get('dna_pwgapopen') != '' else 0
+    rec.dna_pwgapext  =  post.get('dna_pwgapext') if post.get('dna_pwgapext') != '' else 0    
+
+    # BOTH FAST
     rec.ktuple        =  post.get('ktuple') if post.get('ktuple') != '' else 0
     rec.window        =  post.get('window') if post.get('window') != '' else 0
+    rec.pairgap       =  post.get('pairgap') if post.get('pairgap') != '' else 0
     rec.topdiags      =  post.get('topdiags') if post.get('topdiags') != '' else 0
     rec.score         =  post.get('score', '')
+
+    # DNA multiple alignment
     rec.dnamatrix     =  post.get('dnamatrix', '')
     rec.dna_gapopen   =  post.get('dna_gapopen') if post.get('dna_gapopen') != '' else 0
     rec.dna_gapext    =  post.get('dna_gapext')  if post.get('dna_gapext') != '' else 0
@@ -438,6 +454,8 @@ def save_history(post, task_id, user, seq_file):
     rec.dna_iteration =  post.get('dna_iteration') if post.get('dna_iteration') != '' else 0
     rec.dna_numiter   =  post.get('dna_numiter') if post.get('dna_numiter') != '' else 0
     rec.dna_clustering       =  post.get('dna_clustering', '')
+
+    # PROTEIN multiple alignment
     rec.matrix               =  post.get('matrix', '')
     rec.protein_gapopen      =  post.get('protein_gapopen') if post.get('protein_gapopen') != '' else 0
     rec.protein_gapext       =  post.get('protein_gapext') if post.get('protein_gapext') != '' else 0
@@ -445,8 +463,12 @@ def save_history(post, task_id, user, seq_file):
     rec.protein_iteration    =  post.get('protein_iteration') if post.get('protein_iteration') != '' else 0
     rec.protein_numiter      =  post.get('protein_numiter') if post.get('protein_numiter') != '' else 0
     rec.protein_clustering   =  post.get('protein_clustering', '')
+
+    # CLUSTALW OUTPUT
     rec.output               =  post.get('output', '')
     rec.outorder             =  post.get('outorder', '')
+
+    # CLUSTALO
     rec.dealing_input        =  True if post.get('dealing_input') == 'yes' else False
     rec.clustering_guide_tree =  True if post.get('clustering_guide_tree') == 'yes' else False
     rec.clustering_guide_iter =  True if post.get('clustering_guide_iter') == 'yes' else False
@@ -455,4 +477,5 @@ def save_history(post, task_id, user, seq_file):
     rec.max_hmm_iter          =  post.get('max_hmm_iter', '')
     rec.omega_output          =  post.get('omega_output', '')
     rec.omega_order           =  post.get('omega_order', '')
+
     rec.save()

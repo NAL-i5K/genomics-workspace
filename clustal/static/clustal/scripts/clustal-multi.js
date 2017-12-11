@@ -99,7 +99,7 @@ $(function() { // document ready
 		if($('#texterror').length){
 			$('#texterror').remove();
 		}
-        $('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
+    $('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
 		if (qtype == '') {
 			$('.enter-query-text').before("<label id='texterror' class=\"error\">No sequence found!</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
@@ -107,7 +107,7 @@ $(function() { // document ready
 			$('.enter-query-text').before("<label id='texterror' class=\"error\">Your sequence is invalid:</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
 		} else if (qtype == 'not_multiple') {
-            		$('.enter-query-text').before("<label id='texterror' class=\"error\">You must provide 2+ sequence</label>");
+      $('.enter-query-text').before("<label id='texterror' class=\"error\">You must provide 2+ sequence</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
 		} else if (qtype == 'nucleotide') {
 			$('.enter-query-text').html('Your sequence is detected as nucleotide:');
@@ -116,16 +116,19 @@ $(function() { // document ready
 		} else if (qtype == 'peptide') {
 			$('.enter-query-text').html('Your sequence is detected as peptide:');
 			$('.sequenceType.protein').prop('checked', true);
+      $('.sequenceType.dna').attr('disabled', true);
 			$('.sequenceType').change();
 		}
 	}
 
-	function checktxt() {
+	function checktxt(change) {
 		if ($('#query-textarea').val() == '') {
 			setQueryType('');
 			return false;
 		}else if(validateFasta($('#query-textarea').val()) == 1) {
-			setQueryType('nucleotide');
+      if (change != false){
+			  setQueryType('nucleotide');
+      }
 			return true;
 		}else if(validateFasta($('#query-textarea').val()) == 2) {
 			setQueryType('peptide');
@@ -160,24 +163,24 @@ $(function() { // document ready
 		}
 	});
 
-        var ex_nucleotide = ">Test1\n\ATCGATGCTA\n\>Test2\n\ATCGATCGATCGA"
+  var ex_nucleotide = ">Test1\n\ATCGATGCTA\n\>Test2\n\ATCGATCGATCGA"
 
-        $('.load-example').click(function() {
-                $('#query-textarea').val(ex_nucleotide);
-                $('#query-textarea').keyup();
-        });
+  $('.load-example').click(function() {
+          $('#query-textarea').val(ex_nucleotide);
+          $('#query-textarea').keyup();
+  });
 
-        var ex_clustal = ">CLEC010822-PA:polypeptide, Heat shock protein 70-2\n\
+  var ex_clustal = ">CLEC010822-PA:polypeptide, Heat shock protein 70-2\n\
 MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\n\
 >OFAS004830-PA:polypeptide, Heat shock protein 70-2\n\
 MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTETDRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGKPMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDSQRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFDVSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRALRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRGTLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINPDEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNTTIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGVPQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAERYKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNETIMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERGPVIEEAD\n\
 >OFAS004738-PA:polypeptide, Heat shock protein 70-1\n\
 MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKGETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAGAIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSLKGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHLAEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFYTKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQNLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLSLGIETAGGVMTKIIERNTRI";
 
-        $('.load-nucleotide').click(function() {
-            $('#query-textarea').val(ex_clustal);
-            $('#query-textarea').keyup();
-        });
+  $('.load-nucleotide').click(function() {
+      $('#query-textarea').val(ex_clustal);
+      $('#query-textarea').keyup();
+  });
 
 
 
@@ -355,34 +358,28 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
     });
 
 	$('#clustalw_submit').click(function() {
-		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
-				$('#program').val('clustalw');
-				$('#MainClustalForm').submit();
-			}
+		if (checktxt(false) && $("#MainClustalForm").valid()) {
+			$('#program').val('clustalw');
+			$('#MainClustalForm').submit();
 		}
 	});
 
 	$('#clustalo_submit').click(function() {
-		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
-				$('#program').val('clustalo');
-				$('#MainClustalForm').submit();
-			}
+		if (checktxt(false) && $("#MainClustalForm").valid()) {
+			$('#program').val('clustalo');
+			$('#MainClustalForm').submit();
 		}
 	});
 
 	$('.btn_reset').click(function() {
-		{
-			$('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
-			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
-			var validator = $( "#MainClustalForm" ).validate();
-			validator.resetForm();
-            $('.sequenceType.protein').prop('checked', true);
-            $('.sequenceType.protein').change();
-            $('.pairwise.full').prop('checked', true);
-            $('.pairwise.full').change();
-		}
+		$('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
+		$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
+		var validator = $( "#MainClustalForm" ).validate();
+		validator.resetForm();
+          $('.sequenceType.protein').prop('checked', true);
+          $('.sequenceType.protein').change();
+          $('.pairwise.full').prop('checked', true);
+          $('.pairwise.full').change();
 	});
 
         hist_program = $("#hist_program").val();
@@ -397,7 +394,7 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
             $("select[name='combined_iter']").val($("#hist_combined_iter").val());
             $("select[name='max_gt_iter']").val($("#hist_max_gt_iter").val());
             $("select[name='max_hmm_iter']").val($("#hist_max_hmm_iter").val());
-            $('.nav-tabs a[href="#'+hist_program+'"]').tab('show');     
+            $('.nav-tabs a[href="#'+hist_program+'"]').tab('show');
             $('#query-textarea').val($("#hist_sequence").val());
         } else if (hist_program == 'clustalw'){
             $('.nav-tabs a[href="#'+hist_program+'"]').tab('show');
@@ -429,8 +426,8 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
                 $("input[name='protein_clustering'][value='"+$('#hist_protein_clustering').val()+"']").prop('checked', true);
                 $("select[name='pwmatrix']").val($('#hist_pwmatrix').val());
                 $("input[name='protein_pwgapopen']").val($('#hist_protein_pwgapopen').val());
-                $("input[name='protein_pwgapext']").val($('#hist_protein_pwgapext').val());                  
-            } 
+                $("input[name='protein_pwgapext']").val($('#hist_protein_pwgapext').val());
+            }
             if (pairwise == 'fast'){
                 $("input[name='ktuple']").val($('#hist_ktuple').val());
                 $("input[name='window']").val($('#hist_window').val());
@@ -445,7 +442,7 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
             $("select[name='outorder']").val($('#hist_outorder').val());
         }
 
-     
+
 
 });
 
