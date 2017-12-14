@@ -1,6 +1,10 @@
-from os import path, remove
+from __future__ import absolute_import
+from os import path, remove, chmod, mkdir, chdir
+from shutil import rmtree
+import stat as Perm
+from subprocess import Popen, PIPE
 from shutil import copyfile
-from django.test import LiveServerTestCase, override_settings
+from django.test import SimpleTestCase, LiveServerTestCase, override_settings
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from selenium import webdriver
@@ -11,6 +15,8 @@ from selenium.webdriver.support import expected_conditions as EC
 from hmmer.models import HmmerDB
 from app.models import Organism
 from filebrowser.base import FileObject
+from hmmer.views import generate_hmmer_args
+from util.get_bin_name import get_bin_name
 
 tax_id = 79782
 display_name = 'test'
@@ -249,3 +255,65 @@ class UploadFileTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
         self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+
+
+class HmmerViewFunctionTestCase(SimpleTestCase):
+    def test_generate_hmmer_args(self):
+        args = generate_hmmer_args('phmmer', '/test/hmmer/bin_mac',
+                                   '/test/hmmer/task/123/test123.in',
+                                   ['--incE', u'0.01', '--incdomE', u'0.03',
+                                    '-E', u'0.01', '--domE', u'0.03'],
+                                   ['/test/test.fa'])
+        self.assertEqual(args,
+                         [['/test/hmmer/bin_mac/phmmer', '-o',
+                           '0.out', '--incE', u'0.01', '--incdomE', u'0.03',
+                           '-E', u'0.01', '--domE', u'0.03',
+                           '/test/hmmer/task/123/test123.in', '/test/test.fa']])
+
+
+class HmmerBinaryTestCase(SimpleTestCase):
+    def test_phmmer(self):
+        run_hmmer('phmmer', self.assertEqual)
+
+    def test_hmmsearch(self):
+        run_hmmer('hmmsearch', self.assertEqual)
+
+
+def run_hmmer(program, assertEqual):
+    test_dir = path.join(settings.PROJECT_ROOT, 'test_hmmer')
+    if not path.exists(test_dir):
+        mkdir(test_dir)
+    chmod(test_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
+    if program == 'phmmer':
+        input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'blastdb')
+        query_filename = path.join(test_dir, 'Cimex_sample_pep_query.faa')
+        copyfile(path.join(input_file_dir, 'Cimex_sample_pep_query.faa'), query_filename)
+    else:  # program == 'hmmersearch'
+        input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'hmmer')
+        query_filename = path.join(test_dir, 'example.MSA')
+        copyfile(path.join(input_file_dir, 'example.MSA'), query_filename)
+    db_file = path.join(test_dir, 'AGLA_new_ids.faa')
+    copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'AGLA_new_ids.faa'), db_file)
+    chmod(query_filename,
+          Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
+    chmod(db_file,
+          Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
+    bin_name = get_bin_name()
+    if bin_name == 'bin_win':
+        return
+    program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
+    option_params = ['--incE', u'0.01', '--incdomE', u'0.03', '-E', u'0.01', '--domE', u'0.03']
+    db_list = [db_file]
+    args = generate_hmmer_args(program, program_path, query_filename, option_params, db_list)
+    chdir(test_dir)
+    try:
+        run_commands(args, assertEqual)
+    finally:
+        rmtree(test_dir)
+
+
+def run_commands(args_list, assertEqual):
+    for args in args_list:
+        p = Popen(args, stdin=PIPE, stdout=PIPE)
+        p.wait()
+        assertEqual(p.returncode, 0)

@@ -1,0 +1,18 @@
+coverage:
+  ignore:          # files and folders that will be removed during processing
+    - "blast/static/blast/components/"
+    - "blast/static/blast/scripts/backbone*"
+    - "blast/static/blast/scripts/bootstrap*"
+    - "blast/static/blast/scripts/chroma*"
+    - "blast/static/blast/scripts/codemirror*"
+    - "blast/static/blast/scripts/dataTables"
+    - "blast/static/blast/scripts/dragscrollable.js"
+    - "blast/static/blast/scripts/jquery*"
+    - "blast/static/blast/scripts/kendo*"
+    - "blast/static/blast/scripts/scribl.1.1.5-hotdogee.js"
+    - "blast/static/blast/scripts/underscore*"
+    - "blast/static/blast/dataTables/"
+    - "clustal/static/clustal/scripts/jquery*"
+    - "clustal/static/clustal/scripts/underscore*"
+    - "hmmer/static/hmmer/scripts/jquery*"
+    - "hmmer/static/hmmer/scripts/underscore*"

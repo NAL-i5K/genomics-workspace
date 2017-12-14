@@ -5,9 +5,8 @@ from django.conf import settings
 from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod, remove, symlink
-from sys import platform
-from .tasks import run_hmmer_task
-from .models import HmmerQueryRecord, HmmerDB
+from hmmer.tasks import run_hmmer_task
+from hmmer.models import HmmerQueryRecord, HmmerDB
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
@@ -17,6 +16,7 @@ import stat as Perm
 from itertools import groupby
 from subprocess import Popen, PIPE
 from i5k.settings import HMMER_QUERY_MAX
+from util.get_bin_name import get_bin_name
 
 
 def manual(request):
@@ -24,6 +24,7 @@ def manual(request):
     Manual page of Hmmer
     '''
     return render(request, 'hmmer/manual.html',{'title':'HMMER Manual'})
+
 
 def create(request):
     '''
@@ -39,8 +40,6 @@ def create(request):
                               key=lambda x: (x[3], x[1], x[0], x[2]))
         hmmerdb_type_counts = dict([(k.lower().replace(' ', '_'), len(list(g))) for k, g in
                                     groupby(sorted(hmmerdb_list, key=lambda x: x[0]), key=lambda x: x[0])])
-
-
         '''
         Redirect from clustal result
         '''
@@ -63,7 +62,6 @@ def create(request):
 
     elif request.method == 'POST':
         # setup file paths
-
         task_id = uuid4().hex
         task_dir = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id)
         # file_prefix only for task...
@@ -84,7 +82,7 @@ def create(request):
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, task_id + '.in')
             with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
@@ -93,9 +91,7 @@ def create(request):
               Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
 
-        bin_name = 'bin_linux'
-        if platform == 'darwin':
-            bin_name = 'bin_mac'
+        bin_name = get_bin_name()  # Note that currently we didn't support HMMER on windows
         program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
 
         if request.POST['program'] == 'phmmer':
@@ -105,7 +101,7 @@ def create(request):
                     query_cnt = str(qstr.count('>'))
                     remove(query_filename)
                     return render(request, 'hmmer/invalid_query.html',
-                            {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', })
+                                  {'title': 'Your search includes ' + query_cnt + ' sequences, but HMMER allows a maximum of ' + str(HMMER_QUERY_MAX) + ' sequences per submission.', })
         elif request.POST['program'] == 'hmmsearch':
             '''
             Format validation by hmmsearch fast mode
@@ -126,9 +122,8 @@ def create(request):
             raise Http404
 
         # build hmmer command
-        db_list = ' '.join(
-            [db.fasta_file.path_full for db in HmmerDB.objects.filter(title__in=set(request.POST.getlist('db-name')))])
-        for db in db_list.split(' '):
+        db_list = [db.fasta_file.path_full for db in HmmerDB.objects.filter(title__in=set(request.POST.getlist('db-name')))]
+        for db in db_list:
             symlink(db, path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, db[db.rindex('/') + 1:]))
 
         if not db_list:
@@ -156,12 +151,12 @@ def create(request):
                 seq_count = 1
             with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
                 json.dump({'status': 'pending', 'seq_count': seq_count,
-                           'db_list': [db[db.rindex('/') + 1:] for db in db_list.split(' ')],
+                           'db_list': [db[db.rindex('/') + 1:] for db in db_list],
                            'program': request.POST['program'],
                            'params': option_params,
                            'input': path.basename(query_filename)}, f)
-        args_list = generate_hmmer_args_list(request.POST['program'], program_path, query_filename, option_params, db_list)
-        run_hmmer_task.delay(task_id, args_list, file_prefix)
+        args = generate_hmmer_args(request.POST['program'], program_path, query_filename, option_params, db_list)
+        run_hmmer_task.delay(task_id, args, file_prefix)
         return redirect('hmmer:retrieve', task_id)
 
 
@@ -296,16 +291,19 @@ def user_tasks(request, user_id):
         return JSONResponse(serializer.data)
 
 
-def generate_hmmer_args_list(program, program_path, query_filename, option_params, db_list):
-    args_list = []
+def generate_hmmer_args(program, program_path, query_filename,
+                        option_params, db_list):
+    args = []
     if program == 'hmmsearch':
-        args_list.append([path.join(program_path, 'hmmbuild'), '--amino', '-o', 'hmm.sumary',
-            path.basename(query_filename) + '.hmm', path.basename(query_filename)])
-        for idx, db in enumerate(db_list.split()):
-            args_list.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
-                    + option_params + [path.basename(query_filename) + '.hmm', path.basename(db)])
+        args.append([path.join(program_path, 'hmmbuild'), '--amino',
+                          '-o', 'hmm.sumary',
+                          query_filename + '.hmm',
+                          query_filename])
+        for idx, db in enumerate(db_list):
+            args.append([path.join(program_path, 'hmmsearch'), '-o', str(idx) + '.out']
+                         + option_params + [query_filename + '.hmm', db])
     else:  # phmmer
-        for idx, db in enumerate(db_list.split()):
-            args_list.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
-                    + option_params + [path.basename(query_filename), path.basename(db)])
-    return args_list
+        for idx, db in enumerate(db_list):
+            args.append([path.join(program_path, 'phmmer'), '-o', str(idx) + '.out']
+                         + option_params + [query_filename, db])
+    return args

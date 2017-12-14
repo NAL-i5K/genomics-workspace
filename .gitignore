@@ -171,3 +171,16 @@ sphinx_doc/_build/
 blast/bin_linux/
 blast/bin_win/
 blast/bin_mac/
+
+# hmmer binaries
+hmmer/bin_linux/
+hmmer/bin_win/
+hmmer/bin_mac/
+
+# clustal binaries
+clustal/bin_linux/
+clustal/bin_win/
+clustal/bin_mac/
+
+# media folder
+media/

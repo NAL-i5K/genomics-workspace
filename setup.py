@@ -6,14 +6,12 @@ from sys import platform
 from shutil import rmtree, move
 import tarfile
 from six.moves import urllib
+from util.get_bin_name import get_bin_name
+
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
-bin_name = 'bin_linux'
-if platform == 'win32':
-    bin_name = 'bin_win'
-elif platform == 'darwin':
-    bin_name = 'bin_mac'
+bin_name = get_bin_name()
 
 blast_bin_path = join(PROJECT_ROOT, 'blast', bin_name + '/')
 
@@ -62,7 +60,7 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 if platform == 'win32':
-    pass
+    pass  # currently, we don't support winodws with hmmer and clustal
 elif platform == 'darwin':
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
@@ -146,11 +144,9 @@ else:  # for linux
     # installation of clustal
     clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
 
-    if exists(clustal_bin_path):
-        rmtree(clustal_bin_path)
-    mkdir(clustal_bin_path)
-
     clustalo_path = join(clustal_bin_path, 'clustalo')
+    if exists(clustalo_path):
+        remove(clustalo_path)
 
     urllib.request.urlretrieve(
         'http://www.clustal.org/omega/clustalo-1.2.4-Ubuntu-x86_64',

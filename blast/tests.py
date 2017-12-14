@@ -1,6 +1,5 @@
 from os import path, makedirs, remove
 from shutil import copyfile, rmtree
-from sys import platform
 from subprocess import Popen, PIPE
 from django.conf import settings
 from django.test import SimpleTestCase, TestCase, LiveServerTestCase, override_settings
@@ -13,6 +12,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
 from blast.models import SequenceType, BlastDb, Sequence
 from app.models import Organism
+from util.get_bin_name import get_bin_name
 
 display_name = 'test'
 short_name = 'test'
@@ -444,24 +444,19 @@ def prepare_test_fasta_file():
 
 class BlastBinaryTestCase(SimpleTestCase):
     def test_blastp(self):
-        program = 'blastp'
-        run_blast(program, self.assertEqual)
+        run_blast('blastp', self.assertEqual)
 
     def test_blastn(self):
-        program = 'blastn'
-        run_blast(program, self.assertEqual)
+        run_blast('blastn', self.assertEqual)
 
     def test_tblastn(self):
-        program = 'tblastn'
-        run_blast(program, self.assertEqual)
+        run_blast('tblastn', self.assertEqual)
 
     def test_tblastx(self):
-        program = 'tblastx'
-        run_blast(program, self.assertEqual)
+        run_blast('tblastx', self.assertEqual)
 
     def test_blastx(self):
-        program = 'blastx'
-        run_blast(program, self.assertEqual)
+        run_blast('blastx', self.assertEqual)
 
 
 def run_blast(program, assertEqual):
@@ -470,11 +465,11 @@ def run_blast(program, assertEqual):
 
 
 def generate_blast_args(program):
-    input_file_dir = path.join(settings.PROJECT_ROOT, 'example/blastdb/')
+    input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'blastdb/')
     output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
     asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
     if program == 'blastp':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        query_filename = path.join(input_file_dir, 'Cimex_sample_pep_query.faa')
         db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
         options = {
             'max_target_seqs': '100',
@@ -488,7 +483,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'blastn':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -503,7 +498,7 @@ def generate_blast_args(program):
             'soft_masking': 'true',
         }
     elif program == 'tblastn':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/Cimex_sample_pep_query.faa')
+        query_filename = path.join(input_file_dir, 'Cimex_sample_pep_query.faa')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -517,7 +512,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'tblastx':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'Ladonda_sample_CDS_BLASTdb.fna')
         options = {
             'max_target_seqs': '100',
@@ -530,7 +525,7 @@ def generate_blast_args(program):
             'soft_masking': 'false',
         }
     elif program == 'blastx':
-        query_filename = path.join(settings.PROJECT_ROOT, 'example/blastdb/LFUL_sample_query.fna')
+        query_filename = path.join(input_file_dir, 'LFUL_sample_query.fna')
         db_list = path.join(input_file_dir, 'clec_peptide_example_BLASTdb.fa')
         options = {
             'max_target_seqs': '100',
@@ -547,11 +542,7 @@ def generate_blast_args(program):
     if path.exists(output_file_dir):
         rmtree(output_file_dir)
     makedirs(output_file_dir)
-    bin_name = 'bin_linux'
-    if platform == 'win32':
-        bin_name = 'bin_win'
-    elif platform == 'darwin':
-        bin_name = 'bin_mac'
+    bin_name = get_bin_name()
     program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, program)
     blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                                 'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
