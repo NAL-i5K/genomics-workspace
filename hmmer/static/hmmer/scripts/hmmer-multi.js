@@ -45,7 +45,7 @@ $(function() { // document ready
 	///////////////////////////////
 	// HTML STRUCTURE GENERATION //
 	///////////////////////////////
-	
+
 	var organism_list_count = organism_list.length;
 	var alphabet_list_count = alphabet_list.length;
 	//alert("hello");
@@ -89,7 +89,11 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
+<<<<<<< HEAD
                                                 'id': file_name.split('.')[0],
+=======
+            'id': file_name,
+>>>>>>> 973f041262944ca35df7f6fd81e50589dd2cc395
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -121,7 +125,7 @@ $(function() { // document ready
 		$('.datasets-div').hide();
 		$('.' + $(this).attr('organism') + '.datasets-div').show();
 		// background toggle
-		$('.organism-div').removeClass('organism-active-background'); 
+		$('.organism-div').removeClass('organism-active-background');
 		$(this).addClass('organism-active-background');
 		//console.log('.' + $(this).attr('organism') + '.datasets-div');
 	});
@@ -199,7 +203,7 @@ $(function() { // document ready
 		}
 		chooseProgram();
 	}
-	
+
 	var query_type = '';
 	function setQueryType(qtype) {
 		query_type = qtype;
@@ -214,7 +218,7 @@ $(function() { // document ready
 		}
 		chooseProgram();
 	}
-	
+
 	//var program_selected = 'phmmer';
 	var chooseProgram = _.debounce(function () {
 		$('.program').attr('disabled', false).removeClass('disabled-radio');
@@ -243,7 +247,7 @@ $(function() { // document ready
 	    $('.program').attr('disabled', false).removeClass('disabled-radio');
 	    chooseProgram();
 	}
-	
+
 	function sum(obj) {
 		var sum = 0;
 		for(var el in obj) {
@@ -253,7 +257,7 @@ $(function() { // document ready
 		}
 		return sum;
 	}
-	
+
 	function filter_key(obj, test) {
 		var result = {}, key;
 		for (key in obj) {
@@ -399,14 +403,14 @@ $(function() { // document ready
 	// load file into textarea
 	$('.query-file').change(function(evt) {
 		if (window.File && window.FileReader) {
-			var f = evt.target.files[0]; 
+			var f = evt.target.files[0];
 			console.log(f.type);
 			if (f && (f.type.match('text.*') || f.type == '')) {
 				var r = new FileReader();
-				r.onload = function(e) { 
+				r.onload = function(e) {
 					var contents = e.target.result;
 					$('#query-textarea').val(contents);
-					$('#query-textarea').keyup();  
+					$('#query-textarea').keyup();
 				}
 				r.readAsText(f);
 			}
@@ -622,7 +626,7 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
                     { "data": "enqueue_date" },
                     { "data": "result_status" },
                     { "data": "task_id" },
-                    
+
                 ],
                 "aoColumnDefs": [{
                     "aTargets": [2], // Column to target
@@ -645,8 +649,13 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
     hist_program = $("#hist_program").val();
     if ( hist_program == '' ){
     }else if ( hist_program == 'phmmer' ){
+<<<<<<< HEAD
         $('.program.phmmer').prop("checked", true);        
     }else if ( hist_program == 'hmmsearch' ){  
+=======
+        $('.program.phmmer').prop("checked", true);
+    }else if ( hist_program == 'hmmsearch' ){
+>>>>>>> 973f041262944ca35df7f6fd81e50589dd2cc395
         $('.program.hmmsearch').prop("checked", true);
     }
 

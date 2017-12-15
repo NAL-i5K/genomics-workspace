@@ -53,12 +53,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'django',
-    'USER': 'django',
-    'PASSWORD': 'django1234',
-    'HOST': 'localhost',
-    'PORT': '5432',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': os.path.join(PROJECT_ROOT, 'db.sqlite3'),
     }
 }
 
@@ -182,7 +178,7 @@ INSTALLED_APPS = (
     'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django.contrib.postgres',
+    #'django.contrib.postgres',
     'axes',
     'rest_framework',
     'rest_framework_swagger',

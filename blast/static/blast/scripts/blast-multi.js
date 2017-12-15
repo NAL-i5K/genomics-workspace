@@ -92,7 +92,11 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
+<<<<<<< HEAD
             'id': file_name.split('.')[0],
+=======
+            'id': file_name,
+>>>>>>> 973f041262944ca35df7f6fd81e50589dd2cc395
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
