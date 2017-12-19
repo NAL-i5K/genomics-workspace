@@ -20,10 +20,6 @@
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
   <script>
     var dataset_list = {{ blastdb_list|safe }};
-    var sequence1 = "{{ sequence1 }}"
-    var sequence2 = "{{ sequence2 }}"
-    var sequence = '>' + sequence1 + '\n' + sequence2
-    var tag = "{{ tag }}";
     var blastdb_type_counts = {{ blastdb_type_counts|jsonify }};
   </script>
 {% endblock %}

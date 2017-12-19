@@ -89,7 +89,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
-            'id': file_name,
+        					'id': file_name,
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -105,11 +105,12 @@ $(function() { // document ready
 
 	hist_checkbox = $("#hist_checkbox").val();
 	hist_check_array = hist_checkbox.split(',');
-	for(var i = 0; i < hist_check_array.length; i++){
-	    c = '#' + hist_check_array[i].split(".")[0]
-	    $(c).prop("checked", true);
-	    $('#'+$(c).attr('organism')).prop("checked", true);
-	};
+        for(var i = 0; i < hist_check_array.length; i++) {
+            name = hist_check_array[i].replace('.','\\.')
+            c = '#' + name;
+            $(c).prop("checked", true);
+            $('#'+$(c).attr('organism')).prop("checked", true);
+        };
 
 	////////////////////
 	// EVENT HANDLING //

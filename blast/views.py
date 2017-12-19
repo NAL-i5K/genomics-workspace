@@ -79,6 +79,7 @@ def create(request, iframe=False):
                 print 'word size %s' % saved_search.word_size
                 print 'blastdb_list %s' % blastdb_list
                 print 'blastdb_type_counts %s' % blastdb_type_counts
+                print 'organism %s' % (saved_search.organisms)
                 return render(request, 'blast/main.html', {
                     'tag':             saved_search.search_tag,
                     'soft_masking':    saved_search.soft_masking,
@@ -90,14 +91,14 @@ def create(request, iframe=False):
                     'gapopen':         saved_search.gapopen,
                     'strand':          saved_search.strand,
                     #'ga_box':          saved_search.ga_box,
-                    'program':    saved_search.program,
+                    'program':         saved_search.program,
                     #'transcript_box':  saved_search.transcript_box,
                     #'peptide_box':     saved_search.peptide_box,
                     'gapextend':       saved_search.gapextend,
                     'word_size':       saved_search.word_size,
                     'max_target_seqs': saved_search.max_target_seqs,
-                    'sequence1':       sequence_list[0],
-                    'organism':        saved_search.organisms[1:-2], #remove ""
+                    'sequence1':       saved_search.sequence, #sequence_list[0],
+                    'organism':        saved_search.organisms[1:-1], #remove ""
                     'matrix':          saved_search.matrix,
                     'threshold':       saved_search.threshold,
                     #'sequence2':       sequence_list[1],
