@@ -92,7 +92,7 @@ $(function() { // document ready
 						'type': 'checkbox',
 						'name': 'db-name',
 						'value': file_name,
-            'id': file_name,
+            					'id': file_name,
 						'organism': organism_id,
 						'dataset-type': data_type_class,
 						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
@@ -108,7 +108,8 @@ $(function() { // document ready
   hist_checkbox = $("#hist_checkbox").val();
   hist_check_array = hist_checkbox.split(',');
   for(var i = 0; i < hist_check_array.length; i++) {
-      c = '#' + hist_check_array[i].split(".")[0]
+      name = hist_check_array[i].replace('.','\\.')
+      c = '#' + name;
       $(c).prop("checked", true);
       $('#'+$(c).attr('organism')).prop("checked", true);
   };
@@ -576,9 +577,11 @@ $(function() { // document ready
 
 
     hist_program = $("#hist_program").val();
+    alert(hist_program);
     if (hist_program == ''){
     }
     if ( hist_program == 'blastn' ){
+        alert();
         $(".blastn-parms #word_size").val($("#hist_word_size").val());
         $(".blastn-parms #evalue").val($("#hist_evalue").val());
         $(".blastn-parms #reward").val($("#hist_reward").val());
@@ -602,6 +605,7 @@ $(function() { // document ready
         query_type = 'nucleotide';
         disableProgram();
         $('#blastn').prop("checked", true);
+        alert();
     } else if (hist_program == 'tblastn' ){
         $(".tblastn-parms #word_size").val($("#hist_word_size").val());
         $(".tblastn-parms #evalue").val($("#hist_evalue").val());
