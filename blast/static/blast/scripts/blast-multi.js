@@ -577,11 +577,9 @@ $(function() { // document ready
 
 
     hist_program = $("#hist_program").val();
-    alert(hist_program);
     if (hist_program == ''){
     }
     if ( hist_program == 'blastn' ){
-        alert();
         $(".blastn-parms #word_size").val($("#hist_word_size").val());
         $(".blastn-parms #evalue").val($("#hist_evalue").val());
         $(".blastn-parms #reward").val($("#hist_reward").val());
@@ -605,7 +603,6 @@ $(function() { // document ready
         query_type = 'nucleotide';
         disableProgram();
         $('#blastn').prop("checked", true);
-        alert();
     } else if (hist_program == 'tblastn' ){
         $(".tblastn-parms #word_size").val($("#hist_word_size").val());
         $(".tblastn-parms #evalue").val($("#hist_evalue").val());
