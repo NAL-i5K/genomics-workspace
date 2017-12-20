@@ -50,60 +50,60 @@ if (!Array.prototype.indexOf) {
   };
 }
 $(function() { // document ready
-	///////////////////////////////
-	// HTML STRUCTURE GENERATION //
-	///////////////////////////////
+  ///////////////////////////////
+  // HTML STRUCTURE GENERATION //
+  ///////////////////////////////
 
-	var organism_list_count = organism_list.length;
-	var alphabet_list_count = alphabet_list.length;
-	for (var i = 0; i < organism_list_count; i++) {
-		var organism_id = organism_list[i].toLowerCase().replace(' ', '-');
-		// organism-checkbox
-		var $organism_checkbox = $('<input>', {
-			'organism': organism_id,
-                        'id': organism_id,
-			'type': 'checkbox',
-			'class': 'organism-checkbox ' + organism_id,
-                        'name': 'organism-checkbox[]',
-		});
-		var $organism_div = $('<div/>', {
-			'organism': organism_id,
-			'class': 'organism-div italic',
-		}).append($organism_checkbox).append(organism_list[i]);
-		$('<label/>').append($organism_div).appendTo('#box-organism');
-		var $organism_datasets_div = $('<div/>', {
-			'class': organism_id + ' datasets-div',
-			'style': 'display: none',
-		}).appendTo('#box-datasets');
-		$('<div class="dataset-title">' + organism_list[i] + '</div>').appendTo($organism_datasets_div);
-		for (var j = 0; j < alphabet_list_count; j++) {
-			if (alphabet_list[j] in dataset_dict[organism_list[i]]) {
-				var alphabet_class = alphabet_list[j].toLowerCase();
-				var alphabet_fieldset_id = organism_id + '-' + alphabet_class + '-fieldset'
-				var $alphabet_fieldset = $('<fieldset class="' + alphabet_class + '"><legend>' + alphabet_list[j] + '</legend></fieldset>').appendTo($organism_datasets_div);
-				var entry_count = dataset_dict[organism_list[i]][alphabet_list[j]].length;
-				for (var k = 0; k < entry_count; k++) {
-					var file_name = dataset_dict[organism_list[i]][alphabet_list[j]][k][0];
-					var data_type = dataset_dict[organism_list[i]][alphabet_list[j]][k][1];
-					var description = dataset_dict[organism_list[i]][alphabet_list[j]][k][2];
-					var data_type_class = data_type.toLowerCase().replace(' ', '-');
-					// dataset checkbox
-					var $organism_datasets_checkbox = $('<input>', {
-						'type': 'checkbox',
-						'name': 'db-name',
-						'value': file_name,
-            					'id': file_name,
-						'organism': organism_id,
-						'dataset-type': data_type_class,
-						'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
-					});
-					var $organism_datasets_checkbox_div = $('<div/>').append($organism_datasets_checkbox).append(data_type + ' - ' + description);
-					var $organism_datasets_label = $('<label/>').append($organism_datasets_checkbox_div);
-					$alphabet_fieldset.append($organism_datasets_label);
-				}
-			}
-		}
-	}
+  var organism_list_count = organism_list.length;
+  var alphabet_list_count = alphabet_list.length;
+  for (var i = 0; i < organism_list_count; i++) {
+    var organism_id = organism_list[i].toLowerCase().replace(' ', '-');
+    // organism-checkbox
+    var $organism_checkbox = $('<input>', {
+      'organism': organism_id,
+      'id': organism_id,
+      'type': 'checkbox',
+      'class': 'organism-checkbox ' + organism_id,
+      'name': 'organism-checkbox[]',
+    });
+    var $organism_div = $('<div/>', {
+      'organism': organism_id,
+      'class': 'organism-div italic',
+    }).append($organism_checkbox).append(organism_list[i]);
+    $('<label/>').append($organism_div).appendTo('#box-organism');
+    var $organism_datasets_div = $('<div/>', {
+      'class': organism_id + ' datasets-div',
+      'style': 'display: none',
+    }).appendTo('#box-datasets');
+    $('<div class="dataset-title">' + organism_list[i] + '</div>').appendTo($organism_datasets_div);
+    for (var j = 0; j < alphabet_list_count; j++) {
+      if (alphabet_list[j] in dataset_dict[organism_list[i]]) {
+        var alphabet_class = alphabet_list[j].toLowerCase();
+        var alphabet_fieldset_id = organism_id + '-' + alphabet_class + '-fieldset'
+        var $alphabet_fieldset = $('<fieldset class="' + alphabet_class + '"><legend>' + alphabet_list[j] + '</legend></fieldset>').appendTo($organism_datasets_div);
+        var entry_count = dataset_dict[organism_list[i]][alphabet_list[j]].length;
+        for (var k = 0; k < entry_count; k++) {
+          var file_name = dataset_dict[organism_list[i]][alphabet_list[j]][k][0];
+          var data_type = dataset_dict[organism_list[i]][alphabet_list[j]][k][1];
+          var description = dataset_dict[organism_list[i]][alphabet_list[j]][k][2];
+          var data_type_class = data_type.toLowerCase().replace(' ', '-');
+          // dataset checkbox
+          var $organism_datasets_checkbox = $('<input>', {
+            'type': 'checkbox',
+            'name': 'db-name',
+            'value': file_name,
+            'id': file_name,
+            'organism': organism_id,
+            'dataset-type': data_type_class,
+            'class': 'dataset-checkbox ' + organism_id + ' ' + data_type_class + ' ' + alphabet_class,
+          });
+          var $organism_datasets_checkbox_div = $('<div/>').append($organism_datasets_checkbox).append(data_type + ' - ' + description);
+          var $organism_datasets_label = $('<label/>').append($organism_datasets_checkbox_div);
+          $alphabet_fieldset.append($organism_datasets_label);
+        }
+      }
+    }
+  }
 
   hist_checkbox = $("#hist_checkbox").val();
   hist_check_array = hist_checkbox.split(',');
@@ -114,135 +114,135 @@ $(function() { // document ready
       $('#'+$(c).attr('organism')).prop("checked", true);
   };
 
-	////////////////////
-	// EVENT HANDLING //
-	////////////////////
-	var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
-	$('.organism-div').hoverIntent(function() {
-		// show and hide right panel
-		$('.datasets-div').hide();
-		$('.' + $(this).attr('organism') + '.datasets-div').show();
-		// background toggle
-		$('.organism-div').removeClass('organism-active-background');
-		$(this).addClass('organism-active-background');
-		//console.log('.' + $(this).attr('organism') + '.datasets-div');
-	});
-	$('.organism-checkbox').change(function(e) {
-		if ($(this).is(':checked')) {
-			$('.dataset-checkbox.' + $(this).attr('organism') + '.' + default_data_type).prop('checked', true).change();
-			//console.log('.datasets-checkbox.' + $(this).attr('organism') + '.' + default_data_type);
-		} else {
-			// uncheck all dataset checkboxes of the organism
-			$('.dataset-checkbox.' + $(this).attr('organism')).prop('checked', false).change();
-		}
-	});
-	$('.dataset-checkbox').change(function() {
-		if ($(this).is(':checked')) {
-			// check organism checkbox
-			$('.organism-checkbox.' + $(this).attr('organism')).prop('checked', true);
-			default_data_type = $(this).attr('dataset-type');
-		} else {
-			//console.log($('.dataset-checkbox.' + $(this).attr('organism')).is(':checked'));
-			// if none of the dataset checkboxes are checked
-			if (!$('.dataset-checkbox.' + $(this).attr('organism')).is(':checked')) {
-				// uncheck the organism checkbox
-				$('.organism-checkbox.' + $(this).attr('organism')).prop('checked', false);
-			}
-		}
-		setDatabaseType();
-	});
-	$('.all-organism-checkbox').change(function() {
-		if ($(this).is(':checked')) {
-			$('.all-dataset-checkbox.' + default_data_type).prop('checked', true);
-			// check all dataset checkboxes with the dataset type
-			$('.dataset-checkbox.' + default_data_type).prop('checked', true).change();
-		} else {
-			// uncheck all dataset checkboxes of the organism
-			$('.all-dataset-checkbox').prop('checked', false).change();
-		}
-	});
-	$('.all-dataset-checkbox').change(function() {
-		if ($(this).is(':checked')) {
-			// check organism checkbox
-			$('.all-organism-checkbox').prop('checked', true);
-			// check all dataset checkboxes with the dataset type
-			$('.dataset-checkbox.' + $(this).attr('dataset-type')).prop('checked', true).change();
-		} else {
-			// uncheck all dataset checkboxes with the dataset type
-			$('.dataset-checkbox.' + $(this).attr('dataset-type')).prop('checked', false).change();
-			// if none of the dataset checkboxes are checked
-			if (!$('.all-dataset-checkbox').is(':checked')) {
-				// uncheck the organism checkbox
-				$('.all-organism-checkbox').prop('checked', false);
-			}
-		}
-	});
+  ////////////////////
+  // EVENT HANDLING //
+  ////////////////////
+  var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
+  $('.organism-div').hoverIntent(function() {
+    // show and hide right panel
+    $('.datasets-div').hide();
+    $('.' + $(this).attr('organism') + '.datasets-div').show();
+    // background toggle
+    $('.organism-div').removeClass('organism-active-background');
+    $(this).addClass('organism-active-background');
+    //console.log('.' + $(this).attr('organism') + '.datasets-div');
+  });
+  $('.organism-checkbox').change(function(e) {
+    if ($(this).is(':checked')) {
+      $('.dataset-checkbox.' + $(this).attr('organism') + '.' + default_data_type).prop('checked', true).change();
+      //console.log('.datasets-checkbox.' + $(this).attr('organism') + '.' + default_data_type);
+    } else {
+      // uncheck all dataset checkboxes of the organism
+      $('.dataset-checkbox.' + $(this).attr('organism')).prop('checked', false).change();
+    }
+  });
+  $('.dataset-checkbox').change(function() {
+    if ($(this).is(':checked')) {
+      // check organism checkbox
+      $('.organism-checkbox.' + $(this).attr('organism')).prop('checked', true);
+      default_data_type = $(this).attr('dataset-type');
+    } else {
+      //console.log($('.dataset-checkbox.' + $(this).attr('organism')).is(':checked'));
+      // if none of the dataset checkboxes are checked
+      if (!$('.dataset-checkbox.' + $(this).attr('organism')).is(':checked')) {
+        // uncheck the organism checkbox
+        $('.organism-checkbox.' + $(this).attr('organism')).prop('checked', false);
+      }
+    }
+    setDatabaseType();
+  });
+  $('.all-organism-checkbox').change(function() {
+    if ($(this).is(':checked')) {
+      $('.all-dataset-checkbox.' + default_data_type).prop('checked', true);
+      // check all dataset checkboxes with the dataset type
+      $('.dataset-checkbox.' + default_data_type).prop('checked', true).change();
+    } else {
+      // uncheck all dataset checkboxes of the organism
+      $('.all-dataset-checkbox').prop('checked', false).change();
+    }
+  });
+  $('.all-dataset-checkbox').change(function() {
+    if ($(this).is(':checked')) {
+      // check organism checkbox
+      $('.all-organism-checkbox').prop('checked', true);
+      // check all dataset checkboxes with the dataset type
+      $('.dataset-checkbox.' + $(this).attr('dataset-type')).prop('checked', true).change();
+    } else {
+      // uncheck all dataset checkboxes with the dataset type
+      $('.dataset-checkbox.' + $(this).attr('dataset-type')).prop('checked', false).change();
+      // if none of the dataset checkboxes are checked
+      if (!$('.all-dataset-checkbox').is(':checked')) {
+        // uncheck the organism checkbox
+        $('.all-organism-checkbox').prop('checked', false);
+      }
+    }
+  });
 
-	var db_type = '';
-	function setDatabaseType() {
-		if (db_type == '') {
-			// check what has been checked
-			if ($('.nucleotide').is(':checked')) {
-				db_type = 'nucleotide';
-				$('.peptide').attr('disabled', 'disabled').addClass('disabled-fieldset');
-			} else if ($('.peptide').is(':checked')) {
-				db_type = 'peptide';
-				$('.nucleotide').attr('disabled', 'disabled').addClass('disabled-fieldset');
-			}
-		} else {
-			if (!$('.dataset-checkbox').is(':checked')) {
-				db_type = '';
-				$('.peptide').attr('disabled', false).removeClass('disabled-fieldset');
-				$('.nucleotide').attr('disabled', false).removeClass('disabled-fieldset');
-			}
-		}
-		chooseProgram();
-	}
+  var db_type = '';
+  function setDatabaseType() {
+    if (db_type == '') {
+      // check what has been checked
+      if ($('.nucleotide').is(':checked')) {
+        db_type = 'nucleotide';
+        $('.peptide').attr('disabled', 'disabled').addClass('disabled-fieldset');
+      } else if ($('.peptide').is(':checked')) {
+        db_type = 'peptide';
+        $('.nucleotide').attr('disabled', 'disabled').addClass('disabled-fieldset');
+      }
+    } else {
+      if (!$('.dataset-checkbox').is(':checked')) {
+        db_type = '';
+        $('.peptide').attr('disabled', false).removeClass('disabled-fieldset');
+        $('.nucleotide').attr('disabled', false).removeClass('disabled-fieldset');
+      }
+    }
+    chooseProgram();
+  }
 
-	var query_type = '';
-	function setQueryType(qtype) {
-		query_type = qtype;
-		if (qtype == '') {
-			$('.enter-query-text').html('Enter sequence below in <a href="docs/fasta.html">FASTA</a> format:');
-		} else if (qtype == 'invalid') {
-			$('.enter-query-text').html('Your sequence is invalid:');
-		} else if (qtype == 'nucleotide') {
-			$('.enter-query-text').html('Your sequence is detected as nucleotide:');
-		} else if (qtype == 'peptide') {
-			$('.enter-query-text').html('Your sequence is detected as peptide:');
-		}
-		chooseProgram();
-	}
+  var query_type = '';
+  function setQueryType(qtype) {
+    query_type = qtype;
+    if (qtype == '') {
+      $('.enter-query-text').html('Enter sequence below in <a href="docs/fasta.html">FASTA</a> format:');
+    } else if (qtype == 'invalid') {
+      $('.enter-query-text').html('Your sequence is invalid:');
+    } else if (qtype == 'nucleotide') {
+      $('.enter-query-text').html('Your sequence is detected as nucleotide:');
+    } else if (qtype == 'peptide') {
+      $('.enter-query-text').html('Your sequence is detected as peptide:');
+    }
+    chooseProgram();
+  }
 
 
   function disableProgram(){
-		$('.program').attr('disabled', false).removeClass('disabled-radio');
-		if (db_type == 'nucleotide') {
-			$('.blastp').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
-		} else if (db_type == 'peptide') {
-			$('.blastn').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.tblastn').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
-		}
-		if (query_type == 'nucleotide') {
-			$('.blastp').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.tblastn').attr('disabled', 'disabled').addClass('disabled-radio');
-		} else if (query_type == 'peptide') {
-			$('.blastn').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
-			$('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
-		}
+    $('.program').attr('disabled', false).removeClass('disabled-radio');
+    if (db_type == 'nucleotide') {
+      $('.blastp').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
+    } else if (db_type == 'peptide') {
+      $('.blastn').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.tblastn').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
+    }
+    if (query_type == 'nucleotide') {
+      $('.blastp').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.tblastn').attr('disabled', 'disabled').addClass('disabled-radio');
+    } else if (query_type == 'peptide') {
+      $('.blastn').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.blastx').attr('disabled', 'disabled').addClass('disabled-radio');
+      $('.tblastx').attr('disabled', 'disabled').addClass('disabled-radio');
+    }
   }
 
-	var program_selected = 'blastn';
-	var chooseProgram = _.debounce(function () {
+  var program_selected = 'blastn';
+  var chooseProgram = _.debounce(function () {
     disableProgram();
-		query_type = '';
-		// select first non disabled option
-		$('input.program:not([disabled])').first().prop('checked', true);
-		program_selected = $('input.program:not([disabled])').first().val();
-		$('.' + program_selected).mouseover();
+    query_type = '';
+    // select first non disabled option
+    $('input.program:not([disabled])').first().prop('checked', true);
+    program_selected = $('input.program:not([disabled])').first().val();
+    $('.' + program_selected).mouseover();
         add_blast_options(program_selected.toUpperCase());
     }, 30);
 
@@ -702,13 +702,13 @@ $(function() { // document ready
     }
 
     if (hist_program != ''){
-	hist_checkbox = $("#hist_checkbox").val();
-	hist_check_array = hist_checkbox.split(',');
-	for(var i = 0; i < hist_check_array.length; i++){
-	    c = '#' + hist_check_array[i].split(".")[0]
-	    $(c).prop("checked", true);
-	    $('#'+$(c).attr('organism')).prop("checked", true);
-	};
+  hist_checkbox = $("#hist_checkbox").val();
+  hist_check_array = hist_checkbox.split(',');
+  for(var i = 0; i < hist_check_array.length; i++){
+      c = '#' + hist_check_array[i].split(".")[0]
+      $(c).prop("checked", true);
+      $('#'+$(c).attr('organism')).prop("checked", true);
+  };
         $('#query-textarea').val($("#hist_sequence1").val());
         add_blast_options($('input.program:checked').val().toUpperCase());
     }
