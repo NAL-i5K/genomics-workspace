@@ -227,11 +227,8 @@ FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
 FILEBROWSER_MAX_UPLOAD_SIZE = 10737418240 # 10GB
 FILEBROWSER_EXTENSIONS = {
     'Folder': [''],
-    #'Image': ['.jpg', '.jpeg', '.gif', '.png', '.tif', '.tiff'],
     'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
-    #'Video': ['.mov', '.wmv', '.mpeg', '.mpg', '.avi', '.rm'],
-    #'Audio': ['.mp3', '.mp4', '.wav', '.aiff', '.midi', '.m4p'],
-    'FASTA': ['.fa', '.faa', '.fna', '.fasta', '.cds', '.pep'],
+    'FASTA': ['.fa', '.faa', '.fna', '.fsa', '.ffn', '.mpfa', '.faa', '.fasta', '.cds', '.pep', '.seq'],
     'FASTQ': ['.fq', '.fastq'],
     'SAM': ['.sam', '.bam'],
     'WIG': ['.wig', '.bw', '.bigwig'],
