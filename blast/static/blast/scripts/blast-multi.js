@@ -104,19 +104,13 @@ $(function() { // document ready
     }
   }
 
-  hist_checkbox = $("#hist_checkbox").val();
-  hist_check_array = hist_checkbox.split(',');
-  for(var i = 0; i < hist_check_array.length; i++) {
-      name = hist_check_array[i].replace('.','\\.')
-      c = '#' + name;
-      $(c).prop("checked", true);
-      $('#'+$(c).attr('organism')).prop("checked", true);
-  };
+  var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
+  var db_type = '';
 
   ////////////////////
   // EVENT HANDLING //
   ////////////////////
-  var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
+  //var default_data_type = $('.all-dataset-checkbox').attr('dataset-type') || 'genome-assembly';
   $('.organism-div').hoverIntent(function() {
     // show and hide right panel
     $('.datasets-div').hide();
@@ -177,7 +171,7 @@ $(function() { // document ready
     }
   });
 
-  var db_type = '';
+  //var db_type = '';
   function setDatabaseType() {
     if (db_type == '') {
       // check what has been checked
@@ -677,6 +671,20 @@ $(function() { // document ready
       }
     }
 
+    hist_checkbox = $("#hist_checkbox").val();
+    hist_check_array = hist_checkbox.split(',');
+    for(var i = 0; i < hist_check_array.length; i++) {
+        name = hist_check_array[i].replace('.','\\.');
+        if(name == ''){
+            break;
+        }
+        c = '#' + name;
+        $(c).prop("checked", true);
+        $('#'+$(c).attr('organism')).prop("checked", true);
+        default_data_type = $(c).attr('dataset-type');
+        setDatabaseType();
+    };
+
     hist_program = $("#hist_program").val();
     if (hist_program == ''){
     }
@@ -803,13 +811,13 @@ $(function() { // document ready
     }
 
     if (hist_program != ''){
-  hist_checkbox = $("#hist_checkbox").val();
-  hist_check_array = hist_checkbox.split(',');
-  for(var i = 0; i < hist_check_array.length; i++){
-      c = '#' + hist_check_array[i].split(".")[0]
-      $(c).prop("checked", true);
-      $('#'+$(c).attr('organism')).prop("checked", true);
-  };
+        hist_checkbox = $("#hist_checkbox").val();
+        hist_check_array = hist_checkbox.split(',');
+        for(var i = 0; i < hist_check_array.length; i++){
+          c = '#' + hist_check_array[i].split(".")[0]
+          $(c).prop("checked", true);
+          $('#'+$(c).attr('organism')).prop("checked", true);
+        };
         $('#query-textarea').val($("#hist_sequence1").val());
         add_blast_options($('input.program:checked').val().toUpperCase());
     }

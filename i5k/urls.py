@@ -17,11 +17,12 @@ login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
     url(r'^about', about, name='about'),
+
     url(r'^home$', dashboard, name='dashboard'),
     url(r'^dashboard$', dashboard, name='dashboard'),
-    url(r'blast_hist', dashboard, name='dashboard'),
-    url(r'hmmer_hist', dashboard, name='dashboard'),
-    url(r'clustal_hist', dashboard, name='dashboard'),
+    url(r'blast_hist', dashboard, name='dashboard_blast'),
+    url(r'hmmer_hist', dashboard, name='dashboard_hmmer'),
+    url(r'clustal_hist', dashboard, name='dashboard_clustal'),
 
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
     # url(r'^grappelli/', include('grappelli.urls')),
