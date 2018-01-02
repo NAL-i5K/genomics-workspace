@@ -103,15 +103,6 @@ $(function() { // document ready
 	}
 
 
-	hist_checkbox = $("#hist_checkbox").val();
-	hist_check_array = hist_checkbox.split(',');
-        for(var i = 0; i < hist_check_array.length; i++) {
-            name = hist_check_array[i].replace('.','\\.')
-            c = '#' + name;
-            $(c).prop("checked", true);
-            $('#'+$(c).attr('organism')).prop("checked", true);
-        };
-
 	////////////////////
 	// EVENT HANDLING //
 	////////////////////
@@ -577,8 +568,14 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
     });
 
     $('.cutoff').change(function(){
+        if($('#hist_cut_off').val() == $('.cutoff:checked').val()){
+            $("#s_sequence").val($("#hist_significane_seq").val());
+            $("#s_hit").val($("#hist_significane_hit").val());
+            $("#r_sequence").val($("#hist_report_seq").val());
+            $("#r_hit").val($("#hist_report_hit").val());
+            return;
+        }
         if($('.cutoff:checked').val() == 'bitscore'){
-            if ( $('#hist_cut_off').val() == 'bitscore' ) return;
             $('#s_sequence').val('25');
             $('#s_hit').val('22');
             $('#r_sequence').val('7');
@@ -586,7 +583,6 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
         }
 
         if($('.cutoff:checked').val() == 'evalue'){
-            if ( $('#hist_cut_off').val() == 'evalue' )return;
             $('#s_sequence').val('0.01');
             $('#s_hit').val('0.03');
             $('#r_sequence').val('0.01');
@@ -597,6 +593,10 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
     $('.btn_reset').click(function() {
         $("#hist_program").val('');
         $("#hist_cut_off").val('');
+        $("#hist_significane_seq").val('');
+        $("#hist_significane_hit").val('');
+        $("#hist_report_seq").val('');
+        $("#hist_report_hit").val('');
         query_type = '';
         $('.program').attr('disabled', false).removeClass('disabled-radio');
         $('#query-textarea').val('');
@@ -642,6 +642,19 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
             });
         }
     });
+
+    hist_checkbox = $("#hist_checkbox").val();
+    hist_check_array = hist_checkbox.split(',');
+    for(var i = 0; i < hist_check_array.length; i++) {
+        name = hist_check_array[i].replace('.','\\.')
+        c = '#' + name;
+        $(c).prop("checked", true);
+        $('#'+$(c).attr('organism')).prop("checked", true);
+        default_data_type = $(c).attr('dataset-type');
+        setDatabaseType();
+    };
+
+
 
     hist_program = $("#hist_program").val();
     if ( hist_program == '' ){
