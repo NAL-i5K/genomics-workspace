@@ -52,7 +52,6 @@ before_script:
   - sudo chmod 666 /var/log/django/django.log
   - sudo touch /var/log/django/i5k.log
   - sudo chmod 666 /var/log/django/i5k.log
-  - sudo python2 manage.py makemigrations
   - sudo python2 manage.py migrate
   - sudo python2 setup.py
   - celery -A i5k worker --loglevel=info --concurrency=3 &
