@@ -1,5 +1,11 @@
 coverage:
-  ignore:          # files and folders that will be removed during processing
+  ignore:  # files and folders that will be removed during processing
+    # migration files
+    - "app/migrations/"
+    - "blast/migrations/"
+    - "hmmer/migrations/"
+    - "clustal/migrations/"
+    # static files
     - "blast/static/blast/components/"
     - "blast/static/blast/scripts/backbone*"
     - "blast/static/blast/scripts/bootstrap*"
@@ -16,3 +22,5 @@ coverage:
     - "clustal/static/clustal/scripts/underscore*"
     - "hmmer/static/hmmer/scripts/jquery*"
     - "hmmer/static/hmmer/scripts/underscore*"
+    # documents
+    - "sphinx_doc/"
