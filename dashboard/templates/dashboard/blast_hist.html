@@ -36,7 +36,7 @@
             </button>
 
             <div class="brand">
-                <a class="navbar-brand" href="index.html"><span>USDA LOGO</span></a>
+                <a class="navbar-brand" href="/"><span>USDA LOGO</span></a>
                 <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
             </div>      
         </div>
@@ -61,7 +61,7 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="heading1">
                             <h4 class="panel-title">
-                                <a href="/dashboard" class="single-item">
+                                <a href="{% url 'dashboard' %}" class="single-item">
                                     <i class="fa fa-dashboard"></i> Dashboard 
                                 </a>
                             </h4>
@@ -84,10 +84,10 @@
                     <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
                         <!-- anchors Item #1  -->
                         <div>
-                            <a href="blast_hist" class="list-group-item">BLAST</a>
-                            <a href="hmmer_hist" class="list-group-item">HMMER</a>
-                            <a href="clustal_hist" class="list-group-item">CLUSTAL</a>
-                            <a href="apollo_hist" class="list-group-item">APOLLO</a>
+                            <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
+                            <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
+                            <a href="{% url 'dashboard_clustal' %}' " class="list-group-item">CLUSTAL</a>
+                            <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
                         </div>
                         <!-- anchors Item #1  -->
                     </div>
