@@ -17,9 +17,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    
+
     <link rel="stylesheet" type="text/css" href="static/dashboard/css/design.css">
-    <!-- END CSS -->    
+    <!-- END CSS -->
 </head>
 <body>
 
@@ -36,13 +36,13 @@
             </button>
 
             <div class="brand">
-                <a class="navbar-brand" href="index.html"><span>USDA LOGO</span></a>
+                <a class="navbar-brand" href="/"><span>USDA LOGO</span></a>
                 <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
-            </div>      
+            </div>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        
+
         </div>
     </div>
     </nav>
@@ -53,7 +53,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar show perfectScrollbar">
         <div id="solso-sidebar">
-        
+
             <!-- SIDEBAR ACCORDION MENU -->
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <!-- SIMPLE PANEL - no Collapse -->
@@ -61,15 +61,15 @@
                     <div class="panel panel-default">
                         <div class="panel-heading" role="tab" id="heading1">
                             <h4 class="panel-title">
-                                <a href="/dashboard" class="single-item">
-                                    <i class="fa fa-dashboard"></i> Dashboard 
+                                <a href="{% url 'dashboard' %}" class="single-item">
+                                    <i class="fa fa-dashboard"></i> Dashboard
                                 </a>
                             </h4>
                         </div>
                     </div>
                 </div>
                 <!-- END SIMPLE PANEL - no Collapse -->
-                
+
                 <!-- Collapsible Group Item #1  -->
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="heading2">
@@ -80,55 +80,30 @@
                             </a>
                         </h4>
                     </div>
-                    
+
                     <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
                         <!-- anchors Item #1  -->
                         <div>
-                            <a href="blast_hist" class="list-group-item">BLAST</a>
-                            <a href="hmmer_hist" class="list-group-item">HMMER</a>
-                            <a href="clustal_hist" class="list-group-item">CLUSTAL</a>
-                            <a href="apollo_hist" class="list-group-item">APOLLO</a>
+                            <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
+                            <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
+                            <a href="{% url 'dashboard_clustal' %}" class="list-group-item">CLUSTAL</a>
+                            <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
                         </div>
                         <!-- anchors Item #1  -->
                     </div>
                 </div>
                 <!-- END Collapsible Group Item #1  -->
-                
-                <!-- Collapsible Group Item #2  -->
-                <div class="panel panel-default">
-                    <div class="panel-heading" role="tab" id="heading7">
-                        <h4 class="panel-title">
-                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse7" aria-expanded="true" aria-controls="collapse7">
-                                <i class="fa fa-picture-o"></i> Gallery
-                                <i class="pull-right fa fa-caret-down"></i>
-                            </a>
-                        </h4>
-                    </div>
-                    
-                    <div id="collapse7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading7">
-                        <!-- anchors Item #2  -->
-                        <div>
-                            <a href="gallery-1.html" class="list-group-item">Gallery 1</a>
-                            <a href="gallery-2.html" class="list-group-item">Gallery 2</a>
-                            <a href="gallery-3.html" class="list-group-item">Gallery 3</a>
-                            <a href="gallery-4.html" class="list-group-item">Gallery 4</a>
-                            <a href="gallery-5.html" class="list-group-item">Gallery 5</a>
-                        </div>
-                        <!-- END anchors Item #2  -->
-                    </div>
-                </div>
-                <!-- END Collapsible Group Item #2  -->             
             </div>
             <!-- END SIDEBAR ACCORDION MENU -->
         </div>
     </aside>
     <!-- END SIDEBAR -->
 
-    
+
     <!-- MAIN CONTENT  -->
     <div class="container-fluid left-border">
     <div class="row">
-    
+
     <div class="container">
         <div class="panel-group" id="accordion">
             {% for search in search_list %}
@@ -167,19 +142,19 @@
             {% endfor %}
         </div>
     </div>
-        
-    </div>  
-    </div>  
+
+    </div>
+    </div>
     <!-- MAIN CONTENT  -->
-</div>  
+</div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    
+
 <!-- === JAVASCRIPT MANDATORY CODE === -->
 <script>
-    
+
     /* === SIDEBAR === */
     $('.toogle').on('click', function() {
         $('.body').toggleClass('slide');
@@ -192,7 +167,7 @@
         localStorage.removeItem('collapseID');
         localStorage.removeItem('activeLink');
     });
-    
+
     $( '#accordion' ).on('click', '.list-group-item', function(){
         localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
         localStorage.setItem('activeLink', this);
@@ -202,15 +177,15 @@
         $( '#' + localStorage.collapseID ).addClass('in');
     } else {
         $( '.panel-collapse' ).removeClass('in');
-    }       
-    
+    }
+
     if ( localStorage.activeLink ) {
         $( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
-    }   
+    }
     /* === END ACCORDION === */
 </script>
 <!-- === END JAVASCRIPT MANDATORY CODE === -->
-    
-    
+
+
 </body>
 </html>

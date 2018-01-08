@@ -1,7 +1,5 @@
-'''
-    Dashboard views.py
-'''
 from django.shortcuts import render, redirect
+from django.core.urlresolvers import reverse
 from blast.models import BlastSearch
 from hmmer.models import HmmerSearch
 from clustal.models import ClustalSearch
@@ -15,10 +13,15 @@ dash = i5kLogger()
 def dashboard(request):
     search_list = []
     print 'Method: %s' % request.method
-    print 'Path: %s' % request.path
+    print 'Path: %s' % request.path # can be in two forms: /dashboard or /webapp/dashboard (also can be ended with /)
+    if request.path.endswith('/'):
+        relative_path = request.path.rstrip('/')
+    else:
+        relative_path = request.path
+    relative_path = relative_path.split('/')[-1]
     if request.method == 'GET':
         id_num = 0
-        if request.path == '/dashboard' or request.path == '/home':
+        if relative_path == 'dashboard' or relative_path == 'home':
             print "GET: %s" % request.GET
             if 'search_id' in request.GET:
                 if request.GET['app'] == 'blast':
@@ -35,24 +38,24 @@ def dashboard(request):
             if 'searchagain' in request.GET:
                 print 'SEARCHAGAIN'
                 if request.GET['app'] == 'blast':
-                    return redirect('/blast/%s' % search.task_id)
+                    return redirect(reverse('blast:retrieve', kwargs={'task_id': search.task_id}))
                 elif request.GET['app'] == 'hmmer':
-                    return redirect('/hmmer/%s' % search.task_id)
+                    return redirect(reverse('hmmer:retrieve', kwargs={'task_id': search.task_id}))
                 elif request.GET['app'] == 'clustal':
-                    return redirect('/clustal/%s' % search.task_id)
+                    return redirect(reverse('clustal:retrieve', kwargs={'task_id': search.task_id}))
             elif 'editsearch' in request.GET:
                 print 'EDITSEARCH'
                 if request.GET['app'] == 'blast':
-                    return redirect('/blast?search_id=%s' % search.search_tag)
+                    return redirect(reverse('blast:create') + '?search_id=%s' % search.search_tag)
                 elif request.GET['app'] == 'hmmer':
-                    return redirect('/hmmer?search_id=%s' % search.search_tag)
+                    return redirect(reverse('hmmer:create') + '?search_id=%s' % search.search_tag)
                 elif request.GET['app'] == 'clustal':
-                    return redirect('/clustal?search_id=%s' % search.search_tag)
+                    return redirect(reverse('clustal:create') + '?search_id=%s' % search.search_tag)
             else:
                 return render(request, 'dashboard/index.html')
-        if request.path == '/blast_hist':
+        elif relative_path == 'blast_hist':
             search_list = []
-            for obj in BlastSearch.objects.filter(user=request.user):
+            for obj in BlastSearch.objects.filter(user=request.user.id):
                 search_dict = {}
                 id_num += 1
                 orgs = json.loads(obj.organisms)
@@ -80,9 +83,9 @@ def dashboard(request):
                 search_dict['organisms']       = orgs
                 search_list.append(search_dict)
             return render(request, 'dashboard/blast_hist.html', { 'search_list': search_list})
-        elif request.path == '/hmmer_hist':
+        elif relative_path == 'hmmer_hist':
            search_list = []
-           for obj in HmmerSearch.objects.filter(user=request.user):
+           for obj in HmmerSearch.objects.filter(user=request.user.id):
                search_dict = {}
                id_num += 1
                orgs = json.loads(obj.organisms)
@@ -99,11 +102,10 @@ def dashboard(request):
                search_dict['sequence']        = seq
                search_dict['organisms']       = orgs
                search_list.append(search_dict)
-               pass
            return render(request, 'dashboard/hmmer_hist.html', { 'search_list': search_list})
-        elif request.path == '/clustal_hist':
+        elif relative_path == 'clustal_hist':
            search_list = []
-           for obj in ClustalSearch.objects.filter(user=request.user):
+           for obj in ClustalSearch.objects.filter(user=request.user.id):
                search_dict = {}
                id_num += 1
                seq = (obj.sequence[:20] + '..') if len(obj.sequence) > 20 else obj.sequence
@@ -116,7 +118,6 @@ def dashboard(request):
                search_dict['program']         = obj.program
                search_dict['sequence']        = obj.sequence
                search_list.append(search_dict)
-               pass
            return render(request, 'dashboard/clustal_hist.html', { 'search_list': search_list})
 
 
