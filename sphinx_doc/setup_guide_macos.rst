@@ -65,13 +65,14 @@ Database
 
 Install PostgreSQL::
 
-    brew postgres
+    brew install postgres
     psql postgres
 
     # At the prompt 'postgres=#' enter:
     create database django;
     create user django;
     grant all on database django to django;
+    ALTER USER django CREATEDB;
 
     # Connect to django database:
     \c django
