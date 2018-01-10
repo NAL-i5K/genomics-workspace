@@ -121,7 +121,6 @@ Run migrate::
     sudo chmod 666 /var/log/django/django.log
     sudo touch /var/log/django/i5k.log
     sudo chmod 666 /var/log/django/i5k.log
-    python manage.py makemigrations
     python manage.py migrate
 
 

@@ -241,7 +241,6 @@ Run migrate::
     sudo mkdir /var/log/i5k
     sudo touch /var/log/i5k/i5k.log
     sudo chmod 666 /var/log/i5k/i5k.log
-    python manage.py makemigrations
     python manage.py migrate
 
 
