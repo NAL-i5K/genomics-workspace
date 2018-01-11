@@ -108,7 +108,7 @@ def dashboard(request):
             return render(request, 'dashboard/hmmer_hist.html', { 'search_list': search_list})
         elif relative_path == 'clustal_hist':
             search_list = []
-            if not request.user.is_authenticated():
+            if request.user.is_authenticated():
                 for obj in ClustalSearch.objects.filter(user=request.user.id):
                     search_dict = {}
                     id_num += 1
