@@ -23,9 +23,9 @@ Follow the instruction shown on your terminal, then browse and login to the admi
 BLAST Database Configuration
 ----------------------------
 
-There are five steps to create BLAST database.
+There are five steps to create a BLAST database.
 
-* Add Organism:
+* Add Organism (click the **Organism** icon at sidebar and click **Add organism**):
 
   * Display name should be scientific name.
   * Short name are used by system as a abbreviation.
