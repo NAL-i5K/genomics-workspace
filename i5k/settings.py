@@ -218,6 +218,8 @@ if ENABLE_JBROWSE_INTEGRATION:
     )
 else:
     suit_menu = (
+        {'app': 'app', 'label': 'Organism', 'icon':'icon-leaf', 'url': 'app.organism', 'models': (
+        )},
         {'app': 'blast', 'label': 'BLAST', 'icon': 'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
             {'model': 'organism'},
