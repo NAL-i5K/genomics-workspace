@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>BLAST History</title>
+    <title>Clustal History</title>
     <meta charset="utf-8">
 
     <!-- META -->
@@ -17,9 +17,9 @@
 
     <!-- CSS -->
     <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
-    
+
     <link rel="stylesheet" type="text/css" href="static/dashboard/css/design.css">
-    <!-- END CSS -->    
+    <!-- END CSS -->
 </head>
 <body>
 
@@ -38,11 +38,11 @@
             <div class="brand">
                 <a class="navbar-brand" href="/"><span>USDA LOGO</span></a>
                 <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
-            </div>      
+            </div>
         </div>
 
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
-        
+
         </div>
     </div>
     </nav>
@@ -53,7 +53,7 @@
     <!-- SIDEBAR -->
     <aside class="sidebar show perfectScrollbar">
         <div id="solso-sidebar">
-        
+
             <!-- SIDEBAR ACCORDION MENU -->
             <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
                 <!-- SIMPLE PANEL - no Collapse -->
@@ -62,14 +62,14 @@
                         <div class="panel-heading" role="tab" id="heading1">
                             <h4 class="panel-title">
                                 <a href="{% url 'dashboard' %}" class="single-item">
-                                    <i class="fa fa-dashboard"></i> Dashboard 
+                                    <i class="fa fa-dashboard"></i> Dashboard
                                 </a>
                             </h4>
                         </div>
                     </div>
                 </div>
                 <!-- END SIMPLE PANEL - no Collapse -->
-                
+
                 <!-- Collapsible Group Item #1  -->
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="heading2">
@@ -80,7 +80,7 @@
                             </a>
                         </h4>
                     </div>
-                    
+
                     <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
                         <!-- anchors Item #1  -->
                         <div>
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 <!-- END Collapsible Group Item #1  -->
-                
+
                 <!-- Collapsible Group Item #2  -->
                 <div class="panel panel-default">
                     <div class="panel-heading" role="tab" id="heading7">
@@ -104,7 +104,7 @@
                             </a>
                         </h4>
                     </div>
-                    
+
                     <div id="collapse7" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading7">
                         <!-- anchors Item #2  -->
                         <div>
@@ -117,18 +117,18 @@
                         <!-- END anchors Item #2  -->
                     </div>
                 </div>
-                <!-- END Collapsible Group Item #2  -->             
+                <!-- END Collapsible Group Item #2  -->
             </div>
             <!-- END SIDEBAR ACCORDION MENU -->
         </div>
     </aside>
     <!-- END SIDEBAR -->
 
-    
+
     <!-- MAIN CONTENT  -->
     <div class="container-fluid left-border">
     <div class="row">
-    
+
     <div class="container">
         <div class="panel-group" id="accordion">
             {% for search in search_list %}
@@ -167,19 +167,19 @@
             {% endfor %}
         </div>
     </div>
-        
-    </div>  
-    </div>  
+
+    </div>
+    </div>
     <!-- MAIN CONTENT  -->
-</div>  
+</div>
 
 <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
 <script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
 
-    
+
 <!-- === JAVASCRIPT MANDATORY CODE === -->
 <script>
-    
+
     /* === SIDEBAR === */
     $('.toogle').on('click', function() {
         $('.body').toggleClass('slide');
@@ -192,7 +192,7 @@
         localStorage.removeItem('collapseID');
         localStorage.removeItem('activeLink');
     });
-    
+
     $( '#accordion' ).on('click', '.list-group-item', function(){
         localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
         localStorage.setItem('activeLink', this);
@@ -202,15 +202,15 @@
         $( '#' + localStorage.collapseID ).addClass('in');
     } else {
         $( '.panel-collapse' ).removeClass('in');
-    }       
-    
+    }
+
     if ( localStorage.activeLink ) {
         $( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
-    }   
+    }
     /* === END ACCORDION === */
 </script>
 <!-- === END JAVASCRIPT MANDATORY CODE === -->
-    
-    
+
+
 </body>
 </html>
