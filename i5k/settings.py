@@ -286,13 +286,13 @@ SUIT_CONFIG = {
             {'model': 'jbrowsesetting'},
             {'model': 'sequence'},
         )},
-        #{'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
-        #    {'model': 'hmmerdb'},
-        #    {'model': 'hmmerqueryrecord'},
-        #)},
-        #{'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
-        #    {'model': 'clustalqueryrecord'},
-        #)},
+        {'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
+           {'model': 'hmmerdb'},
+           {'model': 'hmmerqueryrecord'},
+        )},
+        {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
+           {'model': 'clustalqueryrecord'},
+        )},
         {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
             {'model': 'usersocialauth'},
             {'model': 'nonce'},
