@@ -278,8 +278,7 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     'MENU_EXCLUDE': (),
     'MENU': (
-        {'app': 'app', 'label': 'Organism', 'icon':'icon-leaf', 'url': '/admin/app/organism/' , 'models': (
-            { 'model': 'Organism'},
+        {'app': 'app', 'label': 'Organism', 'icon':'icon-leaf', 'url': 'app.organism' , 'models': (
         )},
         {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
@@ -312,7 +311,7 @@ SUIT_CONFIG = {
             {'model': 'accession'},
         )},
         # auth and axes
-        {'label': 'Auth', 'icon':'icon-lock', 'url': '/admin/auth/user/', 'models': (
+        {'label': 'Auth', 'icon':'icon-lock', 'url': 'auth.user', 'models': (
             {'model': 'auth.user'},
             {'model': 'auth.group'},
             {'model': 'axes.accessattempt'},
