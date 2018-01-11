@@ -278,9 +278,11 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     'MENU_EXCLUDE': (),
     'MENU': (
+        {'app': 'app', 'label': 'Organism', 'icon':'icon-leaf', 'url': '/admin/app/organism/' , 'models': (
+            { 'model': 'Organism'},
+        )},
         {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
-            {'model': 'organism'},
             {'model': 'sequencetype'},
             {'model': 'blastdb'},
             {'model': 'jbrowsesetting'},
@@ -290,7 +292,7 @@ SUIT_CONFIG = {
            {'model': 'hmmerdb'},
            {'model': 'hmmerqueryrecord'},
         )},
-        {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
+        {'app': 'clustal', 'label': 'Clustal', 'icon':'icon-leaf', 'models': (
            {'model': 'clustalqueryrecord'},
         )},
         {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
@@ -310,7 +312,7 @@ SUIT_CONFIG = {
             {'model': 'accession'},
         )},
         # auth and axes
-        {'label': 'Auth', 'icon':'icon-lock', 'models': (
+        {'label': 'Auth', 'icon':'icon-lock', 'url': '/admin/auth/user/', 'models': (
             {'model': 'auth.user'},
             {'model': 'auth.group'},
             {'model': 'axes.accessattempt'},
