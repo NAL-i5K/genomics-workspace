@@ -19,10 +19,14 @@ dash = i5kLogger()
 def dashboard(request):
     search_list = []
     print 'Method: %s' % request.method
-    print 'Path: %s' % request.path # can be in two forms: /dashboard or /webapp/dashboard
+    print 'Path: %s' % request.path # can be in two forms: /dashboard or /webapp/dashboard (also can be ended with /)
+    if request.path.endswith('/'):
+        relative_path = request.path.rstrip('/')
+    else:
+        relative_path = request.path
+    relative_path = relative_path.split('/')[-1]
     if request.method == 'GET':
         id_num = 0
-        relative_path = request.path.split('/')[-1]
         if relative_path == 'dashboard' or relative_path == 'home':
             print "GET: %s" % request.GET
             if 'search_id' in request.GET:
