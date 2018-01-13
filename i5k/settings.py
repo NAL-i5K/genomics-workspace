@@ -1,8 +1,12 @@
 # Django settings for i5k project.
 from os import path
 import sys
+from sys import platform
 import os
 import socket
+# to fix axe issue on Windows, see: https://github.com/jazzband/django-axes/issues/204
+if platform == 'win32':
+    from win_inet_pton import inet_pton
 
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
@@ -148,7 +152,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'axes.middleware.FailedLoginMiddleware',
     'app.middleware.SocialAuthExceptionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
