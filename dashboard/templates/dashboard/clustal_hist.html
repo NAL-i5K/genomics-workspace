@@ -115,7 +115,7 @@
                     </div>
                     <div id="{{ search.id_str }}" class="panel-collapse collapse in">
                         <div class="panel-body">
-                            <form style="display:flex" method="GET" action="/dashboard">
+                            <form style="display:flex" method="GET" action="{% url 'dashboard' %}">
                             <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
                                 <table>
                                     <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
