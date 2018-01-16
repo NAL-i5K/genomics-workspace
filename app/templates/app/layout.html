@@ -75,7 +75,7 @@
 {% block content %}{% endblock %}
             <hr/>
             <footer>
-                <p>{{ year|default:"2017" }} - National Agricultural Library</p>
+                <p>{% now "Y" %} - National Agricultural Library</p>
             </footer>
         </div>
 {% endblock %}
