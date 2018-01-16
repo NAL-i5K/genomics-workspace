@@ -28,7 +28,7 @@ def dashboard(request):
     relative_path = relative_path.split('/')[-1]
     if request.method == 'GET':
         id_num = 0
-        if relative_path == 'dashboard' or relative_path == 'home':
+        if relative_path.startswith('dashboard') or relative_path.startswith('home'):
             print "GET: %s" % request.GET
             if 'search_id' in request.GET:
                 if request.GET['app'] == 'blast':
