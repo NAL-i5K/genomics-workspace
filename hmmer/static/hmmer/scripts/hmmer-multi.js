@@ -646,7 +646,7 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
     hist_checkbox = $("#hist_checkbox").val();
     hist_check_array = hist_checkbox.split(',');
     for(var i = 0; i < hist_check_array.length; i++) {
-        name = hist_check_array[i].replace('.','\\.');
+        name = hist_check_array[i].split('.').join('\\.');
         if(name == ''){
             break;
         }
