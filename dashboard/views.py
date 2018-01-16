@@ -2,6 +2,7 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.core.mail import send_mail
 from django.http import HttpResponse
+from django.core.urlresolvers import reverse
 from blast.models import BlastSearch
 from hmmer.models import HmmerSearch
 from clustal.models import ClustalSearch
@@ -44,19 +45,19 @@ def dashboard(request):
             if 'searchagain' in request.GET:
                 print 'SEARCHAGAIN'
                 if request.GET['app'] == 'blast':
-                    return redirect('/blast/%s' % search.task_id)
+                    return redirect(reverse('blast:retrieve', kwargs={'task_id': search.task_id}))
                 elif request.GET['app'] == 'hmmer':
-                    return redirect('/hmmer/%s' % search.task_id)
+                    return redirect(reverse('hmmer:retrieve', kwargs={'task_id': search.task_id}))
                 elif request.GET['app'] == 'clustal':
-                    return redirect('/clustal/%s' % search.task_id)
+                    return redirect(reverse('clustal:retrieve', kwargs={'task_id': search.task_id}))
             elif 'editsearch' in request.GET:
                 print 'EDITSEARCH'
                 if request.GET['app'] == 'blast':
-                    return redirect('/blast?search_id=%s' % search.search_tag)
+                    return redirect(reverse('blast:create') + '?search_id=%s' % search.search_tag)
                 elif request.GET['app'] == 'hmmer':
-                    return redirect('/hmmer?search_id=%s' % search.search_tag)
+                    return redirect(reverse('hmmer:create') + '?search_id=%s' % search.search_tag)
                 elif request.GET['app'] == 'clustal':
-                    return redirect('/clustal?search_id=%s' % search.search_tag)
+                    return redirect(reverse('clustal:create') + '?search_id=%s' % search.search_tag)
             else:
                 return render(request, 'dashboard/index.html')
         elif relative_path == 'blast_hist':
