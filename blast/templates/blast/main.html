@@ -4,33 +4,35 @@
 {% load jsonify %}
 
 {% block head-scripts %}
-    {% if iframe == True %}
+  {% if iframe == True %}
     <style>
-    nav {
-        display: none;
-    }
-    body {
-        padding-top: 0px;
-    }
+      nav {
+          display: none;
+      }
+      body {
+          padding-top: 0px;
+      }
     </style>
-    {% endif %}
-    <link type="text/css" rel="stylesheet" media="all" href="{% static 'blast/css/main.css' %}" />
-    <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
-    <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
-    <script>
+  {% endif %}
+  {% stylesheet 'blast-css' %}
+  <link rel="stylesheet" type="text/css" media="all" href="{% static 'blast/css/main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
+  <script>
     var dataset_list = {{ blastdb_list|safe }};
     var blastdb_type_counts = {{ blastdb_type_counts|jsonify }};
-    </script>
+  </script>
 {% endblock %}
 
 {% block scripts %}
-    <script src="{% static 'blast/scripts/underscore-min.js' %}"></script>
-    <script src="{% static 'blast/scripts/jquery.hoverIntent.minified.js' %}"></script>
-    <script src="{% static 'blast/scripts/jquery.validate.min.js' %}"></script>
-    <script src="{% static 'blast/scripts/blast-multi.js' %}"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-    <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+  <script src="{% static 'blast/scripts/underscore-min.js' %}"></script>
+  <script src="{% static 'blast/scripts/jquery.hoverIntent.minified.js' %}"></script>
+  <script src="{% static 'blast/scripts/jquery.validate.min.js' %}"></script>
+  <script src="{% static 'blast/scripts/blast-multi.js' %}"></script>
+  {% javascript 'blast-js' %}
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -43,7 +45,7 @@
 {% endif %}
 
 {% if user.is_authenticated %}
-    <div id="myTabContent" class="tab-content">    
+    <div id="myTabContent" class="tab-content">
     <div class="tripal_details tab-pane fade active in" role="tabpanel" id="run" aria-labelledby="run-tab">
 {% else %}
     <div class="tripal_details">
@@ -53,7 +55,7 @@
 <div class="tripal_organism-info-box tripal-info-box">
 <!--<a href="docs/blast_databases.html">-->
 <fieldset id="fieldset-datasets">
-    <legend>BLAST Databases <a href="https://i5k.nal.usda.gov/content/blast-tutorial" target="_blank"><span style="float:right"><span class="glyphicon glyphicon-book"></span> Tutorial</span></a></legend>
+    <legend>BLAST Databases <a href="https://i5k.nal.usda.gov/content/blast-tutorial" target="_blank"><span id="tutorial"><span class="glyphicon glyphicon-book"></span> Tutorial</span></a></legend>
 	<fieldset class="organism" id="fieldset-organism">
 		<legend id="legend-Organisms">Organisms</legend>
 		<div id="box-organism">
@@ -81,10 +83,10 @@
 </fieldset>
 
 <!--
-Enter here your input data as 
-<select name = "INPUT_TYPE"> 
-    <option> Sequence in FASTA format 
-    <option> Accession or GI 
+Enter here your input data as
+<select name = "INPUT_TYPE">
+    <option> Sequence in FASTA format
+    <option> Accession or GI
 </select>
 -->
 
@@ -92,9 +94,7 @@ Enter here your input data as
 	<legend id="legend-sequence">Query Sequence</legend>
 	<div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:</div>
 	<textarea id="query-textarea" name="query-sequence" rows=6 cols=60 spellcheck="false" autocomplete="off"></textarea>
-  <BR>
-  <span id="load-examples"> (load from example: <span class="load-nucleotide txt">nucleotide</span> or <span class="load-peptide txt">peptide</span>) </span>  
-  <BR>
+  <div><span id="load-examples"> (load from example: <span class="load-nucleotide txt">nucleotide</span> or <span class="load-peptide txt">peptide</span>) </span></div>
   Or load it from disk:
 	<input type="file" name="query-file" class="query-file">
     <!--
@@ -139,7 +139,7 @@ Enter here your input data as
         <legend></legend>
 	<!-- BLASTN -->
 		<div class="parms blastn-parms">
-        <fieldset id="fieldset-options-blast-general-param">        
+        <fieldset id="fieldset-options-blast-general-param">
         <legend>General Parameters</legend>
         <table id="general-param-table">
         <tr>
@@ -173,7 +173,7 @@ Enter here your input data as
         </tr>
         </table>
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-scoring-param">
         <legend>Scoring Parameters </legend>
 		<table id="blastn-scoring-param">
@@ -191,9 +191,9 @@ Enter here your input data as
 				</select>
 			</td></tr>
 		</table>
-		
+
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
         <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastn_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
@@ -201,10 +201,10 @@ Enter here your input data as
         </fieldset>
 		</div>
 	<!-- End BLASTN -->
-	
+
 	<!-- TBLASTN -->
 		<div class="parms tblastn-parms">
-        <fieldset id="fieldset-options-blast-general-param">        
+        <fieldset id="fieldset-options-blast-general-param">
         <legend>General Parameters</legend>
         <table id="general-param-table">
         <tr>
@@ -238,7 +238,7 @@ Enter here your input data as
         </tr>
         </table>
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-scoring-param">
         <legend>Scoring Parameters </legend>
 		<table id="tblastn-scoring-param">
@@ -259,9 +259,9 @@ Enter here your input data as
 			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields">
 			</td></tr>
 		</table>
-		
+
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
         <input TYPE="checkbox" CLASS="chk_low_complexity" ID="tblastn_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
@@ -269,10 +269,10 @@ Enter here your input data as
         </fieldset>
 		</div>
 	<!-- End TBLASTN -->
-	
+
 	<!-- TBLASTX -->
 		<div class="parms tblastx-parms">
-        <fieldset id="fieldset-options-blast-general-param">        
+        <fieldset id="fieldset-options-blast-general-param">
         <legend>General Parameters</legend>
         <table id="general-param-table">
         <tr>
@@ -306,7 +306,7 @@ Enter here your input data as
         </tr>
         </table>
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-scoring-param">
         <legend>Scoring Parameters </legend>
 		<table id="tblastx-scoring-param">
@@ -331,9 +331,9 @@ Enter here your input data as
 			</select></td>
 			</tr>
 		</table>
-		
+
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
         <input TYPE="checkbox" CLASS="chk_low_complexity" ID="tblastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
@@ -344,7 +344,7 @@ Enter here your input data as
 
 	<!-- BLASTP -->
 		<div class="parms blastp-parms">
-        <fieldset id="fieldset-options-blast-general-param">        
+        <fieldset id="fieldset-options-blast-general-param">
         <legend>General Parameters</legend>
         <table id="general-param-table">
         <tr>
@@ -378,7 +378,7 @@ Enter here your input data as
         </tr>
         </table>
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-scoring-param">
         <legend>Scoring Parameters </legend>
 		<table id="blastp-scoring-param">
@@ -398,9 +398,9 @@ Enter here your input data as
 			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="11" SIZE="10" class="input-fields"></td></tr>
 			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields"></td></tr>
 		</table>
-		
+
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
         <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastp_chk_low_complexity" VALUE="no" NAME="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: no)"> Low complexity</span><br/>
@@ -408,10 +408,10 @@ Enter here your input data as
         </fieldset>
 		</div>
 	<!-- End BLASTP -->
-	
+
 	<!-- BLASTX -->
 		<div class="parms blastx-parms">
-        <fieldset id="fieldset-options-blast-general-param">        
+        <fieldset id="fieldset-options-blast-general-param">
         <legend>General Parameters</legend>
         <table id="general-param-table">
         <tr>
@@ -445,7 +445,7 @@ Enter here your input data as
         </tr>
         </table>
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-scoring-param">
         <legend>Scoring Parameters </legend>
 		<table id="blastx-scoring-param">
@@ -472,9 +472,9 @@ Enter here your input data as
 			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="11" SIZE="10" class="input-fields"></td></tr>
 			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields"></td></tr>
 		</table>
-		
+
         </fieldset>
-        
+
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
         <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
@@ -488,7 +488,7 @@ Enter here your input data as
 </div>
 <input type="hidden" ID="click_submit_hidden" NAME="click_submit_hidden" VALUE="false">
 <!-- BLAST options end -->
-   
+
 	<div>
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
 		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">

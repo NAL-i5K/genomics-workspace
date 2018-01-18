@@ -4,31 +4,32 @@
 {% load jsonify %}
 
 {% block head-scripts %}
-{% stylesheet 'clustal-css' %}
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
-<style>
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
-    box-shadow: inset 0 -2px 0 #317eac;
-    color: #317eac;
-    border: 0px;
-}
-.txt:hover {
-    text-decoration: underline;
-}
-</style>
-<script>
-var dataset_list = {{ hmmerdb_list|safe }};
-var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
-</script>
+  {% if iframe == True %}
+    <style>
+      nav {
+          display: none;
+      }
+      body {
+          padding-top: 0px;
+      }
+    </style>
+  {% endif %}
+  {% stylesheet 'hmmer-css' %}
+  <link rel="stylesheet" type="text/css" media="all" href="{% static 'hmmer/css/main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
+  <script>
+    var dataset_list = {{ hmmerdb_list|safe }};
+    var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
+  </script>
 {% endblock %}
 
 {% block scripts %}
-<script src="{% static 'hmmer/scripts/hmmer-multi.js' %}"></script>
-{% javascript 'hmmer-js' %}
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+  <script src="{% static 'hmmer/scripts/hmmer-multi.js' %}"></script>
+  {% javascript 'hmmer-js' %}
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
 {% endblock %}
 
 {% block content %}
@@ -41,16 +42,16 @@ var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
 {% endif %}
 
 {% if user.is_authenticated %}
-<div id="myTabContent" class="tab-content">    
+<div id="myTabContent" class="tab-content">
     <div class="tripal_details tab-pane fade active in" role="tabpanel" id="run" aria-labelledby="run-tab">
         {% else %}
         <div class="tripal_details">
             {% endif %}
-            <FORM METHOD="POST" id="MainHmmerForm" NAME="MainHmmerForm" ENCTYPE="multipart/form-data">
+            <form method="POST" id="MainHmmerForm" name="MainHmmerForm" enctype="multipart/form-data">
                 {% csrf_token %}
                 <div class="tripal_organism-info-box tripal-info-box">
                     <fieldset id="fieldset-datasets">
-                        <legend>HMMER <a href="{% url 'hmmer:manual' %}" target="_blank"><span style="float:right"><span class="glyphicon glyphicon-book"></span> Tutorial</span></a></legend>
+                        <legend>HMMER <a href="{% url 'hmmer:manual' %}" target="_blank"><span id="tutorial"><span class="glyphicon glyphicon-book"></span> Tutorial</span></a></legend>
                         <fieldset class="organism" id="fieldset-organism">
                             <legend id="legend-Organisms">Organisms</legend>
                             <div id="box-organism">
@@ -77,11 +78,11 @@ var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
                         </div>
                     </fieldset>
 
-                    <fieldset id="fieldset-query" style="padding-bottom: 10px;">
+                    <fieldset id="fieldset-query">
                         <legend id="legend-sequence">Query Sequence / Mutliple sequence alignment</legend>
                         <div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format / in <a target="_blank" href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format">MSA (format descriptions)</a> :</div>
-                        <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off" style="font-family: monospace; font-weight:normal;font-size:14px;padding: 6px;margin-top:10px;">{{ clustal_content }}</textarea>
-                        <div><span class="load-example">Or</span> load it from disk <span style=" cursor: pointer; font-weight:bold; color:blue;" class="load-example-seq txt">(load sequence example)</span> <span style=" cursor: pointer; font-weight:bold; color:blue;" class="load-example-aln txt">(load alignment example)</span> </div>
+                        <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off">{{ clustal_content }}</textarea>
+                        <div><span class="load-example">Or</span> load it from disk <span class="load-example-seq txt">(load sequence example)</span> <span class="load-example-aln txt">(load alignment example)</span> </div>
                         <input type="file" name="query-file" class="query-file" id="query-file">
                     </fieldset>
 
@@ -158,7 +159,7 @@ var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
                             <INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
                         </div>
                     </div>
-                </FORM>
+                </form>
             </div>
             {% if user.is_authenticated %}
             <div role="tabpanel" class="tab-pane fade" id="queries" aria-labelledby="queries-tab">
