@@ -52,7 +52,7 @@ $(function() { // document ready
     ///////////////////////////////
     // HTML STRUCTURE GENERATION //
     ///////////////////////////////
-    
+
     var organism_list_count = organism_list.length;
     var alphabet_list_count = alphabet_list.length;
     for (var i = 0; i < organism_list_count; i++) {
@@ -113,7 +113,7 @@ $(function() { // document ready
         $('.datasets-div').hide();
         $('.' + $(this).attr('organism') + '.datasets-div').show();
         // background toggle
-        $('.organism-div').removeClass('organism-active-background'); 
+        $('.organism-div').removeClass('organism-active-background');
         $(this).addClass('organism-active-background');
         //console.log('.' + $(this).attr('organism') + '.datasets-div');
     });
@@ -167,7 +167,7 @@ $(function() { // document ready
             }
         }
     });
-    
+
     var db_type = '';
     function setDatabaseType() {
         if (db_type == '') {
@@ -188,7 +188,7 @@ $(function() { // document ready
         }
         chooseProgram();
     }
-    
+
     var query_type = '';
     function setQueryType(qtype) {
         query_type = qtype;
@@ -203,7 +203,7 @@ $(function() { // document ready
         }
         chooseProgram();
     }
-    
+
     var program_selected = 'blastn';
     var chooseProgram = _.debounce(function () {
         $('.program').prop('disabled', false).removeClass('disabled-radio');
@@ -242,7 +242,7 @@ $(function() { // document ready
         $('.program').prop('disabled', false).removeClass('disabled-radio');
         chooseProgram();
     }
-    
+
     function sum(obj) {
         var sum = 0;
         for(var el in obj) {
@@ -252,7 +252,7 @@ $(function() { // document ready
         }
         return sum;
     }
-    
+
     function filter_key(obj, test) {
         var result = {}, key;
         for (key in obj) {
@@ -262,7 +262,7 @@ $(function() { // document ready
         }
         return result;
     }
-    
+
     var parseTextarea = _.debounce(function () {
         // parse only the first 100 chars for speed
         //console.log($('#query-textarea').val());
@@ -305,8 +305,8 @@ $(function() { // document ready
             return normal_nucleic_codes.indexOf(key) != -1;
         }));
         var total_count = sum(alphabets);
-        // Too many degenerate codes within an input nucleotide query will cause blast.cgi to 
-        // reject the input. For protein queries, too many nucleotide-like code (A,C,G,T,N) may also 
+        // Too many degenerate codes within an input nucleotide query will cause blast.cgi to
+        // reject the input. For protein queries, too many nucleotide-like code (A,C,G,T,N) may also
         // cause similar rejection.
         if (total_count == 0) {
             setQueryType('');
@@ -320,7 +320,7 @@ $(function() { // document ready
         //console.log(query_type, normal_nucleic_count, total_count);
     }, 30);
     $('#query-textarea').keyup(parseTextarea);
-    
+
      // blast program descriptions for labels and their radio buttons
     $('.blastn').mouseover(function() {
         $('#blastProgramDescription').text('blastn - Nucleotide vs. Nucleotide');
@@ -340,37 +340,129 @@ $(function() { // document ready
     $('#fieldset-program').mouseleave(function() {
         $('.' + $('input.program:checked').val()).mouseover();
     });
-    
+
     // example sequences for testing
-    var ex_nucleotide = ">CLEC010822-RA:cDNA , Heat shock protein 70-2\n\
-    TGGAAATTTAAATATTTTCGATTTGGCGCGCCTTTAAGCCGGCGCCCAATCGCGTTTCGGAACGTATTGTCAGTCAGCCGGACCAATCAACGCCGTCCACGATTCCCGACTTCTCCCCGTCACCCAACCCCATTCTTATTCCACAGCCGCGGCCGTTCGTCCGTTCAGTCGAACCTAGGACTTGATTCGAGTACAAAGCGGACGAAAAAACGCGAATTAAACATAGTGTCTTATTCTTAATTTTGATCTAGTTGAAAACAAAAAAAGAGAGAAGGGTATATTTTTTTATATTTTCGAGTCAGTTGTATCAAAAATCAAACCGGAATAATTCAGAGATTTTCACAATAATGATTTTACATTTTCTCGTTTTGCTTTTCGCTTCGGCCTTAGCAGCCGACGAGAAGAATAAGGACGTCGGAACCGTCGTGGGCATTGACCTCGGCACGACTTACTCTTGTGTGGGAGTGTACAAGAATGGAAGAGTTGAAATCATCGCCAACGATCAAGGAAACAGGATTACACCTTCATACGTCGCTTTCACCAGTGAAGGCGAGCGTCTTATCGGAGATGCCGCCAAGAATCAGTTGACGACCAACCCTGAAAACACCGTCTTCGACGCTAAGCGTCTTATCGGACGAGAATGGACGGACAGCACTGTTCAAGACGATATCAAGTTCTTCCCATTCAAAGTCTTGGAGAAAAATAGCAAGCCTCACATTCAAGTCTCCACGTCCCAGGGCAACAAAATGTTCGCACCCGAAGAAATCTCCGCTATGGTATTGGGTAAAATGAAAGAGACGGCAGAGGCATATTTGGGAAAGAAGGTCACCCACGCCGTAGTCACAGTACCCGCATACTTCAACGATGCCCAGAGGCAGGCAACAAAAGATGCTGGAACGATTTCAGGACTCAACGTCATGAGGATCATCAACGAACCGACCGCAGCAGCTATTGCTTACGGACTGGACAAGAAAGAAGGAGAAAAGAACGTACTCGTTTTTGATCTCGGCGGTGGTACTTTTGATGTATCTCTTCTCACCATCGACAACGGAGTTTTCGAAGTCGTTTCTACAAACGGTGATACTCACTTAGGAGGAGAGGACTTTGATCAAAGGGTTATGGACCACTTTATTAAACTGTACAAGAAGAAGAAGGGCAAGGATATCAGGAAAGACAACAGGGCTGTTCAGAAACTCAGGAGGGAAGTCGAAAAAGCAAAGAGGGCTCTGTCTTCTAGCCACCAGGTCAGGATAGAAATTGAAAGCTTCTATGACGGTGAAGACTTCTCTGAGACTCTCACTAGGGCAAAATTCGAAGAGCTCAACATGGACCTCTTCCGTTCCACCATGAAACCCGTTCAGAAGGTCCTCGAAGATGCTGACATGAACAAGAAAGACGTCGATGAAATTGTTTTAGTAGGAGGCAGCACCAGGATTCCAAAAGTTCAGGCCCTCGTCAAAGAGTTTTTCAACGGAAAAGAACCATCCCGAGGTATCAACCCCGATGAAGCTGTCGCTTATGGAGCAGCAGTTCAAGCTGGAGTTTTATCTGGTGAACAAGACACCGATTCAATCGTCCTCCTTGATGTCAACCCTCTGACCCTCGGAATCGAAACAGTCGGTGGTGTCATGACCAAACTCATCCCAAGGAACACAGTCATCCCGACGAAAAAATCTCAGATCTTCTCGACAGCTTCAGACAACCAACACACTGTCACCATTCAGGTTTATGAGGGAGAAAGGCCAATGACCAAAGATAATCATTTGCTCGGAAAATTCGATTTGACAGGAATACCGCCTGCACCAAGGGGAGTGCCACAGATTGAAGTCACTTTTGAGATCGATGCCAACGGTATCCTTCAGGTGTCCGCCGAGGACAAGGGAACGGGCAACAGAGAGAAAATAGTCATCACAAACGACCAGAACAGGTTGACTCCAGACGACATCGATAGGATGATCAAGGACGCCGAGAAGTTCGCTGATGACGACAAGAAGCTCAAGGAGCGCGTCGAGGCCAGGAACGAACTGGAGTCGTACGCCTATTCTCTCAAGAACCAGCTCGCCGACAAGGACAAGTTCGGATCGAAGGTGACGGATTCTGACAAGGCCAAGATGGAAAAAGCCATCGAAGAGAAAATCAAGTGGCTTGACGAGAACCAAGACGCCGACAGTGAAGCCTTCAAGAAGCAAAAGAAAGAACTCGAAGATGTCGTACAGCCCATCATCTCAAAATTATACCAAGGAGGTGCTCCGCCGCCACCTGGAGCCGGTCCTCAATCGGAGGACGATCTTAAAGATGAGTTATAAGACTGCAAAACCTTTGTGTAAATCTGTGGAACATTTCTTTGACTGGTGATACTTAATTTTTAAGTCAGTATTTATATATTTAAAAACAAAAAACCTATACATCTGAGAAGGAAATTTGTTCCTTTTTTTCAATTTAAAATTTGAGTTTTTTCTTGTTTCATAAAATGTTCATTCCGCAGTTTATAAAGTTAATTTAAAAAACAAAAACAAAAATAAAAGACTTTGTTAACTAAGAAATTTATAATTTATTTGTTACTTTTTTATTTAATAATTTTTTTAGTGAATTGGGAATTGATGAATTACATTCAGCATTGAAAATTTATTGGTACCGTGTATTATAATTAATGTTGTCTGTAATTTATATAATTTCGTTTCATTAGGTTTTTGTTTGTCAGTTGGGCTCAATCCCAAAATTTGAGAACATTCTGAAGGTGTGATAATAAAAGTTTCTTTATTTAAA";
-    
-    var ex_peptide = ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\n\
-    MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\n\
-    >OFAS004830-PA:polypeptide ,Heat shock protein 70-2\n\
-    MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTETDRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGKPMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDSQRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFDVSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRALRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRGTLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINPDEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNTTIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGVPQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAERYKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNETIMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERGPVIEEAD\n\
-    >OFAS004738-PA:polypeptide ,Heat shock protein 70-1\n\
-    MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKGETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAGAIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSLKGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHLAEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFYTKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQNLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLSLGIETAGGVMTKIIERNTRI";
-       $('.load-nucleotide').click(function() {
+    var ex_nucleotide = ">CLEC010822-RA:cDNA , Heat shock protein 70-2\n" +
+                        "TGGAAATTTAAATATTTTCGATTTGGCGCGCCTTTAAGCCGGCGCCC" +
+                        "AATCGCGTTTCGGAACGTATTGTCAGTCAGCCGGACCAATCAACGCC" +
+                        "GTCCACGATTCCCGACTTCTCCCCGTCACCCAACCCCATTCTTATTC" +
+                        "CACAGCCGCGGCCGTTCGTCCGTTCAGTCGAACCTAGGACTTGATTC" +
+                        "GAGTACAAAGCGGACGAAAAAACGCGAATTAAACATAGTGTCTTATT" +
+                        "CTTAATTTTGATCTAGTTGAAAACAAAAAAAGAGAGAAGGGTATATT" +
+                        "TTTTTATATTTTCGAGTCAGTTGTATCAAAAATCAAACCGGAATAAT" +
+                        "TCAGAGATTTTCACAATAATGATTTTACATTTTCTCGTTTTGCTTTT" +
+                        "CGCTTCGGCCTTAGCAGCCGACGAGAAGAATAAGGACGTCGGAACCG" +
+                        "TCGTGGGCATTGACCTCGGCACGACTTACTCTTGTGTGGGAGTGTAC" +
+                        "AAGAATGGAAGAGTTGAAATCATCGCCAACGATCAAGGAAACAGGAT" +
+                        "TACACCTTCATACGTCGCTTTCACCAGTGAAGGCGAGCGTCTTATCG" +
+                        "GAGATGCCGCCAAGAATCAGTTGACGACCAACCCTGAAAACACCGTC" +
+                        "TTCGACGCTAAGCGTCTTATCGGACGAGAATGGACGGACAGCACTGT" +
+                        "TCAAGACGATATCAAGTTCTTCCCATTCAAAGTCTTGGAGAAAAATA" +
+                        "GCAAGCCTCACATTCAAGTCTCCACGTCCCAGGGCAACAAAATGTTC" +
+                        "GCACCCGAAGAAATCTCCGCTATGGTATTGGGTAAAATGAAAGAGAC" +
+                        "GGCAGAGGCATATTTGGGAAAGAAGGTCACCCACGCCGTAGTCACAG" +
+                        "TACCCGCATACTTCAACGATGCCCAGAGGCAGGCAACAAAAGATGCT" +
+                        "GGAACGATTTCAGGACTCAACGTCATGAGGATCATCAACGAACCGAC" +
+                        "CGCAGCAGCTATTGCTTACGGACTGGACAAGAAAGAAGGAGAAAAGA" +
+                        "ACGTACTCGTTTTTGATCTCGGCGGTGGTACTTTTGATGTATCTCTT" +
+                        "CTCACCATCGACAACGGAGTTTTCGAAGTCGTTTCTACAAACGGTGA" +
+                        "TACTCACTTAGGAGGAGAGGACTTTGATCAAAGGGTTATGGACCACT" +
+                        "TTATTAAACTGTACAAGAAGAAGAAGGGCAAGGATATCAGGAAAGAC" +
+                        "AACAGGGCTGTTCAGAAACTCAGGAGGGAAGTCGAAAAAGCAAAGAG" +
+                        "GGCTCTGTCTTCTAGCCACCAGGTCAGGATAGAAATTGAAAGCTTCT" +
+                        "ATGACGGTGAAGACTTCTCTGAGACTCTCACTAGGGCAAAATTCGAA" +
+                        "GAGCTCAACATGGACCTCTTCCGTTCCACCATGAAACCCGTTCAGAA" +
+                        "GGTCCTCGAAGATGCTGACATGAACAAGAAAGACGTCGATGAAATTG" +
+                        "TTTTAGTAGGAGGCAGCACCAGGATTCCAAAAGTTCAGGCCCTCGTC" +
+                        "AAAGAGTTTTTCAACGGAAAAGAACCATCCCGAGGTATCAACCCCGA" +
+                        "TGAAGCTGTCGCTTATGGAGCAGCAGTTCAAGCTGGAGTTTTATCTG" +
+                        "GTGAACAAGACACCGATTCAATCGTCCTCCTTGATGTCAACCCTCTG" +
+                        "ACCCTCGGAATCGAAACAGTCGGTGGTGTCATGACCAAACTCATCCC" +
+                        "AAGGAACACAGTCATCCCGACGAAAAAATCTCAGATCTTCTCGACAG" +
+                        "CTTCAGACAACCAACACACTGTCACCATTCAGGTTTATGAGGGAGAA" +
+                        "AGGCCAATGACCAAAGATAATCATTTGCTCGGAAAATTCGATTTGAC" +
+                        "AGGAATACCGCCTGCACCAAGGGGAGTGCCACAGATTGAAGTCACTT" +
+                        "TTGAGATCGATGCCAACGGTATCCTTCAGGTGTCCGCCGAGGACAAG" +
+                        "GGAACGGGCAACAGAGAGAAAATAGTCATCACAAACGACCAGAACAG" +
+                        "GTTGACTCCAGACGACATCGATAGGATGATCAAGGACGCCGAGAAGT" +
+                        "TCGCTGATGACGACAAGAAGCTCAAGGAGCGCGTCGAGGCCAGGAAC" +
+                        "GAACTGGAGTCGTACGCCTATTCTCTCAAGAACCAGCTCGCCGACAA" +
+                        "GGACAAGTTCGGATCGAAGGTGACGGATTCTGACAAGGCCAAGATGG" +
+                        "AAAAAGCCATCGAAGAGAAAATCAAGTGGCTTGACGAGAACCAAGAC" +
+                        "GCCGACAGTGAAGCCTTCAAGAAGCAAAAGAAAGAACTCGAAGATGT" +
+                        "CGTACAGCCCATCATCTCAAAATTATACCAAGGAGGTGCTCCGCCGC" +
+                        "CACCTGGAGCCGGTCCTCAATCGGAGGACGATCTTAAAGATGAGTTA" +
+                        "TAAGACTGCAAAACCTTTGTGTAAATCTGTGGAACATTTCTTTGACT" +
+                        "GGTGATACTTAATTTTTAAGTCAGTATTTATATATTTAAAAACAAAA" +
+                        "AACCTATACATCTGAGAAGGAAATTTGTTCCTTTTTTTCAATTTAAA" +
+                        "ATTTGAGTTTTTTCTTGTTTCATAAAATGTTCATTCCGCAGTTTATA" +
+                        "AAGTTAATTTAAAAAACAAAAACAAAAATAAAAGACTTTGTTAACTA" +
+                        "AGAAATTTATAATTTATTTGTTACTTTTTTATTTAATAATTTTTTTA" +
+                        "GTGAATTGGGAATTGATGAATTACATTCAGCATTGAAAATTTATTGG" +
+                        "TACCGTGTATTATAATTAATGTTGTCTGTAATTTATATAATTTCGTT" +
+                        "TCATTAGGTTTTTGTTTGTCAGTTGGGCTCAATCCCAAAATTTGAGA" +
+                        "ACATTCTGAAGGTGTGATAATAAAAGTTTCTTTATTTAAA";
+
+    var ex_peptide = ">CLEC010822-PA:polypeptide ,Heat shock protein 70-2\n" +
+                     "MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQ" +
+                     "GNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQD" +
+                     "DIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKK" +
+                     "VTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGE" +
+                     "KNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLY" +
+                     "KKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLT" +
+                     "RAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVK" +
+                     "EFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETV" +
+                     "GGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKF" +
+                     "DLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTP" +
+                     "DDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTD" +
+                     "SDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPP" +
+                     "PPGAGPQSEDDLKDEL*\n" +
+                     ">OFAS004830-PA:polypeptide ,Heat shock protein 70-2\n" +
+                     "MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTET" +
+                     "DRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGK" +
+                     "PMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDS" +
+                     "QRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFD" +
+                     "VSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRA" +
+                     "LRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRG" +
+                     "TLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINP" +
+                     "DEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNT" +
+                     "TIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGV" +
+                     "PQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAER" +
+                     "YKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNET" +
+                     "IMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERG" +
+                     "PVIEEAD\n" +
+                     ">OFAS004738-PA:polypeptide ,Heat shock protein 70-1\n" +
+                     "MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAK" +
+                     "NQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKG" +
+                     "ETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAG" +
+                     "AIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSL" +
+                     "KGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHL" +
+                     "AEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFY" +
+                     "TKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQ" +
+                     "NLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLS" +
+                     "LGIETAGGVMTKIIERNTRI";
+
+    $('.load-nucleotide').click(function() {
         $('#query-textarea').val(ex_nucleotide);
         $('#query-textarea').keyup();
     });
-       $('.load-peptide').click(function() {
+
+    $('.load-peptide').click(function() {
         $('#query-textarea').val(ex_peptide);
         $('#query-textarea').keyup();
     });
-    
+
     // load file into textarea
     $('.query-file').change(function(evt) {
         if (window.File && window.FileReader) {
-            var f = evt.target.files[0]; 
+            var f = evt.target.files[0];
             console.log(f.type);
             if (f && (f.type.match('text.*') || f.type == '')) {
                 var r = new FileReader();
-                r.onload = function(e) { 
+                r.onload = function(e) {
                     var contents = e.target.result;
                     $('#query-textarea').val(contents);
-                    $('#query-textarea').keyup();  
+                    $('#query-textarea').keyup();
                 }
                 r.readAsText(f);
             }
@@ -379,23 +471,22 @@ $(function() { // document ready
 
     function add_blast_options(blast_program) {
         var html_content='';
-        
+
         $('#fieldset-options-blast legend:first').html(blast_program+' Options');   //Show the option title
         $('#fieldset-options-blast label.error').remove();
         $('.parms').hide().addClass('unselected_parms');
         $('.' + blast_program.toLowerCase() + '-parms').show();
         $('.' + blast_program.toLowerCase() + '-parms').removeClass('unselected_parms');
-        
+
         $('.chk_low_complexity').change();
         $('.chk_soft_masking').change();
-                
+
         }
-        
+
         // Validate MainBlastForm form on keyup and submit
         $("#MainBlastForm").validate({
             rules: {
                 'query-sequence': {
-                    //'textarea_valid':'', 
                     required: true
                 },
                 'organism-checkbox[]': {
@@ -488,11 +579,11 @@ $(function() { // document ready
                 }
         }
     });
-    
+
     $('input.program:radio').click(function() {
         add_blast_options($('input.program:checked').val().toUpperCase());
     });
-    
+
     $('.btn_reset').click(function() {
         $('#query-textarea').val('');
         $('#query-textarea').keyup();
@@ -501,11 +592,11 @@ $(function() { // document ready
         $('.program').prop('disabled', false).removeClass('disabled-radio');
         add_blast_options('BLASTN');
         //$(".query-file").replaceWith('<input type="file" name="query-file" class="query-file">');
-        
+
         $('label.error').remove();
         $('#MainBlastForm')[0].reset();
     });
-    
+
     $('.chk_low_complexity').change(function() {
         if ($('#'+$('input.program:checked').val()+'_chk_low_complexity').is(':checked')) {
             $('#low_complexity_hidden').val('yes');
@@ -513,7 +604,7 @@ $(function() { // document ready
             $('#low_complexity_hidden').val('no');
         }
     });
-    
+
     $('.chk_soft_masking').change(function() {
         if ($('#'+$('input.program:checked').val()+'_chk_soft_masking').is(':checked')) {
             $('#soft_masking_hidden').val('true');
@@ -521,7 +612,7 @@ $(function() { // document ready
             $('#soft_masking_hidden').val('false');
         }
     });
-    
+
     add_blast_options('BLASTN'); //show initially
 
     $('#queries-tab').click(function() {
@@ -540,7 +631,7 @@ $(function() { // document ready
                     { "data": "enqueue_date" },
                     { "data": "result_status" },
                     { "data": "task_id" },
-                    
+
                 ],
                 "aoColumnDefs": [{
                     "aTargets": [2], // Column to target
@@ -559,13 +650,13 @@ $(function() { // document ready
             });
         }
     });
-        
+
 });
 
 function On_Submit(){
     if($("#MainBlastForm").valid()) {
         $('.unselected_parms').remove();
-        $('#click_submit_hidden').val('true');	//Use for a back button is pressed. See line 52. 
+        $('#click_submit_hidden').val('true');	//Use for a back button is pressed. See line 52.
         $('#MainBlastForm').submit();
     }
 }
