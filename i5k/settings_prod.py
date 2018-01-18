@@ -1,5 +1,4 @@
-DEBUG = True
-#TEMPLATE_DEBUG = DEBUG
+DEBUG = False
 
 USE_CACHE = True
 
@@ -10,27 +9,16 @@ ALLOWED_HOSTS = (
     '.example.com',
 )
 
-MEDIA_URL = '/webapp/media/'
-STATIC_URL = '/webapp/static/'
-LOGIN_URL = '/webapp/login'
-LOGIN_REDIRECT_URL = '/webapp/home'
-
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': '',
-    'USER': '',
-    'PASSWORD': '',
-    'HOST': '127.0.0.1',
-    'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': '',
+        'USER': '',
+        'PASSWORD': '',
+        'HOST': '127.0.0.1',
+        'PORT': '5432',
     }
 }
-
-# social login settings
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = 'YOURS_KEY'
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = 'YOURS_SECRET'
-SOCIAL_AUTH_FACEBOOK_KEY = 'YOURS_KEY'
-SOCIAL_AUTH_FACEBOOK_SECRET = 'YOURS_SECRET'
 
 # Email backend
 EMAIL_HOST = 'localhost'
@@ -38,5 +26,3 @@ EMAIL_PORT = '1025'
 EMAIL_HOST_USER = ''
 EMAIL_HOST_PASSWORD = ''
 DEFAULT_FROM_EMAIL = 'name@yourhost.com'
-
-LOGIN_ENABLED = False

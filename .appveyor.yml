@@ -70,10 +70,10 @@ install:
 build: off
 
 before_test:
-  - createdb django
-  - psql -c "create user django with password 'django1234';" -U postgres
-  - psql -c "grant all on database django to django;" -U postgres
-  - psql -c "ALTER USER django CREATEDB;" -U postgres
+  - createdb "django-bioinfo"
+  - psql -c "create user \"django-bioinfo\" with password 'django1234';" -U postgres
+  - psql -c "grant all on database \"django-bioinfo\" to \"django-bioinfo\";" -U postgres
+  - psql -c "ALTER USER \"django-bioinfo\" CREATEDB;" -U postgres
   - python setup.py
   - ps: $celeryProcess = Start-Process "celery" "-A i5k worker --loglevel=info --concurrency=3" -PassThru
   - ps: $celeryBeatProcess = Start-Process "celery" "beat -A i5k --loglevel=info" -PassThru

@@ -40,10 +40,10 @@ install:
   - export PATH=$PATH:$(pwd):/usr/local/sbin
 
 before_script:
-  - psql -c 'create database django;' -U postgres
-  - psql -c 'create user django;' -U postgres
-  - psql -c 'grant all on database django to django;' -U postgres
-  - psql -c 'ALTER USER django CREATEDB;' -U postgres
+  - psql -c 'create database "django-bioinfo";' -U postgres
+  - psql -c 'create user "django-bioinfo";' -U postgres
+  - psql -c 'grant all on database "django-bioinfo" to "django-bioinfo";' -U postgres
+  - psql -c 'ALTER USER "django-bioinfo" CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
   - sudo mkdir /var/log/django
   - sudo touch /var/log/django/django.log

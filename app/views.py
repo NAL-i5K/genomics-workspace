@@ -348,37 +348,37 @@ def testView(request, uidb64, token, template_name, set_password_form, post_rese
             user = None
 
         try:
-	    new_password = request.POST['new_password1']
-	    user_info = UserMapping.objects.get(django_user=user)
-	    userId = user_info.apollo_user_id
+        new_password = request.POST['new_password1']
+        user_info = UserMapping.objects.get(django_user=user)
+        userId = user_info.apollo_user_id
 
-	    opener = _get_url_open()
-	    response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
-					   json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
-	    result = json.loads(response.read())
+        opener = _get_url_open()
+        response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
+                       json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
+        result = json.loads(response.read())
 
-	    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-	    response = opener.open(req, json.dumps({"userId" : userId}))
-	    users = json.loads(response.read())
+        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
+        response = opener.open(req, json.dumps({"userId" : userId}))
+        users = json.loads(response.read())
 
-	    firstName = users[0]['firstName']
-	    lastName  = users[0]['lastName']
-	    username  = users[0]['username']
-	    role      = users[0]['role']
+        firstName = users[0]['firstName']
+        lastName  = users[0]['lastName']
+        username  = users[0]['username']
+        role      = users[0]['role']
 
-	    opener.close()
+        opener.close()
 
-	    data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
-	    data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
+        data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
+        data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
 
-	    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
-	    opener = _get_url_open()
-	    response = opener.open(req, json.dumps(data))
-	    result = json.loads(response.read())
+        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
+        opener = _get_url_open()
+        response = opener.open(req, json.dumps(data))
+        result = json.loads(response.read())
 
-	    if(len(result)==0):
+        if(len(result)==0):
                 user_info.apollo_user_pwd = encodeAES(new_password)
-		user_info.save()
+        user_info.save()
 
             opener.close()
         except:
@@ -386,5 +386,3 @@ def testView(request, uidb64, token, template_name, set_password_form, post_rese
             pass
 
     return httpresponse
-
-

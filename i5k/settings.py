@@ -7,27 +7,23 @@ import socket
 # to fix axe issue on Windows, see: https://github.com/jazzband/django-axes/issues/204
 if platform == 'win32':
     from win_inet_pton import inet_pton
+from kombu import Exchange, Queue  # For celery
 
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
 DEBUG = True
-# deprecated in Django 1.8
-#TEMPLATE_DEBUG = DEBUG
+
 TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
-# template settings for Django 1.8
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # insert your TEMPLATE_DIRS here
             path.join(PROJECT_ROOT, 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
-                # Insert your TEMPLATE_CONTEXT_PROCESSORS here or use this
-                # list if you haven't customized them:
                 'django.contrib.auth.context_processors.auth',
                 'django.template.context_processors.debug',
                 'django.template.context_processors.i18n',
@@ -57,19 +53,14 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'django',
-    'USER': 'django',
-    'PASSWORD': 'django1234',
-    'HOST': 'localhost',
-    'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django-bioinfo',
+        'USER': 'django-bioinfo',
+        'PASSWORD': 'django1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
-
-
-
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/home'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
@@ -135,16 +126,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'n(bd1f1c%e8=_xad02x5qtfn%wg2pi492e$8_erx+d)!tpeoim'
 
-# List of callables that know how to import templates from various sources.
-# deprecated in Django 1.8
-#TEMPLATE_LOADERS = (
-#    'django.template.loaders.filesystem.Loader',
-#    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-#)
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-#SESSION_COOKIE_AGE = 120 * 60
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -157,27 +139,9 @@ MIDDLEWARE_CLASSES = (
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
 
-
-
-
-
-
-
-
-
-
 ROOT_URLCONF = 'i5k.urls'
 
-# Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'i5k.wsgi.application'
-
-# deprecated in Django 1.8
-#TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-#    path.join(PROJECT_ROOT, 'templates'),
-#)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -193,34 +157,16 @@ INSTALLED_APPS = (
     'pipeline',
     'app',
     'blast',
-    # 'userprofile',
-    'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
-    #'grappelli',
+    'suit',
     'filebrowser',
-    # Uncomment the next line to enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     'social.apps.django_app.default',
-    'captcha',
-    'dashboard',
     'hmmer',
     'clustal',
 #    'webapollo_sso',
 #    'drupal_sso',
 )
-
-
-
-
-
-# deprecated in Django 1.8
-#from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-#TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-#    'django.core.context_processors.request',
-#    'social.apps.django_app.context_processors.backends',
-#    'social.apps.django_app.context_processors.login_redirect',
-#)
 
 FILEBROWSER_SUIT_TEMPLATE = True
 FILEBROWSER_DIRECTORY = ''
@@ -238,9 +184,7 @@ FILEBROWSER_EXTENSIONS = {
 }
 FILEBROWSER_SELECT_FORMATS = {
     'file': ['Folder', 'Image', 'Document', 'Video', 'Audio', 'FASTA', 'FASTQ', 'SAM', 'WIG', 'JSON', 'GFF'],
-    #'image': ['Image'],
     'document': ['Document'],
-    #'media': ['Video','Audio'],
     'FASTA': ['FASTA'],
     'FASTQ': ['FASTQ'],
     'SAM': ['SAM'],
@@ -257,24 +201,10 @@ FILEBROWSER_VERSIONS = {
     'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''},
 }
 
-# Django Suit configuration example
+# Django Suit configuration
 SUIT_CONFIG = {
-    # header
     'ADMIN_NAME': 'i5k Admin',
-    # 'HEADER_DATE_FORMAT': 'l, j. F Y',
-    # 'HEADER_TIME_FORMAT': 'H:i',
-
-    # forms
-    # 'SHOW_REQUIRED_ASTERISK': True,  # Default True
-    # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
-
-    # menu
-    # 'SEARCH_URL': '/admin/auth/user/',
-    #'MENU_ICONS': {
-    #    'blast': 'icon-leaf',
-    #    'auth': 'icon-lock',
-    #},
-    'MENU_OPEN_FIRST_CHILD': False, # Default True
+    'MENU_OPEN_FIRST_CHILD': False,
     'MENU_EXCLUDE': (),
     'MENU': (
         {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
@@ -292,22 +222,6 @@ SUIT_CONFIG = {
         {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
             {'model': 'clustalqueryrecord'},
         )},
-        {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
-            {'model': 'usersocialauth'},
-            {'model': 'nonce'},
-            {'model': 'association'},
-        )},
-        {'app': 'webapollo', 'label': 'Web Apollo', 'icon':'icon-leaf', 'models': (
-            {'model': 'species', 'label': 'Species'},
-            {'label': 'Management', 'url': '/webapp/webapollo/admin/manage'},
-            {'model': 'speciespassword', 'label': '[Read Only] Passwords'},
-            {'model': 'registration', 'label': '[Read Only] Registrations'},
-        )},
-        {'app': 'data', 'label': 'Data', 'icon':'icon-leaf', 'models': (
-            {'model': 'file'},
-            {'model': 'item'},
-            {'model': 'accession'},
-        )},
         # auth and axes
         {'label': 'Auth', 'icon':'icon-lock', 'models': (
             {'model': 'auth.user'},
@@ -316,11 +230,7 @@ SUIT_CONFIG = {
             {'model': 'axes.accesslog'},
         )},
         {'label': 'File Browser', 'icon':'icon-hdd', 'url': 'fb_browse'},
-
     ),
-
-    # misc
-    # 'LIST_PER_PAGE': 15
 }
 
 # A sample logging configuration. The only tangible logging
@@ -346,7 +256,7 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         },
-       'require_debug_true': {
+        'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
     },
@@ -397,23 +307,7 @@ HMMER_QUERY_MAX = 10
 # Query maximum size (k bytes)
 BLAST_QUERY_SIZE_MAX = 1000
 
-# Apollo SSO
-ROBOT_ID = 'R2D2'
-ROBOT_PWD = 'demo'
-
-#APOLLO_URL = 'https://apollo-stage.nal.usda.gov/apollo'
-APOLLO_URL = 'http://192.168.0.110:8085/apollo'
-I5K_URL = 'http://192.168.0.110:8000'
-
-#AES key must be either 16, 24, or 32 bytes long
-SSO_CIPHER = '1234567890123456'
-
-DRUPAL_URL = 'https://gmod-dev.nal.usda.gov'
-DRUPAL_COOKIE_DOMAIN=".nal.usda.gov"
-APOLLO_COOKIE_DOMAIN=".nal.usda.gov"
-
 # Celery Settings
-from kombu import Exchange, Queue
 CELERY_DEFAULT_QUEUE = 'i5k'
 CELERY_DEFAULT_EXCHANGE = 'i5k'
 CELERY_DEFAULT_EXCHANGE_TYPE = 'direct'
@@ -425,14 +319,10 @@ BROKER_URL = 'amqp://'
 CELERY_RESULT_BACKEND = 'amqp://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT=['json']
+CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_DISABLE_RATE_LIMITS = True
-#CELERY_ENABLE_UTC = True
-
-# Use virtual environment or not
-USE_VIRTUALENV = False
-VIRTUALENV_ROOT = 'virtualenv/py2.7'
+# CELERY_ENABLE_UTC = True
 
 USE_CACHE = False
 # memcached
@@ -454,28 +344,10 @@ AXES_LOCKOUT_TEMPLATE = 'app/login_lockout.html'
 AXES_LOCKOUT_URL = None
 AXES_VERBOSE = True
 
-# rest_framework
-REST_FRAMEWORK = {
-    # Use hyperlinked styles by default.
-    # Only used if the `serializer_class` attribute is not set on a view.
-    #'DEFAULT_MODEL_SERIALIZER_CLASS':
-    #    'rest_framework.serializers.HyperlinkedModelSerializer',
-
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
-    'DEFAULT_PERMISSION_CLASSES': [
-        'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
-    #'PAGINATE_BY': 100,
-    #'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
-    'PAGE_SIZE': 10,
-}
-
 # django-pipeline
 if not DEBUG:
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 # django-pipeline 1.6
-
 PIPELINE = {
     'STYLESHEETS':{
         'app-layout': {
@@ -587,43 +459,16 @@ PIPELINE = {
         },
     },
 }
+
 if not DEBUG:
     PIPELINE['PIPELINE_ENABLED'] = True
-PIPELINE['CSSMIN_BINARY'] = 'cssmin'
-PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
-PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
+    PIPELINE['CSSMIN_BINARY'] = 'cssmin'
+    PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
+    PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
 
-
-# social login settings
 AUTHENTICATION_BACKENDS = (
-    'social.backends.google.GoogleOAuth2',
-    'social.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
-)
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
-SOCIAL_AUTH_FACEBOOK_KEY = ''
-SOCIAL_AUTH_FACEBOOK_SECRET = ''
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
-
-# captcha
-CAPTCHA_LETTER_ROTATION = None
-CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 
 # Email backend
 EMAIL_HOST = 'localhost'
