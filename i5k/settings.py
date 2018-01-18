@@ -204,8 +204,6 @@ INSTALLED_APPS = (
     'social.apps.django_app.default',
     'captcha',
     'dashboard',
-    'proxy',
-    #'data',
     'hmmer',
     'clustal',
 #    'webapollo_sso',
