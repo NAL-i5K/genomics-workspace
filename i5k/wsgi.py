@@ -15,26 +15,27 @@ framework.
 """
 import os
 from django.conf import settings
+import sys
+import site
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "i5k.settings")
+try:
+    if settings.USE_VIRTUALENV:
+        PROJECT_ROOT = settings.PROJECT_ROOT
+        VIRTUALENV_ROOT = settings.VIRTUALENV_ROOT
 
-if settings.USE_VIRTUALENV:
-    import sys
-    import site
+        # Add the site-packages of the chosen virtualenv to work with
+        site.addsitedir(os.path.join(PROJECT_ROOT, VIRTUALENV_ROOT, 'lib/python2.7/site-packages'))
 
-    PROJECT_ROOT = settings.PROJECT_ROOT
-    VIRTUALENV_ROOT = settings.VIRTUALENV_ROOT
+        # Add the app's directory to the PYTHONPATH
+        sys.path.append(PROJECT_ROOT)
+        sys.path.append(os.path.join(PROJECT_ROOT, 'i5k'))
 
-    # Add the site-packages of the chosen virtualenv to work with
-    site.addsitedir(os.path.join(PROJECT_ROOT, VIRTUALENV_ROOT, 'lib/python2.7/site-packages'))
-
-    # Add the app's directory to the PYTHONPATH
-    sys.path.append(PROJECT_ROOT)
-    sys.path.append(os.path.join(PROJECT_ROOT, 'i5k'))
-
-    # Activate your virtual env
-    activate_env=os.path.expanduser(os.path.join(PROJECT_ROOT, VIRTUALENV_ROOT, 'bin/activate_this.py'))
-    execfile(activate_env, dict(__file__=activate_env))
+        # Activate your virtual env
+        activate_env = os.path.expanduser(os.path.join(PROJECT_ROOT, VIRTUALENV_ROOT, 'bin/activate_this.py'))
+        execfile(activate_env, dict(__file__=activate_env))
+except AttributeError:
+    pass
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
