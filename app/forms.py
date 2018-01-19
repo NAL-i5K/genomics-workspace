@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.auth.forms import PasswordChangeForm, UserCreationForm, AuthenticationForm, PasswordResetForm, SetPasswordForm
 from django.contrib.auth.models import User
 from django.utils.translation import ugettext, ugettext_lazy as _
-from captcha.fields import CaptchaField
 from .models import Profile
 
 class BootstrapAuthenticationForm(AuthenticationForm):
@@ -126,7 +125,6 @@ class RegistrationForm(UserCreationForm):
         help_text=_("Required. 100 characters or fewer. Letters, digits and /./-/_ only."),
         error_messages={'invalid': _("This value may contain only letters, numbers and /./-/_ characters.")}
     )
-    captcha = CaptchaField()
 
     def clean_password1(self):
         password1 = self.cleaned_data.get("password1")
