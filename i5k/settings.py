@@ -32,8 +32,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.is_login_enabled',
-                'app.context_processors.is_analytics_enabled',
             ],
         },
     },
