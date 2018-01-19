@@ -19,10 +19,7 @@ from django.apps import apps
 from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
-from social.apps.django_app.default.models import UserSocialAuth
 from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN
-from drupal_sso.models import DrupalUserMapping
-from webapollo_sso.models import PermsRequest, UserMapping
 from django.contrib.auth.models import User
 from Crypto.Cipher import AES
 import base64
@@ -62,8 +59,6 @@ def about(request):
             #'year': datetime.now().year,
         })
 
-def checkOAuth(_user):
-    return UserSocialAuth.objects.filter(user=_user).exists()
 
 def ajax_login_required(view_func):
     @wraps(view_func)
@@ -72,78 +67,6 @@ def ajax_login_required(view_func):
             return view_func(request, *args, **kwargs)
         return HttpResponse(json.dumps({ 'invalid_request': True }), content_type='application/json')
     return wrapper
-
-def register(request):
-    if request.method == 'POST':
-        form = RegistrationForm(request.POST)
-
-        def _get_url_request(url):
-            req = urllib2.Request(url)
-            req.add_header('Content-Type', 'application/json')
-            return req
-
-        def _get_url_open():
-            cookies = cookielib.LWPCookieJar()
-            handlers = [
-                urllib2.HTTPHandler(),
-                urllib2.HTTPSHandler(),
-                urllib2.HTTPCookieProcessor(cookies)
-                ]
-            opener = urllib2.build_opener(*handlers)
-            return opener
-
-        if form.is_valid():
-            new_user = form.save();
-            new_user = authenticate(username=form.cleaned_data['username'], password=form.cleaned_data['password1'])
-
-            try:
-                if new_user is not None:
-                    data = {"firstName" : form.cleaned_data['first_name'], "lastName" : form.cleaned_data['last_name'],
-                            "email": form.cleaned_data['username'], "newPassword" : form.cleaned_data['password1'], "role" : "USER"}
-                    data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-                    req = _get_url_request(i5k.settings.APOLLO_URL+'/user/createUser')
-                    opener = _get_url_open()
-                    response = opener.open(req, json.dumps(data))
-                    result = json.loads(response.read())
-
-                    opener.close()
-
-
-                    if(len(result) == 0):
-                        data = {"userId": form.cleaned_data['username']}
-                        data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
-
-                        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-                        opener = _get_url_open()
-                        response = opener.open(req, json.dumps(data))
-                        users = json.loads(response.read())
-
-                        for user in users:
-                            if(user['username'] == form.cleaned_data['username']):
-                                userId = user['userId']
-                                break
-
-                        user_info = UserMapping.objects.create(apollo_user_id=userId,
-                                                               apollo_user_name=form.cleaned_data['username'],
-                                                               apollo_user_pwd=encodeAES(form.cleaned_data['password1']),
-                                                               django_user=User.objects.get(username=form.cleaned_data['username']))
-                        user_info.save()
-
-                        opener.close()
-
-            except:
-                print "apollo is down"
-                pass
-
-            login(request, new_user)
-            return HttpResponseRedirect(reverse('dashboard'))
-    else:
-        form = RegistrationForm()
-    return render(request, "app/register.html", {
-        'form': form,
-        'title': 'Registration',
-    })
 
 @sensitive_post_parameters()
 @csrf_protect
@@ -237,31 +160,6 @@ def password_change(request,
 
     return TemplateResponse(request, template_name, context)
 
-
-@login_required
-def set_institution(request):
-    if request.method == 'POST':
-        form = SetInstitutionForm(request.POST)
-        if form.is_valid():
-            p = Profile()
-            p.user = request.user
-            p.institution = form.cleaned_data['institution']
-            p.save()
-    else:
-        form = SetInstitutionForm()
-
-    try:
-        p = Profile.objects.get(user=request.user)
-        return HttpResponseRedirect(reverse('dashboard'))
-    except ObjectDoesNotExist:
-        return render(
-            request,
-            'app/set_institution.html', {
-            'year': datetime.now().year,
-            'title': 'Specify your institution',
-            'form': form,
-        })
-
 @login_required
 def info_change(request):
     isOAuth = checkOAuth(request.user)
@@ -348,37 +246,37 @@ def testView(request, uidb64, token, template_name, set_password_form, post_rese
             user = None
 
         try:
-        new_password = request.POST['new_password1']
-        user_info = UserMapping.objects.get(django_user=user)
-        userId = user_info.apollo_user_id
+            new_password = request.POST['new_password1']
+            user_info = UserMapping.objects.get(django_user=user)
+            userId = user_info.apollo_user_id
 
-        opener = _get_url_open()
-        response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
-                       json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
-        result = json.loads(response.read())
+            opener = _get_url_open()
+            response = opener.open(_get_url_request(i5k.settings.APOLLO_URL+'/Login?operation=login'),
+                        json.dumps({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD}))
+            result = json.loads(response.read())
 
-        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
-        response = opener.open(req, json.dumps({"userId" : userId}))
-        users = json.loads(response.read())
+            req = _get_url_request(i5k.settings.APOLLO_URL+'/user/loadUsers')
+            response = opener.open(req, json.dumps({"userId" : userId}))
+            users = json.loads(response.read())
 
-        firstName = users[0]['firstName']
-        lastName  = users[0]['lastName']
-        username  = users[0]['username']
-        role      = users[0]['role']
+            firstName = users[0]['firstName']
+            lastName  = users[0]['lastName']
+            username  = users[0]['username']
+            role      = users[0]['role']
 
-        opener.close()
+            opener.close()
 
-        data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
-        data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
+            data = {"userId" : userId, "newPassword": new_password, "role": role, "firstName": firstName, 'lastName': lastName, 'email': username}
+            data.update({'username':i5k.settings.ROBOT_ID, 'password':i5k.settings.ROBOT_PWD})
 
-        req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
-        opener = _get_url_open()
-        response = opener.open(req, json.dumps(data))
-        result = json.loads(response.read())
+            req = _get_url_request(i5k.settings.APOLLO_URL+'/user/updateUser')
+            opener = _get_url_open()
+            response = opener.open(req, json.dumps(data))
+            result = json.loads(response.read())
 
-        if(len(result)==0):
+            if(len(result)==0):
                 user_info.apollo_user_pwd = encodeAES(new_password)
-        user_info.save()
+            user_info.save()
 
             opener.close()
         except:

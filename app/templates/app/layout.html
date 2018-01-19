@@ -11,11 +11,8 @@
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Open+Sans:400,700'>
     <link rel='stylesheet' type='text/css' href='https://fonts.googleapis.com/css?family=Inconsolata:400,700'>
     <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Tangerine">
-    {% block head-scripts %}{% endblock %}
-    {% if isAnalyticsEnabled %}
-    <script type="text/javascript" src="{% static 'app/scripts/analytics.js' %}" async></script>
-    <script type="text/javascript" id="_fed_an_ua_tag" src="https://nal.usda.gov/sites/all/themes/Universal-Federated-Analytics.1.0.js?agency=USDA&subagency=ARS-NAL"></script>
-    {% endif%}
+    {% block head-scripts %}
+    {% endblock %}
 </head>
 
 <body class="padtop {% block bodyclass %}{% endblock %}">
@@ -32,22 +29,11 @@
                                 <li><a href="{% url 'blast:create' %}">BLAST</a></li>
                                 <li><a href="{% url 'hmmer:create' %}">HMMER</a></li>
                                 <li><a href="{% url 'clustal:create' %}">CLUSTAL</a></li>
-                                <li><a href="https://i5k.nal.usda.gov/available-genome-browsers">JBrowse/Apollo</a></li>
-                                <!-- <li><a href="{% url 'sso:create' %}">SSO</a> -->
                         </ul>
                     </li>
-                    <!-- <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li> -->
                 </ul>
                {% if request.user.is_superuser %}
                 <ul class="nav navbar-nav">
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Submit Data<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                                <li><a href="{% url 'tripal_assembly_data' %}">Genome Assembly</a></li>
-                                <li><a href="{% url 'tripal_gene_prediction' %}">Mapped Gene Predictions</a></li>
-                                <li><a href="{% url 'tripal_mapped' %}">Other Mapped features</a></li>
-                        </ul>
-                    </li>
                     <li><a href="{% url 'admin:index' %}">Admin</a></li>
                     <!-- <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li> -->
                 </ul>
@@ -57,9 +43,6 @@
                     <li><a href="https://i5k.nal.usda.gov/contact">Contact</a></li>
                     {% block navbar %}{% endblock %}
                 </ul>
-                {% if isLoginEnabled %}
-                {% include 'app/loginpartial.html' %}
-                {% endif %}
             </div>
         </div>
     </nav>

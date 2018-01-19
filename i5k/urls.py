@@ -17,7 +17,6 @@ urlpatterns = [
     url(r'^blast/', include('blast.urls', namespace='blast')),
     url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
     url(r'^clustal/', include('clustal.urls', namespace='clustal')),
-    url(r'^sso/', include('webapollo_sso.urls', namespace='sso')),
 ]
 
 if settings.DEBUG:
