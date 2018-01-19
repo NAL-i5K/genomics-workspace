@@ -485,3 +485,4 @@ if USE_PROD_SETTINGS:
     from settings_prod import *
 
 sys.path.append('%s/misc' % path.dirname(path.abspath(path.dirname(__file__))))
+USE_VIRTUALENV = False
