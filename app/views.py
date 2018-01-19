@@ -19,7 +19,6 @@ from django.apps import apps
 from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
-from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN
 from django.contrib.auth.models import User
 from Crypto.Cipher import AES
 import base64
