@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from clustal import views
-# from .api import *
 
 urlpatterns = [
     # ex: /clustal/

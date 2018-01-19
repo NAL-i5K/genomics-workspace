@@ -328,31 +328,3 @@ def status(request, task_id):
         return HttpResponse(json.dumps(status))
     else:
         return HttpResponse('Invalid Post')
-
-
-# to-do: integrate with existing router of restframework
-from rest_framework.renderers import JSONRenderer
-from .serializers import UserClustalQueryRecordSerializer
-
-
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
-
-def user_tasks(request, user_id):
-    """
-    Return tasks performed by the user.
-    """
-    if request.method == 'GET':
-        records = ClustalQueryRecord.objects.filter(user__id=user_id, result_date__gt=(localtime(now()) + timedelta(days=-7)))
-        serializer = UserClustalQueryRecordSerializer(records, many=True)
-        return JSONResponse(serializer.data)
-
-
-

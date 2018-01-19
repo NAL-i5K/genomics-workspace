@@ -1,6 +1,5 @@
 from django.conf.urls import url
 from hmmer import views
-# from .api import *
 
 urlpatterns = [
     # ex: /blast/
