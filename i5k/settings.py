@@ -474,9 +474,6 @@ try:
 except:
     HOSTNAME = 'localhost'
 
-LOGIN_ENABLED = False
-ANALYTICS_ENABLED = False
-
 # Use settings for production
 USE_PROD_SETTINGS = False
 if USE_PROD_SETTINGS:
