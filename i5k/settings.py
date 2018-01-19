@@ -161,7 +161,6 @@ INSTALLED_APPS = (
     'filebrowser',
     'django.contrib.admin',
     'django.contrib.admindocs',
-    'social.apps.django_app.default',
     'hmmer',
     'clustal',
 #    'webapollo_sso',
