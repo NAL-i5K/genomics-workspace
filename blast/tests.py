@@ -468,7 +468,11 @@ class BlastBinaryTestCase(SimpleTestCase):
 
 def run_blast(program, assertEqual):
     args_list = generate_blast_args(program)
-    run_commands(args_list, assertEqual)
+    try:
+        run_commands(args_list, assertEqual)
+    finally:
+        output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
+        rmtree(output_file_dir)
 
 
 def generate_blast_args(program):
