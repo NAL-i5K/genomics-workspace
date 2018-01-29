@@ -62,6 +62,7 @@ script:
   - coverage run --source= ./manage.py test blast --noinput
   - coverage run --source= ./manage.py test hmmer --noinput
   - coverage run --source= ./manage.py test clustal --noinput
+  - coverage run --source= ./manage.py test filebrowser --noinput
 
 after_success:
   - coveralls
