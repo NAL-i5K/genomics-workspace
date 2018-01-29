@@ -3,10 +3,10 @@
 [![Build Status](https://travis-ci.org/NAL-i5K/genomics-workspace.svg?branch=master)](https://travis-ci.org/NAL-i5K/genomics-workspace/?branch=master)
 [![](https://ci.appveyor.com/api/projects/status/4m6nngj0vrd21st6/branch/master?svg=true)](https://ci.appveyor.com/project/hsiaoyi0504/genomics-workspace/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/NAL-i5K/genomics-workspace/badge.svg?branch=master)](https://coveralls.io/github/NAL-i5K/genomics-workspace?branch=master)
+[![codecov](https://codecov.io/gh/NAL-i5K/genomics-workspace/branch/master/graph/badge.svg)](https://codecov.io/gh/NAL-i5K/genomics-workspace)
 [![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
 
-Live site
-=========
+## Live site
 
 ### BLAST: https://i5k.nal.usda.gov/webapp/blast/
 
@@ -14,8 +14,8 @@ Live site
 
 ### Clustal: https://i5k.nal.usda.gov/webapp/clustal/
 
-Backend
-=======
+## Backend
+
 * Implemented in [Python](https://www.python.org/) with [Django](https://www.djangoproject.com/).
 * Supports the latest [NCBI BLAST+ executables](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download).
 * Task queue with [RabbitMQ](http://www.rabbitmq.com/).
@@ -24,8 +24,8 @@ Backend
 * Retrieve previous results with a unique URL for every task.
 * Supports both Linux and Windows.
 
-Frontend - Results
-=================
+# Frontend - Results
+
 The results page is an interactive data viewer, query and subject coverage graphs on the top are drawn dynamically on the HTML5 canvas for every high scoring pair (HSP), tabular output from BLAST+ is displayed in a sortable and searchable table on the bottom right, pairwise text output is displayed on the bottom left panel.
 * Fullscreen design dynamically scales to any screen size
 * Dynamically draws a unique query coverage graph and a subject coverage graph for every high scoring pair(HSP) on HTML5 canvas.
@@ -38,7 +38,7 @@ The results page is an interactive data viewer, query and subject coverage graph
 * Tested on the latest versions of Chrome, Firefox, IE.
   * On Windows: Chrome (ver. 36.0), Firefox (ver. 31.0), IE (ver. 11)
 
-Screenshots
-===========
+# Screenshots
+
 BLAST Results
 ![BLAST Results](sphinx_doc/img/blast-results-dynamic.gif)

@@ -18,6 +18,8 @@ from filebrowser.base import FileObject
 from hmmer.views import generate_hmmer_args
 from util.get_bin_name import get_bin_name
 
+DEBUG = False
+
 tax_id = 79782
 display_name = 'test'
 short_name = 'test'
@@ -43,17 +45,19 @@ class HmmerAdminTestCase(LiveServerTestCase):
             username=self.username,
             password=self.password,
             email='test@test.com')
-        # headless chrome driver
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     def tearDown(self):
         self.driver.close()
@@ -135,17 +139,19 @@ class LoadSeqExampleTestCase(LiveServerTestCase):
         HmmerDB.objects.create(
             fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
             organism=organism, is_shown=True, title=title)
-        # headless chrome driver
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     def tearDown(self):
         self.driver.close()
@@ -179,17 +185,19 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
         HmmerDB.objects.create(
             fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
             organism=organism, is_shown=True, title=title)
-        # headless chrome driver
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     def tearDown(self):
         self.driver.close()
@@ -224,16 +232,19 @@ class UploadFileTestCase(LiveServerTestCase):
         HmmerDB.objects.create(
             fasta_file=FileObject('/blast/db/clec_peptide_example_BLASTdb.fa'),
             organism=organism, is_shown=True, title=title)
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     def tearDown(self):
         self.driver.close()

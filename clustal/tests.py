@@ -9,20 +9,25 @@ from subprocess import Popen, PIPE
 from shutil import rmtree
 from util.get_bin_name import get_bin_name
 
+DEBUG = False
+
 
 class ClustalLoadExampleTestCase(LiveServerTestCase):
     def setUp(self):
         settings.DEBUG = True
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
@@ -43,16 +48,19 @@ class ClustalLoadExampleTestCase(LiveServerTestCase):
 class ClustalUploadFileTestCase(LiveServerTestCase):
     def setUp(self):
         settings.DEBUG = True
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     def tearDown(self):
         self.driver.close()

@@ -1,3 +1,4 @@
+from __future__ import print_function
 from os import path, makedirs, remove
 from shutil import copyfile, rmtree
 from subprocess import Popen, PIPE
@@ -10,9 +11,11 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
-from blast.models import SequenceType, BlastDb, Sequence
+from blast.models import SequenceType, BlastDb, Sequence, JbrowseSetting
 from app.models import Organism
 from util.get_bin_name import get_bin_name
+
+DEBUG = False
 
 display_name = 'test'
 short_name = 'test'
@@ -50,17 +53,19 @@ class FrontEndTestCase(LiveServerTestCase):
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
         settings.DEBUG = True
-        # headless chrome driver
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     @classmethod
     def tearDownClass(self):
@@ -329,17 +334,19 @@ class BlastAdminTestCase(LiveServerTestCase):
             username=self.username,
             password=self.password,
             email='test@test.com')
-        # headless chrome driver
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     @classmethod
     def tearDownClass(self):
@@ -461,7 +468,11 @@ class BlastBinaryTestCase(SimpleTestCase):
 
 def run_blast(program, assertEqual):
     args_list = generate_blast_args(program)
-    run_commands(args_list, assertEqual)
+    try:
+        run_commands(args_list, assertEqual)
+    finally:
+        output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
+        rmtree(output_file_dir)
 
 
 def generate_blast_args(program):
@@ -616,16 +627,19 @@ class QueryTestCase(LiveServerTestCase):
         returncode, error, output = blastdb.index_fasta()
         blastdb.is_shown = True
         blastdb.save()
-        options = webdriver.ChromeOptions()
-        options.add_argument('headless')
-        options.add_argument('window-size=1280x800')
-        self.driver = webdriver.Chrome(chrome_options=options)
-        # To use with header
-        # self.driver = webdriver.Chrome()
-        # Or use different webdriver
-        # self.driver = webdriver.PhantomJS()
-        # self.driver = webdriver.Firefox()
-        # self.driver.set_window_size(1280, 800)
+        if not DEBUG:
+            # headless chrome driver
+            options = webdriver.ChromeOptions()
+            options.add_argument('headless')
+            options.add_argument('window-size=1280x800')
+            self.driver = webdriver.Chrome(chrome_options=options)
+        else:
+            # use with header
+            self.driver = webdriver.Chrome()
+            # Or use different webdriver
+            # self.driver = webdriver.PhantomJS()
+            # self.driver = webdriver.Firefox()
+            self.driver.set_window_size(1280, 800)
 
     @classmethod
     def tearDownClass(self):
@@ -680,3 +694,22 @@ class UploadFileTestCase(QueryTestCase):
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
+
+class JbrowseLinkOutTestCase(QueryTestCase):
+    @override_settings(CELERY_ALWAYS_EAGER=True)
+    def test(self):
+        organism = Organism.objects.get(short_name=short_name)
+        blast_db = BlastDb.objects.get(organism=organism)
+        JbrowseSetting.objects.create(blast_db=blast_db, url='https://www.google.com/')
+        query = ( '>Sample_Query_CLEC000107-RA\n'
+        'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAKLDQET'
+        'EELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKMERVLGKIRRNV'
+        'TQAEGCRNYQSKNYSKSIQQ*')
+        send_query(query, self.driver, self.live_server_url)
+        wait = WebDriverWait(self.driver, 10)
+        wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
+        # find jbrowse link out html element and get the url
+        href = self.driver.find_element_by_xpath('//*[@id="results-table"]/tbody/tr[1]/td[1]/a').get_attribute("href")
+        if DEBUG:
+            print(href)
+        self.assertEqual('/'.join(href.split('/')[:3]), 'https://www.google.com/'[:-1])
