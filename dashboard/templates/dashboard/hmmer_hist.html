@@ -1,53 +1,55 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>HMMER History</title>
-    <meta charset="utf-8">
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% load pipeline %}
+{% load jsonify %}
 
-    <!-- META -->
-    <meta name="description" content="">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- END META -->
-
-    <!-- FONTS -->
-    <link href='http://fonts.googleapis.com/css?family=Dosis:400,500,600' rel='stylesheet' type='text/css'>
-    <link href='http://fonts.googleapis.com/css?family=Abel' rel='stylesheet' type='text/css'>
-    <!-- END FONTS -->
-
+{% block head-scripts %}
     <!-- CSS -->
-    <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
 
-    <link rel="stylesheet" type="text/css" href="static/dashboard/css/design.css">
+     <link rel="stylesheet" type="text/css" href="../static/dashboard/css/design.css">
     <!-- END CSS -->
-</head>
-<body>
+{% endblock %}
 
-<header>
-    <!-- NAVBAR -->
-    <nav class="navbar navbar-default navbar-fixed-top" role="navigation">
-    <div class="container-fluid">
-        <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
-                <span class="sr-only">Toggle navigation</span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
+{% block scripts %}
 
-            <div class="brand">
-                <a class="navbar-brand" href="/"><span>USDA LOGO</span></a>
-                <a class="toogle pull-right"><i class="fa fa-chevron-left"></i></a>
-            </div>
-        </div>
 
-        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+    <!-- === JAVASCRIPT MANDATORY CODE === -->
+    <script>
 
-        </div>
-    </div>
-    </nav>
-    <!-- END NAVBAR -->
-</header>
+	    /* === SIDEBAR === */
+	    $('.toogle').on('click', function() {
+		$('.body').toggleClass('slide');
+		$('.sidebar').toggleClass('show');
+		$('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
+	    });
+	    /* === END SIDEBAR === */
+	    /* === ACCORDION === */
+	    $( '#accordion' ).on('click', '.single-item', function(){
+		localStorage.removeItem('collapseID');
+		localStorage.removeItem('activeLink');
+	    });
+
+	    $( '#accordion' ).on('click', '.list-group-item', function(){
+		localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
+		localStorage.setItem('activeLink', this);
+	    });
+	    if ( localStorage.collapseID ) {
+		$( '.panel-collapse' ).removeClass('in');
+		$( '#' + localStorage.collapseID ).addClass('in');
+	    } else {
+		$( '.panel-collapse' ).removeClass('in');
+	    }
+
+	    if ( localStorage.activeLink ) {
+		$( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
+	    }
+	    /* === END ACCORDION === */
+	</script>
+	<!-- === END JAVASCRIPT MANDATORY CODE === -->
+{% endblock %}
+
+
+{% block content %}
 
 <div class="body slide">
     <!-- SIDEBAR -->
@@ -86,8 +88,8 @@
                         <div>
                             <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
                             <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
-                            <a href="{% url 'dashboard_clustal' %}" class="list-group-item">CLUSTAL</a>
-                            <!-- <a href="{# url 'apollo_hist' #}" class="list-group-item">APOLLO</a>-->
+                            <a href="{% url 'dashboard_clustal' %} " class="list-group-item">CLUSTAL</a>
+                            <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
                         </div>
                         <!-- anchors Item #1  -->
                     </div>
@@ -98,13 +100,10 @@
         </div>
     </aside>
     <!-- END SIDEBAR -->
-
+</div>
 
     <!-- MAIN CONTENT  -->
-    <div class="container-fluid left-border">
-    <div class="row">
-
-    <div class="container">
+    <div class="container_dash">
         <div class="panel-group" id="accordion">
             {% for search in search_list %}
                 <div class="panel panel-default">
@@ -132,7 +131,7 @@
                             </div>
                             <div style="display: flex; flex-direction: column;" >
                                 <input type="hidden" name="search_id" value="{{ search.search_tag }}">
-                                <input type="hidden" name="app" value="hmmer">
+                                <input type="hidden" name="app" value="blast">
                                 <input type="submit" name="searchagain" value="Search Again">
                                 <p><br></p>
                                 <input type="submit" name="editsearch" value="Edit and Search">
@@ -140,54 +139,11 @@
                             </form>
                         </div>
                     </div>
+
                 </div>
             {% endfor %}
         </div>
     </div>
-
-    </div>
-    </div>
     <!-- MAIN CONTENT  -->
-</div>
 
-<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
-<script type="text/javascript" src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
-
-<!-- === JAVASCRIPT MANDATORY CODE === -->
-<script>
-
-    /* === SIDEBAR === */
-    $('.toogle').on('click', function() {
-        $('.body').toggleClass('slide');
-        $('.sidebar').toggleClass('show');
-        $('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
-    });
-    /* === END SIDEBAR === */
-    /* === ACCORDION === */
-    $( '#accordion' ).on('click', '.single-item', function(){
-        localStorage.removeItem('collapseID');
-        localStorage.removeItem('activeLink');
-    });
-
-    $( '#accordion' ).on('click', '.list-group-item', function(){
-        localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
-        localStorage.setItem('activeLink', this);
-    });
-    if ( localStorage.collapseID ) {
-        $( '.panel-collapse' ).removeClass('in');
-        $( '#' + localStorage.collapseID ).addClass('in');
-    } else {
-        $( '.panel-collapse' ).removeClass('in');
-    }
-
-    if ( localStorage.activeLink ) {
-        $( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
-    }
-    /* === END ACCORDION === */
-</script>
-<!-- === END JAVASCRIPT MANDATORY CODE === -->
-
-
-</body>
-</html>
+{% endblock %}
