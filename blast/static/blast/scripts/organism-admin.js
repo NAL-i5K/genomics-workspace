@@ -25,6 +25,7 @@
         }
     });
 
+    //Get NCBI taxonomy id
     $('#id_display_name').change(function () {
         var name = $('#id_display_name').val().toLowerCase().replace(/^\s+|\s+$/g, '');
         $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term=' + name, function (data) {
@@ -72,7 +73,6 @@
         //                titles: data['query']['search'][0]['title']
         //            }
         //        }).done(function (data) {
-        //            t
         //            console.log(data['query']['search']);
         //            if (keys(data['query']['pages']).length > 0) {
         //                $('#id_description').val(data['query']['search'][keys(data['query']['pages'])[0]]['extract']);
