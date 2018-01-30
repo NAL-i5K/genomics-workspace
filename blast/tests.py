@@ -11,7 +11,7 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
 from filebrowser.base import FileObject
-from blast.models import SequenceType, BlastDb, Sequence, JbrowseSetting
+from blast.models import SequenceType, BlastDb, Sequence
 from app.models import Organism
 from util.get_bin_name import get_bin_name
 
@@ -694,22 +694,3 @@ class UploadFileTestCase(QueryTestCase):
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
-
-class JbrowseLinkOutTestCase(QueryTestCase):
-    @override_settings(CELERY_ALWAYS_EAGER=True)
-    def test(self):
-        organism = Organism.objects.get(short_name=short_name)
-        blast_db = BlastDb.objects.get(organism=organism)
-        JbrowseSetting.objects.create(blast_db=blast_db, url='https://www.google.com/')
-        query = ( '>Sample_Query_CLEC000107-RA\n'
-        'MFYFKNLTEKVIYVKKKKNENTIVMYTQNTRVVNNARREGVPITTQQKWGGGQNKQHFPVKNTAKLDQET'
-        'EELKHKTIPLSLGKLIQKERMAKGWSQKEFATKCNEKPQVVNDYEAGRGIPNQAIIGKMERVLGKIRRNV'
-        'TQAEGCRNYQSKNYSKSIQQ*')
-        send_query(query, self.driver, self.live_server_url)
-        wait = WebDriverWait(self.driver, 10)
-        wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))
-        # find jbrowse link out html element and get the url
-        href = self.driver.find_element_by_xpath('//*[@id="results-table"]/tbody/tr[1]/td[1]/a').get_attribute("href")
-        if DEBUG:
-            print(href)
-        self.assertEqual('/'.join(href.split('/')[:3]), 'https://www.google.com/'[:-1])

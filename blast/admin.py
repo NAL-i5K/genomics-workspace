@@ -117,9 +117,3 @@ class SequenceAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 admin.site.register(Sequence, SequenceAdmin)
-
-class JbrowseSettingAdmin(admin.ModelAdmin):
-    list_display = ('blast_db', 'url',)
-    actions_on_top = True
-    actions_on_bottom = True
-admin.site.register(JbrowseSetting, JbrowseSettingAdmin)

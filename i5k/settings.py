@@ -126,8 +126,8 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     # Uncomment the next line for simple clickjacking protection:
@@ -151,11 +151,11 @@ INSTALLED_APPS = (
     'rest_framework_swagger',
     'pipeline',
     'app',
-    'blast',
     'suit',
     'filebrowser',
     'django.contrib.admin',
     'django.contrib.admindocs',
+    'blast',
     'hmmer',
     'clustal',
 )
@@ -204,7 +204,6 @@ SUIT_CONFIG = {
             {'model': 'organism'},
             {'model': 'sequencetype'},
             {'model': 'blastdb'},
-            {'model': 'jbrowsesetting'},
             {'model': 'sequence'},
         )},
         {'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
@@ -456,7 +455,7 @@ if not DEBUG:
     PIPELINE['PIPELINE_ENABLED'] = True
     PIPELINE['CSSMIN_BINARY'] = 'cssmin'
     PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
-    PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
+    PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.jsmin.JSMinCompressors'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
