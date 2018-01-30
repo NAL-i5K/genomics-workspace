@@ -6,7 +6,7 @@
 {% block head-scripts %}
     <!-- CSS -->
 
-     <link rel="stylesheet" type="text/css" href="../static/dashboard/css/design.css">
+     <link rel="stylesheet" type="text/css" href="/static/dashboard/css/design.css">
     <!-- END CSS -->
 {% endblock %}
 
@@ -17,11 +17,6 @@
     <script>
 
 	    /* === SIDEBAR === */
-	    $('.toogle').on('click', function() {
-		$('.body').toggleClass('slide');
-		$('.sidebar').toggleClass('show');
-		$('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
-	    });
 	    /* === END SIDEBAR === */
 	    /* === ACCORDION === */
 	    $( '#accordion' ).on('click', '.single-item', function(){
@@ -88,7 +83,7 @@
                         <div>
                             <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
                             <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
-                            <a href="{% url 'dashboard_clustal' %} " class="list-group-item">CLUSTAL</a>
+                            <a href="{% url 'dashboard_clustal' %}" class="list-group-item">CLUSTAL</a>
                             <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
                         </div>
                         <!-- anchors Item #1  -->
