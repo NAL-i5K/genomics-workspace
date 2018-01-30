@@ -144,8 +144,9 @@ SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'axes.middleware.FailedLoginMiddleware',
     'app.middleware.SocialAuthExceptionMiddleware',
