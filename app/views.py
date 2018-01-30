@@ -6,15 +6,19 @@ from django.http import HttpRequest, HttpResponseRedirect, HttpResponse
 from django.template import RequestContext
 from django.template.response import TemplateResponse
 from django.conf import settings
+from django.utils.http import is_safe_url
 from django.core.exceptions import ObjectDoesNotExist
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
-from django.contrib.auth.decorators import login_required
+from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.csrf import csrf_protect
-from django.contrib.auth import login, authenticate, update_session_auth_hash, get_user_model
+from django.contrib.auth import REDIRECT_FIELD_NAME, login, authenticate, update_session_auth_hash, get_user_model
 from django.contrib.auth.views import logout, password_reset_confirm
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.decorators import login_required
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.sites.shortcuts import get_current_site
 from django.apps import apps
 from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
@@ -31,6 +35,7 @@ from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
 import urllib2
 import cookielib
+
 
 def _tripal_login(tripal_login_url, user):
 
@@ -394,6 +399,48 @@ def info_change(request):
         })
     except:
         return HttpResponseRedirect(reverse('set_institution'))
+
+# customized version of django.contrib.auth.views.login function
+@sensitive_post_parameters()
+@csrf_protect
+@never_cache
+def login_all(request, template_name='registration/login.html',
+              redirect_field_name=REDIRECT_FIELD_NAME,
+              authentication_form=AuthenticationForm,
+              current_app=None, extra_context=None):
+    if request.user.is_authenticated():
+        return redirect('dashboard')
+    redirect_to = request.POST.get(redirect_field_name,
+                                   request.GET.get(redirect_field_name, ''))
+    if request.method == "POST":
+        form = authentication_form(request, data=request.POST)
+        if form.is_valid():
+            # Ensure the user-originating redirection url is safe.
+            if not is_safe_url(url=redirect_to, host=request.get_host()):
+                redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+
+            # Okay, security check complete. Log the user in.
+            login(request, form.get_user())
+
+            return HttpResponseRedirect(redirect_to)
+    else:
+        form = authentication_form(request)
+
+    current_site = get_current_site(request)
+
+    context = {
+        'form': form,
+        redirect_field_name: redirect_to,
+        'site': current_site,
+        'site_name': current_site.name,
+    }
+    if extra_context is not None:
+       context.update(extra_context)
+
+    if current_app is not None:
+       request.current_app = current_app
+    
+    return TemplateResponse(request, template_name, context)
 
 @login_required
 def logout_all(request):

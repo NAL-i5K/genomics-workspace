@@ -2,16 +2,15 @@ from datetime import datetime
 from django.conf import settings
 from django.conf.urls import include, url
 from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
-# Uncomment the next two lines to enable the admin:
 from django.contrib import admin
-from django.contrib.auth.views import login
+from app.views import login_all
 from django.contrib.auth.decorators import user_passes_test
+# from filebrowser.sites import site
+
 
 admin.autodiscover()
 # admin.site.unregister(Site)
-# from filebrowser.sites import site
 
-login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
     url(r'^tripal_assembly_data', 'app.views.tripal_assembly_data', name='tripal_assembly_data'),
@@ -41,10 +40,8 @@ urlpatterns = [
     url(r'^set_institution$', 'app.views.set_institution', name='set_institution'),
     url(r'^info_change$', 'app.views.info_change', name='info_change'),
     url(r'^register$', 'app.views.register', name='register'),
-    url(r'^login/$',
-        #'django.contrib.auth.views.logini',
-        login_forbidden(login),
-        {
+    url(r'^login/$', 'app.views.login_all', 
+        kwargs = {
             'template_name': 'app/login.html',
             'authentication_form': BootstrapAuthenticationForm,
             'extra_context':
