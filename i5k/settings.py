@@ -480,3 +480,8 @@ if USE_PROD_SETTINGS:
 
 sys.path.append('%s/misc' % path.dirname(path.abspath(path.dirname(__file__))))
 USE_VIRTUALENV = False
+
+# Use settings for production
+USE_PROD_SETTINGS = False
+if USE_PROD_SETTINGS:
+    from settings_prod import *
