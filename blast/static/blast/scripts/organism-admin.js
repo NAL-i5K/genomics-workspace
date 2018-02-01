@@ -24,21 +24,16 @@
             $('#id_short_name').data('userModified', false);
         }
     });
-    // Get NCBI taxonomy id
+
+    //Get NCBI taxonomy id
     $('#id_display_name').change(function () {
         var name = $('#id_display_name').val().toLowerCase().replace(/^\s+|\s+$/g, '');
-        $.ajax({
-            url: 'http://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi',
-            data: {
-                db: 'taxonomy',
-                term: name,
-                retmode: 'json',
-            }
-        }).done(function (data) {
-            //console.log(data['esearchresult']['idlist']);
-            $('#id_tax_id').val(data['esearchresult']['idlist'][0])
+        $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term=' + name, function (data) {
+            console.log(data['esearchresult']['idlist']);
+            $('#id_tax_id').val(data['esearchresult']['idlist'][0]);
         });
     });
+
     // Get description from wikipedia
     $('#id_display_name').change(function () {
         var name = $('#id_display_name').val().toLowerCase().replace(/^\s+|\s+$/g, '');
