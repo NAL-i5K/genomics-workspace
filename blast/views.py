@@ -71,7 +71,7 @@ def create(request, iframe=False):
             with open(query_filename, 'wb') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
-        elif 'query-sequence' in request.POST and request.POST['query-sequence']:
+        elif 'query-sequence' in request.POST:
             with open(query_filename, 'wb') as query_f:
                 query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))

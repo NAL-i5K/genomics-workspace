@@ -4,84 +4,60 @@
 {% load jsonify %}
 
 {% block head-scripts %}
-{% if iframe == True %}
-<style>
-nav {
-    display: none;
-}
-body {
-    padding-top: 0px;
-}
-</style>
-{% endif %}
-{% stylesheet 'clustal-css' %}
-<link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
-<link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
-<style>
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
-    box-shadow: inset 0 -2px 0 #317eac;
-    color: #317eac;
-    border: 0px;
-}
-.txt:hover {
-    text-decoration: underline;
-}
-.d_col {padding-bottom: 10px}
-.p_col {padding-bottom: 5px}
-.t_font {font-size:16px}
-//input[type="text"]{size:10}
-#fieldset-basic {float:left;}
-#fieldset-dna-full {float:left;padding-left: 20px; display:none}
-#fieldset-protein-full {float:left;padding-left: 20px;}
-#fieldset-dna-multi {float:left;padding-left: 20px; display:none;}
-#fieldset-protein-multi {float:left;padding-left: 20px;}
-#fieldset-output {float:left;padding-left: 20px;}
-#fieldset-fast {float:left;padding-left: 20px; display:none;}
-#fieldset-omega {float:left;}
-#fieldset-omega-clustering {float:left;padding-left: 20px;}
-#fieldset-omega-iteration {float:left;padding-left: 20px;}
-#fieldset-omega-output {float:left;padding-left: 20px;}
-html {overflow-y: scroll;}
-</style>
+  {% if iframe == True %}
+    <style>
+      nav {
+          display: none;
+      }
+      body {
+          padding-top: 0px;
+      }
+    </style>
+  {% endif %}
+  {% stylesheet 'clustal-css' %}
+  <link rel="stylesheet" type="text/css" media="all" href="{% static 'clustal/css/main.css' %}" />
+  <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
+  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
 {% endblock %}
 
 {% block scripts %}
-{% javascript 'clustal-js' %}
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-<script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
+  <script src="{% static 'clustal/scripts/clustal-multi.js' %}"></script>
+  {% javascript 'clustal-js' %}
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
+  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
 {% endblock %}
 
 {% block content %}
 
 {% if user.is_authenticated %}
 <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
-    <li role="presentation" class="active"><a href="#run" id="run-tab" role="tab" data-toggle="tab" aria-controls="run" aria-expanded="true">Run</a></li>
-    <li role="presentation"><a href="#queries" role="tab" id="queries-tab" data-toggle="tab" aria-controls="queries" aria-expanded="false">Queries</a></li>
+  <li role="presentation" class="active"><a href="#run" id="run-tab" role="tab" data-toggle="tab" aria-controls="run" aria-expanded="true">Run</a></li>
+  <li role="presentation"><a href="#queries" role="tab" id="queries-tab" data-toggle="tab" aria-controls="queries" aria-expanded="false">Queries</a></li>
 </ul>
 {% endif %}
 
 {% if user.is_authenticated %}
-<div id="myTabContent" class="tab-content">    
+<div id="myTabContent" class="tab-content">
     <div class="tripal_details tab-pane fade active in" role="tabpanel" id="run" aria-labelledby="run-tab">
         {% else %}
         <div class="tripal_details">
             {% endif %}
-            <FORM METHOD="POST" id="MainClustalForm" NAME="MainClustalForm" ENCTYPE="multipart/form-data">
+            <form method="POST" id="MainClustalForm" name="MainClustalForm" enctype="multipart/form-data">
                 <input type="hidden" name="program" id="program" value="clustalo">
                 {% csrf_token %}
                 <div class="tripal_organism-info-box tripal-info-box">
                     <ul class="nav nav-tabs">
                         <li class="active"><a data-toggle="tab" href="#clustalo">CLUSTALO</a></li>
                         <li><a data-toggle="tab" href="#clustalw">CLUSTALW</a></li>
-                        <li style="float: right;border:0px;"><a href='{% url 'clustal:manual' %}' target="_blank"><span class="glyphicon glyphicon-book"></span> Tutorial</a></li>
+                        <li id="tutorial"><legend><a href='{% url 'clustal:manual' %}' target="_blank"><span class="glyphicon glyphicon-book"></span> Tutorial</a></legend></li>
                     </ul>
                     <fieldset id="fieldset-query">
                         <legend id="legend-sequence">Query Sequence</legend>
                         <div class="enter-query-text">Enter sequence below in <a target="_blank" href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format: </div>
                         <textarea id="query-textarea" name="query-sequence" rows=12 cols=80% spellcheck="false" autocomplete="off"></textarea>
                         <br>
-                        <div><span class="load-example">Or</span> load it from disk <span style=" cursor: pointer; font-weight:bold; color:blue;" class="load-nucleotide txt"> (load example) </span> </div> 
+                        <div><span class="load-example">Or</span> load it from disk <span class="load-nucleotide txt"> (load example) </span> </div>
                         <input type="file" name="query-file" class="query-file" id="queryfile">
                     </fieldset>
                     <div class="tab-content">
@@ -182,7 +158,7 @@ html {overflow-y: scroll;}
                                     <option value="fa">FASTA</option>
                                     <option value="st">STOCKHOLM</option>
                                 </select>
-                                <div style="padding-top: 10px">Out Order</div>
+                                <div id="out_order">Out Order</div>
                                 <select name="omega_order">
                                     <option value="tree-order">Aligned</option>
                                     <option value="input-order">Input</option>
@@ -252,7 +228,7 @@ html {overflow-y: scroll;}
                             <fieldset id="fieldset-protein-full" class="t_font">
                                 <legend>Full options</legend>
                                 <div class="p_col">
-                                    <div style="padding-bottom: 5px">Protein weight matrix</div>
+                                    <div id="protein_weight_matrix">Protein weight matrix</div>
                                     <div>
                                         <select name="PWMATRIX">
                                             <option value="">Default</option>
@@ -441,7 +417,7 @@ html {overflow-y: scroll;}
                                 <fieldset id="fieldset-output" class="t_font">
                                     <legend>Output</legend>
                                     <div>Format</div>
-                                    <select name="OUTPUT" style="width: 100px">
+                                    <select name="OUTPUT" id="output_format_select">
                                         <option value="clustal">Clustal&nbsp;&nbsp; </option>
                                         <option value="phylip">PHYLIP</option>
                                         <option value="fasta">FASTA</option>
@@ -456,7 +432,7 @@ html {overflow-y: scroll;}
 
                         </div>
                     </div>
-                </FORM>
+                </form>
             </div>
 
             {% if user.is_authenticated %}
