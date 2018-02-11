@@ -45,24 +45,25 @@
 
 
 {% block content %}
-
+</div>
+<div class="container_dash">
 <div class="body slide">
-    <!-- SIDEBAR -->
-    <aside class="sidebar show perfectScrollbar">
-        <div id="solso-sidebar">
+<!-- SIDEBAR -->
+<aside class="sidebar show perfectScrollbar">
+<div id="solso-sidebar">
 
-            <!-- SIDEBAR ACCORDION MENU -->
-            <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
-                <!-- SIMPLE PANEL - no Collapse -->
-                <div class="panel panel-default">
-                    <div class="panel panel-default">
-                        <div class="panel-heading" role="tab" id="heading1">
-                            <h4 class="panel-title">
-                                <a href="{% url 'dashboard' %}" class="single-item">
-                                    <i class="fa fa-dashboard"></i> Dashboard
-                                </a>
-                            </h4>
-                        </div>
+    <!-- SIDEBAR ACCORDION MENU -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<!-- SIMPLE PANEL - no Collapse -->
+	<div class="panel panel-default">
+	    <div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="heading1">
+		    <h4 class="panel-title">
+			<a href="{% url 'dashboard' %}" class="single-item">
+			    <i class="fa fa-dashboard"></i> Dashboard
+			</a>
+		    </h4>
+		</div>
                     </div>
                 </div>
                 <!-- END SIMPLE PANEL - no Collapse -->
@@ -98,7 +99,6 @@
 </div>
 
     <!-- MAIN CONTENT  -->
-    <div class="container_dash">
         <div class="panel-group" id="accordion">
             {% for search in search_list %}
                 <div class="panel panel-default">
@@ -135,7 +135,6 @@
 
                 </div>
             {% endfor %}
-        </div>
     </div>
     <!-- MAIN CONTENT  -->
 
