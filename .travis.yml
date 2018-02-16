@@ -59,10 +59,16 @@ before_script:
 # command to run tests
 script:
   - coverage run --source= ./manage.py test i5k --noinput
-  - coverage run --source= ./manage.py test blast --noinput
+  - coverage run ./manage.py test blast --noinput
   - coverage run --source= ./manage.py test hmmer --noinput
   - coverage run --source= ./manage.py test clustal --noinput
   - coverage run --source= ./manage.py test filebrowser --noinput
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cat i5k/settings.py | sed -r 's/ENABLE_JBROWSE_INTEGRATION = False/ENABLE_JBROWSE_INTEGRATION = True/g;' > i5k/settings2.py; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cat i5k/settings.py | sed -E 's/ENABLE_JBROWSE_INTEGRATION = False/ENABLE_JBROWSE_INTEGRATION = True/g;' > i5k/settings2.py; fi
+  - rm i5k/settings.py
+  - mv i5k/settings2.py i5k/settings.py
+  - coverage run ./manage.py test blast --noinput
+
 
 after_success:
   - coveralls

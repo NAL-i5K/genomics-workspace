@@ -3,6 +3,7 @@ from blast.models import *
 from django.forms import ModelForm
 from suit.widgets import AutosizedTextarea
 from django.contrib import messages
+from django.conf import settings
 
 class BlastQueryRecordAdmin(admin.ModelAdmin):
     list_display = ('task_id', 'enqueue_date', 'dequeue_date', 'result_date', 'result_status', 'user', 'is_shown')
@@ -117,3 +118,22 @@ class SequenceAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 admin.site.register(Sequence, SequenceAdmin)
+
+
+class JbrowseSettingAdmin(admin.ModelAdmin):
+    list_display = ('blast_db', 'url',)
+    actions_on_top = True
+    actions_on_bottom = True
+
+    def get_model_perms(self, request):
+        if settings.ENABLE_JBROWSE_INTEGRATION:
+            return {
+                'add': self.has_add_permission(request),
+                'change': self.has_change_permission(request),
+                'delete': self.has_delete_permission(request),
+            }
+        else:
+            return {}
+
+
+admin.site.register(JbrowseSetting, JbrowseSettingAdmin)

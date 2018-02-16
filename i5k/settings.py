@@ -193,12 +193,37 @@ FILEBROWSER_VERSIONS = {
     'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''},
 }
 
-# Django Suit configuration
-SUIT_CONFIG = {
-    'ADMIN_NAME': 'i5k Admin',
-    'MENU_OPEN_FIRST_CHILD': False,
-    'MENU_EXCLUDE': (),
-    'MENU': (
+
+ENABLE_JBROWSE_INTEGRATION = False
+
+if ENABLE_JBROWSE_INTEGRATION:
+    suit_menu = (
+        {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
+            {'model': 'blastqueryrecord'},
+            {'model': 'organism'},
+            {'model': 'sequencetype'},
+            {'model': 'blastdb'},
+            {'model': 'jbrowsesetting'},  # only exsit when ENABLE_JBROWSE_INTEGRATION == True
+            {'model': 'sequence'},
+        )},
+        {'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
+            {'model': 'hmmerdb'},
+            {'model': 'hmmerqueryrecord'},
+        )},
+        {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
+            {'model': 'clustalqueryrecord'},
+        )},
+        # auth and axes
+        {'label': 'Auth', 'icon':'icon-lock', 'models': (
+            {'model': 'auth.user'},
+            {'model': 'auth.group'},
+            {'model': 'axes.accessattempt'},
+            {'model': 'axes.accesslog'},
+        )},
+        {'label': 'File Browser', 'icon':'icon-hdd', 'url': 'fb_browse'},
+    )
+else:
+    suit_menu = (
         {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
             {'model': 'organism'},
@@ -221,7 +246,14 @@ SUIT_CONFIG = {
             {'model': 'axes.accesslog'},
         )},
         {'label': 'File Browser', 'icon':'icon-hdd', 'url': 'fb_browse'},
-    ),
+    )
+
+# Django Suit configuration
+SUIT_CONFIG = {
+    'ADMIN_NAME': 'i5k Admin',
+    'MENU_OPEN_FIRST_CHILD': False,
+    'MENU_EXCLUDE': (),
+    'MENU': suit_menu,
 }
 
 # A sample logging configuration. The only tangible logging

@@ -4,7 +4,7 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from subprocess import Popen, PIPE
 from datetime import datetime, timedelta
-from .models import BlastQueryRecord, Sequence, BlastDb
+from .models import BlastQueryRecord, Sequence, BlastDb, JbrowseSetting
 from os import path, stat
 from pytz import utc
 from itertools import groupby
@@ -89,7 +89,10 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
             # build lookup tables from db
             sseqid_db = dict(Sequence.objects.select_related('blastdb').filter(id__in=set([hsp['sseqid'] for hsp in hsp_dict_list])).values_list('id', 'blast_db__title'))
             db_organism = dict(BlastDb.objects.select_related('organism').filter(title__in=set(sseqid_db.values())).values_list('title', 'organism__short_name'))
-            db_url = []
+            if settings.ENABLE_JBROWSE_INTEGRATION:
+                db_url = dict(JbrowseSetting.objects.select_related('blastdb').filter(blast_db__title__in=set(sseqid_db.values())).values_list('blast_db__title', 'url'))
+            else:
+                db_url = []
             with open(path.join(basedir, 'info.json'), 'wb') as f:
                 json.dump({'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}, f)
             with open(json_path, 'wb') as f:
