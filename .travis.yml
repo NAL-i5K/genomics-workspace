@@ -73,7 +73,6 @@ script:
   - coverage run --source= ./manage.py test blast.tests.ValidQueryTestCase --noinput
   - coverage run --source= ./manage.py test blast.tests.QueryWithNoHitTestCase --noinput
   - coverage run --source= ./manage.py test blast.tests.UploadFileTestCase --noinput
-  - coverage run --source= ./manage.py test blast.tests.JbrowseLinkOutTestCase --noinput
   - coverage run --source= ./manage.py test hmmer.tests.HmmerAdminTestCase --noinput
   - coverage run --source= ./manage.py test hmmer.tests.LoadSeqExampleTestCase --noinput
   - coverage run --source= ./manage.py test hmmer.tests.LoadAlignExampleTestCase --noinput
@@ -84,6 +83,11 @@ script:
   - coverage run --source= ./manage.py test clustal.tests.ClustalUploadFileTestCase --noinput
   - coverage run --source= ./manage.py test clustal.tests.ClustalBinaryTestCase --noinput
   - coverage run --source= ./manage.py test filebrowser --noinput
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then cat i5k/settings.py | sed -r 's/ENABLE_JBROWSE_INTEGRATION = False/ENABLE_JBROWSE_INTEGRATION = True/g;' > i5k/settings2.py; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then cat i5k/settings.py | sed -E 's/ENABLE_JBROWSE_INTEGRATION = False/ENABLE_JBROWSE_INTEGRATION = True/g;' > i5k/settings2.py; fi
+  - rm i5k/settings.py
+  - mv i5k/settings2.py i5k/settings.py
+  - coverage run --source= ./manage.py test blast.tests.JbrowseLinkOutTestCase --noinput
 
 after_success:
   - coveralls
