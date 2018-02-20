@@ -18,7 +18,6 @@ This is our introduction to this project.
    pre_requisites
    setup_guide
    app_conf
-   webapollo_conf
    about
 
 Indices and tables
