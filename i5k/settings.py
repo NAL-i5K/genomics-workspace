@@ -621,7 +621,7 @@ try:
 except:
     HOSTNAME = 'localhost'
 
-LOGIN_ENABLED = True
+LOGIN_ENABLED = False
 ANALYTICS_ENABLED = False
 
 # Use settings for production
