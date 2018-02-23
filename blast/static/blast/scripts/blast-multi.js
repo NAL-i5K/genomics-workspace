@@ -650,16 +650,14 @@ $(function() { // document ready
             });
         }
     });
-
-});
-
-function On_Submit(){
-    if($("#MainBlastForm").valid()) {
+    $('.blast_submit').click(function() {
+      if($("#MainBlastForm").valid()) {
         $('.unselected_parms').remove();
         $('#click_submit_hidden').val('true');	//Use for a back button is pressed. See line 52.
         $('#MainBlastForm').submit();
     }
-}
+    });
+});
 
 //prevention of cache pages
 $(window).unload(function () { });

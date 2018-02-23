@@ -626,19 +626,18 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
         }
     });
   checktxt();
-});
-
-function On_Submit(){
-  if($("#MainHmmerForm").valid()) {
-    $('#click_submit_hidden').val('true');
-    if($('input[name=program]:checked', '#MainHmmerForm').val() == 'hmmsearch'){
-            $('#MainHmmerForm').submit();
-    }else if($('input[name=program]:checked', '#MainHmmerForm').val() == 'phmmer'){
+  $('#hmmer_submit').click(function() {
+    if($("#MainHmmerForm").valid()) {
       $('#click_submit_hidden').val('true');
-      $('#MainHmmerForm').submit();
-    };
-  }
-}
+      if($('input[name=program]:checked', '#MainHmmerForm').val() == 'hmmsearch'){
+              $('#MainHmmerForm').submit();
+      }else if($('input[name=program]:checked', '#MainHmmerForm').val() == 'phmmer'){
+        $('#click_submit_hidden').val('true');
+        $('#MainHmmerForm').submit();
+      };
+    }
+	});
+});
 
 //prevention of cache pages
 $(window).unload(function () { });

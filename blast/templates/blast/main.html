@@ -15,7 +15,6 @@
     </style>
   {% endif %}
   {% stylesheet 'blast-css' %}
-  <link rel="stylesheet" type="text/css" media="all" href="{% static 'blast/css/main.css' %}" />
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
   <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
@@ -26,10 +25,6 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'blast/scripts/underscore-min.js' %}"></script>
-  <script src="{% static 'blast/scripts/jquery.hoverIntent.minified.js' %}"></script>
-  <script src="{% static 'blast/scripts/jquery.validate.min.js' %}"></script>
-  <script src="{% static 'blast/scripts/blast-multi.js' %}"></script>
   {% javascript 'blast-js' %}
   <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
   <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
@@ -129,7 +124,7 @@ Enter here your input data as
 	<div id="blastProgramDescription">blastn - Nucleotide vs. Nucleotide</div>
 	<div id="buttons">
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
-		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
+		<INPUT TYPE="button" VALUE="Search" class="blast_submit">
 	</div>
 </fieldset>
 
@@ -491,7 +486,7 @@ Enter here your input data as
 
 	<div>
 		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
-		<INPUT TYPE="button" VALUE="Search" onclick="On_Submit();">
+		<INPUT TYPE="button" VALUE="Search" class="blast_submit">
 	</div>
 
 </div>
