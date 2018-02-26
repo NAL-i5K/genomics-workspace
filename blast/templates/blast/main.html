@@ -94,7 +94,7 @@ Enter here your input data as
 	<input type="file" name="query-file" class="query-file">
     <!--
 	<div>
-		Set subsequence: From <input TYPE="text" NAME="QUERY_FROM" VALUE="" SIZE="10"> To <input TYPE="text" NAME="QUERY_TO" VALUE="" SIZE="10">
+		Set subsequence: From <input type="text" name="QUERY_FROM" value="" size="10"> To <input type="text" name="QUERY_TO" value="" size="10">
 	</div>
     -->
 </fieldset>
@@ -123,8 +123,8 @@ Enter here your input data as
 	</label>
 	<div id="blastProgramDescription">blastn - Nucleotide vs. Nucleotide</div>
 	<div id="buttons">
-		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
-		<INPUT TYPE="button" VALUE="Search" class="blast_submit">
+		<input type="button" value="Reset" class="btn_reset">
+		<input type="button" value="Search" class="blast_submit">
 	</div>
 </fieldset>
 
@@ -155,15 +155,15 @@ Enter here your input data as
             <span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
           </td>
           <td>
-          <input TYPE="text" ID="evalue" NAME="evalue" VALUE="10.0" SIZE="10" class="input-fields">
+          <input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
           </td>
         </tr>
         <tr>
           <td>
-            <span class="span-title" ID="span_word_size" title="Length of initial exact match. (Default: 11)">Word size </span>
+            <span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 11)">Word size </span>
           </td>
           <td>
-            <input TYPE="text" ID="word_size" NAME="word_size" VALUE="11" SIZE="10" class="input-fields">
+            <input type="text" id="word_size" name="word_size" value="11" size="10" class="input-fields">
           </td>
         </tr>
         </table>
@@ -173,11 +173,11 @@ Enter here your input data as
         <legend>Scoring Parameters </legend>
 		<table id="blastn-scoring-param">
 		<tr><td><span title="Reward for a nucleotide match.  (Default: 2)">Match score </span></td>
-			<td><input TYPE="text" ID="reward" NAME="reward" VALUE="2" SIZE="10" class="input-fields"></td></tr>
+			<td><input type="text" id="reward" name="reward" value="2" size="10" class="input-fields"></td></tr>
 			<tr><td><span title="Penalty for a nucleotide mismatch.  (Default: -3)">Mismatch score </span></td><td>
-			<input TYPE="text" ID="penalty" NAME="penalty" VALUE="-3" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to open a gap.  (Default: 5)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="5" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to extend a gap.  (Default: 2)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="2" SIZE="10" class="input-fields"></td></tr>
+			<input type="text" id="penalty" name="penalty" value="-3" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to open a gap.  (Default: 5)">Gap opening penalty </span></td><td><input type="text" id="gapopen" name="gapopen" value="5" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to extend a gap.  (Default: 2)">Gap extension penalty </span></td><td><input type="text" id="gapextend" name="gapextend" value="2" size="10" class="input-fields"></td></tr>
 			<tr><td><span title="Query strand(s) to search against database/subject.  (Default: both)">Strand </span></td>
 			<td><select id="strand" name="strand">
 				<option value="both" selected>both</option>
@@ -191,8 +191,8 @@ Enter here your input data as
 
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastn_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
-        <input TYPE="checkbox" CLASS="chk_soft_masking" ID="blastn_chk_soft_masking" VALUE="true" NAME="chk_soft_masking" checked="checked"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: true)"> Mask for lookup table only</span><br/>
+        <input type="checkbox" class="chk_low_complexity" id="blastn_chk_low_complexity" value="yes" name="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
+        <input type="checkbox" class="chk_soft_masking" id="blastn_chk_soft_masking" value="true" name="chk_soft_masking" checked="checked"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: true)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
 	<!-- End BLASTN -->
@@ -220,15 +220,15 @@ Enter here your input data as
             <span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
           </td>
           <td>
-          <input TYPE="text" ID="evalue" NAME="evalue" VALUE="10.0" SIZE="10" class="input-fields">
+          <input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
           </td>
         </tr>
         <tr>
           <td>
-            <span class="span-title" ID="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
+            <span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
           </td>
           <td>
-            <input TYPE="text" ID="word_size" NAME="word_size" VALUE="6" SIZE="10" class="input-fields">
+            <input type="text" id="word_size" name="word_size" value="6" size="10" class="input-fields">
           </td>
         </tr>
         </table>
@@ -249,9 +249,9 @@ Enter here your input data as
 				<option value="BLOSUM45">BLOSUM45</option>
 			</select></td>
 			</tr>
-			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 13)">Threshold </span></td><td><input TYPE="text" ID="threshold" NAME="threshold" VALUE="13" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="11" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields">
+			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 13)">Threshold </span></td><td><input type="text" id="threshold" name="threshold" value="13" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input type="text" id="gapopen" name="gapopen" value="11" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input type="text" id="gapextend" name="gapextend" value="1" size="10" class="input-fields">
 			</td></tr>
 		</table>
 
@@ -259,8 +259,8 @@ Enter here your input data as
 
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="tblastn_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
-        <input TYPE="checkbox" CLASS="chk_soft_masking" ID="tblastn_chk_soft_masking" VALUE="false" NAME="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
+        <input type="checkbox" class="chk_low_complexity" id="tblastn_chk_low_complexity" value="yes" name="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
+        <input type="checkbox" class="chk_soft_masking" id="tblastn_chk_soft_masking" value="false" name="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
 	<!-- End TBLASTN -->
@@ -288,15 +288,15 @@ Enter here your input data as
             <span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
           </td>
           <td>
-          <input TYPE="text" ID="evalue" NAME="evalue" VALUE="10.0" SIZE="10" class="input-fields">
+          <input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
           </td>
         </tr>
         <tr>
           <td>
-            <span class="span-title" ID="span_word_size" title="Length of initial exact match. (Default: 3)">Word size </span>
+            <span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 3)">Word size </span>
           </td>
           <td>
-            <input TYPE="text" ID="word_size" NAME="word_size" VALUE="3" SIZE="10" class="input-fields">
+            <input type="text" id="word_size" name="word_size" value="3" size="10" class="input-fields">
           </td>
         </tr>
         </table>
@@ -317,7 +317,7 @@ Enter here your input data as
 				<option value="BLOSUM45">BLOSUM45</option>
 			</select></td>
 			</tr>
-			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 13)">Threshold&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td><input TYPE="text" ID="threshold" NAME="threshold" VALUE="13" SIZE="10" class="input-fields"></td></tr>
+			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 13)">Threshold&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td><td><input type="text" id="threshold" name="threshold" value="13" size="10" class="input-fields"></td></tr>
 			<tr><td><span title="Query strand(s) to search against database/subject.  (Default: both)">Strand </span></td><td>
 				<select id="strand" name="strand">
 				<option value="both" selected>both</option>
@@ -331,8 +331,8 @@ Enter here your input data as
 
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="tblastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
-        <input TYPE="checkbox" CLASS="chk_soft_masking" ID="tblastx_chk_soft_masking" VALUE="false" NAME="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
+        <input type="checkbox" class="chk_low_complexity" id="tblastx_chk_low_complexity" value="yes" name="chk_low_complexity" checked="checked"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
+        <input type="checkbox" class="chk_soft_masking" id="tblastx_chk_soft_masking" value="false" name="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
 	<!-- End TBLASTX -->
@@ -360,15 +360,15 @@ Enter here your input data as
             <span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
           </td>
           <td>
-          <input TYPE="text" ID="evalue" NAME="evalue" VALUE="10.0" SIZE="10" class="input-fields">
+          <input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
           </td>
         </tr>
         <tr>
           <td>
-            <span class="span-title" ID="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
+            <span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
           </td>
           <td>
-            <input TYPE="text" ID="word_size" NAME="word_size" VALUE="6" SIZE="10" class="input-fields">
+            <input type="text" id="word_size" name="word_size" value="6" size="10" class="input-fields">
           </td>
         </tr>
         </table>
@@ -389,17 +389,17 @@ Enter here your input data as
 				<option value="BLOSUM45">BLOSUM45</option>
 			</select></td>
 			</tr>
-			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 11)">Threshold </span></td><td><input TYPE="text" ID="threshold" NAME="threshold" VALUE="11" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="11" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields"></td></tr>
+			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 11)">Threshold </span></td><td><input type="text" id="threshold" name="threshold" value="11" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input type="text" id="gapopen" name="gapopen" value="11" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input type="text" id="gapextend" name="gapextend" value="1" size="10" class="input-fields"></td></tr>
 		</table>
 
         </fieldset>
 
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastp_chk_low_complexity" VALUE="no" NAME="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: no)"> Low complexity</span><br/>
-        <input TYPE="checkbox" CLASS="chk_soft_masking" ID="blastp_chk_soft_masking" VALUE="false" NAME="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
+        <input type="checkbox" class="chk_low_complexity" id="blastp_chk_low_complexity" value="no" name="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: no)"> Low complexity</span><br/>
+        <input type="checkbox" class="chk_soft_masking" id="blastp_chk_soft_masking" value="false" name="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
 	<!-- End BLASTP -->
@@ -427,15 +427,15 @@ Enter here your input data as
             <span class="span-title" title="Expect value (E) for saving hits.  (Default: 10.0)">Expect threshold </span>
           </td>
           <td>
-          <input TYPE="text" ID="evalue" NAME="evalue" VALUE="10.0" SIZE="10" class="input-fields">
+          <input type="text" id="evalue" name="evalue" value="10.0" size="10" class="input-fields">
           </td>
         </tr>
         <tr>
           <td>
-            <span class="span-title" ID="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
+            <span class="span-title" id="span_word_size" title="Length of initial exact match. (Default: 6)">Word size </span>
           </td>
           <td>
-            <input TYPE="text" ID="word_size" NAME="word_size" VALUE="6" SIZE="10" class="input-fields">
+            <input type="text" id="word_size" name="word_size" value="6" size="10" class="input-fields">
           </td>
         </tr>
         </table>
@@ -456,7 +456,7 @@ Enter here your input data as
 			<option value="BLOSUM45">BLOSUM45</option>
 			</select></td>
 			</tr>
-			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 12)">Threshold </span></td><td><input TYPE="text" ID="threshold" NAME="threshold" VALUE="12" SIZE="10" class="input-fields"></td></tr>
+			<tr><td><span title="Minimum score to add a word to the BLAST lookup table.  (Default: 12)">Threshold </span></td><td><input type="text" id="threshold" name="threshold" value="12" size="10" class="input-fields"></td></tr>
 			<tr><td><span title="Query strand(s) to search against database/subject.  (Default: both)">Strand </span></td><td>
 			<select id="strand" name="strand">
 			<option value="both" selected>both</option>
@@ -464,29 +464,29 @@ Enter here your input data as
 			<option value="minus">minus</option>
 			</select></td>
 			</tr>
-			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input TYPE="text" ID="gapopen" NAME="gapopen" VALUE="11" SIZE="10" class="input-fields"></td></tr>
-			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input TYPE="text" ID="gapextend" NAME="gapextend" VALUE="1" SIZE="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to open a gap.  (Default: 11)">Gap opening penalty </span></td><td><input type="text" id="gapopen" name="gapopen" value="11" size="10" class="input-fields"></td></tr>
+			<tr><td><span title="Cost to extend a gap.  (Default: 1)">Gap extension penalty </span></td><td><input type="text" id="gapextend" name="gapextend" value="1" size="10" class="input-fields"></td></tr>
 		</table>
 
         </fieldset>
 
         <fieldset id="fieldset-options-blast-filter-param">
         <legend>Filters and Masking</legend>
-        <input TYPE="checkbox" CLASS="chk_low_complexity" ID="blastx_chk_low_complexity" VALUE="yes" NAME="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
-        <input TYPE="checkbox" CLASS="chk_soft_masking" ID="blastx_chk_soft_masking" VALUE="false" NAME="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
+        <input type="checkbox" class="chk_low_complexity" id="blastx_chk_low_complexity" value="yes" name="chk_low_complexity"><span title="Mask off segments of the query sequence that have low compositional complexity, as determined by the SEG program of Wootton & Federhen (Computers and Chemistry, 1993) or, for BLASTN, by the DUST program of Tatusov and Lipman (in preparation). Filtering can eliminate statistically significant but biologically uninteresting reports from the blast output (e.g., hits against common acidic-, basic- or proline-rich regions), leaving the more biologically interesting regions of the query sequence available for specific matching against database sequences. (Default: yes)"> Low complexity</span><br/>
+        <input type="checkbox" class="chk_soft_masking" id="blastx_chk_soft_masking" value="false" name="chk_soft_masking"><span title="Apply filtering locations as soft masks. (i.e., only for finding initial matches) (Default: false)"> Mask for lookup table only</span><br/>
         </fieldset>
 		</div>
 	<!-- End BLASTX -->
-	<input type="hidden" ID="low_complexity_hidden" NAME="low_complexity" VALUE="yes">
-	<input type="hidden" ID="soft_masking_hidden" NAME="soft_masking" VALUE="true">
+	<input type="hidden" id="low_complexity_hidden" name="low_complexity" value="yes">
+	<input type="hidden" id="soft_masking_hidden" name="soft_masking" value="true">
     </fieldset>
 </div>
-<input type="hidden" ID="click_submit_hidden" NAME="click_submit_hidden" VALUE="false">
+<input type="hidden" id="click_submit_hidden" name="click_submit_hidden" value="false">
 <!-- BLAST options end -->
 
 	<div>
-		<INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
-		<INPUT TYPE="button" VALUE="Search" class="blast_submit">
+		<input type="button" value="Reset" class="btn_reset">
+		<input type="button" value="Search" class="blast_submit">
 	</div>
 
 </div>

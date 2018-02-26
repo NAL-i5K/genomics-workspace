@@ -73,10 +73,10 @@
                                     </label>
                                 </div>
                                 <div class='d_col'>
-                                    <INPUT TYPE="reset" VALUE="Reset" class="btn_reset">
+                                    <input type="reset" VALUE="Reset" class="btn_reset">
                                 </div>
                                 <div class='d_col'>
-                                    <INPUT TYPE="button" VALUE="Search" id="clustalo_submit">
+                                    <input type="button" VALUE="Search" id="clustalo_submit">
                                 </div>
                             </fieldset>
                             <fieldset id="fieldset-omega-clustering" class="t_font">
@@ -190,10 +190,10 @@
                                 </div>
 
                                 <div class="d_col">
-                                    <INPUT TYPE="reset" VALUE="Reset" class="btn_reset">
+                                    <input type="reset" VALUE="Reset" class="btn_reset">
                                 </div>
                                 <div class="d_col">
-                                    <INPUT TYPE="button" VALUE="Search" id="clustalw_submit">
+                                    <input type="button" VALUE="Search" id="clustalw_submit">
                                 </div>
                             </fieldset>
 
@@ -435,7 +435,6 @@
 
             {% if user.is_authenticated %}
             <div role="tabpanel" class="tab-pane fade" id="queries" aria-labelledby="queries-tab">
-                <!-- Table -->
                 <table id="queries-{{user.id}}" class="display" cellspacing="0" width="100%">
                     <thead>
                         <tr>
@@ -446,7 +445,7 @@
                     </thead>
                 </table>
             </div>
-        </div> <!-- myTabContent -->
+        </div>
 
         {% endif %}
 

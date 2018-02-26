@@ -122,15 +122,15 @@
                                                 <span class="span-title" title="">Sequence </span>
                                             </td>
                                             <td>
-                                                <input TYPE="text" ID="s_sequence" NAME="s_sequence" VALUE="0.01" SIZE="10" class="input-fields">
+                                                <input type="text" id="s_sequence" name="s_sequence" value="0.01" size="10" class="input-fields">
                                             </td>
                                         </tr>
                                         <tr>
                                             <td>
-                                                <span class="span-title" ID="span_word_size" title="">Hit </span>
+                                                <span class="span-title" id="span_word_size" title="">Hit </span>
                                             </td>
                                             <td>
-                                                <input TYPE="text" ID="s_hit" NAME="s_hit" VALUE="0.03" SIZE="10" class="input-fields">
+                                                <input type="text" id="s_hit" name="s_hit" value="0.03" size="10" class="input-fields">
                                             </td>
                                         </tr>
                                     </table>
@@ -140,9 +140,9 @@
                                     <legend>Report </legend>
                                     <table id="hmmer-scoring-param">
                                         <tr><td><span title="">Sequence </span></td>
-                                            <td><input TYPE="text" ID="r_sequence" NAME="r_sequence" VALUE="0.01" SIZE="10" class="input-fields"></td></tr>
+                                            <td><input type="text" id="r_sequence" name="r_sequence" value="0.01" size="10" class="input-fields"></td></tr>
                                         <tr><td><span title="">Hit </span></td><td>
-                                                <input TYPE="text" ID="r_hit" NAME="r_hit" VALUE="0.03" SIZE="10" class="input-fields"></td></tr>
+                                                <input type="text" id="r_hit" name="r_hit" value="0.03" size="10" class="input-fields"></td></tr>
                                     </table>
 
                                 </fieldset>
@@ -153,8 +153,8 @@
                         <input type="hidden" id="format_check" name="format_check" value="true">
                         {% csrf_token %}
                         <div>
-                            <INPUT TYPE="button" VALUE="Reset" CLASS="btn_reset">
-                            <INPUT TYPE="button" VALUE="Search"id="hmmer_submit">
+                            <input type="button" value="Reset" class="btn_reset">
+                            <input type="button" value="Search"id="hmmer_submit">
                         </div>
                     </div>
                 </form>
