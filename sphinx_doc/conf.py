@@ -49,8 +49,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'i5k_doc'
-copyright = u'2016, Fish Lin'
-author = u'Fish Lin'
+copyright = u'2018, NAL-i5k'
+author = u'NAL-i5k'
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
