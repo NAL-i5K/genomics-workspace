@@ -504,6 +504,12 @@ PIPELINE = {
             ),
             'output_filename': 'blast/css/blast-results.min.css',
         },
+        'blast-css': {
+            'source_filenames': (
+                'blast/css/main.css',
+            ),
+            'output_filename': 'blast/css/blast-css.min.css',
+        },
         'clustal-css': {
             'source_filenames': (
                 'clustal/css/main.css',
@@ -547,28 +553,37 @@ PIPELINE = {
             ),
             'output_filename': 'blast/scripts/blast-results.min.js',
         },
+        'blast-js': {
+            'source_filenames': (
+                'blast/scripts/underscore-min.js',
+                'blast/scripts/jquery.hoverIntent.minified.js',
+                'blast/scripts/jquery.validate.min.js',
+                'blast/scripts/blast-multi.js',
+            ),
+            'output_filename': 'blast/scripts/blast-js.min.js',
+        },
         'clustal-js': {
             'source_filenames': (
-                    'clustal/scripts/underscore-min.js',
-                    'clustal/scripts/jquery.hoverIntent.minified.js',
-                    'clustal/scripts/jquery.validate.min.js',
-                    'clustal/scripts/clustal-multi.js',
+                'clustal/scripts/underscore-min.js',
+                'clustal/scripts/jquery.hoverIntent.minified.js',
+                'clustal/scripts/jquery.validate.min.js',
+                'clustal/scripts/clustal-multi.js',
             ),
             'output_filename': 'clustal/scripts/clustal-js.min.js',
         },
         'hmmer-js': {
             'source_filenames': (
-                    'hmmer/scripts/underscore-min.js',
-                    'hmmer/scripts/jquery.hoverIntent.minified.js',
-                    'hmmer/scripts/jquery.validate.min.js',
-                    'hmmer/scripts/hmmer-multi.js',
+                'hmmer/scripts/underscore-min.js',
+                'hmmer/scripts/jquery.hoverIntent.minified.js',
+                'hmmer/scripts/jquery.validate.min.js',
+                'hmmer/scripts/hmmer-multi.js',
             ),
             'output_filename': 'hmmer/scripts/hmmer-js.min.js',
         },
         'sso-js': {
             'source_filenames': (
-                    'webapollo_sso/scripts/underscore-min.js',
-                    'webapollo_sso/scripts/sso-datatable.js',
+                'webapollo_sso/scripts/underscore-min.js',
+                'webapollo_sso/scripts/sso-datatable.js',
             ),
             'output_filename': 'sso/scripts/sso-js.min.js',
         },
