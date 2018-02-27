@@ -48,7 +48,7 @@ source_suffix = '.rst'
 master_doc = 'index'
 
 # General information about the project.
-project = u'i5k_doc'
+project = u'Genomics Workspace'
 copyright = u'2018, NAL-i5k'
 author = u'NAL-i5k'
 
