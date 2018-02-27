@@ -17,7 +17,7 @@ There are five tables for creating BLAST DB and browsing in I5K-blast.
   * Short name are used by system as a abbreviation.
   * Descriptions and NCBI taxa ID are automatically filled.
 
-.. image:: add_organism.png
+.. image:: img/add_organism.png
 
 * Add Sequence types:
 
@@ -35,7 +35,7 @@ There are five tables for creating BLAST DB and browsing in I5K-blast.
   * Check ``is shown``, if not check, this database would show in HMMER page.
   * Save
 
-.. image:: add_blastdb.png
+.. image:: img/add_blastdb.png
 
 * Add JBrowse settings
 
@@ -62,7 +62,7 @@ Go django admin page and click Hmmer on left-menubar. You need to create HMMER d
 * Check ``is shown``, if not check, this database would show in HMMER page.
 * Save
 
-.. image:: hmmer_add.png
+.. image:: img/hmmer_add.png
 
 HMMER Query Histroy
 ~~~~~~~~~~~~~~~~~~~
