@@ -184,5 +184,9 @@ clustal/bin_mac/
 
 # media folder
 media/
+
+# generated static folder
+static/
+
 .editorconfig
 .vscode/
