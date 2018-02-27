@@ -7,7 +7,7 @@ from shutil import rmtree, move
 import tarfile
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
-
+import pip
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
@@ -60,7 +60,8 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 if platform == 'win32':
-    pass  # currently, we don't support winodws with hmmer and clustal
+    pip.main(['install', 'win_inet_pton'])
+    # TODO: currently, we don't support winodws with hmmer and clustal
 elif platform == 'darwin':
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
