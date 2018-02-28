@@ -31,7 +31,7 @@ class BlastDbSerializer(serializers.HyperlinkedModelSerializer):
 
 class SequenceSerializer(serializers.HyperlinkedModelSerializer):
     blast_db = serializers.HyperlinkedRelatedField(view_name='blast:blastdb-detail', lookup_field='title', read_only=True)
-    fasta_seq = serializers.ReadOnlyField()
+    fasta_seq = serializers.Field()
 
     class Meta:
         model = Sequence
