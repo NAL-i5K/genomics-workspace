@@ -32,6 +32,7 @@ Leveraging the `admin page of Django
    pre_requisites
    setup_guide
    user_guide
+   deployment_guide
    about
 
 Indices and tables
