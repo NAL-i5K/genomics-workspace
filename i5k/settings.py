@@ -210,6 +210,7 @@ INSTALLED_APPS = (
     'clustal',
 #    'webapollo_sso',
 #    'drupal_sso',
+    'django_celery_results',
 )
 
 
@@ -424,7 +425,11 @@ CELERY_QUEUES = (
     Queue('i5k', Exchange('i5k'), routing_key='i5k'),
 )
 BROKER_URL = 'amqp://'
-CELERY_RESULT_BACKEND = 'amqp://'
+#CELERY_RESULT_BACKEND = 'amqp://'
+# added to support Celery4.1
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_RESULT_BACKEND = 'django-cache'
+
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_ACCEPT_CONTENT=['json']
