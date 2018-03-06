@@ -164,7 +164,6 @@ INSTALLED_APPS = (
     'hmmer',
     'clustal',
 #    'webapollo_sso',
-#    'drupal_sso',
 )
 
 
