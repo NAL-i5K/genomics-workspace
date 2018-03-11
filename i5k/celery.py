@@ -17,3 +17,11 @@ app = Celery('i5k')
 #   should have a `CELERY_` prefix.
 app.config_from_object('django.conf:settings', namespace='CELERY')
 app.autodiscover_tasks(lambda: settings.INSTALLED_APPS)
+
+
+# task for using celery.contrib.testing module in testing
+@app.task(name='celery.ping')
+def ping():
+    # type: () -> str
+    """Simple task that just returns 'pong'."""
+    return 'pong'
