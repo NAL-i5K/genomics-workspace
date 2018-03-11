@@ -4,7 +4,7 @@ from shutil import rmtree
 import stat as Perm
 from subprocess import Popen, PIPE
 from shutil import copyfile
-from django.test import SimpleTestCase, LiveServerTestCase, override_settings
+from django.test import SimpleTestCase, LiveServerTestCase
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from selenium import webdriver
@@ -12,11 +12,14 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
+from celery.contrib.testing.worker import start_worker
+from i5k.celery import app
 from hmmer.models import HmmerDB
 from app.models import Organism
 from filebrowser.base import FileObject
 from hmmer.views import generate_hmmer_args
 from util.get_bin_name import get_bin_name
+
 
 DEBUG = False
 
@@ -58,11 +61,15 @@ class HmmerAdminTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/admin/'))
         # wait at most 5 seconds to let page load, or timeout exception
@@ -102,8 +109,7 @@ class HmmerAdminTestCase(LiveServerTestCase):
         self.driver.find_element_by_name('_save').click()
         send_query(query, self.driver, self.live_server_url)
         wait = WebDriverWait(self.driver, 10)
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
 def send_query(query, driver, live_server_url):
@@ -130,6 +136,7 @@ def prepare_test_fasta_file():
 
 class LoadSeqExampleTestCase(LiveServerTestCase):
     def setUp(self):
+        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -152,11 +159,15 @@ class LoadSeqExampleTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
         wait = WebDriverWait(self.driver, 10)
@@ -170,12 +181,12 @@ class LoadSeqExampleTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
         self.driver.find_element_by_class_name('load-example-seq').click()
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
 class LoadAlignExampleTestCase(LiveServerTestCase):
     def setUp(self):
+        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -198,11 +209,15 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
         wait = WebDriverWait(self.driver, 10)
@@ -216,8 +231,7 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
         self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
         self.driver.find_element_by_class_name('load-example-aln').click()
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
 class UploadFileTestCase(LiveServerTestCase):
@@ -245,11 +259,15 @@ class UploadFileTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/hmmer/'))
         wait = WebDriverWait(self.driver, 10)
@@ -264,8 +282,7 @@ class UploadFileTestCase(LiveServerTestCase):
         example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'HMMER Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
 class HmmerViewFunctionTestCase(SimpleTestCase):
