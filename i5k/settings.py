@@ -160,7 +160,6 @@ INSTALLED_APPS = (
     'captcha',
     'dashboard',
     'proxy',
-    #'data',
     'hmmer',
     'clustal',
 #    'webapollo_sso',
