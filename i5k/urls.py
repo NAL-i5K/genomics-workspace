@@ -29,7 +29,7 @@ urlpatterns = [
     url(r'^info_change$', 'app.views.info_change', name='info_change'),
     url(r'^register$', 'app.views.register', name='register'),
     url(r'^login/$',
-        #'django.contrib.auth.views.logini',
+        # 'django.contrib.auth.views.login',
         login_forbidden(login),
         {
             'template_name': 'app/login.html',
@@ -99,7 +99,7 @@ urlpatterns = [
         },
         name='password_change_done'),
     url(r'^password_change$',
-        #'django.contrib.auth.views.password_change',
+        # 'django.contrib.auth.views.password_change',
         'app.views.password_change',
         {
             'template_name': 'app/password_change.html',
