@@ -30,10 +30,10 @@ def _template():
 
 class FileBrowseWidget(Input):
     input_type = 'text'
-    
+
     class Media:
         js = (os.path.join(URL_FILEBROWSER_MEDIA, 'js/AddFileBrowser.js'), )
-    
+
     def __init__(self, attrs=None):
         self.directory = attrs.get('directory', '')
         self.extensions = attrs.get('extensions', '')
@@ -42,7 +42,7 @@ class FileBrowseWidget(Input):
             self.attrs = attrs.copy()
         else:
             self.attrs = {}
-    
+
     def render(self, name, value, attrs=None):
         if value is None:
             value = ""
@@ -63,11 +63,11 @@ class FileBrowseWidget(Input):
 
 class FileBrowseFormField(forms.CharField):
     widget = FileBrowseWidget
-    
+
     default_error_messages = {
         'extension': _(u'Extension %(ext)s is not allowed. Only %(allowed)s is allowed.'),
     }
-    
+
     def __init__(self, max_length=None, min_length=None,
                  directory=None, extensions=None, format=None,
                  *args, **kwargs):
@@ -78,7 +78,7 @@ class FileBrowseFormField(forms.CharField):
             self.format = format or ''
             self.extensions = extensions or EXTENSIONS.get(format)
         super(FileBrowseFormField, self).__init__(*args, **kwargs)
-    
+
     def clean(self, value):
         value = super(FileBrowseFormField, self).clean(value)
         if value == '':
@@ -93,19 +93,23 @@ class FileBrowseFormField(forms.CharField):
 
 
 class FileBrowseField(Field):
-    __metaclass__ = models.SubfieldBase
-    
+
     def __init__(self, *args, **kwargs):
         self.directory = kwargs.pop('directory', '')
         self.extensions = kwargs.pop('extensions', '')
         self.format = kwargs.pop('format', '')
         super(FileBrowseField, self).__init__(*args, **kwargs)
-    
+
+    def from_db_value(self, value, expression, connection, context):
+        if not value or isinstance(value, FileObject):
+            return value
+        return FileObject(url_to_path(value))
+
     def to_python(self, value):
         if not value or isinstance(value, FileObject):
             return value
         return FileObject(url_to_path(value))
-    
+
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return None
@@ -113,10 +117,10 @@ class FileBrowseField(Field):
 
     def get_manipulator_field_objs(self):
         return [oldforms.TextField]
-    
+
     def get_internal_type(self):
         return "CharField"
-    
+
     def formfield(self, **kwargs):
         attrs = {}
         attrs["directory"] = self.directory
