@@ -1,7 +1,6 @@
 # Genomic-Workspace
 
 [![Build Status](https://travis-ci.org/NAL-i5K/genomics-workspace.svg?branch=master)](https://travis-ci.org/NAL-i5K/genomics-workspace/?branch=master)
-[![](https://ci.appveyor.com/api/projects/status/4m6nngj0vrd21st6/branch/master?svg=true)](https://ci.appveyor.com/project/hsiaoyi0504/genomics-workspace/branch/master)
 [![Coverage Status](https://coveralls.io/repos/github/NAL-i5K/genomics-workspace/badge.svg?branch=master)](https://coveralls.io/github/NAL-i5K/genomics-workspace?branch=master)
 [![codecov](https://codecov.io/gh/NAL-i5K/genomics-workspace/branch/master/graph/badge.svg)](https://codecov.io/gh/NAL-i5K/genomics-workspace)
 [![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
@@ -17,16 +16,18 @@
 ## Backend
 
 * Implemented in [Python](https://www.python.org/) with [Django](https://www.djangoproject.com/).
-* Supports the latest [NCBI BLAST+ executables](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download).
+* Supports searches for [blast](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [HMMER](http://hmmer.org/), and [Clustal](http://www.clustal.org/).
 * Task queue with [RabbitMQ](http://www.rabbitmq.com/).
+* Use [PostgreSQL](https://www.postgresql.org/) as databae backend.
 * Generates all BLAST output formats for download: Text, CSV, TSV, XML, ASN.1.
 * Converts BLAST output to GFF3 by grouping contiguous HSPs with identical query sequence, subject sequence, strand direction and an overlap length less than 6 between neighbouring HSPs under the same match.
 * Retrieve previous results with a unique URL for every task.
-* Supports both Linux and Windows.
+* Supports only on Linux.
 
-# Frontend - Results
+## Frontend
 
 The results page is an interactive data viewer, query and subject coverage graphs on the top are drawn dynamically on the HTML5 canvas for every high scoring pair (HSP), tabular output from BLAST+ is displayed in a sortable and searchable table on the bottom right, pairwise text output is displayed on the bottom left panel.
+
 * Fullscreen design dynamically scales to any screen size
 * Dynamically draws a unique query coverage graph and a subject coverage graph for every high scoring pair(HSP) on HTML5 canvas.
 * Interactive graph updates the page as the user mouse over each aligned segment.
@@ -35,10 +36,12 @@ The results page is an interactive data viewer, query and subject coverage graph
   * Mouse over each row.
   * Changes the sorting column.
   * Filters the table using the search box.
-* Tested on the latest versions of Chrome, Firefox, IE.
-  * On Windows: Chrome (ver. 36.0), Firefox (ver. 31.0), IE (ver. 11)
 
-# Screenshots
+## Screenshots
 
 BLAST Results
 ![BLAST Results](sphinx_doc/img/blast-results-dynamic.gif)
+
+## Documentation
+
+On [readthedocs.io](http://genomics-workspace.readthedocs.io/en/latest/).
