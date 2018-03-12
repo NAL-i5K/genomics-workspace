@@ -21,12 +21,10 @@ from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
 from social.apps.django_app.default.models import UserSocialAuth
 from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN
-from drupal_sso.models import DrupalUserMapping
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_decode
-import urllib2
-import cookielib
+
 
 def home(request):
     assert isinstance(request, HttpRequest)

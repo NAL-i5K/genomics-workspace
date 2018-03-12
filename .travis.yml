@@ -33,9 +33,9 @@ install:
   - sudo pip2 install -r requirements.txt
   - sudo pip2 install coveralls
   - sudo pip2 install codecov
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_mac64.zip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then unzip chromedriver_mac64.zip; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://chromedriver.storage.googleapis.com/2.33/chromedriver_linux64.zip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip chromedriver_linux64.zip; fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
 

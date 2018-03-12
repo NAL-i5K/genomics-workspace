@@ -149,8 +149,8 @@ INSTALLED_APPS = (
     'app',
     'blast',
     # 'userprofile',
-    'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
-    #'grappelli',
+    'suit',  # Optional, Creative Commons Attribution-NonCommercial 3.0 license
+    # 'grappelli',
     'filebrowser',
     # Enable the admin:
     'django.contrib.admin',
@@ -162,8 +162,6 @@ INSTALLED_APPS = (
     'proxy',
     'hmmer',
     'clustal',
-#    'drupal_sso',
-
 )
 
 
