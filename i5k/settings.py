@@ -11,8 +11,7 @@ if platform == 'win32':
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
 DEBUG = True
-# deprecated in Django 1.8
-#TEMPLATE_DEBUG = DEBUG
+
 TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
 # template settings for Django 1.8
@@ -45,16 +44,6 @@ TEMPLATES = [
     },
 ]
 
-ALLOWED_HOSTS = (
-    '*',
-)
-
-ADMINS = (
-     ('Your Name', 'Your@email.address'),
-)
-
-MANAGERS = ADMINS
-
 DATABASES = {
     'default': {
     'ENGINE': 'django.db.backends.postgresql_psycopg2',
@@ -65,8 +54,6 @@ DATABASES = {
     'PORT': '5432',
     }
 }
-
-
 
 LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/home'
@@ -116,13 +103,6 @@ STATIC_ROOT = path.join(PROJECT_ROOT, 'static').replace('\\','/')
 # Example: "http://media.lawrence.com/static/"
 STATIC_URL = '/static/'
 
-# Additional locations of static files
-STATICFILES_DIRS = (
-    # Put strings here, like "/home/html/static" or "C:/www/django/static".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-)
-
 # List of finder classes that know how to find static files in
 # various locations.
 STATICFILES_FINDERS = (
@@ -135,16 +115,7 @@ STATICFILES_FINDERS = (
 # Make this unique, and don't share it with anybody.
 SECRET_KEY = 'n(bd1f1c%e8=_xad02x5qtfn%wg2pi492e$8_erx+d)!tpeoim'
 
-# List of callables that know how to import templates from various sources.
-# deprecated in Django 1.8
-#TEMPLATE_LOADERS = (
-#    'django.template.loaders.filesystem.Loader',
-#    'django.template.loaders.app_directories.Loader',
-#     'django.template.loaders.eggs.Loader',
-#)
-
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-#SESSION_COOKIE_AGE = 120 * 60
 
 MIDDLEWARE_CLASSES = (
     'django.middleware.common.CommonMiddleware',
@@ -158,26 +129,10 @@ MIDDLEWARE_CLASSES = (
 )
 
 
-
-
-
-
-
-
-
-
 ROOT_URLCONF = 'i5k.urls'
 
 # Python dotted path to the WSGI application used by Django's runserver.
 WSGI_APPLICATION = 'i5k.wsgi.application'
-
-# deprecated in Django 1.8
-#TEMPLATE_DIRS = (
-    # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
-    # Always use forward slashes, even on Windows.
-    # Don't forget to use absolute paths, not relative paths.
-#    path.join(PROJECT_ROOT, 'templates'),
-#)
 
 INSTALLED_APPS = (
     'django.contrib.auth',
@@ -197,32 +152,22 @@ INSTALLED_APPS = (
     'suit', # Optional, Creative Commons Attribution-NonCommercial 3.0 license
     #'grappelli',
     'filebrowser',
-    # Uncomment the next line to enable the admin:
+    # Enable the admin:
     'django.contrib.admin',
-    # Uncomment the next line to enable admin documentation:
+    # Enable admin documentation:
     'django.contrib.admindocs',
     'social.apps.django_app.default',
     'captcha',
     'dashboard',
     'proxy',
-    #'data',
     'hmmer',
     'clustal',
 #    'drupal_sso',
+
 )
 
 
-
-
-
-# deprecated in Django 1.8
-#from django.conf.global_settings import TEMPLATE_CONTEXT_PROCESSORS as TCP
-#TEMPLATE_CONTEXT_PROCESSORS = TCP + (
-#    'django.core.context_processors.request',
-#    'social.apps.django_app.context_processors.backends',
-#    'social.apps.django_app.context_processors.login_redirect',
-#)
-
+# filebrowser settings
 FILEBROWSER_SUIT_TEMPLATE = True
 FILEBROWSER_DIRECTORY = ''
 FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
@@ -239,9 +184,7 @@ FILEBROWSER_EXTENSIONS = {
 }
 FILEBROWSER_SELECT_FORMATS = {
     'file': ['Folder', 'Image', 'Document', 'Video', 'Audio', 'FASTA', 'FASTQ', 'SAM', 'WIG', 'JSON', 'GFF'],
-    #'image': ['Image'],
     'document': ['Document'],
-    #'media': ['Video','Audio'],
     'FASTA': ['FASTA'],
     'FASTQ': ['FASTQ'],
     'SAM': ['SAM'],
@@ -260,21 +203,7 @@ FILEBROWSER_VERSIONS = {
 
 # Django Suit configuration example
 SUIT_CONFIG = {
-    # header
     'ADMIN_NAME': 'i5k Admin',
-    # 'HEADER_DATE_FORMAT': 'l, j. F Y',
-    # 'HEADER_TIME_FORMAT': 'H:i',
-
-    # forms
-    # 'SHOW_REQUIRED_ASTERISK': True,  # Default True
-    # 'CONFIRM_UNSAVED_CHANGES': True, # Default True
-
-    # menu
-    # 'SEARCH_URL': '/admin/auth/user/',
-    #'MENU_ICONS': {
-    #    'blast': 'icon-leaf',
-    #    'auth': 'icon-lock',
-    #},
     'MENU_OPEN_FIRST_CHILD': False, # Default True
     'MENU_EXCLUDE': (),
     'MENU': (
@@ -311,11 +240,7 @@ SUIT_CONFIG = {
             {'model': 'axes.accesslog'},
         )},
         {'label': 'File Browser', 'icon':'icon-hdd', 'url': 'fb_browse'},
-
     ),
-
-    # misc
-    # 'LIST_PER_PAGE': 15
 }
 
 # A sample logging configuration. The only tangible logging
@@ -385,6 +310,7 @@ LOGGING = {
         },
     }
 }
+
 # Query maximum limit
 BLAST_QUERY_MAX = 10
 HMMER_QUERY_MAX = 10
@@ -396,7 +322,6 @@ BLAST_QUERY_SIZE_MAX = 1000
 ROBOT_ID = 'R2D2'
 ROBOT_PWD = 'demo'
 
-#APOLLO_URL = 'https://apollo-stage.nal.usda.gov/apollo'
 APOLLO_URL = 'http://192.168.0.110:8085/apollo'
 I5K_URL = 'http://192.168.0.110:8000'
 
@@ -449,28 +374,19 @@ AXES_LOCKOUT_TEMPLATE = 'app/login_lockout.html'
 AXES_LOCKOUT_URL = None
 AXES_VERBOSE = True
 
-# rest_framework
+# django-restframework
 REST_FRAMEWORK = {
-    # Use hyperlinked styles by default.
-    # Only used if the `serializer_class` attribute is not set on a view.
-    #'DEFAULT_MODEL_SERIALIZER_CLASS':
-    #    'rest_framework.serializers.HyperlinkedModelSerializer',
-
-    # Use Django's standard `django.contrib.auth` permissions,
-    # or allow read-only access for unauthenticated users.
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ],
-    #'PAGINATE_BY': 100,
-    #'PAGINATE_BY_PARAM': 'page_size',  # Allow client to override, using `?page_size=xxx`.
     'PAGE_SIZE': 10,
 }
 
-# django-pipeline
+
 if not DEBUG:
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
-# django-pipeline 1.6
 
+# django-pipeline
 PIPELINE = {
     'STYLESHEETS':{
         'app-layout': {
@@ -575,6 +491,7 @@ PIPELINE = {
         },
     },
 }
+
 if not DEBUG:
     PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
@@ -612,13 +529,6 @@ SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 CAPTCHA_LETTER_ROTATION = None
 CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
 CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
-
-# Email backend
-EMAIL_HOST = 'localhost'
-EMAIL_PORT = '25'
-EMAIL_HOST_USER = ''
-EMAIL_HOST_PASSWORD = ''
-DEFAULT_FROM_EMAIL = 'webmaster@localhost'
 
 try:
     HOSTNAME = socket.gethostname()

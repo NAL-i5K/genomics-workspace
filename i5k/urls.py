@@ -113,15 +113,14 @@ urlpatterns = [
         },
         name='password_change'),
 
-    # Uncomment the next line to enable the admin:
+    # Enable the admin:
     url(r'^admin/', include(admin.site.urls)),
 
     # BLAST
     url(r'^blast/', include('blast.urls', namespace='blast')),
-    # BLAST
-    # url(r'^data/', include('data.urls', namespace='data')),
-
+    # HMMER
     url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
+    # CLUSTAL
     url(r'^clustal/', include('clustal.urls', namespace='clustal')),
 ]
 
