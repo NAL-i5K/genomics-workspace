@@ -2,7 +2,7 @@ import copy
 from django.conf import settings
 from django.contrib.admin import ModelAdmin
 from django.contrib.admin.views.main import ChangeList
-from django.contrib.contenttypes import generic
+from django.contrib.contenttypes.admin import GenericTabularInline, GenericStackedInline
 from django.forms import ModelForm
 from django.contrib import admin
 from django.db import models
@@ -65,7 +65,7 @@ class SortableTabularInline(SortableTabularInlineBase, admin.TabularInline):
 
 
 class SortableGenericTabularInline(SortableTabularInlineBase,
-                                   generic.GenericTabularInline):
+                                   GenericTabularInline):
     pass
 
 
@@ -119,7 +119,7 @@ class SortableStackedInline(SortableStackedInlineBase, admin.StackedInline):
 
 
 class SortableGenericStackedInline(SortableStackedInlineBase,
-                                   generic.GenericStackedInline):
+                                   GenericStackedInline):
     pass
 
 
