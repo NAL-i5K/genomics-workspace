@@ -162,7 +162,8 @@ INSTALLED_APPS = (
     'proxy',
     'hmmer',
     'clustal',
-#    'webapollo_sso',
+#    'drupal_sso',
+
 )
 
 
@@ -225,12 +226,6 @@ SUIT_CONFIG = {
             {'model': 'usersocialauth'},
             {'model': 'nonce'},
             {'model': 'association'},
-        )},
-        {'app': 'webapollo', 'label': 'Web Apollo', 'icon':'icon-leaf', 'models': (
-            {'model': 'species', 'label': 'Species'},
-            {'label': 'Management', 'url': '/webapp/webapollo/admin/manage'},
-            {'model': 'speciespassword', 'label': '[Read Only] Passwords'},
-            {'model': 'registration', 'label': '[Read Only] Registrations'},
         )},
         {'app': 'data', 'label': 'Data', 'icon':'icon-leaf', 'models': (
             {'model': 'file'},
@@ -493,13 +488,6 @@ PIPELINE = {
                 'hmmer/scripts/hmmer-multi.js',
             ),
             'output_filename': 'hmmer/scripts/hmmer-js.min.js',
-        },
-        'sso-js': {
-            'source_filenames': (
-                'webapollo_sso/scripts/underscore-min.js',
-                'webapollo_sso/scripts/sso-datatable.js',
-            ),
-            'output_filename': 'sso/scripts/sso-js.min.js',
         },
     },
 }
