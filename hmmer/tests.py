@@ -4,7 +4,8 @@ from shutil import rmtree
 import stat as Perm
 from subprocess import Popen, PIPE
 from shutil import copyfile
-from django.test import SimpleTestCase, LiveServerTestCase
+from django.test import SimpleTestCase, override_settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from selenium import webdriver
@@ -38,9 +39,9 @@ query = (
 )
 
 
-class HmmerAdminTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class HmmerAdminTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
@@ -133,9 +134,9 @@ def prepare_test_fasta_file():
     copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
 
 
-class LoadSeqExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class LoadSeqExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -183,9 +184,9 @@ class LoadSeqExampleTestCase(LiveServerTestCase):
         wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
-class LoadAlignExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class LoadAlignExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -233,9 +234,9 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
         wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
-class UploadFileTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class UploadFileTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)

@@ -3,8 +3,9 @@ from os import path, makedirs, remove
 from shutil import copyfile, rmtree
 from subprocess import Popen, PIPE
 from django.conf import settings
-from django.test import SimpleTestCase, TestCase, LiveServerTestCase
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.by import By
@@ -50,11 +51,11 @@ nucleotide_seq = (
 )
 
 
-class FrontEndTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class FrontEndTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
@@ -324,14 +325,14 @@ class BlastModelActionTestCase(TestCase):
             self.assertEqual(s.blast_db.title, title)
 
 
-class BlastAdminTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class BlastAdminTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(BlastAdminTestCase, self).setUpClass()
         # Start up celery worker for testing
         self.celery_worker = start_worker(app)
         self.celery_worker.__enter__()
-        settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
@@ -592,20 +593,22 @@ def generate_blast_args(program):
         args_list.append(args)
     return args_list
 
+
 def run_commands(args_list, assertEqual):
     for args in args_list:
         p = Popen(args, stdin=PIPE, stdout=PIPE)
         p.wait()
         assertEqual(p.returncode, 0)
 
-class QueryTestCase(LiveServerTestCase):
+
+@override_settings(DEBUG=True)
+class QueryTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(QueryTestCase, self).setUpClass()
         # Start up celery worker for testing
         self.celery_worker = start_worker(app)
         self.celery_worker.__enter__()
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)

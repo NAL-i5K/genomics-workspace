@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.test import SimpleTestCase, LiveServerTestCase
+from django.test import SimpleTestCase, override_settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -14,9 +15,9 @@ from i5k.celery import app
 DEBUG = False
 
 
-class ClustalLoadExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class ClustalLoadExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
@@ -49,9 +50,9 @@ class ClustalLoadExampleTestCase(LiveServerTestCase):
         self.celery_worker.__exit__(None, None, None)
 
 
-class ClustalUploadFileTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class ClustalUploadFileTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
