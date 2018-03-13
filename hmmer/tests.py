@@ -4,12 +4,13 @@ from shutil import rmtree
 import stat as Perm
 from subprocess import Popen, PIPE
 from shutil import copyfile
-from django.test import SimpleTestCase, LiveServerTestCase
+from django.test import SimpleTestCase, override_settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from celery.contrib.testing.worker import start_worker
@@ -38,9 +39,9 @@ query = (
 )
 
 
-class HmmerAdminTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class HmmerAdminTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
@@ -96,9 +97,8 @@ class HmmerAdminTestCase(LiveServerTestCase):
         self.driver.find_element_by_name('_save').click()
         prepare_test_fasta_file()
         self.driver.get('%s%s' % (self.live_server_url, '/admin/hmmer/hmmerdb/add/'))
-        dropdown = self.driver.find_element_by_css_selector('button[data-id=id_organism]')
-        dropdown.click()
-        wait.until(EC.element_to_be_clickable((By.LINK_TEXT, display_name)))
+        select = Select(self.driver.find_element_by_name('organism'))
+        select.select_by_visible_text(display_name)
         fasta_file_input = self.driver.find_element_by_id('id_fasta_file')
         fasta_file_input.send_keys('/media/blast/db/clec_peptide_example_BLASTdb.fa')
         title_input = self.driver.find_element_by_id('id_title')
@@ -134,9 +134,9 @@ def prepare_test_fasta_file():
     copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
 
 
-class LoadSeqExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class LoadSeqExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -184,9 +184,9 @@ class LoadSeqExampleTestCase(LiveServerTestCase):
         wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
-class LoadAlignExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class LoadAlignExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)
@@ -234,9 +234,9 @@ class LoadAlignExampleTestCase(LiveServerTestCase):
         wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
 
 
-class UploadFileTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class UploadFileTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)

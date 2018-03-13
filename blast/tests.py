@@ -3,10 +3,11 @@ from os import path, makedirs, remove
 from shutil import copyfile, rmtree
 from subprocess import Popen, PIPE
 from django.conf import settings
-from django.test import SimpleTestCase, TestCase, LiveServerTestCase
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.contrib.auth import get_user_model
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.action_chains import ActionChains
@@ -50,11 +51,11 @@ nucleotide_seq = (
 )
 
 
-class FrontEndTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class FrontEndTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(FrontEndTestCase, self).setUpClass()
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
@@ -324,14 +325,14 @@ class BlastModelActionTestCase(TestCase):
             self.assertEqual(s.blast_db.title, title)
 
 
-class BlastAdminTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class BlastAdminTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(BlastAdminTestCase, self).setUpClass()
         # Start up celery worker for testing
         self.celery_worker = start_worker(app)
         self.celery_worker.__enter__()
-        settings.DEBUG = True
         User = get_user_model()
         self.username = 'test'
         self.password = 'test'
@@ -386,27 +387,18 @@ class BlastAdminTestCase(LiveServerTestCase):
         self.driver.find_element_by_name('_save').click()
         # add sequence type
         self.driver.get('%s%s' % (self.live_server_url, '/admin/blast/sequencetype/add/'))
-        dropdown = self.driver.find_element_by_css_selector('button[data-id=id_molecule_type]')
-        dropdown.click()
-        wait.until(EC.element_to_be_clickable((By.LINK_TEXT, 'Peptide')))
-        option = self.driver.find_element_by_link_text('Peptide')
-        option.click()
+        select = Select(self.driver.find_element_by_id('id_molecule_type'))
+        select.select_by_visible_text('Peptide')
         dataset_type_input = self.driver.find_element_by_id('id_dataset_type')
         dataset_type_input.send_keys(dataset_type)
         self.driver.find_element_by_name('_save').click()
         # add blastdb
         prepare_test_fasta_file()
         self.driver.get('%s%s' % (self.live_server_url, '/admin/blast/blastdb/add/'))
-        dropdown = self.driver.find_element_by_css_selector('button[data-id=id_organism]')
-        dropdown.click()
-        wait.until(EC.element_to_be_clickable((By.LINK_TEXT, display_name)))
-        option = self.driver.find_element_by_link_text(display_name)
-        option.click()
-        dropdown = self.driver.find_element_by_css_selector('button[data-id=id_type]')
-        dropdown.click()
-        wait.until(EC.element_to_be_clickable((By.LINK_TEXT, 'Peptide - ' + dataset_type )))
-        option = self.driver.find_element_by_link_text('Peptide - ' + dataset_type)
-        option.click()
+        select = Select(self.driver.find_element_by_id('id_organism'))
+        select.select_by_visible_text(display_name)
+        select = Select(self.driver.find_element_by_id('id_type'))
+        select.select_by_visible_text('Peptide - ' + dataset_type)
         fasta_file_input = self.driver.find_element_by_id('id_fasta_file')
         fasta_file_input.send_keys('/media/blast/db/clec_peptide_example_BLASTdb.fa')
         title_input = self.driver.find_element_by_id('id_title')
@@ -417,19 +409,15 @@ class BlastAdminTestCase(LiveServerTestCase):
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-blast_db_files_exists > img').get_attribute('alt'), 'false')
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-sequence_set_exists > img').get_attribute('alt'), 'false')
         self.driver.find_element_by_id('action-toggle').click()
-        dropdown = self.driver.find_element_by_xpath('//div[@class="actions"]//label//div//button[@data-toggle="dropdown"]')
-        dropdown.click()
-        option = self.driver.find_element_by_link_text('Run makeblastdb on selected entries, replaces existing files')
-        option.click()
+        select = Select(self.driver.find_element_by_name('action'))
+        select.select_by_visible_text('Run makeblastdb on selected entries, replaces existing files')
         self.driver.find_element_by_name('index').click()
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-fasta_file_exists > img').get_attribute('alt'), 'true')
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-blast_db_files_exists > img').get_attribute('alt'), 'true')
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-sequence_set_exists > img').get_attribute('alt'), 'false')
         self.driver.find_element_by_id('action-toggle').click()
-        dropdown = self.driver.find_element_by_xpath('//div[@class="actions"]//label//div//button[@data-toggle="dropdown"]')
-        dropdown.click()
-        option = self.driver.find_element_by_link_text('Populate Sequences table, replaces existing Sequence entries')
-        option.click()
+        select = Select(self.driver.find_element_by_name('action'))
+        select.select_by_visible_text('Populate Sequences table, replaces existing Sequence entries')
         self.driver.find_element_by_name('index').click()
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-fasta_file_exists > img').get_attribute('alt'), 'true')
         self.assertEqual(self.driver.find_element_by_css_selector('td.field-blast_db_files_exists > img').get_attribute('alt'), 'true')
@@ -605,20 +593,22 @@ def generate_blast_args(program):
         args_list.append(args)
     return args_list
 
+
 def run_commands(args_list, assertEqual):
     for args in args_list:
         p = Popen(args, stdin=PIPE, stdout=PIPE)
         p.wait()
         assertEqual(p.returncode, 0)
 
-class QueryTestCase(LiveServerTestCase):
+
+@override_settings(DEBUG=True)
+class QueryTestCase(StaticLiveServerTestCase):
     @classmethod
     def setUpClass(self):
         super(QueryTestCase, self).setUpClass()
         # Start up celery worker for testing
         self.celery_worker = start_worker(app)
         self.celery_worker.__enter__()
-        settings.DEBUG = True
         Organism.objects.create(
             display_name=display_name, short_name=short_name,
             tax_id=tax_id)

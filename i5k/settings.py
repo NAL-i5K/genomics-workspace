@@ -46,12 +46,12 @@ TEMPLATES = [
 
 DATABASES = {
     'default': {
-    'ENGINE': 'django.db.backends.postgresql_psycopg2',
-    'NAME': 'django',
-    'USER': 'django',
-    'PASSWORD': 'django1234',
-    'HOST': 'localhost',
-    'PORT': '5432',
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'django',
+        'USER': 'django',
+        'PASSWORD': 'django1234',
+        'HOST': 'localhost',
+        'PORT': '5432',
     }
 }
 
@@ -149,7 +149,7 @@ INSTALLED_APPS = (
     'app',
     'blast',
     # 'userprofile',
-    'suit',  # Optional, Creative Commons Attribution-NonCommercial 3.0 license
+    'suit',  # suit must before admin
     # 'grappelli',
     'filebrowser',
     # Enable the admin:
@@ -202,10 +202,10 @@ FILEBROWSER_VERSIONS = {
 # Django Suit configuration example
 SUIT_CONFIG = {
     'ADMIN_NAME': 'i5k Admin',
-    'MENU_OPEN_FIRST_CHILD': False, # Default True
+    'MENU_OPEN_FIRST_CHILD': False,  # Default True
     'MENU_EXCLUDE': (),
     'MENU': (
-        {'app': 'blast', 'label': 'BLAST', 'icon':'icon-leaf', 'models': (
+        {'app': 'blast', 'label': 'BLAST', 'icon': 'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
             {'model': 'organism'},
             {'model': 'sequencetype'},
@@ -213,31 +213,31 @@ SUIT_CONFIG = {
             {'model': 'jbrowsesetting'},
             {'model': 'sequence'},
         )},
-        {'app': 'hmmer', 'label': 'Hmmer', 'icon':'icon-leaf', 'models': (
+        {'app': 'hmmer', 'label': 'Hmmer', 'icon': 'icon-leaf', 'models': (
             {'model': 'hmmerdb'},
             {'model': 'hmmerqueryrecord'},
         )},
         {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
             {'model': 'clustalqueryrecord'},
         )},
-        {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
+        {'app': 'default', 'label': 'Social Auth', 'icon': 'icon-leaf', 'models': (
             {'model': 'usersocialauth'},
             {'model': 'nonce'},
             {'model': 'association'},
         )},
-        {'app': 'data', 'label': 'Data', 'icon':'icon-leaf', 'models': (
+        {'app': 'data', 'label': 'Data', 'icon': 'icon-leaf', 'models': (
             {'model': 'file'},
             {'model': 'item'},
             {'model': 'accession'},
         )},
         # auth and axes
-        {'label': 'Auth', 'icon':'icon-lock', 'models': (
+        {'label': 'Auth', 'icon': 'icon-lock', 'models': (
             {'model': 'auth.user'},
             {'model': 'auth.group'},
             {'model': 'axes.accessattempt'},
             {'model': 'axes.accesslog'},
         )},
-        {'label': 'File Browser', 'icon':'icon-hdd', 'url': 'fb_browse'},
+        {'label': 'File Browser', 'icon': 'icon-hdd', 'url': 'fb_browse'},
     ),
 }
 
@@ -264,7 +264,7 @@ LOGGING = {
         'require_debug_false': {
             '()': 'django.utils.log.RequireDebugFalse'
         },
-       'require_debug_true': {
+        'require_debug_true': {
             '()': 'django.utils.log.RequireDebugTrue',
         },
     },
@@ -342,7 +342,7 @@ CELERY_TASK_QUEUES = (
 CELERY_BROKER_URL = 'amqp://'
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
-CELERY_ACCEPT_CONTENT=['json']
+CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TIMEZONE = TIME_ZONE
 CELERY_WORKER_DISABLE_RATE_LIMITS = True
 CELERY_RESULT_BACKEND = 'amqp://'
@@ -378,10 +378,6 @@ REST_FRAMEWORK = {
     ],
     'PAGE_SIZE': 10,
 }
-
-
-if not DEBUG:
-    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
 
 # django-pipeline
 PIPELINE = {
@@ -422,7 +418,7 @@ PIPELINE = {
             ),
             'output_filename': 'clustal/css/clustal-css.min.css',
         },
-        'hmmer-css' : {
+        'hmmer-css': {
             'source_filenames': (
                 'hmmer/css/main.css',
             ),
@@ -490,11 +486,11 @@ PIPELINE = {
 }
 
 if not DEBUG:
+    STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
     PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
-PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
-
+PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.jsmin.JSMinCompressors'
 
 # social login settings
 AUTHENTICATION_BACKENDS = (

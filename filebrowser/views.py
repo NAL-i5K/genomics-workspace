@@ -5,8 +5,7 @@ import os, re
 from time import gmtime, strftime
 
 # django imports
-from django.shortcuts import render_to_response, HttpResponse
-from django.template import RequestContext as Context
+from django.shortcuts import render, HttpResponse
 from django.http import HttpResponseRedirect, Http404
 from django.contrib.admin.views.decorators import staff_member_required
 from django.views.decorators.cache import never_cache
@@ -161,7 +160,7 @@ def browse(request):
     except (EmptyPage, InvalidPage):
         page = p.page(p.num_pages)
 
-    return render_to_response(_template() + 'index.html', {
+    return render(request, _template() + 'index.html', {
         'dir': path,
         'p': p,
         'page': page,
@@ -173,13 +172,14 @@ def browse(request):
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': "",
         'is_popup': is_popup
-    }, context_instance=Context(request))
+    })
 browse = staff_member_required(never_cache(browse))
 
 
 # mkdir signals
 filebrowser_pre_createdir = Signal(providing_args=["path", "dirname"])
 filebrowser_post_createdir = Signal(providing_args=["path", "dirname"])
+
 
 def mkdir(request):
     """
@@ -199,7 +199,7 @@ def mkdir(request):
 
     if path is None:
         msg = _('The requested Folder does not exist.')
-        messages.warning(request,message=msg)
+        messages.warning(request, message=msg)
         return HttpResponseRedirect(reverse("fb_browse"))
     abs_path = _check_access(request, path)
 
@@ -218,7 +218,7 @@ def mkdir(request):
                 filebrowser_post_createdir.send(sender=request, path=path, dirname=_new_dir_name)
                 # MESSAGE & REDIRECT
                 msg = _('The Folder %s was successfully created.') % (_new_dir_name)
-                messages.success(request,message=msg)
+                messages.success(request, message=msg)
                 # on redirect, sort by date desc to see the new directory on top of the list
                 # remove filter in order to actually _see_ the new folder
                 # remove pagination
@@ -232,7 +232,7 @@ def mkdir(request):
     else:
         form = MakeDirForm(abs_path)
 
-    return render_to_response(_template() + 'makedir.html', {
+    return render(request, _template() + 'makedir.html', {
         'form': form,
         'query': query,
         'title': _(u'New Folder'),
@@ -240,7 +240,7 @@ def mkdir(request):
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'New Folder'),
         'is_popup': is_popup
-    }, context_instance=Context(request))
+    })
 mkdir = staff_member_required(never_cache(mkdir))
 
 
@@ -269,7 +269,7 @@ def upload(request):
     # SESSION (used for flash-uploading)
     session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME, None)
 
-    return render_to_response(_template() + 'upload.html', {
+    return render(request, _template() + 'upload.html', {
         'query': query,
         'title': _(u'Select files to upload'),
         'settings_var': get_settings_var(),
@@ -277,7 +277,7 @@ def upload(request):
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Upload'),
         'is_popup': is_popup
-    }, context_instance=Context(request))
+    })
 upload = staff_member_required(never_cache(upload))
 
 
@@ -481,7 +481,7 @@ def rename(request):
     else:
         form = RenameForm(abs_path, file_extension)
 
-    return render_to_response(_template() + 'rename.html', {
+    return render(request, _template() + 'rename.html', {
         'form': form,
         'query': query,
         'file_extension': file_extension,
@@ -490,7 +490,7 @@ def rename(request):
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Rename'),
         'is_popup': is_popup
-    }, context_instance=Context(request))
+    })
 rename = staff_member_required(never_cache(rename))
 
 
@@ -518,7 +518,7 @@ def versions(request):
         return HttpResponseRedirect(reverse("fb_browse"))
     abs_path = _check_access(request, path)
 
-    return render_to_response(_template() + 'versions.html', {
+    return render(request, _template() + 'versions.html', {
         'original': path_to_url(os.path.join(fb_settings.DIRECTORY, path, filename)),
         'query': query,
         'title': _(u'Versions for "%s"') % filename,
@@ -526,7 +526,5 @@ def versions(request):
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Versions for "%s"') % filename,
         'is_popup': is_popup
-    }, context_instance=Context(request))
+    })
 versions = staff_member_required(never_cache(versions))
-
-
