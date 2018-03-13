@@ -7,7 +7,6 @@
 {# Additional CSS includes #}
 {% block extrastyle %}
 <link rel="stylesheet" type="text/css" href="{% static 'suit/css/bootstrap-glyphicon.css' %}" media="all" />
-<link rel="stylesheet" type="text/css" href="{% static 'suit/bootstrap/css/bootstrap-select.min.css' %}" media="all" />
 <style type="text/css">
     .footer .content .copyright {
         padding: 15px 20px 0 0;
@@ -55,11 +54,9 @@
 
 {# Additional JS files in footer, right before </body> #}
 {% block extrajs %}
-<script type="text/javascript" src="{% static 'suit/bootstrap/js/bootstrap-select.min.js' %}"></script>
 <script type="text/javascript">
     $('select').attr('data-size', '15');
     $('select').attr('data-width', 'auto');
-    $('select').selectpicker();
 </script>
 {% endblock %}
 
@@ -124,5 +121,5 @@
 
 {# Footer copyright (right side) #}
 {% block copyright %}
-2014 - National Agricultural Library
+2018 - National Agricultural Library
 {% endblock %}
