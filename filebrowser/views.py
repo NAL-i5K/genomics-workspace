@@ -180,6 +180,7 @@ browse = staff_member_required(never_cache(browse))
 filebrowser_pre_createdir = Signal(providing_args=["path", "dirname"])
 filebrowser_post_createdir = Signal(providing_args=["path", "dirname"])
 
+
 def mkdir(request):
     """
     Make Directory.
@@ -198,7 +199,7 @@ def mkdir(request):
 
     if path is None:
         msg = _('The requested Folder does not exist.')
-        messages.warning(request,message=msg)
+        messages.warning(request, message=msg)
         return HttpResponseRedirect(reverse("fb_browse"))
     abs_path = _check_access(request, path)
 
@@ -217,7 +218,7 @@ def mkdir(request):
                 filebrowser_post_createdir.send(sender=request, path=path, dirname=_new_dir_name)
                 # MESSAGE & REDIRECT
                 msg = _('The Folder %s was successfully created.') % (_new_dir_name)
-                messages.success(request,message=msg)
+                messages.success(request, message=msg)
                 # on redirect, sort by date desc to see the new directory on top of the list
                 # remove filter in order to actually _see_ the new folder
                 # remove pagination
