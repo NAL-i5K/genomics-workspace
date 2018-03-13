@@ -14,13 +14,12 @@ DEBUG = True
 
 TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
-# template settings for Django 1.8
+# template settings
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            # insert your TEMPLATE_DIRS here
-            path.join(PROJECT_ROOT, 'templates'),
+            path.join(PROJECT_ROOT, 'i5k', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
