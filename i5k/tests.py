@@ -3,8 +3,6 @@ import celery
 from celery import Celery
 import subprocess
 from threading import Timer
-from sys import platform
-from os import environ
 from os.path import join, exists
 from django.conf import settings
 
@@ -24,17 +22,8 @@ class CeleryTestCase(SimpleTestCase):
         # example output of `rabbitmq status` command can be found
         # at https://www.rabbitmq.com/troubleshooting.html
         try:
-            if platform == 'win32':
-                p = subprocess.check_output(
-                    ['rabbitmqctl.bat', 'status'],
-                    stderr=subprocess.STDOUT,
-                    shell=True,
-                    env={
-                        'PATH': environ['PATH']
-                    })
-            else:
-                p = subprocess.check_output(
-                    ['rabbitmqctl', 'status'], stderr=subprocess.STDOUT)
+            p = subprocess.check_output(
+                ['rabbitmqctl', 'status'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as e:
             p = e.output
         first_line = p.split('\n')[1]

@@ -1,12 +1,8 @@
 # Django settings for i5k project.
 from os import path
 import sys
-from sys import platform
 import os
 import socket
-# to fix axe issue on Windows, see: https://github.com/jazzband/django-axes/issues/204
-if platform == 'win32':
-    from win_inet_pton import inet_pton
 
 PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
 
