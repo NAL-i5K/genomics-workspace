@@ -146,7 +146,6 @@ INSTALLED_APPS = (
     # Enable admin documentation:
     'django.contrib.admindocs',
     'captcha',
-    'dashboard',
     'proxy',
     'hmmer',
     'clustal',
