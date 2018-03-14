@@ -147,7 +147,6 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     'captcha',
     'dashboard',
-    'proxy',
     'hmmer',
     'clustal',
 )
