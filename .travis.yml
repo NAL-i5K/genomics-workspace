@@ -31,6 +31,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start rabbitmq; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start memcached; fi
   - sudo pip2 install -r requirements.txt
+  - sudo pip2 install -r dev_requirements.txt
   - sudo pip2 install coveralls
   - sudo pip2 install codecov
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip; fi
