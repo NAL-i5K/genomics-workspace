@@ -19,7 +19,6 @@ from django.apps import apps
 from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
-from social.apps.django_app.default.models import UserSocialAuth
 from i5k.settings import DRUPAL_URL, DRUPAL_COOKIE_DOMAIN
 from django.contrib.auth.models import User
 from django.utils.encoding import force_text
@@ -55,8 +54,6 @@ def about(request):
             #'year': datetime.now().year,
         })
 
-def checkOAuth(_user):
-    return UserSocialAuth.objects.filter(user=_user).exists()
 
 def ajax_login_required(view_func):
     @wraps(view_func)
@@ -112,7 +109,6 @@ def password_change(request,
     }
     if extra_context is not None:
         context.update(extra_context)
-    context.update({'isOAuth': checkOAuth(request.user)})
     if current_app is not None:
         request.current_app = current_app
 
@@ -145,7 +141,6 @@ def set_institution(request):
 
 @login_required
 def info_change(request):
-    isOAuth = checkOAuth(request.user)
     try:
         p = Profile.objects.select_related('user').get(user=request.user)
         msg = ''
