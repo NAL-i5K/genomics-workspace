@@ -1,9 +1,8 @@
 from django.conf.urls import url, include
 from django.conf import settings
 from blast import views
-from .api import *
-from rest_framework import routers, serializers, viewsets
-# from .serializers import UserSerializer
+from blast.api import OrganismViewSet, SequenceTypeViewSet, BlastDbViewSet, SequenceViewSet, BlastQueryRecordViewSet, UserViewSet
+from rest_framework import routers
 
 router = routers.DefaultRouter()
 router.register(r'organism', OrganismViewSet)

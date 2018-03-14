@@ -222,6 +222,7 @@ def read_gff3(request, task_id, dbname):
     finally:
         return HttpResponse(output)
 
+
 def status(request, task_id):
     if request.method == 'GET':
         status_file_path = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'status.json')
