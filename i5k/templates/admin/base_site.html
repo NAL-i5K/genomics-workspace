@@ -13,28 +13,8 @@
         text-align: right;
     }
 
-    .header {
-        color: #d4d4d4;
-        height: 50px;
-        overflow: hidden;
-        text-shadow: 0 -1px #121414;
-        background-color: #222;
-        background-image: none;
-    }
-
-    .header #branding h1 {
-        color: #fff;
-        font-size: 18px;
-        font-weight: normal;
-        margin: 15px;
-        text-shadow: 0 -1px #121414;
-        line-height: 20px;
-    }
-
     .header #user-tools {
-        padding: 15px 20px 0 0;
         font-size: 14px;
-        float: right;
     }
 
     .controls input[type="text"], .controls input[type="url"] {
@@ -64,24 +44,22 @@
 <div id="header" class="header">
     <div id="branding">
         <a href="{% url 'admin:index' %}"><h1 id="site-name">{% block branding %}{{ 'ADMIN_NAME'|suit_conf }}{% endblock %}</h1></a>
-    </div>{% block header_time %}{% endblock %}{# Remove header time block #}{% block header_content %}
-    <!--<div class="header-content">
-    <div class="header-column icon">
-        <i class="icon-comment"></i>
-    </div>
-    <div class="header-column">
-        <a href="" class="grey"><b>2</b> new messages</a>
-    </div>
-    </div>-->{% endblock %}{% if user.is_active and user.is_staff %}
+    </div>{% block header_time %}{% endblock %}{# Remove header time block #}{% block header_content %}{% endblock %}
+    {% if user.is_active and user.is_staff %}
     <div id="user-tools">{% trans 'Welcome, ' %}{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}.
-        <span class="user-links">{% block userlinks %}{% url 'django-admindocs-docroot' as docsroot %}{% if docsroot %}
+        <span class="user-links"></span>
+        {% block userlinks %}{% url 'django-admindocs-docroot' as docsroot %}
+          {% if docsroot %}
             <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
-            <span class="separator">|</span>{% endif %}
+            <span class="separator">|</span>
+          {% endif %}
             <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
             <span class="separator">|</span>
             <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
-        </span>{% endblock %}
-    </div>{% endif %}{% block nav-global %}{% endblock %}
+        {% endblock %}
+    </div>
+    {% endif %}
+    {% block nav-global %}{% endblock %}
 </div>{% endif %}
 {% endblock %}
 
