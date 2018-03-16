@@ -1,5 +1,5 @@
-Deployment Guide
-================
+How to Deploy
+=============
 
 In short, you need to setup following tools and services:
 
