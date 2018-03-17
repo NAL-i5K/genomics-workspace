@@ -3,11 +3,12 @@ from os import remove, mkdir, chmod
 from os.path import dirname, abspath, join, exists
 import stat as Perm
 from sys import platform
-from shutil import rmtree, move
+from shutil import rmtree, move, copyfile
 import tarfile
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
 import pip
+import subprocess
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
@@ -109,6 +110,19 @@ elif platform == 'darwin':
         clustalo_path)
     chmod(clustalo_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
 
+    clustalw_dmg_path = join(clustal_bin_path, 'clustalw-2.1-macosx.dmg')
+    clustalw_dmg_attach_path = join('/Volumes', 'clustalw-2.1-macosx', 'clustalw-2.1-macosx', 'clustalw2')
+    clustalw_path = join(clustal_bin_path, 'clustalw2')
+
+    urllib.request.urlretrieve(
+        'http://www.clustal.org/download/current/clustalw-2.1-macosx.dmg',
+        clustalw_dmg_path)
+
+    subprocess.call(['hdiutil', 'attach', clustalw_dmg_path])
+    copyfile(clustalw_dmg_attach_path, clustalw_path)
+    subprocess.call(['hdiutil', 'detach', join('/Volumes', 'clustalw-2.1-macosx')])
+    chmod(clustalw_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
+    remove(clustalw_dmg_path)
 else:  # for linux
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
