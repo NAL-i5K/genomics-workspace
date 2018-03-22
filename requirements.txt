@@ -15,7 +15,6 @@ python-memcached==1.57
 python-social-auth==0.2.16
 requests-oauthlib==0.6.1
 wsgiref==0.1.2
-selenium==3.5.0
 django-suit==0.2.18
 six>=1.10.0
 django-axes==2.3.3
