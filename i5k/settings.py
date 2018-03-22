@@ -35,8 +35,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'social.apps.django_app.context_processors.backends',
-                'social.apps.django_app.context_processors.login_redirect',
                 'app.context_processors.is_login_enabled',
                 'app.context_processors.is_analytics_enabled',
             ],
@@ -123,7 +121,6 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'app.middleware.SocialAuthExceptionMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -148,7 +145,6 @@ INSTALLED_APPS = (
     'pipeline',
     'app',
     'blast',
-    # 'userprofile',
     'suit',  # Optional, Creative Commons Attribution-NonCommercial 3.0 license
     # 'grappelli',
     'filebrowser',
@@ -156,7 +152,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Enable admin documentation:
     'django.contrib.admindocs',
-    'social.apps.django_app.default',
     'captcha',
     'dashboard',
     'proxy',
@@ -219,11 +214,6 @@ SUIT_CONFIG = {
         )},
         {'app': 'clustal', 'label': 'clustal', 'icon':'icon-leaf', 'models': (
             {'model': 'clustalqueryrecord'},
-        )},
-        {'app': 'default', 'label': 'Social Auth', 'icon':'icon-leaf', 'models': (
-            {'model': 'usersocialauth'},
-            {'model': 'nonce'},
-            {'model': 'association'},
         )},
         {'app': 'data', 'label': 'Data', 'icon':'icon-leaf', 'models': (
             {'model': 'file'},
@@ -494,34 +484,12 @@ if not DEBUG:
     PIPELINE['PIPELINE_ENABLED'] = True
 PIPELINE['CSSMIN_BINARY'] = 'cssmin'
 PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
-PIPELINE['JS_COMPRESSOR']  = 'pipeline.compressors.jsmin.JSMinCompressors'
+PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.jsmin.JSMinCompressors'
 
 
-# social login settings
 AUTHENTICATION_BACKENDS = (
-    'social.backends.google.GoogleOAuth2',
-    'social.backends.facebook.FacebookOAuth2',
     'django.contrib.auth.backends.ModelBackend',
 )
-
-SOCIAL_AUTH_PIPELINE = (
-    'social.pipeline.social_auth.social_details',
-    'social.pipeline.social_auth.social_uid',
-    'social.pipeline.social_auth.auth_allowed',
-    'social.pipeline.social_auth.social_user',
-    'social.pipeline.user.get_username',
-    'social.pipeline.social_auth.associate_by_email',
-    'social.pipeline.user.create_user',
-    'social.pipeline.social_auth.associate_user',
-    'social.pipeline.social_auth.load_extra_data',
-    'social.pipeline.user.user_details'
-)
-
-SOCIAL_AUTH_GOOGLE_OAUTH2_KEY = ''
-SOCIAL_AUTH_GOOGLE_OAUTH2_SECRET = ''
-SOCIAL_AUTH_FACEBOOK_KEY = ''
-SOCIAL_AUTH_FACEBOOK_SECRET = ''
-SOCIAL_AUTH_FACEBOOK_SCOPE = ['email']
 
 # captcha
 CAPTCHA_LETTER_ROTATION = None
