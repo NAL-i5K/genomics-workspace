@@ -15,7 +15,6 @@ login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
     url(r'^about', 'app.views.about', name='about'),
-    url('', include('social.apps.django_app.urls', namespace='social')),
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
     # url(r'^admin/filebrowser/', include(site.urls)),
     # url(r'^grappelli/', include('grappelli.urls')),
