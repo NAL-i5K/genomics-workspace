@@ -306,20 +306,6 @@ HMMER_QUERY_MAX = 10
 # Query maximum size (k bytes)
 BLAST_QUERY_SIZE_MAX = 1000
 
-# Apollo SSO
-ROBOT_ID = 'R2D2'
-ROBOT_PWD = 'demo'
-
-APOLLO_URL = 'http://192.168.0.110:8085/apollo'
-I5K_URL = 'http://192.168.0.110:8000'
-
-#AES key must be either 16, 24, or 32 bytes long
-SSO_CIPHER = '1234567890123456'
-
-DRUPAL_URL = 'https://gmod-dev.nal.usda.gov'
-DRUPAL_COOKIE_DOMAIN=".nal.usda.gov"
-APOLLO_COOKIE_DOMAIN=".nal.usda.gov"
-
 # Celery Settings
 from kombu import Exchange, Queue
 CELERY_DEFAULT_QUEUE = 'i5k'
