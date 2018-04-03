@@ -5,6 +5,7 @@ coverage:
     - "blast/static/blast/scripts/bootstrap*"
     - "blast/static/blast/scripts/chroma*"
     - "blast/static/blast/scripts/codemirror*"
+    - "blast/static/blast/scripts/codemirror/"
     - "blast/static/blast/scripts/dataTables"
     - "blast/static/blast/scripts/dragscrollable.js"
     - "blast/static/blast/scripts/jquery*"
