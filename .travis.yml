@@ -54,16 +54,35 @@ before_script:
   - sudo chmod 666 /var/log/django/i5k.log
   - sudo python2 manage.py migrate
   - sudo python2 setup.py
-  - celery -A i5k worker --loglevel=info --concurrency=3 &
-  - celery beat -A i5k --loglevel=info &
   - sudo python2 manage.py collectstatic --noinput
 
 # command to run tests
 script:
-  - coverage run --source= ./manage.py test i5k --noinput
-  - coverage run --source= ./manage.py test blast --noinput
-  - coverage run --source= ./manage.py test hmmer --noinput
-  - coverage run --source= ./manage.py test clustal --noinput
+  - coverage run --source= ./manage.py test blast.tests.ClickAllTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.NucleotideSequenceSimpleTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.NucleotideSequenceComplexTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.PeptideSequenceSimpleTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.PeptideSequenceComplexTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.LoadExampleNucleotideSequenceTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.LoadExamplePeptideSequenceTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.ClickSequenceTypeTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.HoverIntentTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.BlastModelActionTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.BlastAdminTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.BlastBinaryTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.ValidQueryTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.QueryWithNoHitTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.UploadFileTestCase --noinput
+  - coverage run --source= ./manage.py test blast.tests.JbrowseLinkOutTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.HmmerAdminTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.LoadSeqExampleTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.LoadAlignExampleTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.UploadFileTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.HmmerViewFunctionTestCase --noinput
+  - coverage run --source= ./manage.py test hmmer.tests.HmmerBinaryTestCase --noinput
+  - coverage run --source= ./manage.py test clustal.tests.ClustalLoadExampleTestCase --noinput
+  - coverage run --source= ./manage.py test clustal.tests.ClustalUploadFileTestCase --noinput
+  - coverage run --source= ./manage.py test clustal.tests.ClustalBinaryTestCase --noinput
   - coverage run --source= ./manage.py test filebrowser --noinput
 
 after_success:

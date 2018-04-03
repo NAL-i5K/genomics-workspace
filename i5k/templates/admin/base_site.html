@@ -1,0 +1,75 @@
+{% extends "admin/base.html" %}
+{% load admin_static %}{% load suit_tags %}{% load i18n %}
+{# Additional <head> content here, some extra meta tags or favicon #}
+{#{% block extrahead %}#}
+{#{% endblock %}#}
+
+{# Additional CSS includes #}
+{% block extrastyle %}
+<style type="text/css">
+    .footer .content .copyright {
+        padding: 15px 20px 0 0;
+        float: right;
+        text-align: right;
+    }
+
+    .header #user-tools {
+        font-size: 14px;
+    }
+
+    .controls input[type="text"], .controls input[type="url"] {
+        width: 530px;
+    }
+
+    .controls select {
+        width: 284px;
+    }
+
+    .autosize{
+        max-height: 500px
+    }
+</style>
+{% endblock %}
+
+{# Additional JS files in footer, right before </body> #}
+{% block extrajs %}
+<script type="text/javascript">
+    $('select').attr('data-size', '15');
+    $('select').attr('data-width', 'auto');
+</script>
+{% endblock %}
+
+{% block header %}{% if not is_popup %}
+<!-- Header -->
+<div id="header" class="header">
+    <div id="branding">
+        <a href="{% url 'admin:index' %}"><h1 id="site-name">{% block branding %}{{ 'ADMIN_NAME'|suit_conf }}{% endblock %}</h1></a>
+    </div>{% block header_time %}{% endblock %}{# Remove header time block #}{% block header_content %}{% endblock %}
+    {% if user.is_active and user.is_staff %}
+    <div id="user-tools">{% trans 'Welcome, ' %}{% filter force_escape %}{% firstof user.first_name user.username %}{% endfilter %}.
+        <span class="user-links"></span>
+        {% block userlinks %}{% url 'django-admindocs-docroot' as docsroot %}
+          {% if docsroot %}
+            <a href="{{ docsroot }}">{% trans 'Documentation' %}</a>
+            <span class="separator">|</span>
+          {% endif %}
+            <a href="{% url 'admin:password_change' %}">{% trans 'Change password' %}</a>
+            <span class="separator">|</span>
+            <a href="{% url 'admin:logout' %}">{% trans 'Log out' %}</a>
+        {% endblock %}
+    </div>
+    {% endif %}
+    {% block nav-global %}{% endblock %}
+</div>{% endif %}
+{% endblock %}
+
+{% block footer_links %}
+{% endblock %}
+{# Footer branding name (center) #}
+{#{% block footer_branding %}#}
+{#{% endblock %}#}
+
+{# Footer copyright (right side) #}
+{% block copyright %}
+{% now 'Y' %} - National Agricultural Library
+{% endblock %}

@@ -55,7 +55,6 @@ def create(request, iframe=False):
         })
     elif request.method == 'OPTIONS':
         return HttpResponse("OPTIONS METHOD NOT SUPPORTED", status=202)
-
     elif request.method == 'POST':
         # setup file paths
         task_id = uuid4().hex  # TODO: Create from hash of input to check for duplicate inputs
@@ -76,7 +75,7 @@ def create(request, iframe=False):
                 query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
-            return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
+            return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
 
         if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
             return render(request, 'blast/invalid_query.html', {'title': 'Your query size is ' + str(path.getsize(query_filename)) + ' bytes, but exceeds our query size limit of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' kbytes,  Please try again with a smaller query size.',})
@@ -133,8 +132,9 @@ def create(request, iframe=False):
                 record.user = request.user
             record.save()
 
-            # generate status.json for frontend statu checking
-            with open(query_filename, 'r') as f: # count number of query sequence by counting '>'
+            # generate status.json for frontend status checking
+            with open(query_filename, 'r') as f:
+                # count number of query sequence by counting '>'
                 qstr = f.read()
                 seq_count = qstr.count('>')
                 if (seq_count == 0):
@@ -145,13 +145,13 @@ def create(request, iframe=False):
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
 
             # debug
-            #run_blast_task.delay(task_id, args_list, file_prefix, blast_info).get()
+            # run_blast_task.delay(task_id, args_list, file_prefix, blast_info).get()
             return redirect('blast:retrieve', task_id)
         else:
             raise Http404
 
+
 def retrieve(request, task_id='1'):
-    #return HttpResponse("BLAST Page: retrieve = %s." % (task_id))
     try:
         r = BlastQueryRecord.objects.get(task_id=task_id)
         # if result is generated and not expired
@@ -212,6 +212,7 @@ def retrieve(request, task_id='1'):
         else:
             return HttpResponse(traceback.format_exc())
 
+
 def read_gff3(request, task_id, dbname):
     output = '##gff-version 3\n'
     try:
@@ -220,6 +221,7 @@ def read_gff3(request, task_id, dbname):
                 output = f.read()
     finally:
         return HttpResponse(output)
+
 
 def status(request, task_id):
     if request.method == 'GET':

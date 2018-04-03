@@ -1,7 +1,6 @@
 {% extends "admin/base_site.html" %}
 {% load i18n admin_static admin_list admin_urls %}
 {% load fb_tags fb_pagination %}
-{% load url from future %}
 
 {% block extrastyle %}
     {{ block.super }}
@@ -85,7 +84,7 @@
         <div class="inner-center-column">
             <div class="module filtered" id="changelist">
                 <div class="toolbar-content">
-                    
+
                     {% block search %}
                         <div id="toolbar">
                             <a href="{% url "fb_upload" %}{% query_string '' 'p' %}" class="btn btn-danger btn-large">

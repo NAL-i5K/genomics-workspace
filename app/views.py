@@ -14,8 +14,6 @@ from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.csrf import csrf_protect
 from django.contrib.auth import login, authenticate, update_session_auth_hash, get_user_model
 from django.contrib.auth.views import logout, password_reset_confirm
-from django.contrib.contenttypes.models import ContentType
-from django.apps import apps
 from functools import wraps
 from .forms import InfoChangeForm, SetInstitutionForm, RegistrationForm
 from .models import Profile
