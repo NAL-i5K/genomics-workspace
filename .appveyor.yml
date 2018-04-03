@@ -63,10 +63,9 @@ install:
   # Configure python
   - SET PATH=%PYTHON%;%PYTHON%\Scripts;%PATH%
   - echo Upgrading pip...
-  - pip install -U pip
-  - pip --version
   - cd c:\projects\genomics-workspace
   - pip install -r requirements.txt
+  - pip install -r dev_requirements.txt
   - mkdir media\blast\db\
   - mkdir C:\var\log\django\
   - ECHO >> C:\var\log\django\django.log
