@@ -18,8 +18,10 @@
     {% endif%}
 </head>
 
+<body class="padtop {% block bodyclass %}{% endblock %}">
+<nav class="navbar-fixed-top">
 {% include "app/header.html" %}
-<body  {% block bodyclass %}{% endblock %}">
+</nav>
 {% block content-body %}{% endblock %}
     <div class="container-fluid" style="height: 100%;">
 {% block content-fluid %}
