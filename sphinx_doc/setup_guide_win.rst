@@ -1,5 +1,5 @@
 Setup Guide (Windows)
-====================
+=====================
 
 This setup guide is for Windows. It's tested in Windwos 8.1 with django 1.8.12
 
@@ -55,8 +55,8 @@ Build a separate virtualenv::
 
     cd <git-home>
     # Create a virtual environment called py2.7 and activate:
-    virtualenv py2.7
-    # C:\genomics-workspace\py2.7\Scripts\activate
+    virtualenv -p C:\Python27\python py2.7
+    C:\genomics-workspace\py2.7\Scripts\activate
 
 
 RabbitMQ
