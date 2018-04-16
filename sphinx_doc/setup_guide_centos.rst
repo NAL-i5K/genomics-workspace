@@ -75,7 +75,7 @@ Build a separate virtualenv::
     cd <git-home>
 
     # Create a virtual environment called py2.7 and activate:
-    virtualenv py2.7
+    virtualenv -p python2.7 py2.7
     source py2.7/bin/activate
 
 
