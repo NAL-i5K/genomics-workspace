@@ -23,7 +23,7 @@ would be in group ``GROUP_(OSN)_USER``.
 | USER         | RWE permission   | in GROUP_()_USER with RWE permission       | 
 +--------------+------------------+--------------------------------------------+
 
-.. note:: Mapping between full organism name and short organism name are stored in django-blast app. Full organism name is the real name in WebApollo and short name is a abbreviation used in django-blast app.
+.. note:: Mapping between full organism name and short organism name are stored in genomics-workspace app. Full organism name is the real name in WebApollo and short name is a abbreviation used in genomics-workspace app.
 
 Framework Overview 
 ------------------

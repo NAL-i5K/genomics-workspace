@@ -4,7 +4,7 @@ import shutil
 
 TSV_FILENAME = 'dataset_list.tsv'
 FROM_PATH = r'E:\NAL-Home\NAL\Blast\db'
-TO_PATH = r'D:\Django\django-blast\media\blastdb'
+TO_PATH = r'D:\Django\genomics-workspace\media\blastdb'
 
 # read tsv
 with open(TSV_FILENAME, 'r') as f:

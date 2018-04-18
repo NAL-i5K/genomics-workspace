@@ -36,9 +36,9 @@ Build a separate virtualenv::
     # Make root dir for virtualenv and cd into it:
     cd genomics-workspace
 
-    # Create a virtual environment called py2.7 and activate:
-    virtualenv -p python2.7 py2.7
-    source py2.7/bin/activate
+    # Create a virtual environment called env and activate:
+    virtualenv -p python2.7 env
+    source env/bin/activate
 
 
 RabbitMQ

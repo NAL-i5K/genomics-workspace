@@ -4,7 +4,7 @@
 # 1. add analytics code for layout.html (see i5k branch)
 # 2. add proxy to installed_app and urls.py
 
-GIT_PATH="/usr/local/test1/django-blast"
+GIT_PATH="/usr/local/test1/genomics-workspace"
 PROJ_PATH="/usr/local/i5k"
 PROJ_TRAINING_PATH="/usr/local/i5k-training"
 USER_NAME="jun-wei.lin"
@@ -16,7 +16,7 @@ cd $PROJ_PATH
 #chmod 666 db.sqlite3
 chmod 777 media
 chmod -R 777 media/blast/task
-source virtualenv/py2.7/bin/activate
+source env/bin/activate
 
 # change (?:blast)* to (?:blast)+ for training site (and dont affect production site meanwhile)
 cd $PROJ_PATH/blast/static/blast/scripts

@@ -260,7 +260,7 @@ CELERY_RESULT_BACKEND = 'rpc://'
 
 # Use virtual environment or not
 USE_VIRTUALENV = False
-VIRTUALENV_ROOT = 'virtualenv/py2.7'
+VIRTUALENV_ROOT = 'env'
 
 USE_CACHE = False
 # memcached

@@ -105,7 +105,7 @@ by the various tools that can be used to examine and analyze log files.
 
 Thus, an example log message looks like: 
 
-    i5k ERROR 2016-11-02 10:41:07,110 21900 [<error message>] (file: /django-blast/dashboard/views.py line: 24)
+    i5k ERROR 2016-11-02 10:41:07,110 21900 [<error message>] (file: /genomics-workspace/dashboard/views.py line: 24)
 
 We have no control of the message part of the logs produced by the Django loggers, 
 but we can still specify their general log entry format.
@@ -319,7 +319,7 @@ allows to call any of the five methods corresponding to the five message severit
 
 The resulting debug log is for example:
 
-    i5k DEBUG 2016-09-08 10:29:22,861 9055 [<debug message>] (file: /django-blast/blast/views.py line: 23)
+    i5k DEBUG 2016-09-08 10:29:22,861 9055 [<debug message>] (file: /genomics-workspace/blast/views.py line: 23)
 
 Log entries are usually a single line, except when you print the http request, if available.  
 
@@ -340,7 +340,7 @@ This produces a multiline log similar to this:
     POST:<QueryDict: {}>,
     COOKIES:{'csrftoken': 'lw03D5JjghuOzEFDsQE3uaREaHr1xUM2'},
     <other request fields> 
-    RequestEnd] (file: /django-blast/blast/views.py line: 29)
+    RequestEnd] (file: /genomics-workspace/blast/views.py line: 29)
 
 The request data makes the log file less readable but equally useful to text manipulation tools.
 The call to *'src.request(request)'* returns the request string sandwiched between the strings 
