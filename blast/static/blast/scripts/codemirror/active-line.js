@@ -1,3 +1,6 @@
+// CodeMirror, copyright (c) by Marijn Haverbeke and others
+// Distributed under an MIT license: http://codemirror.net/LICENSE
+
 // Because sometimes you need to style the cursor's line.
 //
 // Adds an option 'styleActiveLine' which, when enabled, gives the
@@ -6,9 +9,9 @@
 
 (function(mod) {
   if (typeof exports == "object" && typeof module == "object") // CommonJS
-    mod(require("./codemirror"));
+    mod(require("../../lib/codemirror"));
   else if (typeof define == "function" && define.amd) // AMD
-    define(["./codemirror"], mod);
+    define(["../../lib/codemirror"], mod);
   else // Plain browser env
     mod(CodeMirror);
 })(function(CodeMirror) {
@@ -46,7 +49,9 @@
   function updateActiveLines(cm, ranges) {
     var active = [];
     for (var i = 0; i < ranges.length; i++) {
-      var line = cm.getLineHandleVisualStart(ranges[i].head.line);
+      var range = ranges[i];
+      if (!range.empty()) continue;
+      var line = cm.getLineHandleVisualStart(range.head.line);
       if (active[active.length - 1] != line) active.push(line);
     }
     if (sameArray(cm.state.activeLines, active)) return;
