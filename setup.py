@@ -5,10 +5,9 @@ import stat as Perm
 from sys import platform
 from shutil import rmtree, move, copyfile
 import tarfile
+import subprocess
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
-import pip
-import subprocess
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
@@ -29,12 +28,7 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 # download the blast binary
-if platform == 'win32':
-    urllib.request.urlretrieve(
-        ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
-         'blast+/2.7.1/ncbi-blast-2.7.1+-x64-win64.tar.gz'),
-        blast_local_file_path)
-elif platform == 'darwin':
+if platform == 'darwin':
     urllib.request.urlretrieve(
         ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
          'blast+/2.7.1/ncbi-blast-2.7.1+-x64-macosx.tar.gz'),
@@ -60,10 +54,7 @@ if exists(blast_local_file_path):
 if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
-if platform == 'win32':
-    pip.main(['install', 'win_inet_pton'])
-    # TODO: currently, we don't support winodws with hmmer and clustal
-elif platform == 'darwin':
+if platform == 'darwin':
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 

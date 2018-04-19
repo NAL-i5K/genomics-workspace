@@ -1,11 +1,12 @@
 from datetime import datetime
 from django.conf import settings
 from django.conf.urls import include, url
-from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
-# Uncomment the next two lines to enable the admin:
+from django.conf.urls.static import static
 from django.contrib import admin
-from django.contrib.auth.views import login
+from django.contrib.auth.views import login, password_reset, password_reset_done, password_reset_complete, password_change_done, password_reset_confirm
 from django.contrib.auth.decorators import user_passes_test
+from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
+from app.views import about, set_institution, info_change, register, logout_all, password_change
 
 admin.autodiscover()
 # admin.site.unregister(Site)
@@ -14,22 +15,19 @@ admin.autodiscover()
 login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
-    url(r'^about', 'app.views.about', name='about'),
+    url(r'^about', about, name='about'),
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
-    # url(r'^admin/filebrowser/', include(site.urls)),
     # url(r'^grappelli/', include('grappelli.urls')),
-    # Uncomment the admin/doc line below to enable admin documentation:
+    # Enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
     url(r'^captcha/', include('captcha.urls')),
     url(r'^proxy/', include('proxy.urls', namespace='proxy')),
 
     # user authentication
-    url(r'^set_institution$', 'app.views.set_institution', name='set_institution'),
-    url(r'^info_change$', 'app.views.info_change', name='info_change'),
-    url(r'^register$', 'app.views.register', name='register'),
-    url(r'^login/$',
-        # 'django.contrib.auth.views.login',
-        login_forbidden(login),
+    url(r'^set_institution$', set_institution, name='set_institution'),
+    url(r'^info_change$', info_change, name='info_change'),
+    url(r'^register$', register, name='register'),
+    url(r'^login/$', login_forbidden(login),
         {
             'template_name': 'app/login.html',
             'authentication_form': BootstrapAuthenticationForm,
@@ -40,9 +38,8 @@ urlpatterns = [
             },
         },
         name='login'),
-    url(r'^logout$', 'app.views.logout_all', name='logout'),
-    url(r'^password_reset$',
-        'django.contrib.auth.views.password_reset',
+    url(r'^logout$', logout_all, name='logout'),
+    url(r'^password_reset$', password_reset,
         {
             'template_name': 'app/password_reset.html',
             'password_reset_form': BootStrapPasswordResetForm,
@@ -53,8 +50,7 @@ urlpatterns = [
             },
         },
         name='password_reset'),
-    url(r'^password_reset_done$',
-        'django.contrib.auth.views.password_reset_done',
+    url(r'^password_reset_done$', password_reset_done,
         {
             'template_name': 'app/password_reset_done.html',
             'extra_context':
@@ -65,7 +61,7 @@ urlpatterns = [
         },
         name='password_reset_done'),
     url(r'^reset/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
-        'django.contrib.auth.views.password_reset_confirm',
+        password_reset_confirm,
         {
             'template_name': 'app/password_reset_confirm.html',
             'set_password_form': BootStrapSetPasswordForm,
@@ -75,8 +71,7 @@ urlpatterns = [
             },
         },
         name='password_reset_confirm'),
-    url(r'^reset_complete$',
-        'django.contrib.auth.views.password_reset_complete',
+    url(r'^reset_complete$', password_reset_complete,
         {
             'template_name': 'app/password_reset_complete.html',
             'extra_context':
@@ -86,8 +81,7 @@ urlpatterns = [
             },
         },
         name='password_reset_complete'),
-    url(r'^password_change_done$',
-        'django.contrib.auth.views.password_change_done',
+    url(r'^password_change_done$', password_change_done,
         {
             'template_name': 'app/password_change_done.html',
             'extra_context':
@@ -97,9 +91,7 @@ urlpatterns = [
             },
         },
         name='password_change_done'),
-    url(r'^password_change$',
-        # 'django.contrib.auth.views.password_change',
-        'app.views.password_change',
+    url(r'^password_change$', password_change,
         {
             'template_name': 'app/password_change.html',
             'password_change_form': BootStrapPasswordChangeForm,
@@ -124,11 +116,5 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
-    urlpatterns += [
-        url(r'^media/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.MEDIA_ROOT,
-        }),
-        url(r'^static/(?P<path>.*)$', 'django.views.static.serve', {
-            'document_root': settings.STATIC_ROOT,
-        }),
-    ]
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

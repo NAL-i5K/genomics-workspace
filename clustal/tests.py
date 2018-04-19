@@ -1,5 +1,6 @@
 from django.conf import settings
-from django.test import SimpleTestCase, LiveServerTestCase, override_settings
+from django.test import SimpleTestCase, override_settings
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
@@ -8,13 +9,15 @@ from os import path, mkdir
 from subprocess import Popen, PIPE
 from shutil import rmtree
 from util.get_bin_name import get_bin_name
+from celery.contrib.testing.worker import start_worker
+from i5k.celery import app
 
 DEBUG = False
 
 
-class ClustalLoadExampleTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class ClustalLoadExampleTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
@@ -28,8 +31,10 @@ class ClustalLoadExampleTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/clustal/'))
         # wait at most 2 seconds to let page load, or timeout exception
@@ -37,17 +42,17 @@ class ClustalLoadExampleTestCase(LiveServerTestCase):
         wait.until(EC.presence_of_element_located((By.CLASS_NAME, 'txt')))
         self.driver.find_element_by_class_name('txt').click()
         self.driver.find_element_by_id('clustalo_submit').click()
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text,
-                         'CLUSTAL Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'clustal-success')))
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
 
-class ClustalUploadFileTestCase(LiveServerTestCase):
+@override_settings(DEBUG=True)
+class ClustalUploadFileTestCase(StaticLiveServerTestCase):
     def setUp(self):
-        settings.DEBUG = True
         if not DEBUG:
             # headless chrome driver
             options = webdriver.ChromeOptions()
@@ -61,19 +66,22 @@ class ClustalUploadFileTestCase(LiveServerTestCase):
             # self.driver = webdriver.PhantomJS()
             # self.driver = webdriver.Firefox()
             self.driver.set_window_size(1280, 800)
+        # Start up celery worker for testing
+        self.celery_worker = start_worker(app)
+        self.celery_worker.__enter__()
 
     def tearDown(self):
         self.driver.close()
+        # Close worker for testing
+        self.celery_worker.__exit__(None, None, None)
 
-    @override_settings(CELERY_ALWAYS_EAGER=True)
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/clustal/'))
         wait = WebDriverWait(self.driver, 10)
         example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
-        wait.until(EC.presence_of_element_located((By.TAG_NAME, 'h2')))
-        self.assertEqual(self.driver.find_element_by_tag_name('h2').text, 'CLUSTAL Success')
+        wait.until(EC.presence_of_element_located((By.ID, 'clustal-success')))
 
 
 class ClustalBinaryTestCase(SimpleTestCase):
