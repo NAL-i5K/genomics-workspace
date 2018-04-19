@@ -27,7 +27,7 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then rm -rf /usr/local/var/postgres; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then initdb /usr/local/var/postgres; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then pg_ctl -D /usr/local/var/postgres start; fi
-  - sleep 5
+  - sleep 5 # let database start
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then createuser -s postgres; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start rabbitmq; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start memcached; fi
@@ -56,6 +56,7 @@ before_script:
   - sudo python2 setup.py
   - celery -A i5k worker --loglevel=info --concurrency=3 &
   - celery beat -A i5k --loglevel=info &
+  - sleep 5 # give some time for celery starting
   - sudo python2 manage.py collectstatic --noinput
 
 # command to run tests
