@@ -151,11 +151,11 @@ def create(request):
 
                 args_list.append([path.join(program_path, 'clustalw2'), '-infile='+query_filename,
                                   '-OUTFILE='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id+'.aln'),
-                                  '-type=protein'])
+                                  '-type=protein'] + option_params)
 
                 args_list_log = []
                 args_list_log.append(['clustalw2', '-infile='+path.basename(query_filename),
-                                     '-OUTFILE='+task_id+'.aln', '-type=protein'])
+                                     '-OUTFILE='+task_id+'.aln', '-type=protein'] + option_params)
 
             else:  # clustalo
                 if request.POST['dealing_input'] == "yes":
