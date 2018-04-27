@@ -4,7 +4,7 @@ from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from subprocess import Popen, PIPE
 from datetime import datetime, timedelta
-from .models import BlastQueryRecord, Sequence, BlastDb, JbrowseSetting
+from blast.models import BlastQueryRecord, Sequence, BlastDb, JbrowseSetting
 from os import path, stat
 from pytz import utc
 from itertools import groupby
@@ -25,7 +25,8 @@ if settings.USE_CACHE:
     acquire_lock = lambda: cache.add(LOCK_ID, 'true', LOCK_EXPIRE)
     release_lock = lambda: cache.delete(LOCK_ID)
 
-@shared_task() # ignore_result=True
+
+@shared_task()  # ignore_result=True
 def run_blast_task(task_id, args_list, file_prefix, blast_info):
     import django
     django.setup()
@@ -181,9 +182,10 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
     with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
         json.dump({'status': 'done'}, f)
 
-    return task_id # passed to 'result' argument of task_success_handler
+    return task_id   # passed to 'result' argument of task_success_handler
 
-@periodic_task(run_every=(crontab(hour='0', minute='10'))) # Execute daily at midnight
+
+@periodic_task(run_every=(crontab(hour='0', minute='10')))   # Execute daily at midnight
 def remove_files():
     from shutil import rmtree
     logger.info('removing expired files (under test, not working actually)')
@@ -202,8 +204,8 @@ def task_sent_handler(sender=None, task_id=None, task=None, args=None,
         try:
             tlist = cache.get(CACHE_ID, [])
             if args:
-                bid = args[0] # blast_task_id
-                tlist.append( (task_id,bid) )
+                bid = args[0]  # blast_task_id
+                tlist.append((task_id, bid))
                 logger.info('[task_sent] task sent: %s. queue length: %s' % (bid, len(tlist)) )
                 cache.set(CACHE_ID, tlist)
             else:
@@ -236,5 +238,5 @@ def task_success_handler(sender=None, result=None, **kwds):
 def task_failure_handler(sender=None, task_id=None, exception=None,
                          args=None, kwargs=None, traceback=None, einfo=None, **kwds):
     if settings.USE_CACHE:
-        logger.info('[task_failure] task failed. rabbit task_id: %s' % (task_id) )
+        logger.info('[task_failure] task failed. rabbit task_id: %s' % (task_id))
         task_success_handler(sender, task_id)
