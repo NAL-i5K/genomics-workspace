@@ -1,7 +1,7 @@
 Setup Guide (MacOS)
 ===================
 
-This setup guide is tested in MacOS Sierra (10.12.6) with django 1.8.12.
+This setup guide is tested in MacOS Sierra (10.12) and MacOS High Sierra (10.13), but it should also work on all recent MacOS versions.
 
 Note: The following variables may be used in path names; substitute as appropriate::
 

@@ -1,7 +1,7 @@
 Setup Guide (CentOS)
 ====================
 
-This setup guide is for CentOS. It's tested in CentOS 6.7 and CentOS 7.2 with django 1.8.12
+This setup guide is for CentOS. It's tested in CentOS 6.7 and CentOS 7.2, but it should also work on all modern linux distributions.
 
 Note: The following variables may be used in path names; substitute as appropriate::
 
