@@ -162,27 +162,25 @@ $RECYCLE.BIN/
 .DS_Store
 
 # Virtual Environment
-py2.7/
+/py2.7/
 
 # Sphinx build docs
-sphinx_doc/_build/
+/sphinx_doc/_build/
 
 # blast binaries
-blast/bin_linux/
-blast/bin_win/
-blast/bin_mac/
+/blast/bin_*/
 
 # hmmer binaries
-hmmer/bin_linux/
-hmmer/bin_win/
-hmmer/bin_mac/
+/hmmer/bin_*/
 
 # clustal binaries
-clustal/bin_linux/
-clustal/bin_win/
-clustal/bin_mac/
+/clustal/bin_*/
 
 # media folder
-media/
+/media/
+
+# generated static folder
+/static/
+
 .editorconfig
 .vscode/

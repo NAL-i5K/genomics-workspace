@@ -4,7 +4,7 @@ Setup Guide
 This is our introduction to this project.
 
 .. toctree::
-   :maxdepth: 3
+   :maxdepth: 1
    :name: setup_guide_doc
 
    setup_guide_centos

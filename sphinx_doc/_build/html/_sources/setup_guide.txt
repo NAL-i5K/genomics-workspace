@@ -1,9 +1,0 @@
-Setup guide
-===========
-Environmnet 
------------
-1. virtualenv
-
-Database
---------
-1. postgresql
