@@ -467,9 +467,9 @@ PIPELINE = {
         },
         'clustal-js': {
             'source_filenames': (
-                'clustal/scripts/underscore-min.js',
-                'clustal/scripts/jquery.hoverIntent.minified.js',
-                'clustal/scripts/jquery.validate.min.js',
+                'clustal/scripts/underscore.js',
+                'clustal/scripts/jquery.hoverIntent.js',
+                'clustal/scripts/jquery.validate.js',
                 'clustal/scripts/clustal-multi.js',
             ),
             'output_filename': 'clustal/scripts/clustal-js.min.js',
