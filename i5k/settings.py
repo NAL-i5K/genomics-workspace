@@ -439,9 +439,9 @@ PIPELINE = {
         },
         'hmmer-js': {
             'source_filenames': (
-                'hmmer/scripts/underscore-min.js',
-                'hmmer/scripts/jquery.hoverIntent.minified.js',
-                'hmmer/scripts/jquery.validate.min.js',
+                'hmmer/scripts/underscore.js',
+                'hmmer/scripts/jquery.hoverIntent.js',
+                'hmmer/scripts/jquery.validate.js',
                 'hmmer/scripts/hmmer-multi.js',
             ),
             'output_filename': 'hmmer/scripts/hmmer-js.min.js',
