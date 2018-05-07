@@ -212,8 +212,8 @@ class Sequence(models.Model):
 
 
 class JbrowseSetting(models.Model):
-    'Used to link databases to Jbrowse'
-    blast_db = models.OneToOneField(BlastDb, verbose_name='reference', unique=True, help_text='The BLAST database used as the reference in Jbrowse') #
+    '''Used to link databases to Jbrowse'''
+    blast_db = models.OneToOneField(BlastDb, verbose_name='reference', unique=True, help_text='The BLAST database used as the reference in Jbrowse')
     url = models.URLField('Jbrowse URL', unique=True, help_text='The URL to Jbrowse using this reference')
 
     def __unicode__(self):
