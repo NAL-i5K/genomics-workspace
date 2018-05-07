@@ -382,11 +382,11 @@ REST_FRAMEWORK = {
 
 # django-pipeline
 PIPELINE = {
-    'STYLESHEETS':{
+    'STYLESHEETS': {
         'app-layout': {
             'source_filenames': (
                 'app/content/site.css',
-                'app/content/bootstrap.min.css',
+                'app/content/bootstrap.css',
             ),
             'output_filename': 'app/content/app-layout.min.css',
         },
@@ -429,9 +429,9 @@ PIPELINE = {
     'JAVASCRIPT': {
         'app-layout': {
             'source_filenames': (
-                'app/scripts/jquery-1.11.1.min.js',
-                'app/scripts/bootstrap.min.js',
-                'app/scripts/respond.min.js',
+                'app/scripts/jquery-1.11.1.js',
+                'app/scripts/bootstrap.js',
+                'app/scripts/respond.src.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
