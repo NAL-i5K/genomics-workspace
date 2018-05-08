@@ -432,6 +432,7 @@ PIPELINE = {
                 'app/scripts/jquery-1.11.1.js',
                 'app/scripts/bootstrap.js',
                 'app/scripts/respond.src.js',
+                'app/scripts/underscore.js'
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
@@ -447,7 +448,6 @@ PIPELINE = {
                 'blast/dataTables/js/dataTables.colReorder.js',
                 'blast/dataTables/js/dataTables.tableTools.js',
                 'blast/dataTables/js/dataTables.bootstrap.js',
-                'blast/scripts/underscore.js',
                 'blast/scripts/backbone.js',
                 'blast/scripts/scribl.1.1.5-hotdogee.js',
                 'blast/scripts/bootstrap-select-hotdogee.js',
@@ -458,7 +458,6 @@ PIPELINE = {
         },
         'blast-js': {
             'source_filenames': (
-                'blast/scripts/underscore.js',
                 'blast/scripts/jquery.hoverIntent.js',
                 'blast/scripts/jquery.validate.js',
                 'blast/scripts/blast-multi.js',
@@ -467,7 +466,6 @@ PIPELINE = {
         },
         'clustal-js': {
             'source_filenames': (
-                'clustal/scripts/underscore.js',
                 'clustal/scripts/jquery.hoverIntent.js',
                 'clustal/scripts/jquery.validate.js',
                 'clustal/scripts/clustal-multi.js',
@@ -476,7 +474,6 @@ PIPELINE = {
         },
         'hmmer-js': {
             'source_filenames': (
-                'hmmer/scripts/underscore.js',
                 'hmmer/scripts/jquery.hoverIntent.js',
                 'hmmer/scripts/jquery.validate.js',
                 'hmmer/scripts/hmmer-multi.js',
