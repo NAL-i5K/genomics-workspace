@@ -9,10 +9,6 @@ blast/staic/blast/dataTables/css/dataTables.colReorder.css
 blast/staic/blast/dataTables/css/dataTables.bootstrap.css
 blast/staic/blast/css/bootstrap-select.css
 blast/staic/blast/css/bootstrap-switch.css
-app/static/app/scripts/jquery-1.11.1.js
-app/static/app/scripts/bootstrap.js
-app/static/app/scripts/respond.src.js
-app/static/app/scripts/underscore.js
 blast/static/blast/scripts/chroma.js
 blast/static/blast/scripts/codemirror-compressed.js
 blast/static/blast/scripts/kendo-hotdogee.js

@@ -1,7 +1,9 @@
 {
   "name": "genomics-workspace",
   "version": "1.0.0",
-  "scripts": {},
+  "scripts": {
+    "build": "npm install && webpack && python2.7 setup.py && rm -rf dist/"
+  },
   "private": true,
   "repository": {
     "type": "git",
@@ -13,9 +15,19 @@
     "url": "https://github.com/NAL-i5K/genomics-workspace/issues"
   },
   "homepage": "https://github.com/NAL-i5K/genomics-workspace#readme",
-  "dependencies": {},
   "devDependencies": {
     "jshint": "^2.9.6",
     "prettier": "1.13.0"
+  },
+  "dependencies": {
+    "Respond.js": "https://github.com/scottjehl/Respond/archive/1.4.0.tar.gz",
+    "bootstrap": "^3.1.1",
+    "chroma-js": "https://github.com/gka/chroma.js/archive/v0.6.1.tar.gz",
+    "copy-webpack-plugin": "^4.5.1",
+    "jquery": "^1.11.1",
+    "jquery-validation": "^1.13.1",
+    "underscore": "^1.7.0",
+    "webpack": "^4.8.1",
+    "webpack-cli": "^2.1.3"
   }
 }
