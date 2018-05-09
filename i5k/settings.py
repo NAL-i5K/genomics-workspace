@@ -382,11 +382,11 @@ REST_FRAMEWORK = {
 
 # django-pipeline
 PIPELINE = {
-    'STYLESHEETS':{
+    'STYLESHEETS': {
         'app-layout': {
             'source_filenames': (
                 'app/content/site.css',
-                'app/content/bootstrap.min.css',
+                'app/content/bootstrap.css',
             ),
             'output_filename': 'app/content/app-layout.min.css',
         },
@@ -395,14 +395,14 @@ PIPELINE = {
                 'blast/css/codemirror.css',
                 'blast/css/xq-light.css',
                 'blast/css/kendo.common-bootstrap.core.css',
-                'blast/css/kendo.bootstrap.min.css',
-                'blast/css/jquery-ui.min.css',
-                'blast/dataTables/css/jquery.dataTables.min.css',
-                'blast/dataTables/css/dataTables.scroller.min.css',
-                'blast/dataTables/css/dataTables.colReorder.min.css',
+                'blast/css/kendo.bootstrap.css',
+                'blast/css/jquery-ui.css',
+                'blast/dataTables/css/jquery.dataTables.css',
+                'blast/dataTables/css/dataTables.scroller.css',
+                'blast/dataTables/css/dataTables.colReorder.css',
                 'blast/dataTables/css/dataTables.bootstrap.css',
-                'blast/css/bootstrap-select.min.css',
-                'blast/css/bootstrap-switch.min.css',
+                'blast/css/bootstrap-select.css',
+                'blast/css/bootstrap-switch.css',
                 'blast/css/blast-results.css',
             ),
             'output_filename': 'blast/css/blast-results.min.css',
@@ -429,56 +429,53 @@ PIPELINE = {
     'JAVASCRIPT': {
         'app-layout': {
             'source_filenames': (
-                'app/scripts/jquery-1.11.1.min.js',
-                'app/scripts/bootstrap.min.js',
-                'app/scripts/respond.min.js',
+                'app/scripts/jquery-1.11.1.js',
+                'app/scripts/bootstrap.js',
+                'app/scripts/respond.src.js',
+                'app/scripts/underscore.js'
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
         'blast-results': {
             'source_filenames': (
-                'blast/scripts/chroma.min.js',
+                'blast/scripts/chroma.js',
                 'blast/scripts/codemirror-compressed.js',
                 'blast/scripts/kendo-hotdogee.js',
-                'blast/scripts/jquery-ui.min.js',
+                'blast/scripts/jquery-ui.js',
                 'blast/scripts/dragscrollable.js',
                 'blast/dataTables/js/jquery.dataTables-hotdogee.js',
                 'blast/dataTables/js/dataTables.scroller.js',
-                'blast/dataTables/js/dataTables.colReorder.min.js',
-                'blast/dataTables/js/dataTables.tableTools.min.js',
+                'blast/dataTables/js/dataTables.colReorder.js',
+                'blast/dataTables/js/dataTables.tableTools.js',
                 'blast/dataTables/js/dataTables.bootstrap.js',
-                'blast/scripts/underscore-min.js',
-                'blast/scripts/backbone-min.js',
+                'blast/scripts/backbone.js',
                 'blast/scripts/scribl.1.1.5-hotdogee.js',
                 'blast/scripts/bootstrap-select-hotdogee.js',
-                'blast/scripts/bootstrap-switch.min.js',
+                'blast/scripts/bootstrap-switch.js',
                 'blast/scripts/blast-results.js',
             ),
             'output_filename': 'blast/scripts/blast-results.min.js',
         },
         'blast-js': {
             'source_filenames': (
-                'blast/scripts/underscore-min.js',
-                'blast/scripts/jquery.hoverIntent.minified.js',
-                'blast/scripts/jquery.validate.min.js',
+                'blast/scripts/jquery.hoverIntent.js',
+                'blast/scripts/jquery.validate.js',
                 'blast/scripts/blast-multi.js',
             ),
             'output_filename': 'blast/scripts/blast-js.min.js',
         },
         'clustal-js': {
             'source_filenames': (
-                'clustal/scripts/underscore-min.js',
-                'clustal/scripts/jquery.hoverIntent.minified.js',
-                'clustal/scripts/jquery.validate.min.js',
+                'clustal/scripts/jquery.hoverIntent.js',
+                'clustal/scripts/jquery.validate.js',
                 'clustal/scripts/clustal-multi.js',
             ),
             'output_filename': 'clustal/scripts/clustal-js.min.js',
         },
         'hmmer-js': {
             'source_filenames': (
-                'hmmer/scripts/underscore-min.js',
-                'hmmer/scripts/jquery.hoverIntent.minified.js',
-                'hmmer/scripts/jquery.validate.min.js',
+                'hmmer/scripts/jquery.hoverIntent.js',
+                'hmmer/scripts/jquery.validate.js',
                 'hmmer/scripts/hmmer-multi.js',
             ),
             'output_filename': 'hmmer/scripts/hmmer-js.min.js',
