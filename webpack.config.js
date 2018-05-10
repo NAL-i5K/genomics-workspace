@@ -15,7 +15,10 @@ const appScriptConfig = {
         { from: path.join(nodeModules, '/Respond.js/dest/respond.src.js'), to: appScripts},
         { from: path.join(nodeModules, '/bootstrap/dist/css/bootstrap.css'), to: appStyles},
     ])
-  ]
+  ],
+  module: {
+    noParse: [/\.js$/] //use noParse to accelerate
+  }
 };
 
 const blastScripts = path.resolve(__dirname, 'blast/static/blast/scripts');
@@ -40,7 +43,10 @@ const blastScriptConfig = {
         { from: path.join(nodeModules, '/datatables.net-bs/css/dataTables.bootstrap.css'), to: blastStyles},
         { from: path.join(nodeModules, '/datatables.net-dt/css/jquery.dataTables.css'), to: blastStyles},
     ])
-  ]
+  ],
+  module: {
+    noParse: [/\.js$/] //use noParse to accelerate
+  }
 };
 
 const hmmerScripts = path.resolve(__dirname, 'hmmer/static/hmmer/scripts');
@@ -51,7 +57,10 @@ const hmmerScriptConfig = {
         { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: hmmerScripts},
         { from: path.join(nodeModules, '/jquery-hoverintent/jquery.hoverIntent.js'), to: hmmerScripts},
     ])
-  ]
+  ],
+  module: {
+    noParse: [/\.js$/] //use noParse to accelerate
+  }
 };
 
 const clustalScripts = path.resolve(__dirname, 'clustal/static/clustal/scripts');
@@ -62,7 +71,10 @@ const clustalScriptConfig = {
         { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: clustalScripts},
         { from: path.join(nodeModules, '/jquery-hoverintent/jquery.hoverIntent.js'), to: clustalScripts},
     ])
-  ]
+  ],
+  module: {
+    noParse: [/\.js$/] //use noParse to accelerate
+  }
 };
 
 module.exports = [
