@@ -43,6 +43,28 @@ const blastScriptConfig = {
   ]
 };
 
+const hmmerScripts = path.resolve(__dirname, 'hmmer/static/hmmer/scripts');
+const hmmerScriptConfig = {
+  entry: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'),  // Just a fake entry, we only copy files here
+  plugins: [
+    new CopyWebpackPlugin([
+        { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: hmmerScripts},
+        { from: path.join(nodeModules, '/jquery-hoverintent/jquery.hoverIntent.js'), to: hmmerScripts},
+    ])
+  ]
+};
+
+const clustalScripts = path.resolve(__dirname, 'clustal/static/clustal/scripts');
+const clustalScriptConfig = {
+  entry: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'),  // Just a fake entry, we only copy files here
+  plugins: [
+    new CopyWebpackPlugin([
+        { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: clustalScripts},
+        { from: path.join(nodeModules, '/jquery-hoverintent/jquery.hoverIntent.js'), to: clustalScripts},
+    ])
+  ]
+};
+
 module.exports = [
-  appScriptConfig, blastScriptConfig
+  appScriptConfig, blastScriptConfig, hmmerScriptConfig, clustalScriptConfig,
 ];
