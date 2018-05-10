@@ -9,4 +9,4 @@ exclude_patterns:
 - "blast/static/blast/scripts/dataTables.scroller.js"
 - "blast/static/blast/scripts/scribl.1.1.5-hotdogee.js"
 - "blast/static/blast/scripts/bootstrap-select-hotdogee.js"
-- "blast/static/blast/scripts/codemirror/*"
+- "blast/static/blast/scripts/dragscrollable.js"

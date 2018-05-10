@@ -219,12 +219,13 @@ Run migrate::
     python manage.py migrate
 
 
-Install BLAST binary
---------------------
 
-To instll blast binary::
+Install Binary Files and Front-end Scripts
+------------------------------------------
 
-   python setup.py
+This step will instll binary files (for BLAST, HMMER and Clustal) and front-end scripts (`.js`, `.css` files)::
+
+   npm run build
 
 
 Start development server
