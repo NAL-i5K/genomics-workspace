@@ -7,6 +7,4 @@ coverage:
     - "blast/static/blast/scripts/scribl.1.1.5-hotdogee.js"
     - "blast/static/blast/scripts/dragscrollable.js"
     - "blast/static/blast/scripts/dataTables.scroller.js"
-    - "clustal/static/clustal/scripts/jquery*"
-    - "hmmer/static/hmmer/scripts/jquery*"
 
