@@ -48,15 +48,6 @@ blast_info = {
 
 
 def create(request, iframe=False):
-    #return HttpResponse("BLAST Page: create.")
-    from django.views.debug import get_exception_reporter_filter
-    import inspect
-    import sys
-    fil = get_exception_reporter_filter(request)
-    request_repr = '\n{0}'.format(fil.get_request_repr(request))
-    with open('/tmp/requests', 'a') as f:
-        #f.write(json.dumps(request.POST, indent=4))
-        f.write(request_repr)
     replay = False  #  True if it's a history search being replayed.
     if request.method == 'GET':
         print('GET')
