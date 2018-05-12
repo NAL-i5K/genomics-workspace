@@ -354,8 +354,14 @@ def save_history(post, task_id, user, seq_file):
     rec.search_tag       = post.get('tag')
     rec.enqueue_date     = datetime.now()
     rec.user             = user
-    rec.soft_masking     = post.get('chk_soft_masking', False)
-    rec.low_complexity   = post.get('chk_low_complexity', False)
+    if post.get('chk_soft_masking', False):
+        rec.soft_masking = True
+    else:
+        rec.soft_masking = False
+    if post.get('chk_low_complexity', False):
+        rec.low_complexity = True
+    else:
+        rec.low_complexity = False
     rec.penalty          = post.get('penalty', 0)
     rec.evalue           = float(post.get('evalue', 0))
     rec.gapopen          = post.get('gapopen', 0)
