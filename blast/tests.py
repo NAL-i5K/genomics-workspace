@@ -309,7 +309,7 @@ class BlastModelActionTestCase(TestCase):
         self.assertEqual(error, '')
         for file in self.files:
             self.assertEqual(
-                path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)),
+                path.exists(path.join(settings.BASE_DIR, 'media', 'blast', 'db', file)),
                 True)
 
     def test_index_fasta(self):
@@ -438,9 +438,9 @@ class BlastAdminTestCase(StaticLiveServerTestCase):
 
 def prepare_test_fasta_file():
     for file in test_files:
-        if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
-            remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
-    copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
+        if path.exists(path.join(settings.BASE_DIR, 'media', 'blast', 'db', file)):
+            remove(path.join(settings.BASE_DIR, 'media', 'blast', 'db', file))
+    copyfile(path.join(settings.BASE_DIR, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.BASE_DIR, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
 
 
 class BlastBinaryTestCase(SimpleTestCase):
@@ -465,13 +465,13 @@ def run_blast(program, assertEqual):
     try:
         run_commands(args_list, assertEqual)
     finally:
-        output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
+        output_file_dir = path.join(settings.BASE_DIR, 'test_' + program + '/')
         rmtree(output_file_dir)
 
 
 def generate_blast_args(program):
-    input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'blastdb/')
-    output_file_dir = path.join(settings.PROJECT_ROOT, 'test_' + program + '/')
+    input_file_dir = path.join(settings.BASE_DIR, 'example', 'blastdb/')
+    output_file_dir = path.join(settings.BASE_DIR, 'test_' + program + '/')
     asn_filename = path.join(output_file_dir,  'test_' + program + '.asn')
     if program == 'blastp':
         query_filename = path.join(input_file_dir, 'Cimex_sample_pep_query.faa')
@@ -548,7 +548,7 @@ def generate_blast_args(program):
         rmtree(output_file_dir)
     makedirs(output_file_dir)
     bin_name = get_bin_name()
-    program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, program)
+    program_path = path.join(settings.BASE_DIR, 'blast', bin_name, program)
     blast_customized_options = {'blastn':['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                                 'tblastn':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
                                 'tblastx':['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'strand', 'low_complexity', 'soft_masking'],
@@ -567,7 +567,7 @@ def generate_blast_args(program):
 
     args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', '2']]
     args_list[0].extend(input_opt)
-    blast_formatter_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'blast_formatter')
+    blast_formatter_path = path.join(settings.BASE_DIR, 'blast', bin_name, 'blast_formatter')
     blast_col_name = 'qseqid sseqid pident length mismatch gapopen qstart qend sstart send evalue bitscore nident qcovs qlen slen qframe sframe'
     blast_info = {
         'col_types': ['str', 'str', 'float', 'int', 'int', 'int', 'int', 'int', 'int', 'int', 'float', 'float', 'int', 'int', 'int', 'int', 'int', 'int'],
@@ -691,7 +691,7 @@ class UploadFileTestCase(QueryTestCase):
         hover.perform()
         wait.until(EC.element_to_be_clickable((By.ID, title)))
         self.driver.find_element_by_id(title).click()
-        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        example_file_path = path.join(settings.BASE_DIR, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.ID, 'query-canvas-name')))

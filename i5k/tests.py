@@ -9,11 +9,11 @@ from django.conf import settings
 
 class PostInstallTestCase(SimpleTestCase):
     def test_remove_downloaded_blast(self):
-        local_file_path = join(settings.PROJECT_ROOT, 'blast.tar.gz')
+        local_file_path = join(settings.BASE_DIR, 'blast.tar.gz')
         self.assertEqual(exists(local_file_path), False)
 
     def test_remove_downloaded_hmmer(self):
-        local_file_path = join(settings.PROJECT_ROOT, 'hmmer.tar.gz')
+        local_file_path = join(settings.BASE_DIR, 'hmmer.tar.gz')
         self.assertEqual(exists(local_file_path), False)
 
 
