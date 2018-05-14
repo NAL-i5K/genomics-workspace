@@ -62,3 +62,11 @@
 	};
 
 })(jQuery);
+
+$(function () {
+	var options = {
+			owner: 'hotdogee',
+			repo: 'django-blast'
+	};
+	$('#readme').readme(options);
+});

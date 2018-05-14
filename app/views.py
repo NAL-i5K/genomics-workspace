@@ -46,8 +46,7 @@ def about(request):
     return render(
         request,
         'app/about.html', {
-            'title': 'About i5k - BLAST',
-            'message': 'django-blast',
+            'title': 'About Genomics-Workspace',
             #'year': datetime.now().year,
         })
 
