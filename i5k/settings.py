@@ -295,10 +295,10 @@ PIPELINE = {
     'STYLESHEETS': {
         'app-layout': {
             'source_filenames': (
-                'app/content/site.css',
-                'app/content/bootstrap.css',
+                'app/css/site.css',
+                'app/css/bootstrap.css',
             ),
-            'output_filename': 'app/content/app-layout.min.css',
+            'output_filename': 'app/css/app-layout.min.css',
         },
         'app-readme': {
             'source_filenames': (

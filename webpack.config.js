@@ -4,7 +4,7 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 const nodeModules = path.resolve(__dirname, 'node_modules');
 
 const appScripts = path.resolve(__dirname, 'app/static/app/scripts');
-const appStyles = path.resolve(__dirname, 'app/static/app/content');
+const appStyles = path.resolve(__dirname, 'app/static/app/css');
 const appScriptConfig = {
   entry: path.join(nodeModules, '/jquery/dist/jquery.js'),  // Just a fake entry, we only copy files here
   plugins: [
