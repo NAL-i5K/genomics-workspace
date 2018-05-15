@@ -1,5 +1,4 @@
 DEBUG = True
-#TEMPLATE_DEBUG = DEBUG
 
 USE_CACHE = True
 
