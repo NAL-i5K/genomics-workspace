@@ -9,6 +9,7 @@ const appScriptConfig = {
   entry: path.join(nodeModules, '/jquery/dist/jquery.js'),  // Just a fake entry, we only copy files here
   plugins: [
     new CopyWebpackPlugin([
+        { from: path.join(nodeModules, '/marked/marked.min.js'), to: appScripts},
         { from: path.join(nodeModules, '/jquery/dist/jquery.js'), to: appScripts},
         { from: path.join(nodeModules, '/bootstrap/dist/js/bootstrap.js'), to: appScripts},
         { from: path.join(nodeModules, '/underscore/underscore.js'), to: appScripts},
