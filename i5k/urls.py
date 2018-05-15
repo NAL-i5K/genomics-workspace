@@ -33,8 +33,7 @@ urlpatterns = [
             'authentication_form': BootstrapAuthenticationForm,
             'extra_context':
             {
-                'title':'Log in',
-                'year':datetime.now().year,
+                'title':'Log in'
             },
         },
         name='login'),
@@ -45,8 +44,7 @@ urlpatterns = [
             'password_reset_form': BootStrapPasswordResetForm,
             'extra_context':
             {
-                'title': 'Password reset',
-                'year': datetime.now().year,
+                'title': 'Password reset'
             },
         },
         name='password_reset'),
@@ -56,7 +54,6 @@ urlpatterns = [
             'extra_context':
             {
                 'title': 'Password reset sent',
-                'year': datetime.now().year,
             },
         },
         name='password_reset_done'),
@@ -65,10 +62,7 @@ urlpatterns = [
         {
             'template_name': 'app/password_reset_confirm.html',
             'set_password_form': BootStrapSetPasswordForm,
-            'extra_context':
-            {
-                'year': datetime.now().year,
-            },
+            'extra_context':{},
         },
         name='password_reset_confirm'),
     url(r'^reset_complete$', password_reset_complete,
@@ -77,7 +71,6 @@ urlpatterns = [
             'extra_context':
             {
                 'title': 'Password reset complete',
-                'year': datetime.now().year,
             },
         },
         name='password_reset_complete'),
@@ -87,7 +80,6 @@ urlpatterns = [
             'extra_context':
             {
                 'title': 'Password changed',
-                'year': datetime.now().year,
             },
         },
         name='password_change_done'),
@@ -99,7 +91,6 @@ urlpatterns = [
             'extra_context':
             {
                 'title': 'Change password',
-                'year': datetime.now().year,
             },
         },
         name='password_change'),
