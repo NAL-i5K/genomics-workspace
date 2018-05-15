@@ -28,7 +28,6 @@ def home(request):
         request,
         'app/index.html', {
             'title': 'Home Page',
-            #'year': datetime.now().year,
         })
 
 def contact(request):
@@ -38,7 +37,6 @@ def contact(request):
         'app/contact.html', {
             'title': 'Contact',
             'message': 'National Agricultural Library',
-            #'year': datetime.now().year,
         })
 
 def about(request):
@@ -48,7 +46,6 @@ def about(request):
         'app/about.html', {
             'title': 'About i5k - BLAST',
             'message': 'django-blast',
-            #'year': datetime.now().year,
         })
 
 
@@ -131,7 +128,6 @@ def set_institution(request):
         return render(
             request,
             'app/set_institution.html', {
-            'year': datetime.now().year,
             'title': 'Specify your institution',
             'form': form,
         })
@@ -159,7 +155,6 @@ def info_change(request):
         return render(
             request,
             'app/info_change.html', {
-            'year': datetime.now().year,
             'title': 'Update Account Info',
             'form': form,
             'msg': msg,
