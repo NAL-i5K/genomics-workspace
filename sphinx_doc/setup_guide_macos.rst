@@ -138,5 +138,4 @@ Start development server
 To run developement server::
 
     cd <git-home>
-    python manage.py collectstatic
     python manage.py runserver
