@@ -26,6 +26,7 @@
     "bootstrap-select": "^1.6.3",
     "bootstrap-switch": "^3.0.2",
     "chroma-js": "https://github.com/gka/chroma.js/archive/v0.6.1.tar.gz",
+    "codemirror": "^4.5.0",
     "copy-webpack-plugin": "^4.5.1",
     "datatables-tabletools": "^2.2.2",
     "datatables.net-bs": "^1.10.9",
