@@ -16,7 +16,6 @@ import json
 import traceback
 import stat as Perm
 from itertools import groupby
-from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
 
@@ -66,14 +65,27 @@ def create(request, iframe=False):
         chmod(path.dirname(query_filename), Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO) # ensure the standalone dequeuing process can open files in the directory
         bin_name = get_bin_name()
         # write query to file
+        # Will replace the comma, because blast doesn't handle this
         if 'query-file' in request.FILES:
-            with open(query_filename, 'wb') as query_f:
+            query_temp_filename = file_prefix + '.temp.in'
+            with open(query_temp_filename, 'wb') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
+            with open(query_temp_filename) as fin, open(query_filename, 'w') as fout:
+                for line in fin:
+                    if line[0] == '>':
+                        fout.write(line.replace(',', '&comma;'))
+                    else:
+                        fout.write(line)
+            remove(query_temp_filename)
         elif 'query-sequence' in request.POST:
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
-                query_f.write('\n'.join(query_text))
+            with open(query_filename, 'w') as query_f:
+                temp = request.POST['query-sequence'].split('\n')
+                for line in temp:
+                    if line[0] == '>':
+                        query_f.write(line.replace(',', '&comma;'))
+                    else:
+                        query_f.write(line)
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
 
@@ -85,18 +97,20 @@ def create(request, iframe=False):
         # build blast command
         db_list = ' '.join([db.fasta_file.path_full for db in BlastDb.objects.filter(title__in=set(request.POST.getlist('db-name'))) if db.db_ready()])
         if not db_list:
-            return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query',})
+            return render(request, 'blast/invalid_query.html',
+                          {'title': 'Invalid Query'})
 
         # check if program is in list for security
-        if request.POST['program'] in ['blastn', 'tblastn', 'tblastx', 'blastp', 'blastx']:
+        programs = ['blastn', 'tblastn', 'tblastx', 'blastp', 'blastx']
+        if request.POST['program'] in programs:
 
             with open(query_filename, 'r') as f:
                 qstr = f.read()
-                if(qstr.count('>') > int(BLAST_QUERY_MAX)):
+                if(qstr.count('>') > int(settings.BLAST_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
                     remove(query_filename)
                     return render(request, 'blast/invalid_query.html',
-                            {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
+                                  {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
 
             # generate customized_options
             input_opt = []
