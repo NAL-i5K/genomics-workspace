@@ -16,8 +16,6 @@
   {% endif %}
   {% stylesheet 'hmmer-css' %}
   <link rel="stylesheet" type="text/css" href="//fonts.googleapis.com/css?family=Droid+Serif">
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/1.10.5/css/jquery.dataTables.min.css">
-  <link rel="stylesheet" type="text/css" href="//cdn.datatables.net/tabletools/2.2.3/css/dataTables.tableTools.css">
   <script>
     var dataset_list = {{ hmmerdb_list|safe }};
     var hmmerdb_type_counts = {{ hmmerdb_type_counts|jsonify }};
@@ -26,8 +24,6 @@
 
 {% block scripts %}
   {% javascript 'hmmer-js' %}
-  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/1.10.5/js/jquery.dataTables.min.js"></script>
-  <script type="text/javascript" charset="utf8" src="//cdn.datatables.net/tabletools/2.2.3/js/dataTables.tableTools.min.js"></script>
 {% endblock %}
 
 {% block content %}

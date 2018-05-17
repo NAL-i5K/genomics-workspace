@@ -5,15 +5,16 @@
 {% block navbar%}
 {% endblock%}
 
-{% block head-scripts %}{% stylesheet 'blast-results' %}
-<script>
-    var results_col_names = {{ results_col_names|safe }};
-    var results_col_names_display = {{ results_col_names_display|safe }};
-    var results_detail = {{ results_detail|safe }};
-    var results_data = {{ results_data|safe }};
-    var results_info = {{ results_info|safe }};
-    var task_id = '{{ task_id }}';
-</script>
+{% block head-scripts %}
+  {% stylesheet 'blast-results' %}
+  <script>
+      var results_col_names = {{ results_col_names|safe }};
+      var results_col_names_display = {{ results_col_names_display|safe }};
+      var results_detail = {{ results_detail|safe }};
+      var results_data = {{ results_data|safe }};
+      var results_info = {{ results_info|safe }};
+      var task_id = '{{ task_id }}';
+  </script>
 {% endblock %}
 
 {% block content-fluid %}
@@ -93,7 +94,6 @@
 </div>
 {% endblock %}
 
-{% block scripts %}{% javascript 'blast-results' %}
-<!-- CDN Scripts -->
-<script src="//cdnjs.cloudflare.com/ajax/libs/d3/3.4.11/d3.min.js" charset="utf-8"></script>
+{% block scripts %}
+  {% javascript 'blast-results' %}
 {% endblock %}

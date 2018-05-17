@@ -19,7 +19,7 @@ const appScriptConfig = {
     ])
   ],
   module: {
-    noParse: [/\.js$/] //use noParse to accelerate
+    noParse: [/\.js$/] // use noParse to accelerate
   }
 };
 
@@ -29,6 +29,7 @@ const blastScriptConfig = {
   entry: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'),  // Just a fake entry, we only copy files here
   plugins: [
     new CopyWebpackPlugin([
+        { from: path.join(nodeModules, '/d3/d3.js'), to: blastScripts},
         { from: path.join(nodeModules, '/codemirror/lib/codemirror.js'), to: blastScripts},
         { from: path.join(nodeModules, '/codemirror/addon/search/searchcursor.js'), to: blastScripts},
         { from: path.join(nodeModules, '/codemirror/addon/selection/active-line.js'), to: blastScripts},

@@ -373,6 +373,8 @@ PIPELINE = {
         },
         'blast-results': {
             'source_filenames': (
+                'blast/scripts/error.js',
+                'blast/scripts/d3.js',
                 'blast/scripts/chroma.js',
                 'blast/scripts/codemirror.js',
                 'blast/scripts/active-line.js',
