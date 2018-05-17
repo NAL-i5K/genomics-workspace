@@ -45,8 +45,14 @@ dist/
 /app/static/app/scripts/jquery.js
 /app/static/app/scripts/respond.src.js
 /app/static/app/scripts/underscore.js
-/app/static/app/content/bootstrap.css
+/app/static/app/scripts/jquery.validate.js
+/app/static/app/scripts/marked.min.js
+/app/static/app/css/bootstrap.css
 
+/blast/static/blast/scripts/active-line.js
+/blast/static/blast/scripts/codemirror.js
+/blast/static/blast/scripts/d3.js
+/blast/static/blast/scripts/searchcursor.js
 /blast/static/blast/scripts/backbone.js
 /blast/static/blast/scripts/bootstrap-switch.js
 /blast/static/blast/scripts/chroma.js
