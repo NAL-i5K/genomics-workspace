@@ -169,3 +169,6 @@ def logout_all(request):
     logout(request)
     return HttpResponseRedirect(reverse('login'))
 
+
+def handle_404(request):
+    return render(request, 'app/404.html')

@@ -1,23 +1,19 @@
-from datetime import datetime
 from django.conf import settings
-from django.conf.urls import include, url
+from django.conf.urls import include, url, handler404
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.views import login, password_reset, password_reset_done, password_reset_complete, password_change_done, password_reset_confirm
 from django.contrib.auth.decorators import user_passes_test
 from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
-from app.views import about, set_institution, info_change, register, logout_all, password_change
+from app.views import about, set_institution, info_change, register, logout_all, password_change, handle_404
 
 admin.autodiscover()
-# admin.site.unregister(Site)
-# from filebrowser.sites import site
 
 login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
     url(r'^about', about, name='about'),
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
-    # url(r'^grappelli/', include('grappelli.urls')),
     # Enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
     url(r'^captcha/', include('captcha.urls')),
@@ -106,6 +102,11 @@ urlpatterns = [
     url(r'^clustal/', include('clustal.urls', namespace='clustal')),
 ]
 
+# handle 404 page
+handler404 = handle_404
+
 if settings.DEBUG:
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # By default, when DEBUG = True, you will not available to see 404 page, we need to add it by ourselves
+    urlpatterns += [url(r'^404/$', handle_404)]
