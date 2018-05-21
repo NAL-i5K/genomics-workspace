@@ -31,7 +31,6 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
                 'app.context_processors.is_login_enabled',
-                'app.context_processors.is_analytics_enabled',
             ],
         },
     },
@@ -433,6 +432,12 @@ PIPELINE = {
         },
     },
     'JAVASCRIPT': {
+        'app-analytics': {
+            'source_filenames': (
+                'app/scripts/analytics.js',
+            ),
+            'output_filename': 'app/scripts/app-analytics.min.js',
+        },
         'app-layout': {
             'source_filenames': (
                 'app/scripts/jquery-1.11.1.js',
@@ -519,7 +524,6 @@ except:
     HOSTNAME = 'localhost'
 
 LOGIN_ENABLED = False
-ANALYTICS_ENABLED = False
 
 # Use settings for production
 USE_PROD_SETTINGS = False
