@@ -84,14 +84,19 @@
                         <input type="file" name="query-file" class="query-file" id="query-file">
                     </fieldset>
 
+<fieldset id="fieldset-search-tag">
+        <legend>Search Tag</legend>
+    <INPUT TYPE="text" VALUE="{{ tag }}" id="tag" name="tag">
+</fieldset>
+
                     <fieldset id="fieldset-program">
                         <legend>Program</legend>
                         <label class="program phmmer">
-                            <input type="radio" name="program" value="phmmer" checked class="program phmmer">
+                            <input type="radio" id='phmmer' name="program" value="phmmer" checked class="program phmmer">
                             phmmer
                         </label>
                         <label class="program hmmsearch">
-                            <input type="radio" name="program" value="hmmsearch" class="program hmmsearch">
+                            <input type="radio" id='hmmsearch' name="program" value="hmmsearch" class="program hmmsearch">
                             hmmsearch
                         </label>
                         <div id="hmmerProgramDescription">phmmer - Protein sequence vs. Ptotein sequence database</div>
@@ -158,6 +163,17 @@
                         </div>
                     </div>
                 </form>
+
+<input type="hidden" ID="hist_program" name="hist_program" VALUE="{{ program }}">
+<input type="hidden" ID="hist_cut_off" name="hist_cut_off" VALUE="{{ cut_off }}">
+<input type="hidden" ID="hist_significane_seq" name="hist_significane_seq" VALUE="{{ significane_seq }}">
+<input type="hidden" ID="hist_significane_hit" name="hist_significane_hit" VALUE="{{ significane_hit }}">
+<input type="hidden" ID="hist_report_seq" name="hist_report_seq" VALUE="{{ report_seq }}">
+<input type="hidden" ID="hist_report_hit" name="hist_report_hit" VALUE="{{ report_hit }}">
+<input type="hidden" ID="hist_sequence" name="hist_sequence" VALUE="{{ sequence }}">
+<input type="hidden" ID="hist_checkbox" name="hist_checkbox" VALUE="{{ organism }}">
+
+
             </div>
             {% if user.is_authenticated %}
             <div role="tabpanel" class="tab-pane fade" id="queries" aria-labelledby="queries-tab">
