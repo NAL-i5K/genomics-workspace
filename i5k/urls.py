@@ -7,6 +7,7 @@ from django.contrib.auth.views import login, password_reset, password_reset_done
 from django.contrib.auth.decorators import user_passes_test
 from app.forms import BootstrapAuthenticationForm, BootStrapPasswordChangeForm, BootStrapPasswordResetForm, BootStrapSetPasswordForm
 from app.views import about, set_institution, info_change, register, logout_all, password_change
+from dashboard.views import dashboard
 
 admin.autodiscover()
 # admin.site.unregister(Site)
@@ -16,6 +17,9 @@ login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
     url(r'^about', about, name='about'),
+    url(r'^home$', dashboard, name='dashboard'),
+    url(r'^dashboard$', dashboard, name='dashboard'),
+    url(r'blast_hist', dashboard, name='dashboard'),
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
     # url(r'^grappelli/', include('grappelli.urls')),
     # Enable admin documentation:

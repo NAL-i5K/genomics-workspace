@@ -8,6 +8,7 @@ import tarfile
 import subprocess
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
+import pip
 
 PROJECT_ROOT = dirname(abspath(__file__))
 
@@ -55,6 +56,8 @@ if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
 if platform == 'darwin':
+    # installation of pyenchant
+    pip.main(['install', 'https://pypi.python.org/packages/py2.py3.cp27.cp26.cp32.cp33.cp34.pp27/p/pyenchant/pyenchant-1.6.6-py2.py3.cp27.cp26.cp32.cp33.cp34.pp27-none-macosx_10_6_intel.macosx_10_9_intel.whl'])
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 
@@ -115,6 +118,8 @@ if platform == 'darwin':
     chmod(clustalw_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
     remove(clustalw_dmg_path)
 else:  # for linux
+    # installation of pyenchant
+    pip.main(['install', 'pyenchant==1.6.11'])
     # installation of hmmer
     hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
 

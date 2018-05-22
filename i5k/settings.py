@@ -207,11 +207,6 @@ if ENABLE_JBROWSE_INTEGRATION:
         {'app': 'clustal', 'label': 'clustal', 'icon': 'icon-leaf', 'models': (
             {'model': 'clustalqueryrecord'},
         )},
-        {'app': 'data', 'label': 'Data', 'icon': 'icon-leaf', 'models': (
-            {'model': 'file'},
-            {'model': 'item'},
-            {'model': 'accession'},
-        )},
         # auth and axes
         {'label': 'Auth', 'icon': 'icon-lock', 'models': (
             {'model': 'auth.user'},

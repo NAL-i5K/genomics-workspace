@@ -136,3 +136,12 @@ class JbrowseSettingAdmin(admin.ModelAdmin):
 
 
 admin.site.register(JbrowseSetting, JbrowseSettingAdmin)
+
+class BlastSearchAdmin(admin.ModelAdmin):
+    list_display = ('task_id', 'sequence',)
+    search_fields = ('task_id', 'sequence',)
+    actions_on_top = True
+    actions_on_bottom = True
+admin.site.register(BlastSearch, BlastSearchAdmin)
+
+

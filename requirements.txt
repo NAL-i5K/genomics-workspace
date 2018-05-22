@@ -16,4 +16,4 @@ wsgiref==0.1.2
 django-suit==0.2.26
 six>=1.10.0
 django-axes==2.3.3
-requests==2.18.4 
+requests==2.18.4

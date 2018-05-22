@@ -1,30 +1,68 @@
-from datetime import datetime
+'''
+    Dashboard views.py
+'''
 from django.shortcuts import render, redirect
-from django.contrib.auth.decorators import login_required
-from django.http import HttpResponse
-from django.http import Http404
-import sys
-import logging
-from django.core.mail import send_mail
-
-import misc.fileline as src
+from blast.models import BlastSearch
 from misc.logger import i5kLogger
+from datetime import datetime
+import json
 
 dash = i5kLogger()
 
-#@login_required
+
 def dashboard(request):
-
-    dash.debug("<debug message> %s" % src.request(request))
-
-    dash.info("<info message>")
-
-    dash.warn("<warn message>")
-
-    dash.error("<error message>")
-
-    dash.critical("<critical message>")
-
-    raise Http404("No way Jose")
-    #return render(request, 'dashboard/index.html', { 'year': datetime.now().year, 'title': 'Dashboard', })
-
+    search_list = []
+    print 'Method: %s' % request.method
+    print 'Path: %s' % request.path
+    if request.method == 'GET':
+        id_num = 0
+        if request.path == '/dashboard' or request.path == '/home':
+            print "GET: %s" % request.GET
+            if 'search_id' in request.GET:
+                search = BlastSearch.objects.all().filter(search_tag=request.GET['search_id'])
+                if not search:
+                    print 'No search FOUND'
+                    return render(request, 'dashboard/index.html')
+                search = search[0]
+                print 'search found: %s %s' % (search.search_tag, search.task_id)
+            if 'searchagain' in request.GET:
+                print 'SEARCHAGAIN'
+                print(search.task_id)
+                return redirect('/blast/%s' % search.task_id)
+            elif 'editsearch' in request.GET:
+                print 'EDITSEARCH'
+                return redirect('/blast?search_id=%s' % search.search_tag)
+            else:
+                return render(request, 'dashboard/index.html')
+        if request.path == '/blast_hist':
+            search_list = []
+            for obj in BlastSearch.objects.all():
+                search_dict = {}
+                id_num += 1
+                orgs = json.loads(obj.organisms)
+                orglist = orgs.split()
+                forgs = orglist[0]
+                seq = (obj.sequence[:20] + '..') if len(obj.sequence) > 20 else obj.sequence
+                date_str = obj.enqueue_date.strftime('%b %d %H:%M:%S')
+                search_dict['search_head']     = '%s  -  %s  -  %s  -  %s' % (obj.search_tag, date_str, obj.program, forgs)
+                search_dict['id_str']          = 'collapsible' + str(id_num)
+                search_dict['task_id']         = obj.task_id
+                search_dict['search_tag']      = obj.search_tag
+                search_dict['soft_masking']    = obj.soft_masking
+                search_dict['enqueue_date']    = obj.enqueue_date
+                search_dict['low_complexity']  = obj.low_complexity
+                search_dict['penalty']         = obj.penalty
+                search_dict['evalue']          = obj.evalue
+                search_dict['gapopen']         = obj.gapopen
+                search_dict['strand']          = obj.strand
+                search_dict['program']         = obj.program
+                search_dict['reward']          = obj.reward
+                search_dict['gapextend']       = obj.gapextend
+                search_dict['word_size']       = obj.word_size
+                search_dict['max_target_seqs'] = obj.max_target_seqs
+                search_dict['sequence']        = seq
+                search_dict['organisms']       = orgs
+                search_list.append(search_dict)
+            return render(request, 'dashboard/blast_hist.html', { 'search_list': search_list})
+    elif request.method == 'POST':
+        return render(request, 'dashboard/index.html', { 'year': datetime.now().year, 'title': 'Dashboard', })
