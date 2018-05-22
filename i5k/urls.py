@@ -20,6 +20,9 @@ urlpatterns = [
     url(r'^home$', dashboard, name='dashboard'),
     url(r'^dashboard$', dashboard, name='dashboard'),
     url(r'blast_hist', dashboard, name='dashboard'),
+    url(r'hmmer_hist', dashboard, name='dashboard'),
+    url(r'clustal_hist', dashboard, name='dashboard'),
+
     url(r'^admin/filebrowser/', include('filebrowser.urls')),
     # url(r'^grappelli/', include('grappelli.urls')),
     # Enable admin documentation:

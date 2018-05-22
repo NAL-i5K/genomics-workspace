@@ -12,3 +12,11 @@ class ClustalQueryRecordAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 admin.site.register(ClustalQueryRecord, ClustalQueryRecordAdmin)
+
+class ClustalSearchAdmin(admin.ModelAdmin):
+    list_display = ('task_id', 'sequence',)
+    search_fields = ('task_id', 'sequence',)
+    actions_on_top = True
+    actions_on_bottom = True
+admin.site.register(ClustalSearch, ClustalSearchAdmin)
+
