@@ -396,20 +396,335 @@ email us (or phone us when the helpdesk becomes available). For example:
 
 ## Logout <a name="Logout"></a>
 
-- TBD
 
 ---
 
 ## Programming Structure <a name="ProgrammingStructure"></a>
-The Dashboard APIs to both the front end and the Apps exchanges data in JSON format. If any sender is unable to do so, server side
-functions convert the incoming format to JSON before passing the data to the Dashboard.  For example, the server converts 
-form data from the browser from HTML request to a JSON object.   
 
-- TBD
+The Dashbord UI uses the bootstrap framework, and the gridstack.js, a jQuery plugin for widget layout. 
+This is drag-and-drop multi-column grid. It allows you to build draggable responsive bootstrap v3 friendly layouts.
+
+Basic usage:
+
+    <div class="grid-stack">
+        <div class="grid-stack-item"
+            data-gs-x="0" data-gs-y="0"
+            data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content"></div>
+
+        </div>
+        <div class="grid-stack-item"
+            data-gs-x="4" data-gs-y="0"
+            data-gs-width="4" data-gs-height="4">
+                <div class="grid-stack-item-content"></div>
+        </div>
+    </div>
+    
+    <script type="text/javascript">
+    $(function () {
+        var options = {
+            cell_height: 80,
+            vertical_margin: 10
+        };
+        $('.grid-stack').gridstack(options);
+    });
+
+####  Requirements 
+
+Some required files must be accessible locally, but others can be accessed remotely. 
+
+Local requirements:
+
+    gridstack.css
+    gridstack.js
+    gridstack.jQueryUI.js
+
+Remote libraries required:
+
+    https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css
+    https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js           >= 1.11.0 
+    https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.11.0/jquery-ui.js         >= 1.11.0
+    https://maxcdn.bootstrapcdn.com/bootstrap/3.2.0/js/bootstrap.min.js
+    https://cdnjs.cloudflare.com/ajax/libs/lodash.js/3.5.0/lodash.min.js        >= 3.5.0
+
+Bootstrap has ready made objects with a variety of attributes that can be referenced by class name. 
+
+For instance, in our dashboard we use the following containers and objects for the layout.  
+
+#### Basic Usage.
+
+    <div class="grid-stack">
+        <div class="grid-stack-item" 
+            data-gs-x="0" data-gs-y="0" 
+            data-gs-width="4" data-gs-height="2">
+                <div class="grid-stack-item-content"></div>
+        </div>
+        <div class="grid-stack-item" 
+            data-gs-x="4" data-gs-y="0" 
+            data-gs-width="4" data-gs-height="4">
+                <div class="grid-stack-item-content"></div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+    $(function () {
+        var options = {
+            cell_height: 80,
+            vertical_margin: 10
+        };
+        $('.grid-stack').gridstack(options);
+    });
+    </script>
+
+Options:
+
++ always_show_resize_handle - if true the resizing handles are shown even the user is not hovering over the widget (default: false)
+
++ animate - turns animation on (default: false)
+
++ auto - if false it tells to do not initialize existing items (default: true)
+
++ cell_height - one cell height (default: 60)
+
++ draggable - allows to override jQuery UI draggable options. (default: {handle: '.grid-stack-item-content', scroll: true, appendTo: 'body'})
+
++ handle - draggable handle selector (default: '.grid-stack-item-content')
+
++ height - maximum rows amount. Default is 0 which means no maximum rows
+
++ float - enable floating widgets (default: false)
+
++ item_class - widget class (default: 'grid-stack-item')
+
++ min_width - minimal width. If window width is less grid will be shown in one-column mode (default: 768)
+
++ placeholder_class - class for placeholder (default: 'grid-stack-placeholder')
+
++ resizable - allows to override jQuery UI resizable options. (default: {autoHide: true, handles: 'se'})
+
++ vertical_margin - vertical gap size (default: 20)
+
++ width - amount of columns (default: 12)
+
+Grid attributes:
+
++ data-gs-animate - turns animation on
+
++ data-gs-width - amount of columns
+
++ data-gs-height - maximum rows amount. Default is 0 which means no maximum rows.
+
+Item attributes
+
++ data-gs-x, data-gs-y - element position
+
++ data-gs-width, data-gs-height - element size
+
++ data-gs-max-width, data-gs-min-width, data-gs-max-height, data-gs-min-height - element constraints
+
++ data-gs-no-resize - disable element resizing
+
++ data-gs-no-move - disable element moving
+
++ data-gs-auto-position - tells to ignore data-gs-x and data-gs-y attributes and to place element to the first available position
+
++ data-gs-locked - the widget will be locked. It means another widgets could not move it during dragging or resizing. The widget is still can be dragged or resized. You need to add data-gs-no-resize and data-gs-no-move attributes to completely lock the widget.
+
+
+Events:
+
++ onchange(items) Occurs when widgets change their position/size
+
+    var serialize_widget_map = function (items) {
+        console.log(items);
+    };
+    $('.grid-stack').on('change', function (e, items) {
+            serialize_widget_map(items);
+    });
+
++ ondragstart(event, ui)
+
+    $('.grid-stack').on('dragstart', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+
++ ondragstop(event, ui)
+
+    $('.grid-stack').on('dragstop', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+
++ onresizestart(event, ui)
+
+    $('.grid-stack').on('resizestart', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+
++ onresizestop(event, ui)
+
+    $('.grid-stack').on('resizestop', function (event, ui) {
+        var grid = this;
+        var element = event.target;
+    });
+
+API:
+
++ add_widget(el, x, y, width, height, auto_position)
+
+    Creates new widget and returns it.
+
+    Parameters:
+
+        - el - widget to add
+        - x, y, width, height - widget position/dimensions (Optional)
+        - auto_position - if true then x, y parameters will be ignored and widget will be places on the first available position
+
+        Widget will be always placed even if result height will be more 
+        then grid height. You need to use will_it_fit method before call 
+        add_widget for additional check.
+
+    $('.grid-stack').gridstack();
+
+    var grid = $('.grid-stack').data('gridstack');
+    grid.add_widget(el, 0, 0, 3, 2, true);
+
++ batch_update() Initailizes batch updates. You will see no changes until commit method is called.
+
++ cell_height() Gets current cell height.
+
++ cell_height(val)
+
+    Update current cell height. This method rebuilds an internal CSS stylesheet. 
+    Note: You can expect performance issues if call this method too often.
+
+    grid.cell_height(grid.cell_width() * 1.2);
+
++ cell_width() Gets current cell width.
+
++ commit() Finishes batch updates. Updates DOM nodes. You must call it after batch_update.
+
++ disable() Disables widgets moving/resizing. This is a shortcut for:
+
+    grid.movable('.grid-stack-item', false);
+    grid.resizable('.grid-stack-item', false);
+
++ enable() Enables widgets moving/resizing. This is a shortcut for:
+
+    grid.movable('.grid-stack-item', true);
+    grid.resizable('.grid-stack-item', true);
+
+get_cell_from_pixel(position) Get the position of the cell under a pixel on screen.
+
+    Parameters :
+
+        - position - the position of the pixel to resolve in absolute coordinates, as an object with top and leftproperties
+
+        Returns an object with properties x and y i.e. the column and row in the grid.
+
++ is_area_empty(x, y, width, height) Checks if specified area is empty.
+
++ locked(el, val) Locks/unlocks widget.
+
+        - el - widget to modify.
+        - val - if true widget will be locked.
+
++ remove_widget(el, detach_node) Removes widget from the grid.
+
+    Parameters:
+
+        - el - widget to remove.
+        - detach_node - if false DOM node will not be removed from the tree (Optional. Default true).
+
++ remove_all() Removes all widgets from the grid.
+
++ resize(el, width, height) Changes widget size
+
+    Parameters:
+
+        - el - widget to resize
+        - width, height - new dimensions. If value is null or undefined it will be ignored.
+
+
++ move(el, x, y) Changes widget position
+
+    Parameters:
+
+        - el - widget to move
+        - x, y - new position. If value is null or undefined it will be ignored.
+
++ resizable(el, val) Enables/Disables resizing.
+
+        - el - widget to modify
+        - val - if true widget will be resizable.
+
++ movable(el, val) Enables/Disables moving.
+
+        - el - widget to modify
+        - val - if true widget will be draggable.
+
++ update(el, x, y, width, height)
+
+    Parameters:
+
+        - el - widget to move
+        - x, y - new position. If value is null or undefined it will be ignored.
+        - width, height - new dimensions. If value is null or undefined it will be ignored.
+
+                Updates widget position/size.
+                will_it_fit(x, y, width, height, auto_position)
+
+    Returns true if the height of the grid will be less the vertical constraint. 
+    Always returns true if grid does not have height constraint.
+
+    if (grid.will_it_fit(new_node.x, new_node.y, new_node.width, new_node.height, true)) {
+        grid.add_widget(new_node.x, new_node.y, new_node.width, new_node.height, true);
+    } else {
+        alert('Not enough free space to place the widget');
+    }
+
+Utils: 
+
++ GridStackUI.Utils.sort(nodes, dir, width) Sorts array of nodes
+
+        - nodes - array to sort
+        - dir - 1 for asc, -1 for desc (optional)
+        - width - width of the grid. If undefined the width will be calculated automatically (optional).
+
+
+Save grid to array:
+
+Because gridstack does not track any kind of user-defined widget id there is no reason to make serialization to be part of gridstack API. To serialize grid you can simply do something like this (let us say you store widget id inside data-custom-id attribute):
+
+    var res = _.map($('.grid-stack .grid-stack-item:visible'), function (el) {
+        el = $(el);
+        var node = el.data('_gridstack_node');
+        return {
+            id: el.attr('data-custom-id'),
+            x: node.x,
+            y: node.y,
+            width: node.width,
+            height: node.height
+        };
+    });
+    alert(JSON.stringify(res));
+
+To run apps inside widgets use an iframe with width and height == 100%.  
+
+
+
+
+
+
+#### Touch devices support
+
+    TBD
 
 ### Authentication Subsystem
 
-The Authentication Subsystem provides the functionality for users to login and logout, and for the registration process to add new users and their 
+    The Authentication Subsystem provides the functionality for users to login and logout, and for the registration process to add new users and their 
 credentials to the site.  
 
 #### Single Sign-On
