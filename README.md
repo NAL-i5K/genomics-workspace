@@ -3,6 +3,7 @@
 [![Build Status](https://travis-ci.org/NAL-i5K/genomics-workspace.svg?branch=master)](https://travis-ci.org/NAL-i5K/genomics-workspace/?branch=master)
 [![Coverage Status](https://coveralls.io/repos/github/NAL-i5K/genomics-workspace/badge.svg?branch=master)](https://coveralls.io/github/NAL-i5K/genomics-workspace?branch=master)
 [![codecov](https://codecov.io/gh/NAL-i5K/genomics-workspace/branch/master/graph/badge.svg)](https://codecov.io/gh/NAL-i5K/genomics-workspace)
+[![codebeat badge](https://codebeat.co/badges/2a92682c-1434-4ab2-ba27-f2d750819356)](https://codebeat.co/projects/github-com-nal-i5k-genomics-workspace-master)
 [![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
 
 Genomics-Workspace is a bioinformatic website project created by [i5k Workspace](https://i5k.nal.usda.gov/). It provides common sequence search services including [BLAST](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [HMMER](http://hmmer.org/), and [Clustal](http://www.clustal.org/). To see it in action, please visit following live sites:
