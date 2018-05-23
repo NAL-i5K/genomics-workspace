@@ -60,19 +60,19 @@
 	<div id="box-datasets">
 		<div class="datasets-div all">
 			<div class="dataset-title">All organisms</div>
-            {% if blastdb_type_counts.genome_assembly or blastdb_type_counts.transcript %}
-			<fieldset class="nucleotide">
-				<legend>Nucleotide</legend>
-				{% if blastdb_type_counts.genome_assembly %}<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="genome-assembly" class="all-dataset-checkbox nucleotide genome-assembly">Genome Assembly - {{ blastdb_type_counts.genome_assembly|default:0 }} databases</label></div>{% endif %}
-				{% if blastdb_type_counts.transcript %}<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="transcript" class="all-dataset-checkbox nucleotide transcript">Transcript - {{ blastdb_type_counts.transcript|default:0 }} databases</label></div>{% endif %}
-			</fieldset>
-            {% endif %}
-            {% if blastdb_type_counts.protein %}
-			<fieldset class="peptide">
-				<legend>Peptide</legend>
-				<div><label><input type="checkbox" name="dataset-checkbox[]" organism="all" dataset-type="protein" class="all-dataset-checkbox peptide protein">Protein - {{ blastdb_type_counts.protein|default:0 }} databases</label></div>
-			</fieldset>
-            {% endif %}
+        {% if blastdb_type_counts.genome_assembly or blastdb_type_counts.transcript %}
+          <fieldset class="nucleotide">
+            <legend>Nucleotide</legend>
+            {% if blastdb_type_counts.genome_assembly %}<div><label><input type="checkbox" id="genome_assembly_box" name="dataset-checkbox[]" organism="all" dataset-type="genome-assembly" class="all-dataset-checkbox nucleotide genome-assembly">Genome Assembly - {{ blastdb_type_counts.genome_assembly|default:0 }} databases</label></div>{% endif %}
+            {% if blastdb_type_counts.transcript %}<div><label><input type="checkbox" id="transcript_box" name="dataset-checkbox[]" organism="all" dataset-type="transcript" class="all-dataset-checkbox nucleotide transcript">Transcript - {{ blastdb_type_counts.transcript|default:0 }} databases</label></div>{% endif %}
+          </fieldset>
+        {% endif %}
+        {% if blastdb_type_counts.protein %}
+          <fieldset class="peptide">
+            <legend>Peptide</legend>
+            <div><label><input type="checkbox" id="peptide_box" name="dataset-checkbox[]" organism="all" dataset-type="protein" class="all-dataset-checkbox peptide protein">Protein - {{ blastdb_type_counts.protein|default:0 }} databases</label></div>
+          </fieldset>
+        {% endif %}
 		</div>
 	</div>
 </fieldset>
@@ -102,23 +102,23 @@ Enter here your input data as
 <fieldset id="fieldset-program">
 	<legend>Program</legend>
 	<label class="program blastn">
-		<input type="radio" name="program" value="blastn" checked="checked" class="program blastn">
+		<input type="radio" name="program" id='blastn' value="blastn" checked="checked" class="program blastn">
 		blastn
 	</label>
 	<label class="program tblastn">
-		<input type="radio" name="program" value="tblastn" class="program tblastn">
+		<input type="radio" name="program" id='tblastn' value="tblastn" class="program tblastn">
 		tblastn
 	</label>
 	<label class="program tblastx">
-		<input type="radio" name="program" value="tblastx" class="program tblastx">
+		<input type="radio" name="program" id='tblastx' value="tblastx" class="program tblastx">
 		tblastx
 	</label>
 	<label class="program blastp">
-		<input type="radio" name="program" value="blastp" class="program blastp">
+		<input type="radio" name="program" id='blastp' value="blastp" class="program blastp">
 		blastp
 	</label>
 	<label class="program blastx">
-		<input type="radio" name="program" value="blastx" class="program blastx">
+		<input type="radio" name="program" id='blastx' value="blastx" class="program blastx">
 		blastx
 	</label>
 	<div id="blastProgramDescription">blastn - Nucleotide vs. Nucleotide</div>
@@ -126,6 +126,10 @@ Enter here your input data as
 		<input type="button" value="Reset" class="btn_reset">
 		<input type="button" value="Search" class="blast_submit">
 	</div>
+</fieldset>
+<fieldset id="fieldset-program">
+	<legend>Search Tag</legend>
+    <INPUT TYPE="text" VALUE="{{ tag }}" id="tag" name="tag">
 </fieldset>
 
 <!-- BLAST options start -->
@@ -491,6 +495,23 @@ Enter here your input data as
 
 </div>
 </form>
+<input type="hidden" ID="hist_program" name="hist_program" VALUE="{{ program }}">
+<input type="hidden" ID="hist_soft_masking" name="hist_soft_masking" VALUE="{{ soft_masking }}">
+<input type="hidden" ID="hist_low_complexity" name="hist_low_complexity" VALUE="{{ low_complexity }}">
+<input type="hidden" ID="hist_reward" name="hist_reward" VALUE="{{ reward }}">
+<input type="hidden" ID="hist_penalty" name="hist_penalty" VALUE="{{ penalty }}">
+<input type="hidden" ID="hist_evalue" name="hist_evalue" VALUE="{{ evalue }}">
+<input type="hidden" ID="hist_gapopen" name="hist_gapopen" VALUE="{{ gapopen }}">
+<input type="hidden" ID="hist_strand" name="hist_strand" VALUE="{{ strand }}">
+<input type="hidden" ID="hist_ga_box" name="hist_ga_box" VALUE="{{ ga_box }}">
+<input type="hidden" ID="hist_gapextend" name="hist_gapextend" VALUE="{{ gapextend }}">
+<input type="hidden" ID="hist_word_size" name="hist_word_size" VALUE="{{ word_size }}">
+<input type="hidden" ID="hist_max_target_seqs" name="hist_max_target_seqs" VALUE="{{ max_target_seqs }}">
+<input type="hidden" ID="hist_sequence1" name="hist_sequence1" VALUE="{{ sequence1 }}">
+<input type="hidden" ID="hist_checkbox" name="hist_checkbox" VALUE="{{ organism }}">
+<input type="hidden" ID="hist_matrix" name="hist_matrix" VALUE="{{ matrix }}">
+<input type="hidden" ID="hist_threshold" name="hist_threshold" VALUE="{{ threshold }}">
+
 </div>
 
 {% if user.is_authenticated %}

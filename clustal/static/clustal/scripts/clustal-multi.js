@@ -99,7 +99,7 @@ $(function() { // document ready
 		if($('#texterror').length){
 			$('#texterror').remove();
 		}
-        $('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
+    $('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
 		if (qtype == '') {
 			$('.enter-query-text').before("<label id='texterror' class=\"error\">No sequence found!</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
@@ -107,7 +107,7 @@ $(function() { // document ready
 			$('.enter-query-text').before("<label id='texterror' class=\"error\">Your sequence is invalid:</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
 		} else if (qtype == 'not_multiple') {
-            $('.enter-query-text').before("<label id='texterror' class=\"error\">You must provide 2+ sequence</label>");
+      $('.enter-query-text').before("<label id='texterror' class=\"error\">You must provide 2+ sequence</label>");
 			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
 		} else if (qtype == 'nucleotide') {
 			$('.enter-query-text').html('Your sequence is detected as nucleotide:');
@@ -116,16 +116,19 @@ $(function() { // document ready
 		} else if (qtype == 'peptide') {
 			$('.enter-query-text').html('Your sequence is detected as peptide:');
 			$('.sequenceType.protein').prop('checked', true);
+      $('.sequenceType.dna').attr('disabled', true);
 			$('.sequenceType').change();
 		}
 	}
 
-	function checktxt() {
+	function checktxt(change) {
 		if ($('#query-textarea').val() == '') {
 			setQueryType('');
 			return false;
 		}else if(validateFasta($('#query-textarea').val()) == 1) {
-			setQueryType('nucleotide');
+      if (change != false){
+			  setQueryType('nucleotide');
+      }
 			return true;
 		}else if(validateFasta($('#query-textarea').val()) == 2) {
 			setQueryType('peptide');
@@ -160,24 +163,24 @@ $(function() { // document ready
 		}
 	});
 
-        var ex_nucleotide = ">Test1\n\ATCGATGCTA\n\>Test2\n\ATCGATCGATCGA"
+  var ex_nucleotide = ">Test1\n\ATCGATGCTA\n\>Test2\n\ATCGATCGATCGA"
 
-        $('.load-example').click(function() {
-                $('#query-textarea').val(ex_nucleotide);
-                $('#query-textarea').keyup();
-        });
+  $('.load-example').click(function() {
+          $('#query-textarea').val(ex_nucleotide);
+          $('#query-textarea').keyup();
+  });
 
-        var ex_clustal = ">CLEC010822-PA:polypeptide, Heat shock protein 70-2\n\
+  var ex_clustal = ">CLEC010822-PA:polypeptide, Heat shock protein 70-2\n\
 MILHFLVLLFASALAADEKNKDVGTVVGIDLGTTYSCVGVYKNGRVEIIANDQGNRITPSYVAFTSEGERLIGDAAKNQLTTNPENTVFDAKRLIGREWTDSTVQDDIKFFPFKVLEKNSKPHIQVSTSQGNKMFAPEEISAMVLGKMKETAEAYLGKKVTHAVVTVPAYFNDAQRQATKDAGTISGLNVMRIINEPTAAAIAYGLDKKEGEKNVLVFDLGGGTFDVSLLTIDNGVFEVVSTNGDTHLGGEDFDQRVMDHFIKLYKKKKGKDIRKDNRAVQKLRREVEKAKRALSSSHQVRIEIESFYDGEDFSETLTRAKFEELNMDLFRSTMKPVQKVLEDADMNKKDVDEIVLVGGSTRIPKVQALVKEFFNGKEPSRGINPDEAVAYGAAVQAGVLSGEQDTDSIVLLDVNPLTLGIETVGGVMTKLIPRNTVIPTKKSQIFSTASDNQHTVTIQVYEGERPMTKDNHLLGKFDLTGIPPAPRGVPQIEVTFEIDANGILQVSAEDKGTGNREKIVITNDQNRLTPDDIDRMIKDAEKFADDDKKLKERVEARNELESYAYSLKNQLADKDKFGSKVTDSDKAKMEKAIEEKIKWLDENQDADSEAFKKQKKELEDVVQPIISKLYQGGAPPPPGAGPQSEDDLKDEL*\n\
 >OFAS004830-PA:polypeptide, Heat shock protein 70-2\n\
 MAAGGSRPTRPAVGIDLGTTYSCVGYFDKGRVEIIANDQGNRVTPSYVAFTETDRIVGDAARGQAIMNPSNTVYDAKRLIGRKFDDPSVQADRKMWPFKVASKEGKPMIEVTYKGETRQFFPEEISSMVLSKMRETAESYIGKKVSNAVVTVPAYFNDSQRQATKDSGTIAGLNVLRIINEPTAAAVAYGLDKKGSGEINVLIFDLGGGTFDVSVLTIADGLFEVKATAGDTHLGGADFDNRMVQYFLEEFKRKTKKEVNDNKRALRRLQAACERAKRVLSTATQATVEIDSFVDGIDLYSAVSRAKFEEINSDLFRGTLGPVEKAIRDSKIPKNRIDEIVLVGGSTRIPKIQSLLVEYFNGKELNKTINPDEAVAYGAAVQAAIIVGDTSDEVKDVLLLDVTPLSLGIETAGGIMTNLIPRNTTIPVKHSQIFSTYSDNQPGVLIQVYEGERAMTKDNNLLGTFELRGFPPAPRGVPQIEVAFDVDANGILNVTAQEMSTKKTSKITITNDKGRLTKAQIEKMVKEAERYKSEDTAARETAEAKNGLESYCYAMKNSVEEAANLGRVTEDEMKSVVRKCNETIMWIEANRSATKMEFEKKMRETESVCKPIATKILSRGTQQNNAGGGTPTNERGPVIEEAD\n\
 >OFAS004738-PA:polypeptide, Heat shock protein 70-1\n\
 MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKIQDDLKHWPFRVVDCSSKPKIQVEYKGETKTFAPEEISSMVLVKMKETAEAYLGGTVRDAVITVPAYFNDSQRQATKDAGAIAGLNVLRIINEPTAAALAYGLDKNLKGERNVLIFDLGGGTFDGPREQDHSLKGERNVLIFDLGGGTFDVSILTIDEGSLFEVKSTAGDTHLGGEDFDNRLVNHLAEEFKRKYRKDLKTNPRALRRLRTAAERAKRTLSSSTEASIEIDALFEGVDFYTKITRARFEELCSDLFRSTLQPVEKALQDAKLDKGLIHDVVLVGGSTRIPKIQNLLQNFFNGKSLNMSINPDEAVAYGAAVQAAILSGDQSSKIQDVLLVDVAPLSLGIETAGGVMTKIIERNTRI";
 
-        $('.load-nucleotide').click(function() {
-            $('#query-textarea').val(ex_clustal);
-            $('#query-textarea').keyup();
-        });
+  $('.load-nucleotide').click(function() {
+      $('#query-textarea').val(ex_clustal);
+      $('#query-textarea').keyup();
+  });
 
 
 
@@ -205,52 +208,52 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
 				//'textarea_valid':'',
 				required: true
 			},
-			'dna-PWGAPOPEN': {
+			'dna-pwgapopen': {
 				number: true
 			},
-			'dna-PWGAPEXT': {
+			'dna-pwgapext': {
 				number: true
 			},
-			'protein-PWGAPOPEN': {
+			'protein-pwgapopen': {
 				number: true
 			},
-			'protein-PWGAPEXT': {
+			'protein-pwgapext': {
 				number: true
 			},
-			'KTUPLE': {
+			'ktuple': {
 				number: true
 			},
-			'WINDOW': {
+			'window': {
 				number: true
 			},
-			'PAIRGAP': {
+			'pairgap': {
 				number: true
 			},
-			'TOPDIAGS': {
+			'topdiags': {
 				number: true
 			},
-			'dna-GAPOPEN': {
+			'dna-gapopen': {
 				number: true
 			},
-			'dna-GAPEXT': {
+			'dna-gapext': {
 				number: true
 			},
-			'dna-GAPDIST': {
+			'dna-gapdist': {
 				number: true
 			},
-			'dna-NUMITER': {
+			'dna-numiter': {
 				number: true
 			},
-			'protein-GAPOPEN': {
+			'protein-gapopen': {
 				number: true
 			},
-			'protein-GAPEXT': {
+			'protein-gapext': {
 				number: true
 			},
-			'protein-GAPDIST': {
+			'protein-gapdist': {
 				number: true
 			},
-			'protein-NUMITER': {
+			'protein-numiter': {
 				number: true
 			},
 		},
@@ -258,52 +261,52 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
 			'query-sequence': {
 				required: "No sequence found!"
 			},
-			'dna-PWGAPOPEN': {
+			'dna-pwgapopen': {
 				number: "<br>Please enter a valid number"
 			},
-			'dna-PWGAPEXT': {
+			'dna-pwgapext': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-PWGAPOPEN': {
+			'protein-pwgapopen': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-PWGAPEXT': {
+			'protein-pwgapext': {
 				number: "<br>Please enter a valid number"
 			},
-			'KTUPLE': {
+			'ktuple': {
 				number: "<br>Please enter a valid number"
 			},
-			'WINDOW': {
+			'window': {
 				number: "<br>Please enter a valid number"
 			},
-			'PAIRGAP': {
+			'pairgap': {
 				number: "<br>Please enter a valid number"
 			},
-			'TOPDIAGS': {
+			'topdiags': {
 				number: "<br>Please enter a valid number"
 			},
-			'dna-GAPOPEN': {
+			'dna-gapopen': {
 				number: "<br>Please enter a valid number"
 			},
-			'dna-GAPEXT': {
+			'dna-gapext': {
 				number: "<br>Please enter a valid number"
 			},
-			'dna-GAPDIST': {
+			'dna-gapdist': {
 				number: "<br>Please enter a valid number"
 			},
-			'dna-NUMITER': {
+			'dna-numiter': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-GAPOPEN': {
+			'protein-gapopen': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-GAPEXT': {
+			'protein-gapext': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-GAPDIST': {
+			'protein-gapdist': {
 				number: "<br>Please enter a valid number"
 			},
-			'protein-NUMITER': {
+			'protein-numiter': {
 				number: "<br>Please enter a valid number"
 			},
 		},
@@ -355,35 +358,91 @@ MPAIGIDLGTTYSCVGVWQHGKVEIIANDQGNRTTPSYVAFSDTERLIGDAAKNQVAMNPQNTVFDAKRLIGRKYDDPKI
     });
 
 	$('#clustalw_submit').click(function() {
-		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
-				$('#program').val('clustalw');
-				$('#MainClustalForm').submit();
-			}
+		if (checktxt(false) && $("#MainClustalForm").valid()) {
+			$('#program').val('clustalw');
+			$('#MainClustalForm').submit();
 		}
 	});
 
 	$('#clustalo_submit').click(function() {
-		{
-			if (checktxt() && $("#MainClustalForm").valid()) {
-				$('#program').val('clustalo');
-				$('#MainClustalForm').submit();
-			}
+		if (checktxt(false) && $("#MainClustalForm").valid()) {
+			$('#program').val('clustalo');
+			$('#MainClustalForm').submit();
 		}
 	});
 
 	$('.btn_reset').click(function() {
-		{
-			$('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
-			$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
-			var validator = $( "#MainClustalForm" ).validate();
-			validator.resetForm();
-            $('.sequenceType.protein').prop('checked', true);
-            $('.sequenceType.protein').change();
-            $('.pairwise.full').prop('checked', true);
-            $('.pairwise.full').change();
-		}
+		$('.sequenceType').attr('disabled', false).removeClass('disabled-radio');
+		$('.enter-query-text').html('Enter sequence below in <a href="http://en.wikipedia.org/wiki/FASTA_format">FASTA</a> format:');
+		var validator = $( "#MainClustalForm" ).validate();
+		validator.resetForm();
+          $('.sequenceType.protein').prop('checked', true);
+          $('.sequenceType.protein').change();
+          $('.pairwise.full').prop('checked', true);
+          $('.pairwise.full').change();
 	});
+
+        hist_program = $("#hist_program").val();
+        if (hist_program == 'clustalo'){
+            if ($("#hist_combined_iter").val() == 'True'){
+                $("select[name='clustering_guide_tree'][value='yes']").prop('checked', true);
+            }else{
+                $("select[name='clustering_guide_tree'][value='no']").prop('checked', true);
+            }
+            $("select[name='omega_output']").val($("#hist_omega_output").val());
+            $("select[name='omega_order']").val($("#hist_omega_order").val());
+            $("select[name='combined_iter']").val($("#hist_combined_iter").val());
+            $("select[name='max_gt_iter']").val($("#hist_max_gt_iter").val());
+            $("select[name='max_hmm_iter']").val($("#hist_max_hmm_iter").val());
+            $('.nav-tabs a[href="#'+hist_program+'"]').tab('show');
+            $('#query-textarea').val($("#hist_sequence").val());
+        } else if (hist_program == 'clustalw'){
+            $('.nav-tabs a[href="#'+hist_program+'"]').tab('show');
+            $('#query-textarea').val($("#hist_sequence").val());
+            $("input[name='sequenceType'][value='"+$('#hist_sequence_type').val()+"']").prop('checked', true);
+            $("input[name='pairwise'][value='"+$('#hist_pairwise').val()+"']").prop('checked', true);
+            $('.sequenceType').change();
+            $('.pairwise').change();
+            sequence_type = $('#hist_sequence_type').val();
+            pairwise = $('#hist_pairwise').val();
+            if ( sequence_type == 'dna' && pairwise == 'full'){
+                $("select[name='dnamatrix']").val($('#hist_dnamatrix').val());
+                $("input[name='dna_gapopen']").val($('#hist_dna_gapopen').val());
+                $("input[name='dna_gapext']").val($('#hist_dna_gapext').val());
+                $("input[name='dna_gapdist']").val($('#hist_dna_gapdist').val());
+                $("select[name='dna_iteration']").val($('#hist_dna_iteration').val());
+                $("input[name='dna_numiter']").val($('#hist_dna_numiter').val());
+                $("input[name='dna_clustering'][value='"+$('#hist_dna_clustering').val()+"']").prop('checked', true);
+                $("select[name='pwdnamatrix']").val($('#hist_pwdnamatrix').val());
+                $("input[name='dna_pwgapopen']").val($('#hist_dna_pwgapopen').val());
+                $("input[name='dna_pwgapext']").val($('#hist_dna_pwgapext').val());
+            } else if (sequence_type == 'protein' && pairwise == 'full'){
+                $("select[name='matrix']").val($('#hist_matrix').val());
+                $("input[name='protein_gapopen']").val($('#hist_protein_gapopen').val());
+                $("input[name='protein_gapext']").val($('#hist_protein_gapext').val());
+                $("input[name='protein_gapdist']").val($('#hist_protein_gapdist').val());
+                $("select[name='protein_iteration']").val($('#hist_protein_iteration').val());
+                $("input[name='protein_numiter']").val($('#hist_protein_numiter').val());
+                $("input[name='protein_clustering'][value='"+$('#hist_protein_clustering').val()+"']").prop('checked', true);
+                $("select[name='pwmatrix']").val($('#hist_pwmatrix').val());
+                $("input[name='protein_pwgapopen']").val($('#hist_protein_pwgapopen').val());
+                $("input[name='protein_pwgapext']").val($('#hist_protein_pwgapext').val());
+            }
+            if (pairwise == 'fast'){
+                $("input[name='ktuple']").val($('#hist_ktuple').val());
+                $("input[name='window']").val($('#hist_window').val());
+                $("input[name='pairgap']").val($('#hist_pairgap').val());
+                $("input[name='topdiags']").val($('#hist_topdiags').val());
+                $("input[name='score'][value='"+$('#hist_score').val()+"']").val($('#hist_score').val());
+            }
+
+
+
+            $("select[name='output']").val($('#hist_output').val());
+            $("select[name='outorder']").val($('#hist_outorder').val());
+        }
+
+
 
 });
 

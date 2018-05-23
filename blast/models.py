@@ -218,3 +218,31 @@ class JbrowseSetting(models.Model):
 
     def __unicode__(self):
         return self.url
+
+class BlastSearch(models.Model):
+    task_id         = models.CharField(null=True, max_length=50)
+    search_tag      = models.CharField(max_length=64)
+    enqueue_date    = models.DateTimeField()
+    sequence        = models.TextField(null=True)
+    program         = models.CharField(max_length=32)
+    user            = models.ForeignKey(User, null=True, blank=True)
+    soft_masking    = models.BooleanField()
+    low_complexity  = models.BooleanField()
+    penalty         = models.IntegerField()
+    #tr_box          = models.BooleanField(default=False)
+    #ga_box          = models.BooleanField(default=False)
+    #pep_box         = models.BooleanField(default=False)
+    evalue          = models.DecimalField(max_digits=10, decimal_places=5)
+    gapopen         = models.IntegerField()
+    strand          = models.CharField(max_length=10)
+    gapextend       = models.IntegerField()
+    word_size       = models.IntegerField()
+    reward          = models.IntegerField()
+    max_target_seqs = models.IntegerField()
+    organisms       = models.TextField(null=True)
+    matrix          = models.CharField(max_length=10, null=True)
+    threshold       = models.IntegerField(null=True)
+
+    def __unicode__(self):
+        return self.search_tag
+

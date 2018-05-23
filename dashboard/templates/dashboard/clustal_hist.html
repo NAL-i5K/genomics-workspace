@@ -1,0 +1,141 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% load pipeline %}
+{% load jsonify %}
+
+{% block head-scripts %}
+    <!-- CSS -->
+
+	<link rel="stylesheet" type="text/css" href="{% static 'dashboard/css/design.css' %}">
+    <!-- END CSS -->
+{% endblock %}
+
+{% block scripts %}
+
+
+    <!-- === JAVASCRIPT MANDATORY CODE === -->
+    <script>
+
+	    /* === SIDEBAR === */
+	    /* === END SIDEBAR === */
+	    /* === ACCORDION === */
+	    $( '#accordion' ).on('click', '.single-item', function(){
+		localStorage.removeItem('collapseID');
+		localStorage.removeItem('activeLink');
+	    });
+
+	    $( '#accordion' ).on('click', '.list-group-item', function(){
+		localStorage.setItem('collapseID', $(this).parents().eq(1).attr('id'));
+		localStorage.setItem('activeLink', this);
+	    });
+	    if ( localStorage.collapseID ) {
+		$( '.panel-collapse' ).removeClass('in');
+		$( '#' + localStorage.collapseID ).addClass('in');
+	    } else {
+		$( '.panel-collapse' ).removeClass('in');
+	    }
+
+	    if ( localStorage.activeLink ) {
+		$( 'a[href="' + localStorage.activeLink.split('/').pop() + '"]' ).addClass('solso-active');
+	    }
+	    /* === END ACCORDION === */
+	</script>
+	<!-- === END JAVASCRIPT MANDATORY CODE === -->
+{% endblock %}
+
+
+{% block content %}
+</div>
+<div class="container_dash">
+<div class="body slide">
+<!-- SIDEBAR -->
+<aside class="sidebar show perfectScrollbar">
+<div id="solso-sidebar">
+
+    <!-- SIDEBAR ACCORDION MENU -->
+    <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+	<!-- SIMPLE PANEL - no Collapse -->
+	<div class="panel panel-default">
+	    <div class="panel panel-default">
+		<div class="panel-heading" role="tab" id="heading1">
+		    <h4 class="panel-title">
+			<a href="{% url 'dashboard' %}" class="single-item">
+			    <i class="fa fa-dashboard"></i> Dashboard
+			</a>
+		    </h4>
+		</div>
+                    </div>
+                </div>
+                <!-- END SIMPLE PANEL - no Collapse -->
+
+                <!-- Collapsible Group Item #1  -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading2">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse2" aria-expanded="true" aria-controls="collapse2">
+                                <i class="fa fa-bar-chart-o"></i> History
+                                <i class="pull-right fa fa-caret-down"></i>
+                            </a>
+                        </h4>
+                    </div>
+
+                    <div id="collapse2" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="heading2">
+                        <!-- anchors Item #1  -->
+                        <div>
+                            <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
+                            <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
+                            <a href="{% url 'dashboard_clustal' %}" class="list-group-item">CLUSTAL</a>
+                            <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
+                        </div>
+                        <!-- anchors Item #1  -->
+                    </div>
+                </div>
+                <!-- END Collapsible Group Item #1  -->
+            </div>
+            <!-- END SIDEBAR ACCORDION MENU -->
+        </div>
+    </aside>
+    <!-- END SIDEBAR -->
+</div>
+
+    <!-- MAIN CONTENT  -->
+        <div class="panel-group" id="accordion">
+            {% for search in search_list %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ search.id_str }}" aria-expanded="true" aria-controls    ="{{ search.id_str }}">{{ search.search_head }}</a>
+                        </h4>
+                    </div>
+                    <div id="{{ search.id_str }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form style="display:flex" method="GET" action="{% url 'dashboard' %}">
+                            <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
+                                <table>
+                                    <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
+                                    <tr><td>Date:                 </td><td>{{ search.enqueue_date }}   </td></tr>
+                                </table>
+                            </div>
+                            <div id="right_div" style:"display: flex; justify-content: flex-end;">
+                                <table>
+                                    <tr><td>Program:              </td><td>{{ search.program }}        </td></tr>
+                                    <tr><td>Sequence:             </td><td>{{ search.sequence }}</td></tr>
+                                </table>
+                            </div>
+                            <div style="display: flex; flex-direction: column;" >
+                                <input type="hidden" name="search_id" value="{{ search.search_tag }}">
+                                <input type="hidden" name="app" value="blast">
+                                <input type="submit" name="searchagain" value="Search Again">
+                                <p><br></p>
+                                <input type="submit" name="editsearch" value="Edit and Search">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+
+                </div>
+            {% endfor %}
+    </div>
+    <!-- MAIN CONTENT  -->
+
+{% endblock %}

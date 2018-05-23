@@ -17,11 +17,6 @@
     <script>
 
 	    /* === SIDEBAR === */
-	    $('.toogle').on('click', function() {
-		$('.body').toggleClass('slide');
-		$('.sidebar').toggleClass('show');
-		$('.toogle i').toggleClass('fa-chevron-left fa-chevron-right');
-	    });
 	    /* === END SIDEBAR === */
 	    /* === ACCORDION === */
 	    $( '#accordion' ).on('click', '.single-item', function(){
@@ -89,7 +84,7 @@
                         <div>
                             <a href="{% url 'dashboard_blast' %}" class="list-group-item">BLAST</a>
                             <a href="{% url 'dashboard_hmmer' %}" class="list-group-item">HMMER</a>
-                            <a href="{% url 'dashboard_clustal' %} " class="list-group-item">CLUSTAL</a>
+                            <a href="{% url 'dashboard_clustal' %}" class="list-group-item">CLUSTAL</a>
                             <!-- <a href="{# url 'dashboard_apollo' #}" class="list-group-item">APOLLO</a> -->
                         </div>
                         <!-- anchors Item #1  -->
@@ -101,11 +96,53 @@
         </div>
     </aside>
     <!-- END SIDEBAR -->
-
-
-    <!-- MAIN CONTENT  -->
-    <!-- MAIN CONTENT  -->
 </div>
 
-
+    <!-- MAIN CONTENT  -->
+        <div class="panel-group" id="accordion">
+            {% for search in search_list %}
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#{{ search.id_str }}" aria-expanded="true" aria-controls    ="{{ search.id_str }}">{{ search.search_head }}</a>
+                        </h4>
+                    </div>
+                    <div id="{{ search.id_str }}" class="panel-collapse collapse in">
+                        <div class="panel-body">
+                            <form style="display:flex" method="GET" action="{% url 'dashboard' %}">
+                            <div id="left_div" style="display: flex; justify-content: flex-start; margin-right: 50px;">
+                                <table>
+                                    <tr><td>Search Tag:           </td><td>{{ search.search_tag }}     </td></tr>
+                                    <tr><td>Date:                 </td><td>{{ search.enqueue_date }}   </td></tr>
+                                    <tr><td>Program:              </td><td>{{ search.program }}        </td></tr>
+                                    <tr><td>Max target sequences: </td><td>{{ search.max_target_seqs }}</td></tr>
+                                    <tr><td>Expect threshold:     </td><td>{{ search.evalue }}         </td></tr>
+                                    <tr><td>Word Size:            </td><td>{{ search.word_size }}      </td></tr>
+                                </table>
+                            </div>
+                            <div id="right_div" style:"display: flex; justify-content: flex-end;">
+                                <table>
+                                    <tr><td>Match score:          </td><td>{{ search.reward  }}        </td></tr>
+                                    <tr><td>Mismatch score:       </td><td>{{ search.penalty }}        </td></tr>
+                                    <tr><td>Gap opening penalty:  </td><td>{{ search.gapopen }}        </td></tr>
+                                    <tr><td>Gap extension penalty:</td><td>{{ search.gapextend }}      </td></tr>
+                                    <tr><td>Strand:               </td><td>{{ search.strand }}         </td></tr>
+                                    <tr><td>Organisms:            </td><td>{{ search.organisms }}      </td></tr>
+                                    <tr><td>Sequence:             </td><td>{{ search.sequence }}</td></tr>
+                                </table>
+                            </div>
+                            <div style="display: flex; flex-direction: column;" >
+                                <input type="hidden" name="search_id" value="{{ search.search_tag }}">
+                                <input type="hidden" name="app" value="blast">
+                                <input type="submit" name="searchagain" value="Search Again">
+                                <p><br></p>
+                                <input type="submit" name="editsearch" value="Edit and Search">
+                            </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+    </div>
+    <!-- MAIN CONTENT  -->
 {% endblock %}

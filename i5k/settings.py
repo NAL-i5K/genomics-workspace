@@ -207,11 +207,6 @@ if ENABLE_JBROWSE_INTEGRATION:
         {'app': 'clustal', 'label': 'clustal', 'icon': 'icon-leaf', 'models': (
             {'model': 'clustalqueryrecord'},
         )},
-        {'app': 'data', 'label': 'Data', 'icon': 'icon-leaf', 'models': (
-            {'model': 'file'},
-            {'model': 'item'},
-            {'model': 'accession'},
-        )},
         # auth and axes
         {'label': 'Auth', 'icon': 'icon-lock', 'models': (
             {'model': 'auth.user'},
@@ -223,6 +218,8 @@ if ENABLE_JBROWSE_INTEGRATION:
     )
 else:
     suit_menu = (
+        {'app': 'app', 'label': 'Organism', 'icon':'icon-leaf', 'url': 'app.organism', 'models': (
+        )},
         {'app': 'blast', 'label': 'BLAST', 'icon': 'icon-leaf', 'models': (
             {'model': 'blastqueryrecord'},
             {'model': 'organism'},

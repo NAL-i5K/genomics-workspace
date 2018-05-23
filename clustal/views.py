@@ -6,14 +6,18 @@ from django.core.cache import cache
 from uuid import uuid4
 from os import path, makedirs, chmod
 from clustal.tasks import run_clustal_task
-from clustal.models import ClustalQueryRecord
+from clustal.models import ClustalQueryRecord, ClustalSearch
 from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
+from misc.logger import i5kLogger
+from misc.get_tag import get_tag
 import json
 import traceback
 import stat as Perm
 from util.get_bin_name import get_bin_name
+
+log = i5kLogger()
 
 
 def manual(request):
@@ -29,7 +33,60 @@ def create(request):
     * Max number of query sequences: 600 sequences
     '''
     if request.method == 'GET':
+
+        if 'search_id' in request.GET and request.GET['search_id']:
+            tag = request.GET['search_id']
+            saved_search = ClustalSearch.objects.filter(search_tag=tag)
+            if saved_search:
+                saved_search = saved_search[0]
+                #sequence_list = saved_search.sequence.split('\n')
+                return render(request, 'clustal/main.html', {
+                    'tag':               saved_search.search_tag,
+                    'sequence':          saved_search.sequence,
+                    'program':           saved_search.program,
+                    'pairwise':          saved_search.pairwise,
+                    'sequence_type':     saved_search.sequence_type,
+                    'pwdnamatrix':       saved_search.pwdnamatrix,
+                    'dna_pwgapopen':     saved_search.dna_pwgapopen,
+                    'dna_pwgapext':      saved_search.dna_pwgapext,
+                    'pwmatrix':          saved_search.pwmatrix,
+                    'protein_pwgapopen': saved_search.protein_pwgapopen,
+                    'protein_pwgapext':  saved_search.protein_pwgapext,
+                    'ktuple':            saved_search.ktuple,
+                    'window':            saved_search.window,
+                    'pairgap':           saved_search.pairgap,
+                    'topdiags':          saved_search.topdiags,
+                    'score':             saved_search.score,
+                    'dnamatrix':         saved_search.dnamatrix,
+                    'dna_gapopen':       saved_search.dna_gapopen,
+                    'dna_gapext':        saved_search.dna_gapext,
+                    'dna_gapdist':       saved_search.dna_gapdist,
+                    'dna_iteration':     saved_search.dna_iteration,
+                    'dna_numiter':       saved_search.dna_numiter,
+                    'dna_clustering':    saved_search.dna_clustering,
+                    'matrix':            saved_search.matrix,
+                    'protein_gapopen':   saved_search.protein_gapopen,
+                    'protein_gapext':    saved_search.protein_gapext,
+                    'protein_gapdist':   saved_search.protein_gapdist,
+                    'protein_iteration': saved_search.protein_iteration,
+                    'protein_numiter':   saved_search.protein_numiter,
+                    'protein_clustering': saved_search.protein_clustering,
+                    'output':            saved_search.output,
+                    'outorder':          saved_search.outorder,
+                    'dealing_input':     saved_search.dealing_input,
+                    'clustering_guide_tree':  saved_search.clustering_guide_tree,
+                    'clustering_guide_iter':  saved_search.clustering_guide_iter,
+                    'combined_iter':     saved_search.combined_iter,
+                    'max_gt_iter':       saved_search.max_gt_iter,
+                    'max_hmm_iter':      saved_search.max_hmm_iter,
+                    'omega_output':      saved_search.omega_output,
+                    'omega_order':       saved_search.omega_order,
+                    'title':           'Clustal Query',
+                })
+
+        tag = get_tag('vagrant', ClustalSearch)
         return render(request, 'clustal/main.html', {
+            'tag': tag,
             'title': 'Clustal Query',
         })
     elif request.method == 'POST':
@@ -79,6 +136,8 @@ def create(request):
             option_params = []
             args_list = []
 
+            print(request.POST['sequenceType'])
+
             if request.POST['program'] == 'clustalw':
                 # clustalw
                 option_params.append("-type="+request.POST['sequenceType'])
@@ -86,68 +145,68 @@ def create(request):
                 # parameters setting for full option or fast option
                 if request.POST['pairwise'] == "full":
                     if request.POST['sequenceType'] == "dna":
-                        if request.POST['PWDNAMATRIX'] != "":
-                            option_params.append('-PWDNAMATRIX='+request.POST['PWDNAMATRIX'])
-                        if request.POST['dna-PWGAPOPEN'] != "":
-                            option_params.append('-PWGAPOPEN='+request.POST['dna-PWGAPOPEN'])
-                        if request.POST['dna-PWGAPEXT'] != "":
-                            option_params.append('-PWGAPEXT='+request.POST['dna-PWGAPEXT'])
+                        if request.POST['pwdnamatrix'] != "":
+                            option_params.append('-PWDNAMATRIX='+request.POST['pwdnamatrix'])
+                        if request.POST['dna_pwgapopen'] != "":
+                            option_params.append('-PWGAPOPEN='+request.POST['dna_pwgapopen'])
+                        if request.POST['dna_pwgapext'] != "":
+                            option_params.append('-PWGAPEXT='+request.POST['dna_pwgapext'])
                     elif request.POST['sequenceType'] == "protein":
-                        if request.POST['PWMATRIX'] != "":
-                            option_params.append('-PWMATRIX='+request.POST['PWMATRIX'])
-                        if request.POST['protein-PWGAPOPEN'] != "":
-                            option_params.append('-PWGAPOPEN='+request.POST['protein-PWGAPOPEN'])
-                        if request.POST['protein-PWGAPEXT'] != "":
-                            option_params.append('-PWGAPEXT='+request.POST['protein-PWGAPEXT'])
+                        if request.POST['pwmatrix'] != "":
+                            option_params.append('-PWMATRIX='+request.POST['pwmatrix'])
+                        if request.POST['protein_pwgapopen'] != "":
+                            option_params.append('-PWGAPOPEN='+request.POST['protein_pwgapopen'])
+                        if request.POST['protein_pwgapopen'] != "":
+                            option_params.append('-PWGAPEXT='+request.POST['protein_pwgapext'])
                 elif request.POST['pairwise'] == "fast":
                     option_params.append('-QUICKTREE')
-                    if request.POST['KTUPLE'] != "":
-                        option_params.append('-KTUPLE='+request.POST['KTUPLE'])
-                    if request.POST['WINDOW'] != "":
-                        option_params.append('-WINDOW='+request.POST['WINDOW'])
-                    if request.POST['PAIRGAP'] != "":
-                        option_params.append('-PAIRGAP='+request.POST['PAIRGAP'])
-                    if request.POST['TOPDIAGS'] != "":
-                        option_params.append('-TOPDIAGS='+request.POST['TOPDIAGS'])
-                    if request.POST['SCORE'] != "":
-                        option_params.append('-SCORE='+request.POST['SCORE'])
+                    if request.POST['ktuple'] != "":
+                        option_params.append('-KTUPLE='+request.POST['ktuple'])
+                    if request.POST['window'] != "":
+                        option_params.append('-WINDOW='+request.POST['window'])
+                    if request.POST['pairgap'] != "":
+                        option_params.append('-PAIRGAP='+request.POST['pairgap'])
+                    if request.POST['topdiags'] != "":
+                        option_params.append('-TOPDIAGS='+request.POST['topdiags'])
+                    if request.POST['score'] != "":
+                        option_params.append('-SCORE='+request.POST['score'])
 
                 # prarmeters setting for mutliple alignment
                 if request.POST['sequenceType'] == "dna":
-                    if request.POST['DNAMATRIX'] != "":
-                        option_params.append('-DNAMATRIX='+request.POST['DNAMATRIX'])
-                    if request.POST['dna-GAPOPEN'] != "":
-                        option_params.append('-GAPOPEN='+request.POST['dna-GAPOPEN'])
-                    if request.POST['dna-GAPEXT'] != "":
-                        option_params.append('-GAPEXT='+request.POST['dna-GAPEXT'])
-                    if request.POST['dna-GAPDIST'] != "":
-                        option_params.append('-GAPDIST='+request.POST['dna-GAPDIST'])
-                    if request.POST['dna-ITERATION'] != "":
-                        option_params.append('-ITERATION='+request.POST['dna-ITERATION'])
-                    if request.POST['dna-NUMITER'] != "":
-                        option_params.append('-NUMITER='+request.POST['dna-NUMITER'])
-                    if request.POST['dna-CLUSTERING'] != "":
-                        option_params.append('-CLUSTERING='+request.POST['dna-CLUSTERING'])
+                    if request.POST['dnamatrix'] != "":
+                        option_params.append('-DNAMATRIX='+request.POST['dnamatrix'])
+                    if request.POST['dna_gapopen'] != "":
+                        option_params.append('-GAPOPEN='+request.POST['dna_gapopen'])
+                    if request.POST['dna_gapext'] != "":
+                        option_params.append('-GAPEXT='+request.POST['dna_gapext'])
+                    if request.POST['dna_gapdist'] != "":
+                        option_params.append('-GAPDIST='+request.POST['dna_gapdist'])
+                    if request.POST['dna_iteration'] != "":
+                        option_params.append('-ITERATION='+request.POST['dna_iteration'])
+                    if request.POST['dna_numiter'] != "":
+                        option_params.append('-NUMITER='+request.POST['dna_numiter'])
+                    if request.POST['dna_clustering'] != "":
+                        option_params.append('-CLUSTERING='+request.POST['dna_clustering'])
                 elif request.POST['sequenceType'] == "protein":
-                    if request.POST['MATRIX'] != "":
-                        option_params.append('-MATRIX='+request.POST['MATRIX'])
-                    if request.POST['protein-GAPOPEN'] != "":
-                        option_params.append('-GAPOPEN='+request.POST['protein-GAPOPEN'])
-                    if request.POST['protein-GAPEXT'] != "":
-                        option_params.append('-GAPEXT='+request.POST['protein-GAPEXT'])
-                    if request.POST['protein-GAPDIST'] != "":
-                        option_params.append('-GAPDIST='+request.POST['protein-GAPDIST'])
-                    if request.POST['protein-ITERATION'] != "":
-                        option_params.append('-ITERATION='+request.POST['protein-ITERATION'])
-                    if request.POST['protein-NUMITER'] != "":
-                        option_params.append('-NUMITER='+request.POST['protein-NUMITER'])
-                    if request.POST['protein-CLUSTERING'] != "":
-                        option_params.append('-CLUSTERING='+request.POST['protein-CLUSTERING'])
+                    if request.POST['matrix'] != "":
+                        option_params.append('-MATRIX='+request.POST['matrix'])
+                    if request.POST['protein_gapopen'] != "":
+                        option_params.append('-GAPOPEN='+request.POST['protein_gapopen'])
+                    if request.POST['protein_gapext'] != "":
+                        option_params.append('-GAPEXT='+request.POST['protein_gapext'])
+                    if request.POST['protein_gapdist'] != "":
+                        option_params.append('-GAPDIST='+request.POST['protein_gapdist'])
+                    if request.POST['protein_iteration'] != "":
+                        option_params.append('-ITERATION='+request.POST['protein_iteration'])
+                    if request.POST['protein_numiter'] != "":
+                        option_params.append('-NUMITER='+request.POST['protein_numiter'])
+                    if request.POST['protein_clustering'] != "":
+                        option_params.append('-CLUSTERING='+request.POST['protein_clustering'])
 
                 # parameters setting of output
-                is_color = True if request.POST['OUTPUT'] == 'clustal' else False
-                option_params.append('-OUTPUT='+request.POST['OUTPUT'])
-                option_params.append('-OUTORDER='+request.POST['OUTORDER'])
+                is_color = True if request.POST['output'] == 'clustal' else False
+                option_params.append('-output='+request.POST['output'])
+                option_params.append('-outorder='+request.POST['outorder'])
 
                 args_list.append([path.join(program_path, 'clustalw2'), '-infile='+query_filename,
                                   '-OUTFILE='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id+'.aln'),
@@ -165,11 +224,11 @@ def create(request):
                 if request.POST['clustering_guide_iter'] != "no":
                     option_params.append("--full-iter")
 
-                if request.POST['combined_iter'] != "":
+                if request.POST['combined_iter'] != "default":
                     option_params.append("--iterations="+request.POST['combined_iter'])
-                if request.POST['max_gt_iter'] != "":
+                if request.POST['max_gt_iter'] != "default":
                     option_params.append("--max-guidetree-iterations="+request.POST['max_gt_iter'])
-                if request.POST['max_hmm_iter'] != "":
+                if request.POST['max_hmm_iter'] != "default":
                     option_params.append("--max-hmm-iterations="+request.POST['max_hmm_iter'])
                 if request.POST['omega_output'] != "":
                     option_params.append("--outfmt="+request.POST['omega_output'])
@@ -181,7 +240,6 @@ def create(request):
                                   '--guidetree-out='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.ph',
                                   '--outfile='+path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id)+'.aln']
                                   + option_params)
-
                 args_list_log = []
                 args_list_log.append(['clustalo', '--infile='+path.basename(query_filename),
                                       '--guidetree-out=' + task_id + '.ph',
@@ -204,6 +262,11 @@ def create(request):
                                'cmd': " ".join(args_list_log[0]), 'is_color': is_color,
                                'query_filename': path.basename(query_filename)}, f)
             run_clustal_task.delay(task_id, args_list, file_prefix)
+
+            if request.user.is_authenticated():
+                save_history(request.POST, task_id, request.user, query_filename)
+            else:
+                save_history(request.POST, task_id, None, query_filename)
 
             return redirect('clustal:retrieve', task_id)
         else:
@@ -355,4 +418,66 @@ def user_tasks(request, user_id):
         return JSONResponse(serializer.data)
 
 
+def save_history(post, task_id, user, seq_file):
+    rec = ClustalSearch()
+    with open(seq_file) as f:
+        rec.sequence = f.read()
 
+    rec.task_id    = task_id
+    rec.search_tag = post.get('tag')
+    rec.enqueue_date = datetime.now()
+    rec.program    = post.get('program', '')
+    rec.user       = user
+    rec.pairwise      =  post.get('pairwise', '')
+    rec.sequence_type =  post.get('sequenceType', '')
+
+    # DNA FULL
+    rec.pwdnamatrix   =  post.get('pwdnamatrix', '')
+    rec.protein_pwgapopen =  post.get('protein_pwgapopen') if post.get('protein_pwgapopen') != '' else 0
+    rec.protein_pwgapext  =  post.get('protein_pwgapext') if post.get('protein_pwgapext') != '' else 0
+
+    # PROTEIN FULL
+    rec.pwmatrix      =  post.get('pwmatrix', '')
+    rec.dna_pwgapopen =  post.get('dna_pwgapopen') if post.get('dna_pwgapopen') != '' else 0
+    rec.dna_pwgapext  =  post.get('dna_pwgapext') if post.get('dna_pwgapext') != '' else 0
+
+    # BOTH FAST
+    rec.ktuple        =  post.get('ktuple') if post.get('ktuple') != '' else 0
+    rec.window        =  post.get('window') if post.get('window') != '' else 0
+    rec.pairgap       =  post.get('pairgap') if post.get('pairgap') != '' else 0
+    rec.topdiags      =  post.get('topdiags') if post.get('topdiags') != '' else 0
+    rec.score         =  post.get('score', '')
+
+    # DNA multiple alignment
+    rec.dnamatrix     =  post.get('dnamatrix', '')
+    rec.dna_gapopen   =  post.get('dna_gapopen') if post.get('dna_gapopen') != '' else 0
+    rec.dna_gapext    =  post.get('dna_gapext')  if post.get('dna_gapext') != '' else 0
+    rec.dna_gapdist   =  post.get('dna_gapdist') if post.get('dna_gapdist') != '' else 0
+    rec.dna_iteration =  post.get('dna_iteration') if post.get('dna_iteration') != '' else 0
+    rec.dna_numiter   =  post.get('dna_numiter') if post.get('dna_numiter') != '' else 0
+    rec.dna_clustering       =  post.get('dna_clustering', '')
+
+    # PROTEIN multiple alignment
+    rec.matrix               =  post.get('matrix', '')
+    rec.protein_gapopen      =  post.get('protein_gapopen') if post.get('protein_gapopen') != '' else 0
+    rec.protein_gapext       =  post.get('protein_gapext') if post.get('protein_gapext') != '' else 0
+    rec.protein_gapdist      =  post.get('protein_gapdist') if post.get('protein_gapdist') != '' else 0
+    rec.protein_iteration    =  post.get('protein_iteration') if post.get('protein_iteration') != '' else 0
+    rec.protein_numiter      =  post.get('protein_numiter') if post.get('protein_numiter') != '' else 0
+    rec.protein_clustering   =  post.get('protein_clustering', '')
+
+    # CLUSTALW OUTPUT
+    rec.output               =  post.get('output', '')
+    rec.outorder             =  post.get('outorder', '')
+
+    # CLUSTALO
+    rec.dealing_input        =  True if post.get('dealing_input') == 'yes' else False
+    rec.clustering_guide_tree =  True if post.get('clustering_guide_tree') == 'yes' else False
+    rec.clustering_guide_iter =  True if post.get('clustering_guide_iter') == 'yes' else False
+    rec.combined_iter         =  post.get('combined_iter', '')
+    rec.max_gt_iter           =  post.get('max_gt_iter', '')
+    rec.max_hmm_iter          =  post.get('max_hmm_iter', '')
+    rec.omega_output          =  post.get('omega_output', '')
+    rec.omega_order           =  post.get('omega_order', '')
+
+    rec.save()

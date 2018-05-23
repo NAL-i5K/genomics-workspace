@@ -21,6 +21,7 @@ matrix:
 
 # command to install dependencies
 install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install enchant; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install rabbitmq; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install memcached; fi
@@ -52,8 +53,9 @@ before_script:
   - sudo chmod 666 /var/log/django/django.log
   - sudo touch /var/log/django/i5k.log
   - sudo chmod 666 /var/log/django/i5k.log
-  - sudo python2 manage.py migrate
   - sudo python2 setup.py
+  - sudo python2 manage.py migrate
+  - sudo python2 manage.py collectstatic --noinput
 
 # command to run tests
 script:
