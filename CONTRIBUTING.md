@@ -13,7 +13,12 @@ In genomics-workspace, we use git and GitHub flow. If you didn't know git or Git
 
 ## Django
 
-Genomics-workspace is a django website project, so you need to know django before any contribusion. There are many useful resoures available. If you didn't know django before, check the [official tutorial](https://docs.djangoproject.com/en/1.11/intro/) and [tutorials by django girls](https://tutorial.djangogirls.org/en/) first. One thing you need to note when you read any resource related to django is that currently, we use django 1.11.
+Genomics-workspace is a django website project, so you need to know django before any contribusion. There are many useful resoures available. If you didn't know django before, check the [official tutorial](https://docs.djangoproject.com/en/1.11/intro/) and [tutorials by django girls](https://tutorial.djangogirls.org/en/) first. One thing you need to note when you read any resource related to django is that currently, we use django 1.11. Followings are miscellaneous list of links that may help you when contributing this project:
+
+- [awesome-django](https://gitlab.com/rosarior/awesome-django)
+- [djangopackages](https://djangopackages.org/)
+- [Test-Driven Web Development with Django](http://test-driven-django-development.readthedocs.io/en/latest/)
+- [Test-Driven Web Development with Python](https://www.obeythetestinggoat.com/pages/book.html)
 
 ## Coding Style
 

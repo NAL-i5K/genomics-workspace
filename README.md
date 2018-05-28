@@ -8,9 +8,9 @@
 
 Genomics-Workspace is a bioinformatic website project created by [i5k Workspace](https://i5k.nal.usda.gov/). It provides common sequence search services including [BLAST](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [HMMER](http://hmmer.org/), and [Clustal](http://www.clustal.org/). To see it in action, please visit following live sites:
 
-* BLAST: https://i5k.nal.usda.gov/webapp/blast/
-* HMMER: https://i5k.nal.usda.gov/webapp/hmmer/
-* Clustal: https://i5k.nal.usda.gov/webapp/clustal/
+* BLAST: [https://i5k.nal.usda.gov/webapp/blast/](https://i5k.nal.usda.gov/webapp/blast/)
+* HMMER: [https://i5k.nal.usda.gov/webapp/hmmer/](https://i5k.nal.usda.gov/webapp/hmmer/)
+* Clustal: [https://i5k.nal.usda.gov/webapp/clustal/](https://i5k.nal.usda.gov/webapp/clustal/)
 
 ## Features
 
@@ -47,3 +47,7 @@ BLAST Results
 ## Documentation
 
 Docs can be found at [genomics-workspace.readthedocs.io](https://genomics-workspace.readthedocs.io/en/latest/).
+
+## How to contribute
+
+You're highly encouraged to participate in the development of genomics-workspace. Check the [CONTRIBUTING.md](CONTRIBUTING.md) first and start contributing !
