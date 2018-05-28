@@ -1,6 +1,19 @@
 # How to contribute
 
+## Git and GitHub Flow
+
+> Git is a version control system for tracking changes in computer files and coordinating work on those files among multiple people. It is primarily used for source code management in software development.
+> - [wikipedia](https://en.wikipedia.org/wiki/Git)
+
+In genomics-workspace, we use git and GitHub flow. If you didn't know git or GitHub before, check following resources:
+
+- [Try Git: Git Tutorial](https://try.github.io/) provided by GitHub
+- [Understanding the GitHub Flow](https://guides.github.com/introduction/flow/) within 5 minutes
+- [Git and GitHub learning resources](https://help.github.com/articles/git-and-github-learning-resources/)
+
 ## Django
+
+Genomics-workspace is a django website project, so you need to know django before any contribusion. There are many useful resoures available. If you didn't know django before, check the [official tutorial](https://docs.djangoproject.com/en/1.11/intro/) and [tutorials by django girls](https://tutorial.djangogirls.org/en/) first. One thing you need to note when you read any resource related to django is that currently, we use django 1.11.
 
 ## Coding Style
 
