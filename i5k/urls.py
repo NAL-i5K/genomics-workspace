@@ -21,8 +21,6 @@ urlpatterns = [
     # Enable admin documentation:
     url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
     url(r'^captcha/', include('captcha.urls')),
-    url(r'^proxy/', include('proxy.urls', namespace='proxy')),
-
     # user authentication
     url(r'^set_institution$', set_institution, name='set_institution'),
     url(r'^info_change$', info_change, name='info_change'),
