@@ -1,5 +1,6 @@
 const path = require('path');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const DisableOutputWebpackPlugin = require('disable-output-webpack-plugin');
 
 const nodeModules = path.resolve(__dirname, 'node_modules');
 
@@ -7,7 +8,12 @@ const appScripts = path.resolve(__dirname, 'app/static/app/scripts');
 const appStyles = path.resolve(__dirname, 'app/static/app/css');
 const appScriptConfig = {
   entry: path.join(nodeModules, '/jquery/dist/jquery.js'),  // Just a fake entry, we only copy files here
+  output: {
+    path: __dirname,
+    filename: 'bundle.js' // this file will be removed by disable output webpack plugin
+  },
   plugins: [
+    new DisableOutputWebpackPlugin(),
     new CopyWebpackPlugin([
         { from: path.join(nodeModules, '/marked/marked.min.js'), to: appScripts},
         { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: appScripts},
@@ -27,7 +33,12 @@ const blastScripts = path.resolve(__dirname, 'blast/static/blast/scripts');
 const blastStyles = path.resolve(__dirname, 'blast/static/blast/css');
 const blastScriptConfig = {
   entry: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'),  // Just a fake entry, we only copy files here
+  output: {
+    path: __dirname,
+    filename: 'bundle.js' // this file will be removed by disable output webpack plugin
+  },
   plugins: [
+    new DisableOutputWebpackPlugin(),
     new CopyWebpackPlugin([
         { from: path.join(nodeModules, '/d3/d3.js'), to: blastScripts},
         { from: path.join(nodeModules, '/codemirror/lib/codemirror.js'), to: blastScripts},
@@ -58,7 +69,12 @@ const blastScriptConfig = {
 const hmmerScripts = path.resolve(__dirname, 'hmmer/static/hmmer/scripts');
 const hmmerScriptConfig = {
   entry: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'),  // Just a fake entry, we only copy files here
+  output: {
+    path: __dirname,
+    filename: 'bundle.js' // this file will be removed by disable output webpack plugin
+  },
   plugins: [
+    new DisableOutputWebpackPlugin(),
     new CopyWebpackPlugin([
         { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: hmmerScripts},
         { from: path.join(nodeModules, '/jquery-hoverintent/jquery.hoverIntent.js'), to: hmmerScripts},

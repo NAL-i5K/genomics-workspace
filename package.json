@@ -2,7 +2,7 @@
   "name": "genomics-workspace",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm install && webpack && python2.7 setup.py && rm -rf dist/"
+    "build": "npm install && webpack && python2.7 setup.py"
   },
   "private": true,
   "repository": {
@@ -34,6 +34,7 @@
     "datatables.net-colreorder": "^1.2.0",
     "datatables.net-colreorder-dt": "^1.2.0",
     "datatables.net-dt": "^1.10.16",
+    "disable-output-webpack-plugin": "^1.0.1",
     "jquery": "^1.11.1",
     "jquery-hoverintent": "^1.9.0",
     "jquery-ui-dist": "^1.12.0",
