@@ -2,7 +2,7 @@
 {% load pipeline %}
 <!DOCTYPE html>
 <html>
-<head>
+  <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>{% block title %}{{ title }} | i5k - App{% endblock %}</title>
@@ -15,7 +15,7 @@
     {% javascript 'app-analytics' %}
 </head>
 
-<body class="padtop {% block bodyclass %}{% endblock %}">
+  <body class="padtop {% block bodyclass %}{% endblock %}">
     <nav class="navbar navbar-inverse navbar-fixed-top" role="navigation">
         <div class="container">
             <div class="navbar-header">
@@ -32,40 +32,37 @@
                                 <li><a href="https://i5k.nal.usda.gov/available-genome-browsers">JBrowse/Apollo</a></li>
                         </ul>
                     </li>
-                    <!-- <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li> -->
                 </ul>
-               {% if request.user.is_superuser %}
+              {% if request.user.is_superuser %}
                 <ul class="nav navbar-nav">
                     <li><a href="{% url 'admin:index' %}">Admin</a></li>
-                    <!-- <li><a href="javascript:document.getElementById('logoutForm').submit()">Log out</a></li> -->
                 </ul>
                 {% endif %}
                 <ul class="nav navbar-nav">
-                    <li><a href="https://i5k.nal.usda.gov/about-us">About Us</a></li>
-                    <li><a href="https://i5k.nal.usda.gov/contact">Contact</a></li>
-                    {% block navbar %}{% endblock %}
+                  <li><a href="https://i5k.nal.usda.gov/about-us">About Us</a></li>
+                  <li><a href="https://i5k.nal.usda.gov/contact">Contact</a></li>
+                  {% block navbar %}
+                  {% endblock %}
                 </ul>
-                {% if isLoginEnabled %}
-                {% include 'app/loginpartial.html' %}
-                {% endif %}
             </div>
         </div>
     </nav>
-{% block content-body %}{% endblock %}
+    {% block content-body %}
+    {% endblock %}
     <div class="container-fluid" style="height: 100%;">
-{% block content-fluid %}
+      {% block content-fluid %}
         <div class="container body-content">
-{% block content %}{% endblock %}
-            <hr/>
-            <footer>
-                <p>{% now "Y" %} - National Agricultural Library</p>
-            </footer>
+          {% block content %}
+          {% endblock %}
+          <hr/>
+          <footer>
+            <p>{% now "Y" %} - National Agricultural Library</p>
+          </footer>
         </div>
-{% endblock %}
+      {% endblock %}
     </div>
-
-{% javascript 'app-layout' %}
-{% block scripts %}{% endblock %}
-
-</body>
+    {% javascript 'app-layout' %}
+    {% block scripts %}
+    {% endblock %}
+  </body>
 </html>

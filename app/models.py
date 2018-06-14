@@ -2,11 +2,6 @@ from django.db import models
 from django.contrib.auth.models import User
 
 
-class Profile(models.Model):
-    user = models.OneToOneField(User)
-    institution = models.CharField(max_length=100, null=False)
-
-
 class OrganismManager(models.Manager):
     def get_by_natural_key(self, short_name):
         return self.get(short_name=short_name)

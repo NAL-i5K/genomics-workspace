@@ -55,10 +55,10 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         result_status = 'NO_ASN'
     elif stat(file_prefix + '.asn')[6] == 0:
         result_status = 'ASN_EMPTY'
-    elif not path.isfile(file_prefix + '.csv'):
-        result_status = 'NO_CSV'
-    elif stat(file_prefix + '.csv')[6] == 0:
-        result_status = 'CSV_EMPTY'
+    elif not path.isfile(file_prefix + '.tsv'):
+        result_status = 'NO_TSV'
+    elif stat(file_prefix + '.tsv')[6] == 0:
+        result_status = 'TSV_EMPTY'
     else:
         # parse .0, and save index in line_num_list
         report_path = file_prefix + '.0'
@@ -70,17 +70,17 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                 if line[:len(target_str)] == target_str:
                     line_num_list.append(line_num)
                 line_num += 1
-        # read csv and convert to appropreate types
-        csv_path = file_prefix + '.csv'
+        # read tsv and convert to appropreate types
+        tsv_path = file_prefix + '.tsv'
         json_path = file_prefix + '.json'
         type_func = {'str': str, 'float': float, 'int': int}
         hsp_list = []
-        with open(csv_path, 'rb') as f:
-            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f)]
+        with open(tsv_path, 'rb') as f:
+            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter='\t')]
         # generate gff3 files
         try:
             blast_program = path.basename(args_list[0][0])
-            basedir = path.dirname(csv_path)
+            basedir = path.dirname(tsv_path)
             gff_col_names = 'seqid source type start end score strand phase attributes'.split()
             # build hsp_dict_list with extra strand info, always let qend > qstart, if not swap both query and subject cords, than set strand
             cid = dict([(v, i) for i, v in enumerate(blast_info['col_names'])])
