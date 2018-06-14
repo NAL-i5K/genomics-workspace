@@ -62,7 +62,7 @@ def create(request):
         chmod(query_filename, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
         # ensure the standalone dequeuing process can access the file
         bin_name = get_bin_name()  # note that we didn't support Clustal on windows yet
-        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name)
+        program_path = path.join(settings.BASE_DIR, 'clustal', bin_name)
 
         # count number of query sequence by counting '>'
         with open(query_filename, 'r') as f:

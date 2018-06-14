@@ -110,13 +110,13 @@ def create(request, iframe=False):
                 else:
                     input_opt.extend(['-'+blast_option, request.POST[blast_option]])
 
-            program_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, request.POST['program'])
+            program_path = path.join(settings.BASE_DIR, 'blast', bin_name, request.POST['program'])
             num_threads = '4' if cpu_count() >= 4 else str(cpu_count())
             args_list = [[program_path, '-query', query_filename, '-db', db_list, '-outfmt', '11', '-out', asn_filename, '-num_threads', num_threads]]
             args_list[0].extend(input_opt)
 
             # convert to multiple formats
-            blast_formatter_path = path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'blast_formatter')
+            blast_formatter_path = path.join(settings.BASE_DIR, 'blast', bin_name, 'blast_formatter')
             for ext, outfmt in blast_info['ext'].items():
                 args = [blast_formatter_path, '-archive', asn_filename, '-outfmt', outfmt, '-out', file_prefix + ext]
                 if ext == '.html':

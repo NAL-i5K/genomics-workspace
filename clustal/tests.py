@@ -78,7 +78,7 @@ class ClustalUploadFileTestCase(StaticLiveServerTestCase):
     def test(self):
         self.driver.get('%s%s' % (self.live_server_url, '/clustal/'))
         wait = WebDriverWait(self.driver, 10)
-        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        example_file_path = path.join(settings.BASE_DIR, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.ID, 'clustal-success')))
@@ -86,14 +86,14 @@ class ClustalUploadFileTestCase(StaticLiveServerTestCase):
 
 class ClustalBinaryTestCase(SimpleTestCase):
     def test_clustalo(self):
-        test_dir = path.join(settings.PROJECT_ROOT, 'test_clustal')
+        test_dir = path.join(settings.BASE_DIR, 'test_clustal')
         if not path.exists(test_dir):
             mkdir(test_dir)
         bin_name = get_bin_name()
         if bin_name == 'win32':
             return
-        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name, 'clustalo')
-        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        program_path = path.join(settings.BASE_DIR, 'clustal', bin_name, 'clustalo')
+        example_file_path = path.join(settings.BASE_DIR, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         out_file_path = path.join(test_dir, 'test.out')
         ph_file_path = path.join(test_dir, 'test.ph')
         args = [program_path, '--infile=' + example_file_path,
@@ -109,14 +109,14 @@ class ClustalBinaryTestCase(SimpleTestCase):
             rmtree(test_dir)
 
     def test_clustalw(self):
-        test_dir = path.join(settings.PROJECT_ROOT, 'test_clustal')
+        test_dir = path.join(settings.BASE_DIR, 'test_clustal')
         if not path.exists(test_dir):
             mkdir(test_dir)
         bin_name = get_bin_name()
         if bin_name == 'bin_win' or bin_name == 'bin_mac':
             return
-        program_path = path.join(settings.PROJECT_ROOT, 'clustal', bin_name, 'clustalw2')
-        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        program_path = path.join(settings.BASE_DIR, 'clustal', bin_name, 'clustalw2')
+        example_file_path = path.join(settings.BASE_DIR, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         out_file_path = path.join(test_dir, 'test.out')
         args = [program_path, '-infile=' + example_file_path,
                 '-OUTFILE=' + out_file_path,

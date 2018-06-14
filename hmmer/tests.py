@@ -129,9 +129,9 @@ def send_query(query, driver, live_server_url):
 
 def prepare_test_fasta_file():
     for file in test_files:
-        if path.exists(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file)):
-            remove(path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', file))
-    copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.PROJECT_ROOT, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
+        if path.exists(path.join(settings.BASE_DIR, 'media', 'blast', 'db', file)):
+            remove(path.join(settings.BASE_DIR, 'media', 'blast', 'db', file))
+    copyfile(path.join(settings.BASE_DIR, 'example', 'blastdb', 'clec_peptide_example_BLASTdb.fa'), path.join(settings.BASE_DIR, 'media', 'blast', 'db', 'clec_peptide_example_BLASTdb.fa'))
 
 
 @override_settings(DEBUG=True)
@@ -279,7 +279,7 @@ class UploadFileTestCase(StaticLiveServerTestCase):
         hover.perform()
         wait.until(EC.element_to_be_clickable((By.XPATH, '//input[@value="' + title + '"]')))
         self.driver.find_element_by_xpath('//input[@value="' + title + '"]').click()
-        example_file_path = path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
+        example_file_path = path.join(settings.BASE_DIR, 'example', 'blastdb', 'Cimex_sample_pep_query.faa')
         self.driver.find_element_by_name('query-file').send_keys(example_file_path)
         self.driver.find_element_by_xpath('//div//input[@value="Search"]').click()
         wait.until(EC.presence_of_element_located((By.ID, 'hmmer-success')))
@@ -308,20 +308,20 @@ class HmmerBinaryTestCase(SimpleTestCase):
 
 
 def run_hmmer(program, assertEqual):
-    test_dir = path.join(settings.PROJECT_ROOT, 'test_hmmer')
+    test_dir = path.join(settings.BASE_DIR, 'test_hmmer')
     if not path.exists(test_dir):
         mkdir(test_dir)
     chmod(test_dir, Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
     if program == 'phmmer':
-        input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'blastdb')
+        input_file_dir = path.join(settings.BASE_DIR, 'example', 'blastdb')
         query_filename = path.join(test_dir, 'Cimex_sample_pep_query.faa')
         copyfile(path.join(input_file_dir, 'Cimex_sample_pep_query.faa'), query_filename)
     else:  # program == 'hmmersearch'
-        input_file_dir = path.join(settings.PROJECT_ROOT, 'example', 'hmmer')
+        input_file_dir = path.join(settings.BASE_DIR, 'example', 'hmmer')
         query_filename = path.join(test_dir, 'example.MSA')
         copyfile(path.join(input_file_dir, 'example.MSA'), query_filename)
     db_file = path.join(test_dir, 'AGLA_new_ids.faa')
-    copyfile(path.join(settings.PROJECT_ROOT, 'example', 'blastdb', 'AGLA_new_ids.faa'), db_file)
+    copyfile(path.join(settings.BASE_DIR, 'example', 'blastdb', 'AGLA_new_ids.faa'), db_file)
     chmod(query_filename,
           Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
     chmod(db_file,
@@ -329,7 +329,7 @@ def run_hmmer(program, assertEqual):
     bin_name = get_bin_name()
     if bin_name == 'bin_win':
         return
-    program_path = path.join(settings.PROJECT_ROOT, 'hmmer', bin_name)
+    program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name)
     option_params = ['--incE', u'0.01', '--incdomE', u'0.03', '-E', u'0.01', '--domE', u'0.03']
     db_list = [db_file]
     args = generate_hmmer_args(program, program_path, query_filename, option_params, db_list)

@@ -4,12 +4,12 @@ from os.path import abspath, dirname, join
 from subprocess import Popen, PIPE
 from util.get_bin_name import get_bin_name
 
-PROJECT_ROOT = dirname(dirname(abspath(__file__)))
+BASE_DIR = dirname(dirname(abspath(__file__)))
 
 bin_name = get_bin_name()
 
-makeblastdb_path = join(PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
-blastdb_example_dir = join(PROJECT_ROOT, 'example', 'blastdb/')
+makeblastdb_path = join(BASE_DIR, 'blast', bin_name, 'makeblastdb')
+blastdb_example_dir = join(BASE_DIR, 'example', 'blastdb/')
 
 args_list = [
     [makeblastdb_path, '-in', join(blastdb_example_dir, 'clec_peptide_example_BLASTdb.fa'), '-dbtype', 'prot', '-hash_index', '-title', 'test_Cimex', '-taxid', '79782'],
