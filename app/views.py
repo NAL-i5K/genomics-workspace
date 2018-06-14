@@ -45,3 +45,6 @@ def about(request):
             'title': 'About Genomics-Workspace',
             #'year': datetime.now().year,
         })
+
+def handle_404(request):
+    return render(request, 'app/404.html')

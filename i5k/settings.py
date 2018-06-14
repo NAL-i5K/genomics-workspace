@@ -340,6 +340,12 @@ PIPELINE = {
             ),
             'output_filename': 'hmmer/css/hmmer-css.min.css',
         },
+        '404-css': {
+            'source_filenames': (
+                'app/css/404.css',
+            ),
+            'output_filename': 'app/css/404-css.min.css',
+        }
     },
     'JAVASCRIPT': {
         'app-analytics': {

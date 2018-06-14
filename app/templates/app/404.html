@@ -1,0 +1,38 @@
+{% extends "app/layout.html" %}
+{% load staticfiles %}
+{% load pipeline %}
+
+{% block head-scripts %}
+  {% stylesheet '404-css' %}
+{% endblock %}
+
+{% block content %}
+    <h3 class="text-center">Page Not Found</h3>
+    <h4 class="text-center">Are you looking for following services ?</h4>
+  <div class="row">
+    <div class="col-md-4">
+      <h4 class="text-center">BLAST</h4>
+      <p class="text-wrap">Basic Local Alignment Search Tool (<b>BLAST</b>) finds regions of similarity between biological sequences. The program compares nucleotide or protein	sequences to sequence databases and calculates the statistical significance.</p>
+      <div class="text-center">
+        <a class="btn btn-primary btn-md" href="{% url 'blast:create' %}" role="button">Go</a>
+      </div>
+    </div>
+    <div class="col-md-4">
+      <h4 class="text-center">HMMER</h4>
+      <p class="text-wrap"><b>HMMER</b> is used for searching sequence databases for sequence homologs, and for making sequence alignments. It implements methods using probabilistic models called profile hidden Markov models (profile HMMs).</p>
+      <div class="text-center">
+        <a class="btn btn-primary btn-md" href="{% url 'hmmer:create' %}" role="button">Go</a>
+      </div>
+    </div>
+    <div class="col-md-4 text-center">
+      <h4>Clustal</h4>
+      <p class="text-wrap"><b>Clustal</b> is a series of widely used computer programs used in Bioinformatics for multiple sequence alignment. We provide <b>ClustalO</b> and <b>ClustalW</b>.</p>
+      <br/>
+      <br/>
+      <a class="btn btn-primary btn-md" href="{% url 'clustal:create' %}" role="button">Go</a>
+    </div>
+  </div>
+{% endblock %}
+
+{% block scripts %}
+{% endblock %}

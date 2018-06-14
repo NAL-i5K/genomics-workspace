@@ -205,11 +205,8 @@ def retrieve(request, task_id='1'):
                 'dequeue_date': dequeue_date,
                 'isNoHits': False,
             })
-    except:
-        if settings.USE_PROD_SETTINGS:
-            raise Http404
-        else:
-            return HttpResponse(traceback.format_exc())
+    except Exception:
+        raise Http404
 
 
 def read_gff3(request, task_id, dbname):
