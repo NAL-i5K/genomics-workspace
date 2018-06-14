@@ -21,7 +21,7 @@ Genomics-Workspace is a bioinformatic website project created by [i5k Workspace]
 * Task queue with [Celery](https://github.com/celery/celery) and [RabbitMQ](http://www.rabbitmq.com/).
 * Use [PostgreSQL](https://www.postgresql.org/) as database backend.
 * BLAST:
-  * generates all BLAST output formats for download: Text, CSV, TSV, XML, ASN.1.
+  * Generates several BLAST output formats for download: Text, TSV, XML, ASN.1.
   * Converts BLAST output to GFF3 by grouping contiguous HSPs with identical query sequence, subject sequence, strand direction and an overlap length less than 6 between neighbouring HSPs under the same match.
 * Retrieve previous results with a unique URL for every task.
 * Supports both Linux and MacOS.
