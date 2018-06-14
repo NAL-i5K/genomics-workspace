@@ -84,5 +84,6 @@ script:
   - coverage run --source= ./manage.py test blast.tests.JbrowseLinkOutTestCase --noinput
 
 after_success:
+  - coverage report  # show the coverage report
   - coveralls
   - codecov
