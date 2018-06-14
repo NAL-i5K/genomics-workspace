@@ -108,7 +108,7 @@ class BlastDb(models.Model):
         if not os.path.isfile(self.fasta_file.path_full):
             return 1, 'FASTA file not found', ''
         bin_name = get_bin_name()
-        makeblastdb_path = os.path.join(settings.PROJECT_ROOT, 'blast', bin_name, 'makeblastdb')
+        makeblastdb_path = os.path.join(settings.BASE_DIR, 'blast', bin_name, 'makeblastdb')
         args = [makeblastdb_path, '-in', self.fasta_file.path_full, '-dbtype', self.type.molecule_type, '-hash_index'] # , '-parse_seqids' TODO: make option
         if self.title:
             args += ['-title', self.title]
