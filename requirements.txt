@@ -1,5 +1,6 @@
 Django==1.11.11
 Markdown==2.6.6
+amqp==2.3.2
 celery==4.1.1
 cssmin==0.2.0
 django-pipeline==1.6.8
