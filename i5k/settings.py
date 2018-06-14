@@ -4,7 +4,8 @@ import sys
 import os
 import socket
 
-PROJECT_ROOT = path.dirname(path.abspath(path.dirname(__file__)))
+BASE_DIR = path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_ROOT = path.dirname(os.path.abspath(__file__))
 
 DEBUG = True
 
@@ -15,7 +16,7 @@ TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
         'DIRS': [
-            path.join(PROJECT_ROOT, 'i5k', 'templates'),
+            path.join(BASE_DIR, 'i5k', 'templates'),
         ],
         'APP_DIRS': True,
         'OPTIONS': {
@@ -30,7 +31,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.is_login_enabled',
             ],
         },
     },
@@ -78,7 +78,7 @@ USE_TZ = True
 
 # Absolute filesystem path to the directory that will hold user-uploaded files.
 # Example: "/home/media/media.lawrence.com/media/"
-MEDIA_ROOT = path.join(PROJECT_ROOT, 'media').replace('\\','/')
+MEDIA_ROOT = path.join(BASE_DIR, 'media').replace('\\','/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash.
@@ -89,7 +89,7 @@ MEDIA_URL = '/media/'
 # Don't put anything in this directory yourself; store your static files
 # in apps' "static/" subdirectories and in STATICFILES_DIRS.
 # Example: "/home/media/media.lawrence.com/static/"
-STATIC_ROOT = path.join(PROJECT_ROOT, 'static').replace('\\','/')
+STATIC_ROOT = path.join(BASE_DIR, 'static').replace('\\','/')
 
 # URL prefix for static files.
 # Example: "http://media.lawrence.com/static/"
@@ -145,8 +145,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Enable admin documentation:
     'django.contrib.admindocs',
-    'captcha',
-    'dashboard',
     'proxy',
     'hmmer',
     'clustal',
@@ -253,74 +251,6 @@ SUIT_CONFIG = {
     'MENU_OPEN_FIRST_CHILD': False,
     'MENU_EXCLUDE': (),
     'MENU': suit_menu,
-}
-
-# A sample logging configuration. The only tangible logging
-# performed by this configuration is to send an email to
-# the site admins on every HTTP 500 error when DEBUG=False.
-# See http://docs.djangoproject.com/en/dev/topics/logging for
-# more details on how to customize your logging configuration.
-
-#
-# Use default 'django' logger to a file in /var/log/django/django.log
-# and new log 'i5k' to /var/log/i5k/i5k.log
-# See logging.md doc for more details.
-#
-LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'normal': {
-            'format': '%(name)s %(levelname)s %(asctime)s %(process)d [%(message)s] (file: %(pathname)s line: %(lineno)d)'
-        },
-    },
-    'filters': {
-        'require_debug_false': {
-            '()': 'django.utils.log.RequireDebugFalse'
-        },
-        'require_debug_true': {
-            '()': 'django.utils.log.RequireDebugTrue',
-        },
-    },
-    'handlers': {
-        'mail_admins': {
-            'level': os.getenv('ADMIN_LOG_LEVEL', 'ERROR'),
-            'filters': ['require_debug_false'],
-            'class': 'django.utils.log.AdminEmailHandler',
-            'formatter': 'normal'
-        },
-        'django_file': {
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/django/django.log',
-            'when': 'midnight',
-            'backupCount': 60,
-            'formatter': 'normal'
-        },
-        'i5k_file': {
-            'class': 'logging.handlers.TimedRotatingFileHandler',
-            'filename': '/var/log/django/i5k.log',
-            'when': 'midnight',
-            'backupCount': 60,
-            'formatter': 'normal'
-        },
-        'console': {
-            'class': 'logging.StreamHandler',
-            'filters': ['require_debug_true'],
-            'formatter': 'normal'
-        },
-    },
-    'loggers': {
-        'django': {
-            'handlers': ['mail_admins', 'django_file', 'console'],
-            'level': os.getenv('DJANGO_LOG_LEVEL', 'INFO'),
-            'propagate': True,
-        },
-        'i5k': {
-            'handlers': ['mail_admins', 'i5k_file', 'console'],
-            'level': os.getenv('I5K_LOG_LEVEL', 'INFO'),
-            'propagate': True,
-        },
-    }
 }
 
 # Query maximum limit
@@ -513,17 +443,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# captcha
-CAPTCHA_LETTER_ROTATION = None
-CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 
 try:
     HOSTNAME = socket.gethostname()
 except:
     HOSTNAME = 'localhost'
 
-LOGIN_ENABLED = False
 
 # Use settings for production
 USE_PROD_SETTINGS = False

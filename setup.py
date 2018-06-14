@@ -9,21 +9,21 @@ import subprocess
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
 
-PROJECT_ROOT = dirname(abspath(__file__))
+BASE_DIR = dirname(abspath(__file__))
 
 bin_name = get_bin_name()
 
-blast_bin_path = join(PROJECT_ROOT, 'blast', bin_name + '/')
+blast_bin_path = join(BASE_DIR, 'blast', bin_name + '/')
 
 # delete old files if exist
 if exists(blast_bin_path):
     rmtree(blast_bin_path)
 
-blast_local_file_path = join(PROJECT_ROOT, 'blast.tar.gz')
+blast_local_file_path = join(BASE_DIR, 'blast.tar.gz')
 if exists(blast_local_file_path):
     remove(blast_local_file_path)
 
-extracted_blast_path = join(PROJECT_ROOT, 'ncbi-blast-2.7.1+')
+extracted_blast_path = join(BASE_DIR, 'ncbi-blast-2.7.1+')
 if exists(extracted_blast_path):
     rmtree(extracted_blast_path)
 
@@ -56,17 +56,17 @@ if exists(extracted_blast_path):
 
 if platform == 'darwin':
     # installation of hmmer
-    hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
+    hmmer_bin_path = join(BASE_DIR, 'hmmer', bin_name + '/')
 
     if exists(hmmer_bin_path):
         rmtree(hmmer_bin_path)
 
-    hmmer_local_file_path = join(PROJECT_ROOT, 'hmmer.tar.gz')
+    hmmer_local_file_path = join(BASE_DIR, 'hmmer.tar.gz')
 
     if exists(hmmer_local_file_path):
         remove(hmmer_local_file_path)
 
-    extracted_hmmer_path = join(PROJECT_ROOT, 'hmmer-3.1b2-macosx-intel')
+    extracted_hmmer_path = join(BASE_DIR, 'hmmer-3.1b2-macosx-intel')
     if exists(extracted_hmmer_path):
         rmtree(extracted_hmmer_path)
 
@@ -88,7 +88,7 @@ if platform == 'darwin':
         rmtree(extracted_hmmer_path)
 
     # installation of clustal
-    clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
+    clustal_bin_path = join(BASE_DIR, 'clustal', bin_name + '/')
 
     if exists(clustal_bin_path):
         rmtree(clustal_bin_path)
@@ -116,17 +116,17 @@ if platform == 'darwin':
     remove(clustalw_dmg_path)
 else:  # for linux
     # installation of hmmer
-    hmmer_bin_path = join(PROJECT_ROOT, 'hmmer', bin_name + '/')
+    hmmer_bin_path = join(BASE_DIR, 'hmmer', bin_name + '/')
 
     if exists(hmmer_bin_path):
         rmtree(hmmer_bin_path)
 
-    hmmer_local_file_path = join(PROJECT_ROOT, 'hmmer.tar.gz')
+    hmmer_local_file_path = join(BASE_DIR, 'hmmer.tar.gz')
 
     if exists(hmmer_local_file_path):
         remove(hmmer_local_file_path)
 
-    extracted_hmmer_path = join(PROJECT_ROOT, 'hmmer-3.1b2-linux-intel-x86_64')
+    extracted_hmmer_path = join(BASE_DIR, 'hmmer-3.1b2-linux-intel-x86_64')
     if exists(extracted_hmmer_path):
         rmtree(extracted_hmmer_path)
 
@@ -148,7 +148,7 @@ else:  # for linux
         rmtree(extracted_hmmer_path)
 
     # installation of clustal
-    clustal_bin_path = join(PROJECT_ROOT, 'clustal', bin_name + '/')
+    clustal_bin_path = join(BASE_DIR, 'clustal', bin_name + '/')
 
     clustalo_path = join(clustal_bin_path, 'clustalo')
     if exists(clustalo_path):
