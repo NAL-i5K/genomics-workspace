@@ -30,7 +30,6 @@ TEMPLATES = [
                 'django.template.context_processors.tz',
                 'django.template.context_processors.request',
                 'django.contrib.messages.context_processors.messages',
-                'app.context_processors.is_login_enabled',
             ],
         },
     },
@@ -145,8 +144,6 @@ INSTALLED_APPS = (
     'django.contrib.admin',
     # Enable admin documentation:
     'django.contrib.admindocs',
-    'captcha',
-    'dashboard',
     'proxy',
     'hmmer',
     'clustal',
@@ -513,17 +510,12 @@ AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
 )
 
-# captcha
-CAPTCHA_LETTER_ROTATION = None
-CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
-CAPTCHA_NOISE_FUNCTIONS = ('captcha.helpers.noise_dots',)
 
 try:
     HOSTNAME = socket.gethostname()
 except:
     HOSTNAME = 'localhost'
 
-LOGIN_ENABLED = False
 
 # Use settings for production
 USE_PROD_SETTINGS = False
