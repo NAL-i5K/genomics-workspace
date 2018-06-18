@@ -11,6 +11,15 @@ In genomics-workspace, we use git and GitHub flow. If you didn't know git or Git
 - [Understanding the GitHub Flow](https://guides.github.com/introduction/flow/) within 5 minutes
 - [Git and GitHub learning resources](https://help.github.com/articles/git-and-github-learning-resources/)
 
+## Installation of Development Requirements
+
+There are additional Python and JavaScript requirements for development of this project. You can install them through following commands: 
+
+``` shell
+npm install
+pip install -r dev_requirements.txt
+```
+
 ## Django
 
 Genomics-workspace is a django website project, so you need to know django before any contribusion. There are many useful resoures available. If you didn't know django before, check the [official tutorial](https://docs.djangoproject.com/en/1.11/intro/) and [tutorials by django girls](https://tutorial.djangogirls.org/en/) first. One thing you need to note when you read any resource related to django is that currently, we use django 1.11. Followings are miscellaneous list of links that may help you when contributing this project:
