@@ -115,12 +115,6 @@ Migrate Schema to to PostgreSQL
 Run migrate::
 
     cd <git-home>
-    # create log files
-    sudo mkdir /var/log/django/
-    sudo touch /var/log/django/django.log
-    sudo chmod 666 /var/log/django/django.log
-    sudo touch /var/log/django/i5k.log
-    sudo chmod 666 /var/log/django/i5k.log
     python manage.py migrate
 
 
