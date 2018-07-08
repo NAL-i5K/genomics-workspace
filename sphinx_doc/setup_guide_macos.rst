@@ -91,7 +91,7 @@ Python Modules and Packages
 Install additional Python packages::
 
     cd <git-home>
-    pip install -r requirements.txt
+    pip install -r requirements/requirements.txt
 
 Chrome Driver
 -------------
