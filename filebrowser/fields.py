@@ -2,7 +2,8 @@
 
 # imports
 import os
-
+from six.moves.builtins import str as text
+from six import string_types
 # django imports
 from django import forms
 from django.forms.widgets import Input
@@ -94,7 +95,7 @@ class FileBrowseFormField(forms.CharField):
         if value == '':
             return value
         file_extension = os.path.splitext(value)[1].lower()
-        if isinstance(self.extensions, basestring):
+        if isinstance(self.extensions, string_types):
             extensions_list = EXTENSIONS.get(self.extensions)
         else:
             extensions_list = self.extensions
@@ -124,7 +125,7 @@ class FileBrowseField(Field):
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return None
-        return str(value)
+        return text(value)
 
     # FIXME: recheck or need it
     # @staticmethod

@@ -425,8 +425,7 @@ PIPELINE = {
 if not DEBUG:
     STATICFILES_STORAGE = 'pipeline.storage.PipelineCachedStorage'
     PIPELINE['PIPELINE_ENABLED'] = True
-PIPELINE['CSSMIN_BINARY'] = 'cssmin'
-PIPELINE['CSS_COMPRESSOR'] = 'pipeline.compressors.cssmin.CSSMinCompressor'
+PIPELINE['CSS_COMPRESSOR'] = None
 PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.jsmin.JSMinCompressors'
 
 

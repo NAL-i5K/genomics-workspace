@@ -12,6 +12,13 @@ matrix:
     - rabbitmq
     - memcached
     - postgresql
+  - os: linux
+    language: python
+    python: 3.5
+    services:
+    - rabbitmq
+    - memcached
+    - postgresql
   - os: osx
     language: generic
     osx_image: xcode8.3
@@ -41,12 +48,21 @@ install:
         unzip chromedriver_linux64.zip;
     fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
-  - virtualenv -p python2 env
-  - source env/bin/activate
-  - pip2 install -r requirements.txt
-  - pip2 install -r dev_requirements.txt
-  - pip2 install coveralls
-  - pip2 install codecov
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        virtualenv -p python2 env
+        source env/bin/activate
+        pip2 install -r requirements/requirements_py2.txt;
+        pip2 install -r requirements/dev_requirements.txt;
+        pip2 install coveralls;
+        pip2 install codecov;
+    elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        virtualenv -p python3 env
+        source env/bin/activate
+        pip install -r requirements/requirements_py3.txt;
+        pip install -r requirements/dev_requirements.txt;
+        pip install coveralls;
+        pip install codecov;
+    fi
 
 before_script:
   - psql -c 'create database django;' -U postgres
@@ -54,9 +70,13 @@ before_script:
   - psql -c 'grant all on database django to django;' -U postgres
   - psql -c 'ALTER USER django CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
-  - python2 manage.py migrate
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install awesome_bot; fi
   - npm run build
+  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        python2 manage.py migrate;
+    elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
+        python manage.py migrate;
+        gem install awesome_bot;
+    fi
   - python manage.py collectstatic --noinput
 
 # command to run tests

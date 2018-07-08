@@ -4,6 +4,7 @@
 import os
 import re
 import itertools
+import operator
 from time import gmtime, strftime, localtime, time
 from PIL import Image, ImageFile
 
@@ -23,6 +24,8 @@ from filebrowser.conf import fb_settings
 import sys
 _ver = sys.version_info
 
+from six import iteritems
+from six.moves import range, map
 
 def url_to_path(value):
     """
@@ -42,7 +45,7 @@ def path_to_url(value):
     """
     Change PATH to URL.
     Value has to be a PATH relative to MEDIA_ROOT.
-    
+
     Return an URL relative to MEDIA_ROOT.
     """
 
@@ -69,7 +72,7 @@ def get_version_path(value, version_prefix):
     """
     Construct the PATH to an Image version.
     Value has to be server-path, relative to MEDIA_ROOT.
-    
+
     version_filename = filename + version_prefix + ext
     Returns a path relative to MEDIA_ROOT.
     """
@@ -77,7 +80,7 @@ def get_version_path(value, version_prefix):
     if os.path.isfile(smart_str(os.path.join(fb_settings.MEDIA_ROOT, value))):
         path, filename = os.path.split(value)
         filename, ext = os.path.splitext(filename)
-        
+
         # check if this file is a version of an other file
         # to return filename_<version>.ext instead of
         # filename_<version>_<version>.ext
@@ -117,7 +120,6 @@ def sort_by_attr(seq, attr):
     Returns:
     the sorted list of objects.
     """
-    import operator
 
     # Use the "Schwartzian transform"
     # Create the auxiliary list of tuples where every i-th tuple has form
@@ -125,30 +127,9 @@ def sort_by_attr(seq, attr):
     # The second item of tuple is needed not only to provide stable sorting,
     # but mainly to eliminate comparison of objects
     # (which can be expensive or prohibited) in case of equal attribute values.
-
-    if _ver >= (3, 0):
-        intermed = map(
-            None,
-            map(
-                getattr,
-                seq,
-                (attr,)*len(seq)
-            ),
-            itertools.zip_longest(range(len(seq)), seq)
-        )
-        try:
-            intermed = sorted(intermed)
-            # does this actually DO anything?
-            print(intermed)
-            return list(map(operator.getitem, intermed, (-1,) * len(intermed)))
-        except TypeError:
-            return seq
-    else:
-        intermed = map(
-            None, map(getattr, seq, (attr,)*len(seq)), range(len(seq)), seq
-        )
-        intermed.sort()
-        return map(operator.getitem, intermed, (-1,) * len(intermed))
+    intermed = list(zip(map(getattr, seq, (attr,)*len(seq)), range(len(seq)), seq))
+    intermed.sort()
+    return list(map(operator.getitem, intermed, (-1,) * len(intermed)))
 
 
 def url_join(*args):
@@ -296,7 +277,7 @@ def get_file_type(filename):
 
     file_extension = os.path.splitext(filename)[1].lower()
     file_type = ''
-    for k, v in EXTENSIONS.items():
+    for k, v in iteritems(EXTENSIONS):
         for extension in v:
             if file_extension == extension.lower():
                 file_type = k
@@ -310,7 +291,7 @@ def is_selectable(filename, selecttype):
 
     file_extension = os.path.splitext(filename)[1].lower()
     select_types = []
-    for k, v in SELECT_FORMATS.items():
+    for k, v in iteritems(SELECT_FORMATS):
         for extension in v:
             if file_extension == extension.lower():
                 select_types.append(k)
@@ -357,7 +338,7 @@ def scale_and_crop(im, width, height, opts):
     """
     Scale and Crop.
     """
-    
+
     x, y = [float(v) for v in im.size]
     if width:
         xr = float(width)
@@ -367,15 +348,15 @@ def scale_and_crop(im, width, height, opts):
         yr = float(height)
     else:
         yr = float(y * width / x)
-    
+
     if 'crop' in opts:
         r = max(xr / x, yr / y)
     else:
         r = min(xr / x, yr / y)
-    
+
     if r < 1.0 or (r > 1.0 and 'upscale' in opts):
         im = im.resize((int(x * r), int(y * r)), resample=Image.ANTIALIAS)
-    
+
     if 'crop' in opts:
         x, y = [float(v) for v in im.size]
         ex, ey = (x - min(x, xr)) / 2, (y - min(y, yr)) / 2

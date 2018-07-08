@@ -16,15 +16,15 @@ register = template.Library()
 def query_string(context, add=None, remove=None):
     """
     Allows the addition and removal of query string parameters.
-    
+
     _response.html is just {{ response }}
-    
+
     Usage:
     http://www.url.com/{% query_string "param_to_add=value, param_to_add=value" "param_to_remove, params_to_remove" %}
     http://www.url.com/{% query_string "" "filter" %}filter={{new_filter}}
     http://www.url.com/{% query_string "sort=value" "sort" %}
     """
-    
+
     # Written as an inclusion tag to simplify getting the context.
     add = string_to_dict(add)
     remove = string_to_list(remove)
@@ -37,7 +37,7 @@ def query_helper(query, add=None, remove=None):
     """
     Helper Function for use within views.
     """
-    
+
     add = string_to_dict(add)
     remove = string_to_list(remove)
     params = query.copy()
@@ -48,7 +48,7 @@ def get_query_string(p, new_params=None, remove=None):
     """
     Add and remove query parameters. From `django.contrib.admin`.
     """
-    
+
     if new_params is None:
         new_params = {}
     if remove is None:
@@ -73,7 +73,7 @@ def string_to_dict(string):
         {{ url|thumbnail:"width=10" }}
         {{ url|thumbnail:"height=20" }}
     """
-    
+
     kwargs = {}
     if string:
         string = str(string)
@@ -94,7 +94,7 @@ def string_to_list(string):
     Usage:
         {{ url|thumbnail:"width,height" }}
     """
-    
+
     args = []
     if string:
         string = str(string)
@@ -113,7 +113,7 @@ class SelectableNode(template.Node):
     def __init__(self, filetype, format):
         self.filetype = template.Variable(filetype)
         self.format = template.Variable(format)
-    
+
     def render(self, context):
         try:
             filetype = self.filetype.resolve(context)
@@ -134,13 +134,13 @@ class SelectableNode(template.Node):
 
 
 def selectable(parser, token):
-    
+
     try:
         tag, filetype, format = token.split_contents()
     except:
         raise template.TemplateSyntaxError(
             "{0} tag requires 2 arguments".format(token.contents.split()[0])
         )
-        
+
     return SelectableNode(filetype, format)
 register.tag(selectable)

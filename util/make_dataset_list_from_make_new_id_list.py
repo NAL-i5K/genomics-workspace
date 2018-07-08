@@ -1,10 +1,11 @@
 #!/usr/bin/env python
+import io
 from os import path
 
 TSV_FILENAME = 'make_new_id_list.tsv'
 
 # read tsv
-with open(TSV_FILENAME, 'rb') as f:
+with io.open(TSV_FILENAME, 'rb') as f:
     for row in f:
         (display_name, short_name, db_type, fasta_filepath, version) = [t.strip() for t in row.split('\t')]
         display_name = display_name.lower().capitalize().replace(' ', '_')

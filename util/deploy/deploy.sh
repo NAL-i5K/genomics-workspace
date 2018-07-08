@@ -13,7 +13,6 @@ cd $GIT_PATH
 sudo -u $USER_NAME git pull origin master
 rsync -av * $PROJ_PATH --exclude "blast/tests.py" --exclude "i5k/settings_prod.py" --exclude "celeryd.sysconfig" --exclude "i5k.conf" --exclude "db" --exclude "app/static/app/scripts/analytics.js"
 cd $PROJ_PATH
-#chmod 666 db.sqlite3
 chmod 777 media
 chmod -R 777 media/blast/task
 source virtualenv/py2.7/bin/activate

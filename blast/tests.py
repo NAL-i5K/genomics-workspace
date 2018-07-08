@@ -1,4 +1,4 @@
-from __future__ import print_function
+from __future__ import print_function, unicode_literals
 from os import path, makedirs, remove
 from shutil import copyfile, rmtree
 from subprocess import Popen, PIPE

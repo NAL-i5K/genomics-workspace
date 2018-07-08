@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from shutil import rmtree
 from celery import shared_task
 from celery.task.schedules import crontab
@@ -6,6 +6,8 @@ from celery.decorators import periodic_task
 from subprocess import Popen, PIPE, call
 from datetime import datetime, timedelta
 from os import path, chdir
+import io
+import six
 from pytz import utc
 from celery.utils.log import get_task_logger
 from celery.signals import task_sent, task_success, task_failure
@@ -31,13 +33,15 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open('status.json', 'r') as f:
+    with io.open('status.json', 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
-        # db_list = statusdata['db_list']
 
-    with open('status.json', 'w') as f:
-        json.dump(statusdata, f)
+    with io.open('status.json', 'w') as f:
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
     # run
     merge_result_command = 'cat'
@@ -70,12 +74,15 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.save()
 
     # generate status.json for frontend status checking
-    with open('status.json', 'r') as f:
+    with io.open('status.json', 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'done'
 
-    with open('status.json', 'wb') as f:
-        json.dump(statusdata, f)
+    with io.open('status.json', 'w') as f:
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
     return task_id  # passed to 'result' argument of task_success_handler
 

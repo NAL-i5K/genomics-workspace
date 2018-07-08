@@ -1,8 +1,10 @@
+import io
+
 DEBUG = True
 
 USE_CACHE = True
 
-with open('/path/to/secret_key.txt') as f:
+with io.open('/path/to/secret_key.txt') as f:
     SECRET_KEY = f.read().strip()
 
 ALLOWED_HOSTS = (
@@ -99,5 +101,3 @@ LOGGING = {
         },
     }
 }
-
-LOGIN_ENABLED = False

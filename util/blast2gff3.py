@@ -1,6 +1,5 @@
 import os
-import sys
-import subprocess
+import io
 import csv
 import re
 from itertools import groupby
@@ -18,7 +17,7 @@ def blast2gff3(blast_program='blastn', csv_path='C:\\Users\\clee\\Desktop\\Works
     try:
         basedir = os.path.dirname(csv_path)
         csv_content = []
-        with open(csv_path, 'r') as f:
+        with io.open(csv_path, 'r') as f:
             cr = csv.reader(f)
             for row in cr:
                 row = list(convert(value) for convert, value in zip(blast_out_col_types, row))
@@ -349,7 +348,7 @@ def output_csv(in_csv_path='C:\\Users\\clee\\Desktop\\Works\\blast2gff3\\python\
     try:
         out_csv_path = os.path.splitext(in_csv_path)[0]+'_balst2gff.csv'
 
-        with open(in_csv_path, 'r') as f:
+        with io.open(in_csv_path, 'r') as f:
             cr = csv.reader(f)
             csv_content = []
             sseqid_groups = []
@@ -366,7 +365,7 @@ def output_csv(in_csv_path='C:\\Users\\clee\\Desktop\\Works\\blast2gff3\\python\
         for sseqid in sseqid_groups:
             sseqid2dbname[sseqid] = str(get_dbname([[sseqid]]))
 
-        with open(out_csv_path, 'wb') as csvfile:
+        with io.open(out_csv_path, 'wb') as csvfile:
             writer = csv.writer(csvfile)
             for csv_row in csv_content:
                 csv_row.append(sseqid2dbname[csv_row[1]])

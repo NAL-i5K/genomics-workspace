@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
@@ -16,6 +16,8 @@ from django.conf import settings
 import csv
 import json
 import time
+import io
+import six
 
 logger = get_task_logger(__name__)
 
@@ -40,13 +42,15 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'r') as f:
+    with io.open(path.join(path.dirname(file_prefix), 'status.json'), 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
 
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
-        json.dump(statusdata, f)
-
+    with io.open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
     # run
     for args in args_list:
         Popen(args, stdin=PIPE, stdout=PIPE).wait()
@@ -65,7 +69,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         # parse .0, and save index in line_num_list
         report_path = file_prefix + '.0'
         line_num_list = []
-        with open(report_path, 'rb') as f:
+        with io.open(report_path, 'rb') as f:
             target_str = ' Score ='
             line_num = 0
             for line in f:
@@ -77,8 +81,14 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         json_path = file_prefix + '.json'
         type_func = {'str': str, 'float': float, 'int': int}
         hsp_list = []
-        with open(tsv_path, 'rb') as f:
-            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter='\t')]
+        delimiter = '\t'
+        if six.PY2:
+            delimiter = delimiter.encode('utf-8')
+            output = open(tsv_path, 'rb')
+        else:
+            output = open(tsv_path, 'r')
+        with output as f:
+            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter=delimiter)]
         # generate gff3 files
         try:
             blast_program = path.basename(args_list[0][0])
@@ -98,15 +108,23 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                         .values_list('blast_db__title', 'url'))
             else:
                 db_url = []
-            with open(path.join(basedir, 'info.json'), 'wb') as f:
-                json.dump({'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}, f)
-            with open(json_path, 'wb') as f:
-                json.dump([[sseqid_db[hsp_dict_list[i]['sseqid']]] + hsp for i, hsp in enumerate(hsp_list)], f)
+            with io.open(path.join(basedir, 'info.json'), 'w') as f:
+                json_data = {'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}
+                if six.PY2:
+                    f.write(json.dumps(json_data).decode('utf-8'))
+                else:
+                    f.write(json.dumps(json_data))
+            with io.open(json_path, 'w') as f:
+                json_data = [[sseqid_db[hsp_dict_list[i]['sseqid']]] + hsp for i, hsp in enumerate(hsp_list)]
+                if six.PY2:
+                    f.write(json.dumps(json_data).decode('utf-8'))
+                else:
+                    f.write(json.dumps(json_data))
             overlap_cutoff = 5
             # group hsps by database, need to sort before doing groupby
             sorted_hsp_dict_list = sorted([hsp for hsp in hsp_dict_list if sseqid_db[hsp['sseqid']] in db_url], key=lambda a: sseqid_db[a['sseqid']])
             for db_name, db_hsp_dict_list in groupby(sorted_hsp_dict_list, key=lambda a: sseqid_db[a['sseqid']]):
-                with open(path.join(basedir, db_name + '.gff'), 'wb') as fgff:
+                with io.open(path.join(basedir, db_name + '.gff'), 'wb') as fgff:
                     fgff.write('##gff-version 3\n')
                     match_id = 1
                     match_part_id = 1
@@ -172,16 +190,19 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                                 match_part_id += 1
                             match_id += 1
             result_status = 'SUCCESS'
-        except Exception, e:
-            # print Exception, e
+        except Exception:
             result_status = 'NO_GFF'
     record.result_status = result_status
     record.result_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
     # generate status.json for frontend status checking
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
-        json.dump({'status': 'done'}, f)
+    with io.open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+        statusdata = {'status': 'done'}
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
     return task_id  # passed to 'result' argument of task_success_handler
 

@@ -1,9 +1,11 @@
 # coding: utf-8
+from __future__ import unicode_literals
 
 # general imports
 import os
 import re
 import mimetypes
+from six.moves.builtins import str as text
 
 # django imports
 from django.shortcuts import render
@@ -37,11 +39,12 @@ from filebrowser.templatetags.fb_tags import query_helper
 from filebrowser.base import FileObject
 from filebrowser.forms import MakeDirForm, RenameForm
 
+
 # Precompile regular expressions
 filter_re = []
 for exp in EXCLUDE:
     filter_re.append(re.compile(exp))
-for k, v in VERSIONS.items():
+for k in VERSIONS:
     exp = r'_{0}({1})'.format(k, '|'.join(EXTENSION_LIST))
     filter_re.append(re.compile(exp))
 
@@ -93,7 +96,7 @@ def browse(request):
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0,
                    'images_total': 0, 'select_total': 0}
     counter = {}
-    for k, v in EXTENSIONS.items():
+    for k in EXTENSIONS:
         counter[k] = 0
 
     dir_list = os.listdir(abs_path)
@@ -438,7 +441,7 @@ def delete(request):
                 return HttpResponseRedirect(redirect_url)
             except OSError as e:
                 # todo: define error message
-                msg = str(e)
+                msg = text(e)
         else:
             try:
                 # PRE DELETE SIGNAL
@@ -458,7 +461,7 @@ def delete(request):
                 return HttpResponseRedirect(redirect_url)
             except OSError as e:
                 # todo: define error message
-                msg = str(e)
+                msg = text(e)
 
     if msg:
         messages.error(request, e)
