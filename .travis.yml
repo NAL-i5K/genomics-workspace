@@ -40,8 +40,8 @@ install:
         unzip chromedriver_linux64.zip;
     fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
-  - sudo pip2 install -r requirements.txt
-  - sudo pip2 install -r dev_requirements.txt
+  - sudo pip2 install -r requirements/requirements.txt
+  - sudo pip2 install -r requirements/dev_requirements.txt
   - sudo pip2 install coveralls
   - sudo pip2 install codecov
 
