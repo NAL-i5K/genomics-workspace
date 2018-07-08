@@ -1,5 +1,7 @@
 #!/usr/bin/env python
 import json
+from io import open
+
 
 TSV_FILENAME = 'i5k_blastdb_list.tsv'
 BLASTDB_URL_ROOT = '/blast/db/'

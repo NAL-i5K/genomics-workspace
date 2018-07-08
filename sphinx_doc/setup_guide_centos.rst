@@ -191,7 +191,10 @@ Python Modules and Packages
 Install additional Python packages::
 
     cd <git-home>
-    pip install -r requirements/requirements.txt
+    # for python 2
+    pip install -r requirements/requirements_py2.txt
+    # for python 3
+    pip install -r requirements/requirements_py3.txt
 
 Chrome Driver
 -------------

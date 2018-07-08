@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
 from django.conf import settings
@@ -11,12 +11,14 @@ from datetime import datetime, timedelta
 from pytz import timezone
 from django.utils.timezone import localtime, now
 import json
-import traceback
 import stat as Perm
 from itertools import groupby
 from subprocess import Popen, PIPE
 from i5k.settings import HMMER_QUERY_MAX
 from util.get_bin_name import get_bin_name
+from io import open
+from six.moves.builtins import str as text
+import six
 
 
 def manual(request):
@@ -81,9 +83,8 @@ def create(request):
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, task_id + '.in')
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
-                query_f.write('\n'.join(query_text))
+            with open(query_filename, 'w') as query_f:
+                query_f.write(request.POST['query-sequence'])
         else:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
 
@@ -113,7 +114,9 @@ def create(request):
                       stdout=PIPE, stderr=PIPE)
             p.wait()
             result = p.communicate()[1]
-            if(result != ''):
+            if six.PY3:
+                result = result.decode('utf-8')
+            if result != '':
                 return render(request, 'hmmer/invalid_query.html',
                              {'title': 'Invalid MSA format',
                               'info' :'<a href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format" target="_blank"> \
@@ -143,18 +146,22 @@ def create(request):
         if request.user.is_authenticated():
             record.user = request.user
         record.save()
-        # generate status.json for frontend statu checking
+        # generate status.json for frontend status checking
         with open(query_filename, 'r') as f:
             qstr = f.read()
             seq_count = qstr.count('>')
             if (seq_count == 0):
                 seq_count = 1
-            with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
-                json.dump({'status': 'pending', 'seq_count': seq_count,
-                           'db_list': [db[db.rindex('/') + 1:] for db in db_list],
-                           'program': request.POST['program'],
-                           'params': option_params,
-                           'input': path.basename(query_filename)}, f)
+            with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'w') as f:
+                status_data = {'status': 'pending', 'seq_count': text(seq_count),
+                               'db_list': [db[db.rindex('/') + 1:] for db in db_list],
+                               'program': request.POST['program'],
+                               'params': option_params,
+                               'input': path.basename(query_filename)}
+                if six.PY2:
+                    f.write(json.dumps(status_data).decode('utf-8'))
+                else:
+                    f.write(json.dumps(status_data))
         args = generate_hmmer_args(request.POST['program'], program_path, query_filename, option_params, db_list)
         run_hmmer_task.delay(task_id, args, file_prefix)
         return redirect('hmmer:retrieve', task_id)
@@ -244,7 +251,11 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            if six.PY2:
+                infile = open(status_file_path, 'rb')
+            else:
+                infile = open(status_file_path, 'r')
+            with infile as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])

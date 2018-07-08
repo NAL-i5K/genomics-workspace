@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+from io import open
 from os import path
+
 
 #TSV_FILENAME = 'make_new_id_list.tsv'
 TSV_FILENAME = 'make_new_id_list_diacit.tsv'

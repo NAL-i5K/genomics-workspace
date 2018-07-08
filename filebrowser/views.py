@@ -1,8 +1,10 @@
 # coding: utf-8
+from __future__ import unicode_literals
 
 # general imports
-import os, re
-from time import gmtime, strftime
+import os
+import re
+from six.moves.builtins import str
 
 # django imports
 from django.shortcuts import render, HttpResponse
@@ -35,11 +37,13 @@ from filebrowser.templatetags.fb_tags import query_helper
 from filebrowser.base import FileObject
 from filebrowser.decorators import flash_login_required
 
+from six import iteritems
+
 # Precompile regular expressions
 filter_re = []
 for exp in EXCLUDE:
    filter_re.append(re.compile(exp))
-for k,v in VERSIONS.iteritems():
+for k, v in iteritems(VERSIONS):
     exp = (r'_%s.(%s)') % (k, '|'.join(EXTENSION_LIST))
     filter_re.append(re.compile(exp))
 
@@ -82,16 +86,16 @@ def browse(request):
 
     if path is None:
         msg = _('The requested Folder does not exist.')
-        messages.warning(request,message=msg)
+        messages.warning(request, message=msg)
         if directory is None:
             # The DIRECTORY does not exist, raise an error to prevent eternal redirecting.
-            raise ImproperlyConfigured, _("Error finding Upload-Folder. Maybe it does not exist?")
+            raise ImproperlyConfigured(_("Error finding Upload-Folder. Maybe it does not exist?"))
         redirect_url = reverse("fb_browse") + query_helper(query, "", "dir")
         return HttpResponseRedirect(redirect_url)
     # INITIAL VARIABLES
     results_var = {'results_total': 0, 'results_current': 0, 'delete_total': 0, 'images_total': 0, 'select_total': 0 }
     counter = {}
-    for k,v in EXTENSIONS.iteritems():
+    for k, v in iteritems(EXTENSIONS):
         counter[k] = 0
 
     dir_list = os.listdir(abs_path)
@@ -213,7 +217,7 @@ def mkdir(request):
                 filebrowser_pre_createdir.send(sender=request, path=path, dirname=_new_dir_name)
                 # CREATE FOLDER
                 os.mkdir(server_path)
-                os.chmod(server_path, 0775)
+                os.chmod(server_path, 0o775)
                 # POST CREATE SIGNAL
                 filebrowser_post_createdir.send(sender=request, path=path, dirname=_new_dir_name)
                 # MESSAGE & REDIRECT
@@ -224,8 +228,8 @@ def mkdir(request):
                 # remove pagination
                 redirect_url = reverse("fb_browse") + query_helper(query, "ot=desc,o=date", "ot,o,filter_type,filter_date,q,p")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, (errno, strerror):
-                if errno == 13:
+            except OSError as e:
+                if e.errno == 13:
                     form.errors['dir_name'] = forms.util.ErrorList([_('Permission denied.')])
                 else:
                     form.errors['dir_name'] = forms.util.ErrorList([_('Error creating folder.')])
@@ -390,9 +394,9 @@ def delete(request):
                 messages.success(request,message=msg)
                 redirect_url = reverse("fb_browse") + query_helper(query, "", "filename,filetype")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, e:
+            except OSError as e:
                 # todo: define error message
-                msg = unicode(e)
+                msg = str(e)
         else:
             try:
                 # PRE DELETE SIGNAL
@@ -406,9 +410,9 @@ def delete(request):
                 messages.success(request,message=msg)
                 redirect_url = reverse("fb_browse") + query_helper(query, "", "filename,filetype")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, e:
+            except OSError as e:
                 # todo: define error message
-                msg = unicode(e)
+                msg = str(e)
 
     if msg:
         messages.error(request, e)
@@ -476,7 +480,7 @@ def rename(request):
                 messages.success(request,message=msg)
                 redirect_url = reverse("fb_browse") + query_helper(query, "", "filename")
                 return HttpResponseRedirect(redirect_url)
-            except OSError, (errno, strerror):
+            except OSError:
                 form.errors['name'] = forms.util.ErrorList([_('Error.')])
     else:
         form = RenameForm(abs_path, file_extension)
