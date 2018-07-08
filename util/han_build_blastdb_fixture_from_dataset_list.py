@@ -1,5 +1,7 @@
 #!/usr/bin/env python
+from io import open
 import json
+
 
 TSV_FILENAME = 'dataset_list.tsv'
 BLASTDB_URL_ROOT = '/media/blastdb/'

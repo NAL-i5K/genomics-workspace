@@ -20,3 +20,5 @@ class Organism(models.Model):
     def __unicode__(self):
         return self.display_name
 
+    def __str__(self):
+        return self.display_name

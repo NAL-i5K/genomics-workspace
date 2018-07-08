@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from django.shortcuts import render, redirect
 from django.http import Http404, HttpResponse
 from django.conf import settings
@@ -8,10 +8,12 @@ from os import path, makedirs, chmod
 from clustal.tasks import run_clustal_task
 from clustal.models import ClustalQueryRecord
 from datetime import datetime, timedelta
+from io import open
 from pytz import timezone
 from django.utils.timezone import localtime, now
 import json
-import traceback
+import six
+from six.moves.builtins import str as text
 import stat as Perm
 from util.get_bin_name import get_bin_name
 
@@ -53,9 +55,8 @@ def create(request):
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, task_id + '.in')
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
-                query_f.write('\n'.join(query_text))
+            with open(query_filename, 'w') as query_f:
+                query_f.write(request.POST['query-sequence'])
         else:
             return render(request, 'clustal/invalid_query.html', {'title': '',})
 
@@ -199,10 +200,15 @@ def create(request):
                 seq_count = qstr.count('>')
                 if (seq_count == 0):
                     seq_count = 1
-                with open(path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, 'status.json'), 'wb') as f:
-                    json.dump({'status': 'pending', 'seq_count': seq_count, 'program':request.POST['program'],
+                with open(path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, 'status.json'), 'w') as f:
+                    status_data = {'status': 'pending', 'seq_count': text(seq_count), 'program':request.POST['program'],
                                'cmd': " ".join(args_list_log[0]), 'is_color': is_color,
-                               'query_filename': path.basename(query_filename)}, f)
+                               'query_filename': path.basename(query_filename)}
+                    if six.PY2:
+                        f.write(json.dumps(status_data).decode('utf-8'))
+                    else:
+                        f.write(json.dumps(status_data))
+
             run_clustal_task.delay(task_id, args_list, file_prefix)
 
             return redirect('clustal:retrieve', task_id)
@@ -308,11 +314,15 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'clustal', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            if six.PY2:
+                infile = open(status_file_path, 'rb')
+            else:
+                infile = open(status_file_path, 'r')
+            with infile as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
-                    num_preceding = -1;
+                    num_preceding = -1
                     if tlist:
                         for index, tuple in enumerate(tlist):
                             if task_id in tuple:
@@ -350,6 +360,3 @@ def user_tasks(request, user_id):
         records = ClustalQueryRecord.objects.filter(user__id=user_id, result_date__gt=(localtime(now()) + timedelta(days=-7)))
         serializer = UserClustalQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
-
-
-

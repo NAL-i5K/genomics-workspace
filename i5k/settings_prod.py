@@ -1,3 +1,5 @@
+from io import open
+
 DEBUG = True
 
 USE_CACHE = True

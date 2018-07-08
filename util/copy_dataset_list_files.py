@@ -1,6 +1,8 @@
 #!/usr/bin/env python
+from io import open
 from os import path
 import shutil
+
 
 TSV_FILENAME = 'dataset_list.tsv'
 FROM_PATH = r'E:\NAL-Home\NAL\Blast\db'

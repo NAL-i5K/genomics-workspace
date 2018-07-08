@@ -1,5 +1,7 @@
+from __future__ import print_function, unicode_literals
 from subprocess import Popen, PIPE
 import os.path
+from io import open
 from django.db import models
 from django.contrib.auth.models import User
 from filebrowser.fields import FileBrowseField
@@ -7,6 +9,7 @@ from django.core.urlresolvers import reverse
 from django.conf import settings
 import app.models
 from util.get_bin_name import get_bin_name
+import six
 
 
 class BlastQueryRecord(models.Model):
@@ -19,6 +22,9 @@ class BlastQueryRecord(models.Model):
     is_shown = models.BooleanField(default=True)
 
     def __unicode__(self):
+        return self.task_id
+
+    def __str__(self):
         return self.task_id
 
     def get_absolute_url(self):
@@ -46,6 +52,9 @@ class Organism(models.Model):
     def __unicode__(self):
         return self.display_name
 
+    def __str__(self):
+        return self.display_name
+
 
 class SequenceTypeManager(models.Manager):
     def get_by_natural_key(self, dataset_type):
@@ -63,6 +72,9 @@ class SequenceType(models.Model):
         return (self.dataset_type,)
 
     def __unicode__(self):
+        return u'%s - %s' % (self.get_molecule_type_display(), self.dataset_type)
+
+    def __str__(self):
         return u'%s - %s' % (self.get_molecule_type_display(), self.dataset_type)
 
     class Meta:
@@ -116,6 +128,8 @@ class BlastDb(models.Model):
             args += ['-taxid', str(self.organism.tax_id)]
         p = Popen(args, stdout=PIPE, stderr=PIPE)
         output, error = p.communicate()
+        if six.PY3:
+            error = error.decode('utf-8')
         return p.returncode, error, output
 
     def index_fasta(self):
@@ -125,9 +139,8 @@ class BlastDb(models.Model):
             # remove existing sequences
             self.sequence_set.all().delete()
             # parse fasta
-            #seq_count = 0
             sequence_list = []
-            with open(self.fasta_file.path_full, 'rb') as f:
+            with open(self.fasta_file.path_full, 'r') as f:
                 offset = 0
                 id = ''
                 # header = ''
@@ -139,7 +152,6 @@ class BlastDb(models.Model):
                         if stripped[0] == '>':  # header
                             if length > 0:  # not first sequence, add previous sequence to db
                                 sequence_list.append(Sequence(blast_db=self, id=id, length=length, seq_start_pos=seq_start_pos, seq_end_pos=offset))
-                                # seq_count += 1
                             seq_start_pos = offset + line.find('>')  # white chars before '>'
                             # header = stripped[1:] # exclue '>'
                             id = stripped.split(None, 1)[0][1:]
@@ -149,7 +161,6 @@ class BlastDb(models.Model):
                     offset += len(line)
                 if length > 0:  # add last sequence
                     sequence_list.append(Sequence(blast_db=self, id=id, length=length, seq_start_pos=seq_start_pos, seq_end_pos=offset))
-                    # seq_count += 1
             if len(sequence_list) > 0:
                 Sequence.objects.bulk_create(sequence_list)
             return 0, '', '%d sequences added.' % len(sequence_list)
@@ -160,6 +171,9 @@ class BlastDb(models.Model):
         return (str(self.title),)
 
     def __unicode__(self):
+        return str(self.title)
+
+    def __str__(self):
         return str(self.title)
 
     class Meta:
@@ -207,6 +221,9 @@ class Sequence(models.Model):
     def __unicode__(self):
         return self.id
 
+    def __str__(self):
+        return self.id
+
     class Meta:
         unique_together = ('blast_db', 'id')
 
@@ -217,4 +234,7 @@ class JbrowseSetting(models.Model):
     url = models.URLField('Jbrowse URL', unique=True, help_text='The URL to Jbrowse using this reference')
 
     def __unicode__(self):
+        return self.url
+
+    def __str__(self):
         return self.url

@@ -1,10 +1,12 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
 from subprocess import Popen, PIPE
 from datetime import datetime, timedelta
-from os import path, chdir, getcwd, devnull
+from os import path, chdir, devnull
+from io import open
+import six
 from pytz import utc
 from celery.utils.log import get_task_logger
 from celery.signals import task_sent, task_success, task_failure
@@ -12,6 +14,7 @@ from django.core.cache import cache
 from django.conf import settings
 import json
 from clustal.models import ClustalQueryRecord
+
 
 logger = get_task_logger(__name__)
 
@@ -42,7 +45,10 @@ def run_clustal_task(task_id, args_list, file_prefix):
         statusdata['status'] = 'running'
 
     with open('status.json', 'w') as f:
-        json.dump(statusdata, f)
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
     # run
     FNULL = open(devnull, 'w')
@@ -63,8 +69,11 @@ def run_clustal_task(task_id, args_list, file_prefix):
     with open('status.json', 'r') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'done'
-    with open('status.json', 'wb') as f:
-        json.dump(statusdata, f)
+    with open('status.json', 'w') as f:
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
     return task_id  # passed to 'result' argument of task_success_handler
 
