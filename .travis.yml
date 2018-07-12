@@ -48,20 +48,26 @@ install:
         unzip chromedriver_linux64.zip;
     fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        virtualenv -p python2 env
-        source env/bin/activate
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        virtualenv -p python2 env;
+        source env/bin/activate;
         pip2 install -r requirements/requirements_py2.txt;
         pip2 install -r requirements/dev_requirements.txt;
         pip2 install coveralls;
         pip2 install codecov;
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        virtualenv -p python3 env
-        source env/bin/activate
-        pip install -r requirements/requirements_py3.txt;
-        pip install -r requirements/dev_requirements.txt;
-        pip install coveralls;
-        pip install codecov;
+        virtualenv -p python env;
+        if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+            pip2 install -r requirements/requirements_py3.txt;
+            pip2 install -r requirements/dev_requirements.txt;
+            pip2 install coveralls;
+            pip2 install codecov;
+        elif [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then
+            pip install -r requirements/requirements_py3.txt;
+            pip install -r requirements/dev_requirements.txt;
+            pip install coveralls;
+            pip install codecov;
+        fi
     fi
 
 before_script:
@@ -71,8 +77,8 @@ before_script:
   - psql -c 'ALTER USER django CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
   - npm run build
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
-        python2 manage.py migrate;
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+        python manage.py migrate;
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
         python manage.py migrate;
         gem install awesome_bot;
