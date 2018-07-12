@@ -47,16 +47,23 @@ install:
         unzip chromedriver_linux64.zip;
     fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         pip2 install -r requirements/requirements_py2.txt;
         pip2 install -r requirements/dev_requirements.txt;
         pip2 install coveralls;
         pip2 install codecov;
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        pip install -r requirements/requirements_py3.txt;
-        pip install -r requirements/dev_requirements.txt;
-        pip install coveralls;
-        pip install codecov;
+        if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+            pip2 install -r requirements/requirements_py3.txt;
+            pip2 install -r requirements/dev_requirements.txt;
+            pip2 install coveralls;
+            pip2 install codecov;
+        elif [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then
+            pip install -r requirements/requirements_py3.txt;
+            pip install -r requirements/dev_requirements.txt;
+            pip install coveralls;
+            pip install codecov;
+        fi
     fi
 
 before_script:
@@ -65,12 +72,17 @@ before_script:
   - psql -c 'grant all on database django to django;' -U postgres
   - psql -c 'ALTER USER django CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
-  - if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]] || [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then
         python2 manage.py migrate;
         python2 setup.py;
     elif [[ "$TRAVIS_OS_NAME" == "linux" ]]; then
-        python manage.py migrate;
-        python setup.py;
+        if [[ "$TRAVIS_PYTHON_VERSION" == "2.7" ]]; then
+            python2 manage.py migrate;
+            python2 setup.py;
+        elif [[ "$TRAVIS_PYTHON_VERSION" == "3.5" ]]; then
+            python manage.py migrate;
+            python setup.py;
+        fi
     fi
 
 # command to run tests

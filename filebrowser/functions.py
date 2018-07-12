@@ -377,5 +377,3 @@ def convert_filename(value):
         return value.replace(" ", "_").lower()
     else:
         return value
-
-
