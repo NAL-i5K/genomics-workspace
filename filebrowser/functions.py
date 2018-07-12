@@ -28,7 +28,7 @@ else:
 
 from six import iteritems
 from six.moves import range
-import six.moves.builtins import map
+from six.moves.builtins import map
 
 def url_to_path(value):
     """
