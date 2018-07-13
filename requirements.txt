@@ -10,7 +10,6 @@ docutils==0.12
 jsmin==2.0.11
 pillow==3.4.0
 psycopg2==2.7.1
-pycrypto==2.6.1
 python-memcached==1.57
 wsgiref==0.1.2
 django-suit==0.2.26
