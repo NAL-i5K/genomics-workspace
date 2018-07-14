@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from celery import shared_task
 from celery.task.schedules import crontab
 from celery.decorators import periodic_task
@@ -15,6 +15,8 @@ from django.conf import settings
 import csv
 import json
 import time
+from io import open
+import six
 
 logger = get_task_logger(__name__)
 
@@ -43,8 +45,10 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         statusdata['status'] = 'running'
 
     with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
-        json.dump(statusdata, f)
-
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
     # run
     for args in args_list:
         Popen(args, stdin=PIPE, stdout=PIPE).wait()
@@ -75,8 +79,14 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         json_path = file_prefix + '.json'
         type_func = {'str': str, 'float': float, 'int': int}
         hsp_list = []
-        with open(tsv_path, 'rb') as f:
-            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter='\t')]
+        delimiter = '\t'
+        if six.PY2:
+            delimiter = delimiter.encode('utf-8')
+            output = open(tsv_path, 'rb')
+        else:
+            output = open(tsv_path, 'r')
+        with output as f:
+            hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter=delimiter)]
         # generate gff3 files
         try:
             blast_program = path.basename(args_list[0][0])
@@ -96,10 +106,18 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                         .values_list('blast_db__title', 'url'))
             else:
                 db_url = []
-            with open(path.join(basedir, 'info.json'), 'wb') as f:
-                json.dump({'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}, f)
-            with open(json_path, 'wb') as f:
-                json.dump([[sseqid_db[hsp_dict_list[i]['sseqid']]] + hsp for i, hsp in enumerate(hsp_list)], f)
+            with open(path.join(basedir, 'info.json'), 'w') as f:
+                json_data = {'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}
+                if six.PY2:
+                    f.write(json.dumps(json_data).decode('utf-8'))
+                else:
+                    f.write(json.dumps(json_data))
+            with open(json_path, 'w') as f:
+                json_data = [[sseqid_db[hsp_dict_list[i]['sseqid']]] + hsp for i, hsp in enumerate(hsp_list)]
+                if six.PY2:
+                    f.write(json.dumps(json_data).decode('utf-8'))
+                else:
+                    f.write(json.dumps(json_data))
             overlap_cutoff = 5
             # group hsps by database, need to sort before doing groupby
             sorted_hsp_dict_list = sorted([hsp for hsp in hsp_dict_list if sseqid_db[hsp['sseqid']] in db_url], key=lambda a: sseqid_db[a['sseqid']])
@@ -170,18 +188,21 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                                 match_part_id += 1
                             match_id += 1
             result_status = 'SUCCESS'
-        except Exception, e:
-            # print Exception, e
+        except Exception:
             result_status = 'NO_GFF'
     record.result_status = result_status
     record.result_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
     # generate status.json for frontend status checking
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
-        json.dump({'status': 'done'}, f)
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+        statusdata = {'status': 'done'}
+        if six.PY2:
+            f.write(json.dumps(statusdata).decode('utf-8'))
+        else:
+            f.write(json.dumps(statusdata))
 
-    return task_id # passed to 'result' argument of task_success_handler
+    return task_id  # passed to 'result' argument of task_success_handler
 
 @periodic_task(run_every=(crontab(hour='0', minute='10'))) # Execute daily at midnight
 def remove_files():
@@ -202,8 +223,8 @@ def task_sent_handler(sender=None, task_id=None, task=None, args=None,
         try:
             tlist = cache.get(CACHE_ID, [])
             if args:
-                bid = args[0] # blast_task_id
-                tlist.append( (task_id,bid) )
+                bid = args[0]  # blast_task_id
+                tlist.append((task_id, bid))
                 logger.info('[task_sent] task sent: %s. queue length: %s' % (bid, len(tlist)) )
                 cache.set(CACHE_ID, tlist)
             else:

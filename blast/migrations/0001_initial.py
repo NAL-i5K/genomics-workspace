@@ -86,17 +86,17 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='sequence',
-            unique_together=set([(b'blast_db', b'id')]),
+            unique_together=set([('blast_db', 'id')]),
         ),
         migrations.CreateModel(
             name='SequenceType',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('molecule_type', models.CharField(default=b'nucl', max_length=4, choices=[(b'nucl', b'Nucleotide'), (b'prot', b'Peptide')])),
+                ('molecule_type', models.CharField(default='nucl', max_length=4, choices=[('nucl', 'Nucleotide'), ('prot', 'Peptide')])),
                 ('dataset_type', models.CharField(unique=True, max_length=50)),
             ],
             options={
-                'verbose_name': b'sequence type',
+                'verbose_name': 'sequence type',
             },
             bases=(models.Model,),
         ),

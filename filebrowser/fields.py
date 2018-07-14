@@ -2,13 +2,13 @@
 
 # imports
 import os
-
+from six.moves.builtins import str
+from six import string_types
 # django imports
 from django.db import models
 from django import forms
 from django.forms.widgets import Input
 from django.db.models.fields import Field, CharField
-from django.utils.encoding import force_unicode
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext_lazy as _
 
@@ -85,7 +85,7 @@ class FileBrowseFormField(forms.CharField):
             return value
         file_extension = os.path.splitext(value)[1].lower()
         extensions_list = self.extensions
-        if isinstance(self.extensions, basestring):
+        if isinstance(self.extensions, string_types):
             extensions_list = EXTENSIONS.get(self.extensions)
         if self.extensions and not file_extension in extensions_list:
             raise forms.ValidationError(self.error_messages['extension'] % {'ext': file_extension, 'allowed': ", ".join(self.extensions)})
@@ -113,7 +113,7 @@ class FileBrowseField(Field):
     def get_db_prep_value(self, value, connection, prepared=False):
         if value is None:
             return None
-        return unicode(value)
+        return str(value)
 
     def get_manipulator_field_objs(self):
         return [oldforms.TextField]

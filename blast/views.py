@@ -1,19 +1,22 @@
-from __future__ import absolute_import
+from __future__ import absolute_import, unicode_literals
 from django.shortcuts import render
 from django.shortcuts import redirect
 from django.http import Http404
 from django.http import HttpResponse
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ObjectDoesNotExist
 from uuid import uuid4
 from os import path, makedirs, chmod, remove
 from blast.models import BlastQueryRecord, BlastDb
 from blast.tasks import run_blast_task
 from datetime import datetime, timedelta
 from django.utils.timezone import localtime, now
+from io import open
 from pytz import timezone
 import json
-import traceback
+import six
+from six.moves.builtins import str as text
 import stat as Perm
 from itertools import groupby
 from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
@@ -70,9 +73,8 @@ def create(request, iframe=False):
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST:
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
-                query_f.write('\n'.join(query_text))
+            with open(query_filename, 'w') as query_f:
+                query_f.write(request.POST['query-sequence'])
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
 
@@ -136,10 +138,14 @@ def create(request, iframe=False):
                 # count number of query sequence by counting '>'
                 qstr = f.read()
                 seq_count = qstr.count('>')
-                if (seq_count == 0):
+                if seq_count == 0:
                     seq_count = 1
-                with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
-                    json.dump({'status': 'pending', 'seq_count': seq_count}, f)
+                with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+                    status_data = {'status': 'pending', 'seq_count': text(seq_count)}
+                    if six.PY2:
+                        f.write(json.dumps(status_data).decode('utf-8'))
+                    else:
+                        f.write(json.dumps(status_data))
 
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
 
@@ -161,10 +167,10 @@ def retrieve(request, task_id='1'):
                 with open(path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'info.json'), 'rb') as f:
                     results_info = f.read()
                 results_data = ''
-                with open(file_prefix + '.json', 'rb') as f:
+                with open(file_prefix + '.json', 'r') as f:
                     results_data = f.read()
                 results_detail = ''
-                with open(file_prefix + '.0', 'rb') as f:
+                with open(file_prefix + '.0', 'r') as f:
                     results_detail = f.read()
                 results_col_names = blast_info['col_names']
                 results_col_names_display = blast_col_names_display
@@ -205,7 +211,7 @@ def retrieve(request, task_id='1'):
                 'dequeue_date': dequeue_date,
                 'isNoHits': False,
             })
-    except Exception:
+    except ObjectDoesNotExist:
         raise Http404
 
 
@@ -224,7 +230,11 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            if six.PY2:
+                infile = open(status_file_path, 'rb')
+            else:
+                infile = open(status_file_path, 'r')
+            with infile as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
@@ -270,4 +280,3 @@ def user_tasks(request, user_id):
         records = BlastQueryRecord.objects.filter(user__id=user_id, is_shown=True, result_date__gt=(localtime(now())+ timedelta(days=-7)))
         serializer = UserBlastQueryRecordSerializer(records, many=True)
         return JSONResponse(serializer.data)
-

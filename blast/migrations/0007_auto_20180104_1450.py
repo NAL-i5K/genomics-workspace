@@ -15,7 +15,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blastdb',
             name='fasta_file',
-            field=filebrowser.fields.FileBrowseField(max_length=200, verbose_name=b'FASTA file path'),
+            field=filebrowser.fields.FileBrowseField(max_length=200, verbose_name='FASTA file path'),
         ),
         migrations.AlterField(
             model_name='blastdb',

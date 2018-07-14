@@ -1,6 +1,5 @@
 import os
-import sys
-import subprocess
+from io import open
 import csv
 import re
 from itertools import groupby
