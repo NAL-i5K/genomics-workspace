@@ -11,6 +11,7 @@ import tarfile
 import subprocess
 from six.moves import urllib
 from util.get_bin_name import get_bin_name
+import requests
 
 BASE_DIR = dirname(abspath(__file__))
 
@@ -58,37 +59,30 @@ def install_blast(bin_name):
 
 
 def install_hmmer(bin_name):
-    hmmer_bin_path = join(BASE_DIR, 'hmmer', bin_name + '/')
+    hmmer_bin_path = join(BASE_DIR, 'hmmer', bin_name)
     if exists(hmmer_bin_path):
         rmtree(hmmer_bin_path)
-    hmmer_local_file_path = join(BASE_DIR, 'hmmer.tar.gz')
-    if exists(hmmer_local_file_path):
-        remove(hmmer_local_file_path)
+    mkdir(hmmer_bin_path)
+    hmmer_local_file_path = join(hmmer_bin_path, 'hmmer-3.2-0.tar.bz2')
     if platform == 'darwin':
-        extracted_hmmer_path = join(BASE_DIR, 'hmmer-3.1b2-macosx-intel')
-        download_url = ('http://eddylab.org/software/hmmer3'
-            '/3.1b2/hmmer-3.1b2-macosx-intel.tar.gz')
+        download_url = ('https://anaconda.org/bioconda/hmmer/'
+            '3.2/download/osx-64/hmmer-3.2-0.tar.bz2')
     else:  # for linux
-        extracted_hmmer_path = join(BASE_DIR, 'hmmer-3.1b2-linux-intel-x86_64')
-        download_url = ('http://eddylab.org/software/hmmer3'
-            '/3.1b2/hmmer-3.1b2-linux-intel-x86_64.tar.gz')
-    if exists(extracted_hmmer_path):
-        rmtree(extracted_hmmer_path)
-    urllib.request.urlretrieve(
-        download_url,
-        hmmer_local_file_path)
+        download_url = ('https://anaconda.org/bioconda/hmmer/'
+            '3.2/download/linux-64/hmmer-3.2-0.tar.bz2')
 
-    tar = tarfile.open(hmmer_local_file_path, "r:gz")
-    tar.extractall()
+    req = requests.get(download_url)
+    with open(hmmer_local_file_path, 'wb') as f:
+        for chunk in req.iter_content(100000):
+            f.write(chunk)
+
+    tar = tarfile.open(hmmer_local_file_path, 'r:bz2')
+    tar.extractall(hmmer_bin_path)
     tar.close()
-    move(join(extracted_hmmer_path, 'binaries'), hmmer_bin_path)
 
     # delete downloaded and generated files after installation
     if exists(hmmer_local_file_path):
         remove(hmmer_local_file_path)
-
-    if exists(extracted_hmmer_path):
-        rmtree(extracted_hmmer_path)
 
 
 def install_clustal(bin_name):
