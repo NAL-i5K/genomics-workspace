@@ -1,0 +1,21 @@
+{
+  "name": "genomics-workspace",
+  "version": "1.0.0",
+  "scripts": {},
+  "private": true,
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/NAL-i5K/genomics-workspace.git"
+  },
+  "author": "i5k Workspace <i5k@ars.usda.gov >",
+  "license": "SEE LICENSE IN LICENCE.md",
+  "bugs": {
+    "url": "https://github.com/NAL-i5K/genomics-workspace/issues"
+  },
+  "homepage": "https://github.com/NAL-i5K/genomics-workspace#readme",
+  "dependencies": {},
+  "devDependencies": {
+    "jshint": "2.9.5",
+    "prettier": "1.13.0"
+  }
+}
