@@ -1,6 +1,6 @@
 from __future__ import print_function
 from os import remove, mkdir, chmod
-from os.path import dirname, abspath, join, exists
+from os.path import dirname, abspath, join, exists, basename
 import stat as Perm
 from sys import platform
 from shutil import rmtree, move, copyfile
@@ -150,11 +150,27 @@ else:  # for linux
     # installation of clustal
     clustal_bin_path = join(BASE_DIR, 'clustal', bin_name + '/')
 
-    clustalo_path = join(clustal_bin_path, 'clustalo')
-    if exists(clustalo_path):
-        remove(clustalo_path)
+    if exists(clustal_bin_path):
+        rmtree(clustal_bin_path)
+    mkdir(clustal_bin_path)
 
+    clustalo_path = join(clustal_bin_path, 'clustalo')
     urllib.request.urlretrieve(
         'http://www.clustal.org/omega/clustalo-1.2.4-Ubuntu-x86_64',
         clustalo_path)
     chmod(clustalo_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
+
+    clustalw_tar_path = join(clustal_bin_path, 'clustalw-2.1-linux-x86_64-libcppstatic.tar.gz')
+    clustalw_path = join(clustal_bin_path, 'clustalw2')
+    urllib.request.urlretrieve(
+        'http://www.clustal.org/download/current/clustalw-2.1-linux-x86_64-libcppstatic.tar.gz',
+        clustalw_tar_path)
+
+    tar = tarfile.open(clustalw_tar_path, 'r:gz')
+    for member in tar.getmembers():
+        if member.isreg():
+            member.name = basename(member.name)
+            tar.extract(member, clustal_bin_path)
+    tar.close()
+    chmod(clustalw_path, Perm.S_IXUSR | Perm.S_IXGRP | Perm.S_IXOTH)
+    remove(clustalw_tar_path)
