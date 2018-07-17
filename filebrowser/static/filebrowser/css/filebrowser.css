@@ -56,7 +56,7 @@ span.fb_type.folder {
 
 /*  Filebrowser Show-Preview-Link & Show-Versions-Link (uses Grappellis a.internal) ......................................... */
 
-.filebrowser a.fb_showpreview, 
+.filebrowser a.fb_showpreview,
 .filebrowser a.fb_showversions {
     display: block;
     margin-top: 8px;
@@ -73,7 +73,7 @@ span.fb_type.folder {
 }
 .filebrowser a.fb_showversions {
     padding-left: 25px;
-    
+
     background: 0 50% no-repeat scroll;
 }
 a.fb_showversions:link, a.fb_showversions:visited {
@@ -96,7 +96,7 @@ a.fb_showpreview:hover, a.fb_showpreview:active {
 
 /*  Filebrowser View-Link (contains thumbnail) & Select-Link......................................... */
 
-a.fb_viewlink, 
+a.fb_viewlink,
 button.fb_selectlink {
     position: relative;
     top: -4px !important;
@@ -203,4 +203,33 @@ ul.pulldown-actions a {
     padding: 5px 30px 5px 10px;
     font-weight: bold;
     white-space: nowrap;
+}
+
+.dropzone{
+    border: 2px dashed #79aec8;
+    font-family: "Roboto","Lucida Grande","DejaVu Sans","Bitstream Vera Sans",Verdana,Arial,sans-serif;
+}
+
+.dropzone.dz-clickable .dz-message{
+    font-size: 18px;
+    color: #417690;
+}
+
+.dropzone .dz-preview .dz-image{
+    border-radius: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #eee;
+}
+
+.dropzone .dz-preview .dz-progress{
+    height: 5px;
+    top: 110px;
+    margin-top: 0;
+}
+
+.dropzone .dz-preview .dz-remove{
+    color: #ba2121;
+    font-size: 12px;
+    font-weight: 100;
+    text-transform: uppercase;
 }
