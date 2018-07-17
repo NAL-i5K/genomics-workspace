@@ -2,7 +2,7 @@
 
 {% for file in page.object_list %}
     <tr class="{% cycle 'row1' 'row2' %}{% if file.filetype == "Folder" %} fb_folder{% endif %}">
-        
+
         <!-- FILESELECT FOR FILEBROWSEFIELD -->
         {% if query.pop == "1" and results_var.select_total %}
             <td class="fb_icon">
@@ -14,7 +14,7 @@
                 {% endif %}
             </td>
         {% endif %}
-        
+
         <!-- FILESELECT FOR RTE/TINYMCE -->
         {% if query.pop == "2" and results_var.select_total %}
             <td class="fb_icon">
@@ -26,7 +26,7 @@
                 {% endif %}
             </td>
         {% endif %}
-        
+
         <!-- FILESELECT FOR CKEDITOR (FORMER "FCKEDITOR") -->
         {% if query.pop == "3" and results_var.select_total %}
             <td class="fb_icon">
@@ -52,23 +52,40 @@
             </td>
         {% endif %}
 
+        <!-- FILESELECT FOR SIXFOOT -->
+        {% if query.pop == "5" and results_var.select_total %}
+            <td class="fb_icon">
+                {% selectable file.filetype query.type %}
+                {% if selectable %}
+                    <!--<button class="btn btn-success" name="redactor-select" onclick="RedactorSubmit('{{ file.url_save }}', '{{ file.url_thumbnail }}', '{{ file.filetype }}');">{% trans "Select" %}</button>-->
+                    <button class="btn btn-success" name="sixfoot-select" data-file="{{ file.url_save }}" data-thumb="{{ file.url_thumbnail }}" data-type="{{ file.filetype }}">{% trans "Select" %}</button>
+                {% else %}
+                    &nbsp;
+                {% endif %}
+            </td>
+        {% endif %}
+
         <!-- FILEICON -->
         <td>
-            <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" title="{{ file.filetype }}" />
+            {% if file.filetype in 'document,audio,code,folder,image,video'%}
+              <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" />
+            {% else %}
+            <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_document.gif" />
+            {% endif %}
         </td>
-        
+
         <!-- THUMBNAIL -->
-        <!--td class="fb_thumbnail">
+        <td class="fb_thumbnail">
             {% if file.filetype == "Image" %}
                 <a href="{{ file.url_full }}" class="fb_viewlink"><img src="{% version file.path settings_var.ADMIN_THUMBNAIL %}" title="{% trans 'View Image' %}" /></a>
             {% endif %}
-        </td-->
-        
+        </td>
+
         <!-- FILENAME/DIMENSIONS -->
         {% if file.filetype == "Folder" %}
-            <td class="filename"><a href="{% url "fb_browse" %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}"><strong>{{ file.filename }}</strong></a></td>
+            <td class="filename_dimensions"><a href="{% url "fb_browse" %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}"><strong>{{ file.filename }}</strong></a></td>
         {% else %}
-            <td class="filename">
+            <td class="filename_dimensions">
                 <b><a href="{{ file.url_full }}">{{ file.filename }}</a></b>
                 {% if file.dimensions %}
                     <br /><span class="tiny">{{ file.dimensions.0 }} x {{ file.dimensions.1 }} px</span><br clear="all" />
@@ -87,10 +104,10 @@
             </td>
         {% endif %}
 
-          
+
         <!-- SIZE -->
         <td>{{ file.filesize|filesizeformat }}</td>
-        
+
         <!-- DATE -->
         <td>{{ file.datetime|date:"N j, Y" }}</td>
 
@@ -117,7 +134,7 @@
           {% endifnotequal %}
         </td>
         {% endif %}
-        
+
         <!-- DEBUG -->
         {% if settings_var.DEBUG %}
         <td>
@@ -146,8 +163,8 @@
             {% endif %}
         </td>
         {% endif %}
-        
+
     </tr>
 {% endfor %}
 
- 
+

@@ -25,6 +25,6 @@
 #         form = TestForm(data)
 #         self.assertTrue(form.is_valid())
 
-    # def test_model_field(self):
-    #     f = FileBrowseField()
-    #     self.assertEqual(f.db_parameters(connection)['type'], 'varchar(200)')
+#     def test_model_field(self):
+#         f = FileBrowseField()
+#         self.assertEqual(f.db_parameters(connection)['type'], 'varchar(200)')

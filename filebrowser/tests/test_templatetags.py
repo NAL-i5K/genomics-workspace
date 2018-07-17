@@ -1,8 +1,10 @@
 from django.core.urlresolvers import reverse
-from filebrowser.tests.base import BaseTestCase
-# from filebrowser.conf import fb_settings
-# from filebrowser.functions import get_version_path
-# import os
+
+from .base import BaseTestCase
+from filebrowser.conf import fb_settings
+from filebrowser.functions import get_version_path
+
+import os
 
 
 class FbCsrfTokenTests(BaseTestCase):
