@@ -1,3 +1,5 @@
+import os
+
 DEBUG = True
 
 USE_CACHE = True
