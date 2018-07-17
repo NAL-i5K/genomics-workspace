@@ -16,7 +16,6 @@ import json
 import traceback
 import stat as Perm
 from itertools import groupby
-from i5k.settings import BLAST_QUERY_MAX, BLAST_QUERY_SIZE_MAX
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
 
@@ -91,11 +90,11 @@ def create(request, iframe=False):
 
             with open(query_filename, 'r') as f:
                 qstr = f.read()
-                if(qstr.count('>') > int(BLAST_QUERY_MAX)):
+                if(qstr.count('>') > int(settings.BLAST_QUERY_MAX)):
                     query_cnt = str(qstr.count('>'))
                     remove(query_filename)
                     return render(request, 'blast/invalid_query.html',
-                            {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(BLAST_QUERY_MAX) + ' sequences per submission.', })
+                            {'title': 'Your search includes ' + query_cnt + ' sequences, but blast allows a maximum of ' + str(settings.BLAST_QUERY_MAX) + ' sequences per submission.', })
 
             # generate customized_options
             input_opt = []

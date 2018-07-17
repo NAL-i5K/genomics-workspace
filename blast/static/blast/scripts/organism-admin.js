@@ -16,6 +16,7 @@
         if (!$('#id_short_name').data('userModified'))
             $('#id_short_name').val(short_name);
     });
+
     // don't overwrite user input
     $('#id_short_name').keyup(function () {
         if ($('#id_short_name').val().length > 0) {
@@ -29,7 +30,6 @@
     $('#id_display_name').change(function () {
         var name = $('#id_display_name').val().toLowerCase().replace(/^\s+|\s+$/g, '');
         $.getJSON('https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term=' + name, function (data) {
-            console.log(data['esearchresult']['idlist']);
             $('#id_tax_id').val(data['esearchresult']['idlist'][0]);
         });
     });
@@ -38,48 +38,15 @@
     $('#id_display_name').change(function () {
         var name = $('#id_display_name').val().toLowerCase().replace(/^\s+|\s+$/g, '');
         $.getJSON('https://en.wikipedia.org/w/api.php?action=query&list=search&srprop=snippet&srlimit=1&format=json&callback=?&srsearch=' + name, function (data) {
-            //console.log(data['query']['search']);
+            // example name can be used: 'Anoplophora%20glabripennis'
             if (data['query']['search'].length > 0) {
                 $.getJSON('https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=true&callback=?&titles=' + data['query']['search'][0]['title'], function (data) {
-                    //console.log(data['query']['pages']);
                     var keys = Object.keys(data['query']['pages']);
                     if (keys.length > 0) {
                         $('#id_description').val($(data['query']['pages'][keys[0]]['extract']).text()).trigger('autosize.resize');;
-                        // data['query']['search'][keys(data['query']['pages'])[0]]['extract']
                     }
                 });
             }
         });
-        //$.ajax({
-        //    url: 'https://en.wikipedia.org/w/api.php',
-        //    data: { // action=query&list=search&srprop=snippet&srlimit=1&format=json&srsearch=Anoplophora%20glabripennis
-        //        action: 'query',
-        //        list: 'search',
-        //        srsearch: name,
-        //        srprop: '',
-        //        srlimit: '1',
-        //        format: 'json'
-        //    }
-        //}).done(function (data) {
-        //    console.log(data['query']['search']);
-        //    if (data['query']['search'].length > 0) {
-        //        $.ajax({ // action=query&prop=extracts&format=json&exintro=true&titles=Asian%20long-horned%20beetle
-        //            url: 'https://en.wikipedia.org/w/api.php',
-        //            data: {
-        //                action: 'query',
-        //                prop: 'extracts',
-        //                format: 'json',
-        //                exintro: '',
-        //                titles: data['query']['search'][0]['title']
-        //            }
-        //        }).done(function (data) {
-        //            console.log(data['query']['search']);
-        //            if (keys(data['query']['pages']).length > 0) {
-        //                $('#id_description').val(data['query']['search'][keys(data['query']['pages'])[0]]['extract']);
-        //                // data['query']['search'][keys(data['query']['pages'])[0]]['extract']
-        //            }
-        //        });
-        //    }
-        //});
     });
 });

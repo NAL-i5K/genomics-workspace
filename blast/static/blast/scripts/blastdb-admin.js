@@ -4,7 +4,6 @@
     }
     $('#id_fasta_file').change(function () {
         var file = $('#id_fasta_file').val().split('/').pop();
-        //console.log(file);
         if (!$('#id_title').data('userModified'))
             $('#id_title').val(file)
     });
