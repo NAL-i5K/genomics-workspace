@@ -32,19 +32,8 @@
 
 {% block content %}
 
-{% if user.is_authenticated %}
-    <ul id="myTab" class="nav nav-tabs nav-justified" role="tablist">
-        <li role="presentation" class="active"><a href="#run" id="run-tab" role="tab" data-toggle="tab" aria-controls="run" aria-expanded="true">Run</a></li>
-        <li role="presentation"><a href="#queries" role="tab" id="queries-tab" data-toggle="tab" aria-controls="queries" aria-expanded="false">Queries</a></li>
-    </ul>
-{% endif %}
+<div class="tripal_details">
 
-{% if user.is_authenticated %}
-    <div id="myTabContent" class="tab-content">
-    <div class="tripal_details tab-pane fade active in" role="tabpanel" id="run" aria-labelledby="run-tab">
-{% else %}
-    <div class="tripal_details">
-{% endif %}
 <form method="post" id="MainBlastForm" name="MainBlastForm" enctype="multipart/form-data">
 {% csrf_token %}
 <div class="tripal_organism-info-box tripal-info-box">
@@ -492,21 +481,5 @@ Enter here your input data as
 </div>
 </form>
 </div>
-
-{% if user.is_authenticated %}
-    <div role="tabpanel" class="tab-pane fade" id="queries" aria-labelledby="queries-tab">
-    <!-- Table -->
-    <table id="queries-{{user.id}}" class="display" cellspacing="0" width="100%">
-    <thead>
-    <tr>
-        <th>Submission time</th>
-        <th>Status</th>
-        <th>Link</th>
-    </tr>
-    </thead>
-    </table>
-    </div>
-  </div> <!-- myTabContent -->
-{% endif %}
 
 {% endblock %}
