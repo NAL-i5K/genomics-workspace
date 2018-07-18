@@ -3,14 +3,13 @@ from django.conf.urls import include, url, handler404
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import user_passes_test
-from app.views import about, handle_404
+from app.views import handle_404
 
 admin.autodiscover()
 
 login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
 
 urlpatterns = [
-    url(r'^about', about, name='about'),
     url(r'^proxy/', include('proxy.urls', namespace='proxy')),
 
     # Enable the admin:

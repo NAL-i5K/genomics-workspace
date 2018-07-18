@@ -10,6 +10,7 @@ def home(request):
             'title': 'Home Page',
         })
 
+
 def contact(request):
     assert isinstance(request, HttpRequest)
     return render(
@@ -19,14 +20,6 @@ def contact(request):
             'message': 'National Agricultural Library',
         })
 
-def about(request):
-    assert isinstance(request, HttpRequest)
-    return render(
-        request,
-        'app/about.html', {
-            'title': 'About Genomics-Workspace',
-            #'year': datetime.now().year,
-        })
 
 def handle_404(request):
     return render(request, 'app/404.html')
