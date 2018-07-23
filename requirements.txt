@@ -1,6 +1,6 @@
 Django==1.11.11
 Markdown==2.6.6
-celery==4.1.0
+celery==4.1.1
 cssmin==0.2.0
 django-pipeline==1.6.8
 django-simple-captcha==0.4.9
@@ -16,4 +16,4 @@ wsgiref==0.1.2
 django-suit==0.2.26
 six>=1.10.0
 django-axes==2.3.3
-requests==2.18.4 
+requests==2.18.4
