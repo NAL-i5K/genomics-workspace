@@ -70,32 +70,6 @@ class BlastDbAdmin(admin.ModelAdmin):
 admin.site.register(BlastDb, BlastDbAdmin)
 
 
-class OrganismForm(ModelForm):
-    class Meta:
-        widgets = {
-            'description': AutosizedTextarea(attrs={'rows': 10, 'class': 'input-xxlarge'}),
-        }
-
-class OrganismAdmin(admin.ModelAdmin):
-    form = OrganismForm
-    list_display = ('display_name', 'short_name', 'tax_id', 'short_description',)
-    search_fields = ('display_name', 'short_name', 'tax_id', 'description',)
-    actions_on_top = True
-    actions_on_bottom = True
-
-    def short_description(self, obj):
-        if len(obj.description) < 100:
-            return obj.description
-        else:
-            return obj.description[:100] + '...'
-    short_description.short_description = 'description'
-    class Media:
-        css = {
-            'all': ('blast/css/organism-admin.css',)
-        }
-        js = ('blast/scripts/organism-admin.js',)
-admin.site.register(Organism, OrganismAdmin)
-
 class SequenceTypeAdmin(admin.ModelAdmin):
     list_display = ('molecule_type', 'dataset_type',)
     search_fields = ('molecule_type', 'dataset_type',)

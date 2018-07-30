@@ -3,7 +3,6 @@ from django.contrib.auth.models import User
 from app.models import Organism
 from blast.models import SequenceType, BlastDb, Sequence, BlastQueryRecord
 
-
 class OrganismSerializer(serializers.HyperlinkedModelSerializer):
     url = serializers.HyperlinkedIdentityField(view_name='blast:organism-detail', lookup_field='short_name')
 
