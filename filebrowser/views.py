@@ -1,22 +1,26 @@
 # coding: utf-8
 
 # general imports
-import os, re
-from time import gmtime, strftime
+import os
+import re
+import mimetypes
 
 # django imports
-from django.shortcuts import render, HttpResponse
-from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render
+from django.http import HttpResponseRedirect, Http404, JsonResponse
 from django.contrib.admin.views.decorators import staff_member_required
+from django.contrib import messages
 from django.views.decorators.cache import never_cache
+from django.views.decorators.csrf import csrf_exempt
 from django.utils.translation import ugettext as _
+from django.utils.encoding import smart_str
 from django.conf import settings
 from django import forms
 from django.core.urlresolvers import reverse
 from django.core.exceptions import ImproperlyConfigured
-from django.dispatch import Signal
+from django.core.files.move import file_move_safe
 from django.core.paginator import Paginator, InvalidPage, EmptyPage
-from django.utils.encoding import smart_str
+from django.dispatch import Signal
 
 try:
     # django SVN
@@ -33,7 +37,6 @@ from filebrowser.conf import fb_settings
 from filebrowser.functions import path_to_url, sort_by_attr, get_path, get_file, get_version_path, get_breadcrumbs, get_filterdate, get_settings_var, handle_file_upload, convert_filename
 from filebrowser.templatetags.fb_tags import query_helper
 from filebrowser.base import FileObject
-from filebrowser.decorators import flash_login_required
 
 # Precompile regular expressions
 filter_re = []
@@ -268,6 +271,17 @@ def upload(request):
 
     # SESSION (used for flash-uploading)
     session_key = request.COOKIES.get(settings.SESSION_COOKIE_NAME, None)
+    # we need max. upload size in MB for dropzone library
+    max_upload_size = fb_settings.MAX_UPLOAD_SIZE / 1048576.0
+
+    # we need accepted files mime-type for dropzone library
+    accepted_files = set()
+    for ext_list in fb_settings.EXTENSIONS.values():
+        for ext in ext_list:
+            try:
+                accepted_files.add(mimetypes.types_map[ext])
+            except KeyError:
+                pass
 
     return render(request, _template() + 'upload.html', {
         'query': query,
@@ -276,7 +290,9 @@ def upload(request):
         'session_key': session_key,
         'breadcrumbs': get_breadcrumbs(query, path),
         'breadcrumbs_title': _(u'Upload'),
-        'is_popup': is_popup
+        'is_popup': is_popup,
+        'max_upload_size': max_upload_size,
+        'accepted_files': ','.join(accepted_files)
     })
 upload = staff_member_required(never_cache(upload))
 
@@ -288,20 +304,20 @@ def _check_file(request):
     Check if file already exists on the server.
     """
 
-    import json
-    folder = request.POST.get('folder')
+    folder = request.GET.get('folder')
     fb_uploadurl_re = re.compile(r'^.*(%s)' % reverse("fb_upload"))
     folder = fb_uploadurl_re.sub('', folder)
 
-    fileArray = {}
+    success = True
     if request.method == 'POST':
-        for k,v in request.POST.items():
+        for k, v in request.POST.items():
             if k != "folder":
                 v = convert_filename(v)
                 if os.path.isfile(smart_str(_check_access(request, folder, v))):
-                    fileArray[k] = v
+                    success = False
+                    break
 
-    return HttpResponse(json.dumps(fileArray))
+    return JsonResponse({'success': success})
 
 
 # upload signals
@@ -309,26 +325,25 @@ filebrowser_pre_upload = Signal(providing_args=["path", "file"])
 filebrowser_post_upload = Signal(providing_args=["path", "file"])
 
 @csrf_exempt
-@flash_login_required
 @staff_member_required
 def _upload_file(request):
     """
     Upload file to the server.
     """
 
-    from django.core.files.move import file_move_safe
-
     if request.method == 'POST':
-        folder = request.POST.get('folder')
+        folder = request.GET.get('folder')
         fb_uploadurl_re = re.compile(r'^.*(%s)' % reverse("fb_upload"))
         folder = fb_uploadurl_re.sub('', folder)
         abs_path = _check_access(request, folder)
         if request.FILES:
-            filedata = request.FILES['Filedata']
+            filedata = request.FILES['file']
             filedata.name = convert_filename(filedata.name)
             _check_access(request, abs_path, filedata.name)
             # PRE UPLOAD SIGNAL
-            filebrowser_pre_upload.send(sender=request, path=request.POST.get('folder'), file=filedata)
+            filebrowser_pre_upload.send(sender=request,
+                                         path=request.GET.get('folder'),
+                                        file=filedata)
             # HANDLE UPLOAD
             uploadedfile = handle_file_upload(abs_path, filedata)
             # MOVE UPLOADED FILE
@@ -338,14 +353,18 @@ def _upload_file(request):
                 new_file = smart_str(os.path.join(abs_path, uploadedfile))
                 file_move_safe(new_file, old_file)
             # POST UPLOAD SIGNAL
-            filebrowser_post_upload.send(sender=request, path=request.POST.get('folder'), file=FileObject(smart_str(os.path.join(fb_settings.DIRECTORY, folder, filedata.name))))
-    return HttpResponse('True')
+            filebrowser_post_upload.send(sender=request,
+                                         path=request.GET.get('folder'),
+                                         file=FileObject(smart_str(os.path.join(fb_settings.DIRECTORY, folder, filedata.name))))
+    return JsonResponse({'success': True})
 
 
 # delete signals
 filebrowser_pre_delete = Signal(providing_args=["path", "filename"])
 filebrowser_post_delete = Signal(providing_args=["path", "filename"])
 
+@never_cache
+@staff_member_required
 def delete(request):
     """
     Delete existing File/Directory.
@@ -362,7 +381,7 @@ def delete(request):
             msg = _('The requested Folder does not exist.')
         else:
             msg = _('The requested File does not exist.')
-        messages.warning(request,message=msg)
+        messages.warning(request, message=msg)
         return HttpResponseRedirect(reverse("fb_browse"))
     abs_path = _check_access(request, path)
 
