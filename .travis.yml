@@ -49,6 +49,7 @@ before_script:
   - mkdir -p ./media/blast/db/
   - sudo python2 manage.py migrate
   - sudo python2 setup.py
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install awesome_bot; fi
 
 # command to run tests
 script:
@@ -82,6 +83,7 @@ script:
   - rm i5k/settings.py
   - mv i5k/settings2.py i5k/settings.py
   - coverage run --source= ./manage.py test blast.tests.JbrowseLinkOutTestCase --noinput
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then awesome_bot --allow-redirect --allow-dupe README.md; fi
 
 after_success:
   - coverage report  # show the coverage report
