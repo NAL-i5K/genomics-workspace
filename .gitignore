@@ -5,26 +5,26 @@
 .DS_Store
 
 # Virtual Environment
-py2.7/
-env/
+/py2.7/
+/env/
 
 # Sphinx build docs
-sphinx_doc/_build/
+/sphinx_doc/_build/
 
 # blast binaries
-blast/bin_*/
+/blast/bin_*/
 
 # hmmer binaries
-hmmer/bin_*/
+/hmmer/bin_*/
 
 # clustal binaries
-clustal/bin_*/
+/clustal/bin_*/
 
 # media folder
-media/
+/media/
 
 # generated static folder
-static/
+/static/
 
 # editor config
 .editorconfig

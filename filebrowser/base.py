@@ -1,26 +1,15 @@
 # coding: utf-8
 
 # imports
-import os, re, datetime
-from time import gmtime, strftime
-
-# django imports
-from django.conf import settings
+import os
+import re
+import datetime
+from PIL import Image
 
 # filebrowser imports
-from filebrowser.settings import *
+from filebrowser.settings import SAVE_FULL_URL, ADMIN_THUMBNAIL
 from filebrowser.conf import fb_settings
-from filebrowser.functions import get_file_type, url_join, is_selectable, get_version_path
-from django.utils.encoding import force_unicode
-
-# PIL import
-if STRICT_PIL:
-    from PIL import Image
-else:
-    try:
-        from PIL import Image
-    except ImportError:
-        import Image
+from filebrowser.functions import get_file_type, url_join, get_version_path
 
 
 class FileObject(object):
@@ -31,21 +20,29 @@ class FileObject(object):
     """
     
     def __init__(self, path):
-        '''
-        `os.path.split` Split the pathname path into a pair, (head, tail) where tail is the last pathname component and head is everything leading up to that. The tail part will never contain a slash; if path ends in a slash, tail will be empty. If there is no slash in path, head will be empty. If path is empty, both head and tail are empty.
-        '''
+        """
+        `os.path.split` Split the pathname path into a pair, (head, tail)
+        where tail is the last pathname component and head is everything
+        leading up to that. The tail part will never contain a slash;
+        if path ends in a slash, tail will be empty.
+        If there is no slash in path, head will be empty.
+        If path is empty, both head and tail are empty.
+        """
         self.path = path
-        self.url_rel = path.replace("\\","/")
+        self.url_rel = path.replace("\\", "/")
         self.head, self.filename = os.path.split(path)
-        self.filename_lower = self.filename.lower() # important for sorting
-        self.filetype = get_file_type(self.filename) # strange if file no extension then this folder
+        # important for sorting
+        self.filename_lower = self.filename.lower()
+        # strange if file no extension then this folder
+        self.filetype = get_file_type(self.filename)
     
     def _filesize(self):
         """
         Filesize.
         """
-        path = force_unicode(self.path)
-        if os.path.isfile(os.path.join(fb_settings.MEDIA_ROOT, path)) or os.path.isdir(os.path.join(fb_settings.MEDIA_ROOT, path)):
+        path = self.path
+        if os.path.isfile(os.path.join(fb_settings.MEDIA_ROOT, path)) or \
+                os.path.isdir(os.path.join(fb_settings.MEDIA_ROOT, path)):
             return os.path.getsize(os.path.join(fb_settings.MEDIA_ROOT, path))
         return ""
     filesize = property(_filesize)
@@ -54,8 +51,11 @@ class FileObject(object):
         """
         Date.
         """
-        if os.path.isfile(os.path.join(fb_settings.MEDIA_ROOT, self.path)) or os.path.isdir(os.path.join(fb_settings.MEDIA_ROOT, self.path)):
-            return os.path.getmtime(os.path.join(fb_settings.MEDIA_ROOT, self.path))
+        if os.path.isfile(os.path.join(fb_settings.MEDIA_ROOT, self.path)) or \
+                os.path.isdir(os.path.join(fb_settings.MEDIA_ROOT, self.path)):
+            return os.path.getmtime(
+                os.path.join(fb_settings.MEDIA_ROOT, self.path)
+            )
         return ""
     date = property(_date)
     
@@ -70,7 +70,7 @@ class FileObject(object):
         """
         Extension.
         """
-        return u"%s" % os.path.splitext(self.filename)[1]
+        return u"{0}".format(os.path.splitext(self.filename)[1])
     extension = property(_extension)
     
     def _filetype_checked(self):
@@ -97,9 +97,9 @@ class FileObject(object):
         """
         Path relative to initial directory.
         """
-        directory_re = re.compile(r'^(%s)' % (fb_settings.DIRECTORY))
+        directory_re = re.compile(r'^({0})'.format(fb_settings.DIRECTORY))
         value = directory_re.sub('', self.path)
-        return u"%s" % value
+        return value
     path_relative_directory = property(_path_relative_directory)
     
     def _url_relative(self):
@@ -110,7 +110,7 @@ class FileObject(object):
         """
         Full URL including MEDIA_URL.
         """
-        return force_unicode(url_join(fb_settings.MEDIA_URL, self.url_rel))
+        return url_join(fb_settings.MEDIA_URL, self.url_rel)
     url_full = property(_url_full)
     
     def _url_save(self):
@@ -128,18 +128,23 @@ class FileObject(object):
         Thumbnail URL.
         """
         if self.filetype == "Image":
-            return u"%s" % url_join(fb_settings.MEDIA_URL, get_version_path(self.path, ADMIN_THUMBNAIL))
+            return "{0}".format(
+                url_join(
+                    fb_settings.MEDIA_URL,
+                    get_version_path(self.path, ADMIN_THUMBNAIL)
+                )
+            )
         else:
             return ""
     url_thumbnail = property(_url_thumbnail)
     
     def url_admin(self):
         if self.filetype_checked == "Folder":
-            directory_re = re.compile(r'^(%s)' % (fb_settings.DIRECTORY))
+            directory_re = re.compile(r'^({0})'.format(fb_settings.DIRECTORY))
             value = directory_re.sub('', self.path)
-            return u"%s" % value
+            return "{0}".format(value)
         else:
-            return u"%s" % url_join(fb_settings.MEDIA_URL, self.path)
+            return "{0}".format(url_join(fb_settings.MEDIA_URL, self.path))
     
     def _dimensions(self):
         """
@@ -147,9 +152,11 @@ class FileObject(object):
         """
         if self.filetype == 'Image':
             try:
-                im = Image.open(os.path.join(fb_settings.MEDIA_ROOT, self.path))
+                im = Image.open(
+                    os.path.join(fb_settings.MEDIA_ROOT, self.path)
+                )
                 return im.size
-            except:
+            except IOError:
                 pass
         else:
             return False
@@ -196,12 +203,10 @@ class FileObject(object):
     is_empty = property(_is_empty)
     
     def __repr__(self):
-        return force_unicode(self.url_save)
+        return self.url_save
     
     def __str__(self):
-        return force_unicode(self.url_save)
+        return self.url_save
     
     def __unicode__(self):
-        return force_unicode(self.url_save)
-
-
+        return self.url_save

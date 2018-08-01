@@ -152,12 +152,13 @@ INSTALLED_APPS = (
 
 
 # filebrowser settings
+FILEBROWSER_DEBUG = False
 FILEBROWSER_SUIT_TEMPLATE = True
 FILEBROWSER_DIRECTORY = ''
 FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
 FILEBROWSER_MAX_UPLOAD_SIZE = 10737418240 # 10GB
 FILEBROWSER_EXTENSIONS = {
-    'Folder': [''],
+    'folder': [''],
     'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
     'FASTA': ['.fa', '.faa', '.fna', '.fsa', '.ffn', '.mpfa', '.faa', '.fasta', '.cds', '.pep', '.seq'],
     'FASTQ': ['.fq', '.fastq'],

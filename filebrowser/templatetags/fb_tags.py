@@ -10,9 +10,9 @@ from filebrowser.settings import SELECT_FORMATS
 register = template.Library()
 
 
-
-
-@register.inclusion_tag('filebrowser/include/_response.html', takes_context=True)
+@register.inclusion_tag(
+    'filebrowser/include/_response.html', takes_context=True
+)
 def query_string(context, add=None, remove=None):
     """
     Allows the addition and removal of query string parameters.
@@ -30,7 +30,7 @@ def query_string(context, add=None, remove=None):
     remove = string_to_list(remove)
     params = context['query'].copy()
     response = get_query_string(params, add, remove)
-    return {'response': response }
+    return {'response': response}
 
 
 def query_helper(query, add=None, remove=None):
@@ -49,19 +49,21 @@ def get_query_string(p, new_params=None, remove=None):
     Add and remove query parameters. From `django.contrib.admin`.
     """
     
-    if new_params is None: new_params = {}
-    if remove is None: remove = []
+    if new_params is None:
+        new_params = {}
+    if remove is None:
+        remove = []
     for r in remove:
-        for k in p.keys():
-            #if k.startswith(r):
-            if k == r:
-                del p[k]
+        try:
+            p.pop(r)
+        except KeyError:
+            continue
     for k, v in new_params.items():
         if k in p and v is None:
             del p[k]
         elif v is not None:
             p[k] = v
-    return '?' + '&'.join([u'%s=%s' % (urlquote(k), urlquote(v)) for k, v in p.items()])
+    return '?' + '&'.join([u'{0}={1}'.format(urlquote(k), urlquote(v)) for k, v in p.items()])
 
 
 def string_to_dict(string):
@@ -80,7 +82,8 @@ def string_to_dict(string):
             string += ','
         for arg in string.split(','):
             arg = arg.strip()
-            if arg == '': continue
+            if arg == '':
+                continue
             kw, val = arg.split('=', 1)
             kwargs[kw] = val
     return kwargs
@@ -100,7 +103,8 @@ def string_to_list(string):
             string += ','
         for arg in string.split(','):
             arg = arg.strip()
-            if arg == '': continue
+            if arg == '':
+                continue
             args.append(arg)
     return args
 
@@ -134,22 +138,9 @@ def selectable(parser, token):
     try:
         tag, filetype, format = token.split_contents()
     except:
-        raise template.TemplateSyntaxError, "%s tag requires 2 arguments" % token.contents.split()[0]
+        raise template.TemplateSyntaxError(
+            "{0} tag requires 2 arguments".format(token.contents.split()[0])
+        )
         
     return SelectableNode(filetype, format)
-    
 register.tag(selectable)
-
-@register.simple_tag
-def custom_admin_media_prefix():
-    import django
-    if "1.4" in django.get_version():
-        from django.conf import settings
-        return "".join([settings.STATIC_URL,"admin/"])
-    else:
-        try:
-            from django.contrib.admin.templatetags import admin_media_prefix
-        except ImportError:
-            from django.contrib.admin.templatetags.adminmedia import admin_media_prefix
-        return admin_media_prefix()
-

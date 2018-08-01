@@ -31,13 +31,15 @@ install:
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then createuser -s postgres; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start rabbitmq; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew services start memcached; fi
-  - sudo pip2 install -r requirements.txt
-  - sudo pip2 install -r dev_requirements.txt
-  - sudo pip2 install coveralls
-  - sudo pip2 install codecov
-  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_mac64.zip; fi
+  - virtualenv -p python2 env
+  - source env/bin/activate
+  - pip2 install -r requirements.txt
+  - pip2 install -r dev_requirements.txt
+  - pip2 install coveralls
+  - pip2 install codecov
+  - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_mac64.zip; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then unzip chromedriver_mac64.zip; fi
-  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://chromedriver.storage.googleapis.com/2.36/chromedriver_linux64.zip; fi
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then wget https://chromedriver.storage.googleapis.com/2.41/chromedriver_linux64.zip; fi
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then unzip chromedriver_linux64.zip; fi
   - export PATH=$PATH:$(pwd):/usr/local/sbin
 
@@ -47,8 +49,8 @@ before_script:
   - psql -c 'grant all on database django to django;' -U postgres
   - psql -c 'ALTER USER django CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
-  - sudo python2 manage.py migrate
-  - sudo python2 setup.py
+  - python2 manage.py migrate
+  - python2 setup.py
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install awesome_bot; fi
 
 # command to run tests
