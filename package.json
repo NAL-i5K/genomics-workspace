@@ -15,7 +15,7 @@
   "homepage": "https://github.com/NAL-i5K/genomics-workspace#readme",
   "dependencies": {},
   "devDependencies": {
-    "jshint": "2.9.5",
+    "jshint": "^2.9.6",
     "prettier": "1.13.0"
   }
 }
