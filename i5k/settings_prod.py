@@ -11,8 +11,6 @@ ALLOWED_HOSTS = (
 
 MEDIA_URL = '/webapp/media/'
 STATIC_URL = '/webapp/static/'
-LOGIN_URL = '/webapp/login'
-LOGIN_REDIRECT_URL = '/webapp/home'
 
 DATABASES = {
     'default': {
