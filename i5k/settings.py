@@ -132,7 +132,6 @@ INSTALLED_APPS = (
     'django.contrib.postgres',
     'axes',
     'rest_framework',
-    'rest_framework_swagger',
     'pipeline',
     'app',
     'blast',
