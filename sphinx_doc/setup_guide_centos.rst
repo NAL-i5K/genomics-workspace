@@ -39,7 +39,7 @@ Install necessary packages::
 Install python 2.7.13 from source::
 
     cd <user-home>
-    wget http://www.python.org/ftp/python/2.7.8/Python-2.7.13.tar.xz
+    wget http://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
     tar -xf Python-2.7.13.tar.xz
 
     # Configure as a shared library:
