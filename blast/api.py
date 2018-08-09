@@ -1,5 +1,4 @@
-from rest_framework import renderers
-from rest_framework import viewsets
+from rest_framework import renderers, viewsets
 from app.models import Organism
 from blast.models import SequenceType, BlastDb
 from blast.serializers import OrganismSerializer, BlastDbSerializer, SequenceTypeSerializer

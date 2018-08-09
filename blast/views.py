@@ -18,6 +18,7 @@ import stat as Perm
 from itertools import groupby
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
+from rest_framework.renderers import JSONRenderer
 
 
 blast_customized_options = {
