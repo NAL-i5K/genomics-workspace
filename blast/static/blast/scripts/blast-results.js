@@ -155,7 +155,7 @@ $(function () { // document ready
     var url_root = /(https?:\/\/.*(?:blast)*)\/task\//g.exec(document.URL)[1];
     function get_fasta(sseqid) {
         // Returns a jqXHR or true if already in cache, for use with $.when
-        //http://localhost:8000/api/seq/gnl%7CLoxosceles_reclusa_transcript_v0.5.3%7CLREC000002-RA/?format=fasta
+        // base_url/blast/api/seq/gnl%7CLoxosceles_reclusa_transcript_v0.5.3%7CLREC000002-RA/?format=fasta
         if (sseqid in fasta_cache)
             return true;
         else if (sseqid in fasta_loading)
