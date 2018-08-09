@@ -359,7 +359,8 @@ PIPELINE = {
                 'app/scripts/jquery-1.11.1.js',
                 'app/scripts/bootstrap.js',
                 'app/scripts/respond.src.js',
-                'app/scripts/underscore.js'
+                'app/scripts/underscore.js',
+                'app/scripts/error.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
