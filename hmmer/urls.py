@@ -1,6 +1,11 @@
-from django.conf.urls import url
+from django.conf.urls import url, include
 from hmmer import views
-# from .api import *
+from hmmer.api import HmmerDbViewSet, OrganismViewSet
+from rest_framework import routers
+
+router = routers.DefaultRouter()
+router.register(r'organism', OrganismViewSet)
+router.register(r'hmmerdb', HmmerDbViewSet)
 
 urlpatterns = [
     # ex: /hmmer/
@@ -11,4 +16,5 @@ urlpatterns = [
         views.status,
         name='status'),
     url(r'^manual/$', views.manual, name='manual'),
+    url(r'^api/', include(router.urls)),
 ]
