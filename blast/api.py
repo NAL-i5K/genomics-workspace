@@ -1,4 +1,9 @@
 from rest_framework import renderers
+from rest_framework import viewsets
+from app.models import Organism
+from blast.models import SequenceType, BlastDb
+from blast.serializers import OrganismSerializer, BlastDbSerializer, SequenceTypeSerializer
+
 
 class FASTARenderer(renderers.BaseRenderer):
     media_type = 'text/plain'
@@ -12,11 +17,6 @@ class FASTARenderer(renderers.BaseRenderer):
         else:
             return ''
 
-from rest_framework.renderers import JSONRenderer, BrowsableAPIRenderer
-from rest_framework import viewsets
-from django.contrib.auth.models import User
-from .models import *
-from .serializers import *
 
 class OrganismViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -26,6 +26,7 @@ class OrganismViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = OrganismSerializer
     lookup_field = 'short_name'
 
+
 class SequenceTypeViewSet(viewsets.ReadOnlyModelViewSet):
     """
     Retrieve sequence types.
@@ -33,6 +34,7 @@ class SequenceTypeViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = SequenceType.objects.all()
     serializer_class = SequenceTypeSerializer
     lookup_field = 'dataset_type'
+
 
 class BlastDbViewSet(viewsets.ReadOnlyModelViewSet):
     """
@@ -42,59 +44,3 @@ class BlastDbViewSet(viewsets.ReadOnlyModelViewSet):
     serializer_class = BlastDbSerializer
     lookup_field = 'title'
     lookup_value_regex = '[^/]+'
-
-    #@link()
-    #def sequence_set(self, request, title=None):
-    #    empty_error = "Empty list and '%(class_name)s.allow_empty' is False."
-    #    blastdb = self.get_object()
-    #    object_list = self.filter_queryset(blastdb.sequence_set.all())
-
-    #    # Default is to allow empty querysets.  This can be altered by setting
-    #    # `.allow_empty = False`, to raise 404 errors on empty querysets.
-    #    if not self.allow_empty and not object_list:
-    #        warnings.warn(
-    #            'The `allow_empty` parameter is deprecated. '
-    #            'To use `allow_empty=False` style behavior, You should override '
-    #            '`get_queryset()` and explicitly raise a 404 on empty querysets.',
-    #            DeprecationWarning
-    #        )
-    #        class_name = self.__class__.__name__
-    #        error_msg = self.empty_error % {'class_name': class_name}
-    #        raise Http404(error_msg)
-
-    #    # Switch between paginated or standard style responses
-    #    page = self.paginate_queryset(object_list)
-    #    if page is not None:
-    #        serializer = PaginatedSequenceSerializer(instance=page, context={'request': request})
-    #    else:
-    #        serializer = SequenceSerializer(object_list, many=True, context={'request': request})
-
-    #    return Response(serializer.data)
-
-class SequenceViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Retrieve fasta sequences.
-    """
-    queryset = Sequence.objects.all()
-    serializer_class = SequenceSerializer
-    renderer_classes = (JSONRenderer, BrowsableAPIRenderer, FASTARenderer)
-    lookup_field = 'id'
-    lookup_value_regex = '[^/]+'
-
-class BlastQueryRecordViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Retrieve tasks.
-    """
-    queryset = BlastQueryRecord.objects.all()
-    serializer_class = BlastQueryRecordSerializer
-    lookup_field = 'task_id'
-
-class UserViewSet(viewsets.ReadOnlyModelViewSet):
-    """
-    Retrieve users.
-    """
-    queryset = User.objects.all()
-    serializer_class = UserSerializer
-    lookup_field = 'pk'
-
-
