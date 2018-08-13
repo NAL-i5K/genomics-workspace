@@ -1,9 +1,10 @@
+from app.views import handle_404
 from django.conf import settings
 from django.conf.urls import include, url, handler404
 from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import user_passes_test
-from app.views import handle_404
+from rest_framework.documentation import include_docs_urls
 
 admin.autodiscover()
 
@@ -24,13 +25,17 @@ urlpatterns = [
     url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
     # CLUSTAL
     url(r'^clustal/', include('clustal.urls', namespace='clustal')),
+    # API doc
+    url(r'^admin/api/doc/', include_docs_urls(title='Genomics Workspace API'))
 ]
 
 # handle 404 page
 handler404 = handle_404
 
 if settings.DEBUG:
+    # Serve static files when developing
     urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    # Generate API docs only when developing
     # By default, when DEBUG = True, you will not available to see 404 page, we need to add it by ourselves
     urlpatterns += [url(r'^404/$', handle_404)]

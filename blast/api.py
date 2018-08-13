@@ -3,21 +3,7 @@ from app.models import Organism
 from blast.models import SequenceType, BlastDb
 from blast.serializers import OrganismSerializer, BlastDbSerializer, SequenceTypeSerializer
 
-
-class FASTARenderer(renderers.BaseRenderer):
-    media_type = 'text/plain'
-    format = 'fasta'
-
-    def render(self, data, media_type=None, renderer_context=None):
-        if 'results' in data:
-            return ''.join([seq['fasta_seq'] for seq in data['results']])
-        elif 'fasta_seq' in data:
-            return data['fasta_seq']
-        else:
-            return ''
-
-
-class OrganismViewSet(viewsets.ReadOnlyModelViewSet):
+class OrganismViewSet(viewsets.ModelViewSet):
     """
     Retrieve organisms.
     """
@@ -26,7 +12,7 @@ class OrganismViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'short_name'
 
 
-class SequenceTypeViewSet(viewsets.ReadOnlyModelViewSet):
+class SequenceTypeViewSet(viewsets.ModelViewSet):
     """
     Retrieve sequence types.
     """
@@ -35,7 +21,7 @@ class SequenceTypeViewSet(viewsets.ReadOnlyModelViewSet):
     lookup_field = 'dataset_type'
 
 
-class BlastDbViewSet(viewsets.ReadOnlyModelViewSet):
+class BlastDbViewSet(viewsets.ModelViewSet):
     """
     Retrieve BLAST databases.
     """
