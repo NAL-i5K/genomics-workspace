@@ -18,6 +18,7 @@ import stat as Perm
 from itertools import groupby
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
+from rest_framework.renderers import JSONRenderer
 
 blast_customized_options = {'blastn': ['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn': ['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -247,26 +248,3 @@ def status(request, task_id):
         return HttpResponse(json.dumps(status))
     else:
         return HttpResponse('Invalid Post')
-
-
-# to-do: integrate with existing router of restframework
-from rest_framework.renderers import JSONRenderer
-from .serializers import UserBlastQueryRecordSerializer
-class JSONResponse(HttpResponse):
-    """
-    An HttpResponse that renders its content into JSON.
-    """
-    def __init__(self, data, **kwargs):
-        content = JSONRenderer().render(data)
-        kwargs['content_type'] = 'application/json'
-        super(JSONResponse, self).__init__(content, **kwargs)
-
-def user_tasks(request, user_id):
-    """
-    Return tasks performed by the user.
-    """
-    if request.method == 'GET':
-        records = BlastQueryRecord.objects.filter(user__id=user_id, is_shown=True, result_date__gt=(localtime(now())+ timedelta(days=-7)))
-        serializer = UserBlastQueryRecordSerializer(records, many=True)
-        return JSONResponse(serializer.data)
-
