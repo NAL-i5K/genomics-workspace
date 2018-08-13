@@ -1206,7 +1206,7 @@ $(function () { // document ready
     $('#score-to-color-checkbox').trigger('switchChange.bootstrapSwitch');
     //updateAlignmentGraph();
     results_table_api.columns.adjust().draw();
-    var footer = $('<p class="nal-footer">2017 - National Agricultural Library</p>');
+    var year = (new Date()).getFullYear();
+    var footer = $('<p class="nal-footer">' + year + ' - National Agricultural Library</p>');
     $('.ui-corner-bl').append(footer);
-    //console.log('checkpoint!');
 });
