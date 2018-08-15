@@ -11,8 +11,8 @@ In short, you need to configure database for BLAST and HMMER, but you don't need
 .. note:: The page is for user that wants to set up genomics-workspace by creating new admin user and confuguring in admin page. **If you want to know how to use services provided by genomics-workspace, see these tutorials:**
 
    * BLAST: https://i5k.nal.usda.gov/content/blast-tutorial
-   * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/manual
-   * CLUSTAL: https://i5k.nal.usda.gov/webapp/clustal/manual
+   * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/manual/
+   * CLUSTAL: https://i5k.nal.usda.gov/webapp/clustal/manual/
 
 To get started, you need to setup an admin account::
 
