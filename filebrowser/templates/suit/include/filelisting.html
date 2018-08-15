@@ -67,7 +67,7 @@
 
         <!-- FILEICON -->
         <td>
-            {% if file.filetype in 'document,audio,code,folder,image,video'%}
+            {% if file.filetype in 'Document,Audio,Code,Folder,Image,Video'%}
               <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_{{ file.filetype|lower }}.gif" />
             {% else %}
             <img src="{{ settings_var.URL_FILEBROWSER_MEDIA }}img/filebrowser_type_document.gif" />
@@ -82,6 +82,7 @@
         </td>
 
         <!-- FILENAME/DIMENSIONS -->
+
         {% if file.filetype == "Folder" %}
             <td class="filename_dimensions"><a href="{% url "fb_browse" %}{% query_string "" "q,dir,p" %}&amp;dir={{ file.path_relative_directory|urlencode }}"><strong>{{ file.filename }}</strong></a></td>
         {% else %}

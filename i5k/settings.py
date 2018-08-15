@@ -158,7 +158,7 @@ FILEBROWSER_DIRECTORY = ''
 FILEBROWSER_VERSIONS_BASEDIR = '_versions/'
 FILEBROWSER_MAX_UPLOAD_SIZE = 10737418240 # 10GB
 FILEBROWSER_EXTENSIONS = {
-    'folder': [''],
+    'Folder': [''],
     'Document': ['.pdf', '.doc', '.rtf', '.txt', '.xls', '.csv', '.docx'],
     'FASTA': ['.fa', '.faa', '.fna', '.fsa', '.ffn', '.mpfa', '.faa', '.fasta', '.cds', '.pep', '.seq'],
     'FASTQ': ['.fq', '.fastq'],

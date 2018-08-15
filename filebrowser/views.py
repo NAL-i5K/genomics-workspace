@@ -170,7 +170,6 @@ def browse(request):
         page = p.page(page_nr)
     except (EmptyPage, InvalidPage):
         page = p.page(p.num_pages)
-
     return render(request, _template() + 'index.html', {
         'dir': path,
         'p': p,
