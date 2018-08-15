@@ -69,7 +69,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         # parse .0, and save index in line_num_list
         report_path = file_prefix + '.0'
         line_num_list = []
-        with io.open(report_path, 'rb') as f:
+        with io.open(report_path, 'r') as f:
             target_str = ' Score ='
             line_num = 0
             for line in f:

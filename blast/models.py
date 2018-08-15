@@ -175,7 +175,7 @@ class Sequence(models.Model):
     def fasta_seq(self):
         if not os.path.isfile(self.blast_db.fasta_file.path_full):
             return 'FASTA file not found.'
-        with io.open(self.blast_db.fasta_file.path_full, 'rb') as f:
+        with io.open(self.blast_db.fasta_file.path_full, 'r') as f:
             f.seek(self.seq_start_pos)
             seq = f.read(self.seq_end_pos - self.seq_start_pos)
             if seq[-1] != '\n':
