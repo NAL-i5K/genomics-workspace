@@ -4,6 +4,7 @@
 [![codecov](https://codecov.io/gh/NAL-i5K/genomics-workspace/branch/master/graph/badge.svg)](https://codecov.io/gh/NAL-i5K/genomics-workspace)
 [![codebeat badge](https://codebeat.co/badges/2a92682c-1434-4ab2-ba27-f2d750819356)](https://codebeat.co/projects/github-com-nal-i5k-genomics-workspace-master)
 [![Documentation Status](http://readthedocs.org/projects/genomics-workspace/badge/?version=latest)](http://genomics-workspace.readthedocs.io/en/latest/)
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNAL-i5K%2Fgenomics-workspace.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FNAL-i5K%2Fgenomics-workspace?ref=badge_shield)
 
 Genomics-Workspace is a bioinformatic website project created by [i5k Workspace](https://i5k.nal.usda.gov/). It provides common sequence search services including [BLAST](http://blast.ncbi.nlm.nih.gov/Blast.cgi?PAGE_TYPE=BlastDocs&DOC_TYPE=Download), [HMMER](http://hmmer.org/), and [Clustal](http://www.clustal.org/). To see it in action, please visit following live sites:
 
@@ -58,3 +59,7 @@ Docs can be found at [genomics-workspace.readthedocs.io](https://genomics-worksp
 ## How to contribute
 
 You're highly encouraged to participate in the development of genomics-workspace. Check the [CONTRIBUTING.md](CONTRIBUTING.md) first and start contributing !
+
+
+## License
+[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FNAL-i5K%2Fgenomics-workspace.svg?type=large)](https://app.fossa.io/projects/git%2Bgithub.com%2FNAL-i5K%2Fgenomics-workspace?ref=badge_large)
