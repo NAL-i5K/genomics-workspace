@@ -151,6 +151,15 @@ Install PostgreSQL::
     #     restart : stop/start the database; used to read changes to core configuration files.
     #     reload  : reload pg_hba.conf file while keeping database running.
 
+    # login as superuser
+    su
+    
+    # Put the following code in the config file
+    vim /var/lib/pgsql/9.5/data/pg_hba.conf
+    local   all             all                               peer
+    host    all             all             127.0.0.1/32      ident
+    host    all             all             ::1/128           md5
+
     # Start:
     sudo service postgresql-9.5 start
 
@@ -165,6 +174,7 @@ Install PostgreSQL::
     # At the prompt 'postgres=#' enter:
     create database django;
     create user django;
+    ALTER USER django CREATEDB;
     grant all on database django to django;
 
     # Connect to django database:
