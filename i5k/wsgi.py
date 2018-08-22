@@ -14,6 +14,7 @@ framework.
 
 """
 import os
+import sys
 from django.conf import settings
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "i5k.settings")
@@ -26,7 +27,8 @@ if settings.USE_VIRTUALENV:
     VIRTUALENV_ROOT = settings.VIRTUALENV_ROOT
 
     # Add the site-packages of the chosen virtualenv to work with
-    site.addsitedir(os.path.join(BASE_DIR, VIRTUALENV_ROOT, 'lib/python2.7/site-packages'))
+    python_version = sys.version[0:3]  # ex: two digit python versions, like 2.7, 3.5
+    site.addsitedir(os.path.join(BASE_DIR, VIRTUALENV_ROOT, 'lib/python' + python_version + '/site-packages'))
 
     # Add the app's directory to the PYTHONPATH
     sys.path.append(BASE_DIR)
