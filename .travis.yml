@@ -21,6 +21,7 @@ matrix:
 
 # command to install dependencies
 install:
+  - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then sudo apt-get install npm; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew update; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install rabbitmq; fi
   - if [[ "$TRAVIS_OS_NAME" == "osx" ]]; then brew install memcached; fi
@@ -50,8 +51,9 @@ before_script:
   - psql -c 'ALTER USER django CREATEDB;' -U postgres
   - mkdir -p ./media/blast/db/
   - python2 manage.py migrate
-  - python2 setup.py
   - if [[ "$TRAVIS_OS_NAME" == "linux" ]]; then gem install awesome_bot; fi
+  - npm run build
+  - python manage.py collectstatic --noinput
 
 # command to run tests
 script:

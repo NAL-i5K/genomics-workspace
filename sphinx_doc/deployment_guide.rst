@@ -35,6 +35,32 @@ Use the `rabbitmq-server command
 Celery and celerybeat
 ---------------------
 
-See the `document of Celery
-<http://docs.celeryproject.org/en/3.1/tutorials/daemonizing.html>`_. We also have example files (celery*) `in our github repo
+Here are example setup steps for linux,
+
+1. Copy files::
+
+    # when using CentOS 7.*
+    # copy celeryd.sysconfig and celerybeat.sysconfig to /etc/default instead.
+    sudo cp celeryd /etc/init.d
+    sudo cp celerybeat /etc/init.d
+    sudo cp celeryd.sysconfig /etc/sysconfig/celeryd
+    sudo cp celerybeat.sysconfig /etc/sysconfig/celerybeat
+
+2. edit '/etc/sysconfig/celeryd'::
+
+    CELERYD_CHDIR="<git-home>"
+    CELERYD_MULTI="<git-home>/py2.7/bin/celery multi"
+
+3. edit '/etc/sysconfig/celerybeat' as follows::
+
+    CELERYBEAT_CHDIR="<git-home>"
+    CELERY_BIN="<git-home>/py2.7/bin/celery"
+
+4. set as daemon::
+
+    sudo chkconfig celeryd on
+    sudo chkconfig celerybeat on
+
+For more details or setup on Mac, check the `document of Celery
+<http://docs.celeryproject.org/en/3.1/tutorials/daemonizing.html>`_. Example files mentioned above are also (celery*) `in our github repo
 <https://github.com/NAL-i5K/genomics-workspace/tree/4ec1f58020d00a38ccb7ffbc6b071bf5abca4390/example/settings>`_.
