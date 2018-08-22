@@ -16,9 +16,9 @@ class HmmerQueryRecord(models.Model):
         verbose_name = 'Hmmer result'
 
 class HmmerDB(models.Model):
-    organism = models.ForeignKey(Organism, default=0) #
+    organism = models.ForeignKey(Organism, default=0)
     fasta_file = FileBrowseField('FASTA file path', max_length=100, directory='hmmer/db/', extensions='FASTA', format='FASTA', default='')
-    title = models.CharField(max_length=200, unique=True, default='') # makeblastdb -title
+    title = models.CharField(max_length=200, unique=True, default='')
     description = models.TextField(blank=True) # shown in hmmer db selection ui
     is_shown = models.BooleanField(default=None, help_text='Display this database in the HMMER submit form') # to temporarily remove from hmmer db selection ui
 
@@ -27,4 +27,3 @@ class HmmerDB(models.Model):
 
     fasta_file_exists.boolean = True
     fasta_file_exists.short_description = 'fasta file exists'
-# Create your models here.
