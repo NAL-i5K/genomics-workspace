@@ -4,7 +4,6 @@ exclude_paths:
 - "app/static/app/scripts/respond.src.js"
 - "app/static/app/scripts/underscore.js"
 - "app/static/app/scripts/jquery.validate.js"
-- "app/static/app/scripts/marked.min.js"
 - "app/static/app/css/bootstrap.css"
 
 - "blast/static/blast/scripts/active-line.js"
