@@ -283,8 +283,7 @@ AXES_VERBOSE = True
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ],
-    'PAGE_SIZE': 10,
+    ]
 }
 
 # django-pipeline
@@ -292,10 +291,10 @@ PIPELINE = {
     'STYLESHEETS': {
         'app-layout': {
             'source_filenames': (
-                'app/content/site.css',
-                'app/content/bootstrap.css',
+                'app/css/site.css',
+                'app/css/bootstrap.css',
             ),
-            'output_filename': 'app/content/app-layout.min.css',
+            'output_filename': 'app/css/app-layout.min.css',
         },
         'app-readme': {
             'source_filenames': (
@@ -309,11 +308,11 @@ PIPELINE = {
                 'blast/css/xq-light.css',
                 'blast/css/kendo.common-bootstrap.core.css',
                 'blast/css/kendo.bootstrap.css',
-                'blast/css/jquery-ui.css',
-                'blast/dataTables/css/jquery.dataTables.css',
-                'blast/dataTables/css/dataTables.scroller.css',
-                'blast/dataTables/css/dataTables.colReorder.css',
-                'blast/dataTables/css/dataTables.bootstrap.css',
+                'blast/css/jquery-ui-custom.css',
+                'blast/css/jquery.dataTables.css',
+                'blast/css/dataTables.scroller.css',
+                'blast/css/colReorder.dataTables.css',
+                'blast/css/dataTables.bootstrap.css',
                 'blast/css/bootstrap-select.css',
                 'blast/css/bootstrap-switch.css',
                 'blast/css/blast-results.css',
@@ -354,10 +353,11 @@ PIPELINE = {
         },
         'app-layout': {
             'source_filenames': (
-                'app/scripts/jquery-1.11.1.js',
+                'app/scripts/jquery.js',
                 'app/scripts/bootstrap.js',
                 'app/scripts/respond.src.js',
-                'app/scripts/underscore.js'
+                'app/scripts/underscore.js',
+                'app/scripts/error.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
         },
@@ -370,16 +370,20 @@ PIPELINE = {
         },
         'blast-results': {
             'source_filenames': (
+                'blast/scripts/error.js',
+                'blast/scripts/d3.js',
                 'blast/scripts/chroma.js',
-                'blast/scripts/codemirror-compressed.js',
+                'blast/scripts/codemirror.js',
+                'blast/scripts/active-line.js',
+                'blast/scripts/searchcursor.js',
                 'blast/scripts/kendo-hotdogee.js',
                 'blast/scripts/jquery-ui.js',
                 'blast/scripts/dragscrollable.js',
-                'blast/dataTables/js/jquery.dataTables-hotdogee.js',
-                'blast/dataTables/js/dataTables.scroller.js',
-                'blast/dataTables/js/dataTables.colReorder.js',
-                'blast/dataTables/js/dataTables.tableTools.js',
-                'blast/dataTables/js/dataTables.bootstrap.js',
+                'blast/scripts/jquery.dataTables-hotdogee.js',
+                'blast/scripts/dataTables.scroller.js',
+                'blast/scrtips/dataTables.colReorder.js',
+                'blast/scripts/dataTables.tableTools.js',
+                'blast/scripts/dataTables.bootstrap.js',
                 'blast/scripts/backbone.js',
                 'blast/scripts/scribl.1.1.5-hotdogee.js',
                 'blast/scripts/bootstrap-select-hotdogee.js',
