@@ -9,3 +9,4 @@ This is our introduction to this project.
 
    setup_guide_centos
    setup_guide_macos
+   advanced_setup
