@@ -33,6 +33,7 @@ Leveraging the `admin page of Django
    setup_guide
    user_guide
    deployment_guide
+   troubleshooting
    about
 
 Indices and tables
