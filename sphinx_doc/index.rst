@@ -15,12 +15,19 @@ Leveraging the `admin page of Django
 <https://www.rabbitmq.com/>`_ and `Celery
 <http://www.celeryproject.org/>`_, it's much easier to manage the sequence databases and provide services to end-users.
 
+All source codes of genomics workspace are in `our github repo
+<https://github.com/NAL-i5K/genomics-workspace/>`_.
+
 .. note::
    You can try genomics workspace on our live services:
 
    * BLAST: https://i5k.nal.usda.gov/webapp/blast/
    * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/
    * Clustal: https://i5k.nal.usda.gov/webapp/clustal/
+
+   In fact, the live services listed above are implemented by a customized version of genomics workspace.
+   You can check the source code of it in another github repo: `NAL-genomics-workspace
+   <https://github.com/NAL-i5K/NAL-genomics-workspace>`_.
 
 
 .. toctree::
