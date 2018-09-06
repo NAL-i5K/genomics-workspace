@@ -57,9 +57,7 @@
           <hr/>
           <footer>
             <p>{% now "Y" %} - National Agricultural Library</p>
-<<<<<<< HEAD
-=======
->>>>>>> 86135709... move tutorial to django
+			<p> Powered by <a href=https://github.com/NAL-i5K/genomics-workspace>genomics-workspace</a> with few customizations. 
           </footer>
         </div>
       {% endblock %}
