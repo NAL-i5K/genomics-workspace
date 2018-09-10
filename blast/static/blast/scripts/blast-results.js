@@ -265,7 +265,7 @@ $(function () { // document ready
                                 end_pos = row[col_idx['slen']];
 
 			    db_url = decodeURI( results_info['db_url'][dbtitle]);
-			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"0. Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
+			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
 
 			    return '<a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="right" data-container="body" title="' + dbtitle + '\nClick to view in genome browser" target="_blank" href="' + final_url  + '" role="button"><span class="glyphicon glyphicon-new-window"></span> ' + results_info['db_organism'][dbtitle] + '</a>';
                         } else {
