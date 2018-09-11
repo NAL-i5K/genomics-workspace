@@ -327,9 +327,7 @@ def run_hmmer(program, assertEqual):
     chmod(db_file,
           Perm.S_IRWXU | Perm.S_IRWXG | Perm.S_IRWXO)
     bin_name = get_bin_name()
-    if bin_name == 'bin_win':
-        return
-    program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name)
+    program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name, 'bin')
     option_params = ['--incE', u'0.01', '--incdomE', u'0.03', '-E', u'0.01', '--domE', u'0.03']
     db_list = [db_file]
     args = generate_hmmer_args(program, program_path, query_filename, option_params, db_list)

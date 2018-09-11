@@ -92,7 +92,7 @@ def create(request):
         # ensure the standalone dequeuing process can access the file
 
         bin_name = get_bin_name()  # Note that currently we didn't support HMMER on windows
-        program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name)
+        program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name, 'bin')
 
         if request.POST['program'] == 'phmmer':
             with open(query_filename, 'r') as f:

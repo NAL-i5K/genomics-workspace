@@ -72,6 +72,7 @@ def remove_files():
             rmtree(task_path)
             logger.info('removed directory %s' % (task_path))
 
+
 @task_sent.connect
 def task_sent_handler(sender=None, task_id=None, task=None, args=None,
                       kwargs=None, **kwds):

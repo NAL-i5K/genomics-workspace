@@ -39,7 +39,7 @@ Install necessary packages::
 Install python 2.7.13 from source::
 
     cd <user-home>
-    wget http://www.python.org/ftp/python/2.7.8/Python-2.7.13.tar.xz
+    wget http://www.python.org/ftp/python/2.7.13/Python-2.7.13.tar.xz
     tar -xf Python-2.7.13.tar.xz
 
     # Configure as a shared library:
@@ -202,30 +202,12 @@ Chrome Driver
 Celery
 ------
 
-Configure the celery::
+Configure celery::
 
-    # Copy files:
-    #
-    # When using CentOS 7.* copy
-    # celeryd.sysconfig and celerybeat.sysconfig
-    # to /etc/default instead.
-    #
-    sudo cp celeryd /etc/init.d
-    sudo cp celerybeat /etc/init.d
-    sudo cp celeryd.sysconfig /etc/sysconfig/celeryd
-    sudo cp celerybeat.sysconfig /etc/sysconfig/celerybeat
-
-    # Sudo edit '/etc/sysconfig/celeryd' as follows:
-    CELERYD_CHDIR="<git-home>"
-    CELERYD_MULTI="<git-home>/py2.7/bin/celery multi"
-
-    # Sudo edit '/etc/sysconfig/celerybeat' as follows:
-    CELERYBEAT_CHDIR="<git-home>"
-    CELERY_BIN="<git-home>/py2.7/bin/celery"
-
-    # Set as daemon:
-    sudo chkconfig celeryd on
-    sudo chkconfig celerybeat on
+    # Run celery manually
+    celery -A i5k worker --loglevel=info --concurrency=3
+    # Run celery beat maually as well
+    celery -A i5k beat --loglevel=info
 
 
 Migrate Schema to to PostgreSQL
@@ -237,12 +219,13 @@ Run migrate::
     python manage.py migrate
 
 
-Install BLAST binary
---------------------
 
-To instll blast binary::
+Install Binary Files and Front-end Scripts
+------------------------------------------
 
-   python setup.py
+This step will instll binary files (for BLAST, HMMER and Clustal) and front-end scripts (`.js`, `.css` files)::
+
+   npm run build
 
 
 Start development server

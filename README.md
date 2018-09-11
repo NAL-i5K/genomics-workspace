@@ -43,6 +43,14 @@ Genomics-Workspace is a bioinformatic website project created by [i5k Workspace]
 BLAST Results
 ![BLAST Results](sphinx_doc/img/blast-results-dynamic.gif)
 
+## Prerequisite
+
+* Python 2.7
+* npm
+* RabbitMQ
+* PostgreSQL
+* mod_wsgi (optional, only for production)
+
 ## Documentation
 
 Docs can be found at [genomics-workspace.readthedocs.io](https://genomics-workspace.readthedocs.io/en/latest/).

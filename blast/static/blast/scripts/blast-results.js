@@ -152,7 +152,7 @@ $(function () { // document ready
     var fasta_cache = {};
     // Flag ongoing ajax calls
     var fasta_loading = {};
-    var url_root = /(https?:\/\/.*(?:blast)*)\//g.exec(document.URL)[1];
+    var url_root = /(https?:\/\/.*(?:blast)*)\/task\//g.exec(document.URL)[1];
     function get_fasta(sseqid) {
         // Returns a jqXHR or true if already in cache, for use with $.when
         //http://localhost:8000/api/seq/gnl%7CLoxosceles_reclusa_transcript_v0.5.3%7CLREC000002-RA/?format=fasta
@@ -265,7 +265,7 @@ $(function () { // document ready
                                 end_pos = row[col_idx['slen']];
 
 			    db_url = decodeURI( results_info['db_url'][dbtitle]);
-			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"0. Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
+			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
 
 			    return '<a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="right" data-container="body" title="' + dbtitle + '\nClick to view in genome browser" target="_blank" href="' + final_url  + '" role="button"><span class="glyphicon glyphicon-new-window"></span> ' + results_info['db_organism'][dbtitle] + '</a>';
                         } else {
@@ -1206,7 +1206,7 @@ $(function () { // document ready
     $('#score-to-color-checkbox').trigger('switchChange.bootstrapSwitch');
     //updateAlignmentGraph();
     results_table_api.columns.adjust().draw();
-    var footer = $('<p class="nal-footer">2017 - National Agricultural Library</p>');
+    var year = (new Date()).getFullYear();
+    var footer = $('<p class="nal-footer">' + year + ' - National Agricultural Library</p>');
     $('.ui-corner-bl').append(footer);
-    //console.log('checkpoint!');
 });
