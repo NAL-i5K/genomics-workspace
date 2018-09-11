@@ -132,7 +132,6 @@ INSTALLED_APPS = (
     'django.contrib.postgres',
     'axes',
     'rest_framework',
-    'rest_framework_swagger',
     'pipeline',
     'app',
     'blast',
@@ -283,7 +282,9 @@ AXES_VERBOSE = True
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
+    ],
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.LimitOffsetPagination',
+    'PAGE_SIZE': 20
 }
 
 # django-pipeline
