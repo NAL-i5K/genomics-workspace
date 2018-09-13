@@ -40,6 +40,11 @@ blast_info = {
     },
 }
 
+def manual(request):
+    '''
+        Manual page of tutorial
+    '''
+    return render(request,'blast/manual.html',{'title':'Blast Manual'})
 
 def create(request, iframe=False):
     if request.method == 'GET':
