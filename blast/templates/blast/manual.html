@@ -1,0 +1,44 @@
+{% extends "app/layout.html" %}
+
+{% load staticfiles %}
+
+{% block head-scripts %}
+{% endblock %}
+{% block content %}
+
+
+
+<center><h1><b>BLAST Tutorial</b></h1></center>
+<p><span>The BLAST resources at the i5k Workspace@NAL have been completely re-engineered to provide support for many new features.  Major new features include integration of the new suite of  BLAST+ programs, a completely redesigned user interface that incorporates intelligent option selection, a queuing system to process requests, and a multi-panel result viewing page that allows for many different ways to view and filter the BLAST results.</span></p>
+<p><span>In this tutorial, we explain some of the features of the BLAST site.</span></p>
+<p><span>To begin, navigate to the BLAST site via the 'Tools -&gt; Blast' menu bar, or go directly to <a href="http://i5k.nal.usda.gov/blast/">http://i5k.nal.usda.gov/blast/</a>.</span></p>
+<p><span>Under the 'Organisms' menu, select one or several organisms that you would like to search against. Then, select which database should be searched. Available databases include genome assemblies, or transcript or protein sequences predicted from the genome. Only one residue type may be selected at a time - for example, both the genome assembly and transcripts can be searched simultaneously, but transcripts and proteins must be searched against separately.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_search_databases.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>Paste your query sequence into the 'Query Sequence' field, or load it from disk. The BLAST programs that are not available for your combination of database and query will be greyed out.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_search_query_0.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>Once the correct BLAST program is selected, additional BLAST options may also be modified. Hit the 'Search' button when finished.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_search_parameters.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>A page will display indicating that your query is running. You can store the indicated query link if you wish to come back to your BLAST results at a later time. Results are stored for one week.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_query_page.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>When the BLAST program has finished, your results will be displayed. Query and subject coverage graphs are displayed on the top left and right of the results panel, respectively. A tabular view of the results is on the bottom left, and raw text output on the bottom right.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_page.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>The feature heights on the query and subject coverage graphs can be modified using the right scroll bar.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_zoom.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>Scrolling over individual HSPs in any of the four panels will highlight the HSP across all panels - orange in the query and subject coverage graphs, and yellow in the results table and raw text output.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_scroll.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>Clicking on a link-out icon under the 'blastdb' column in the Results table will open up a window in JBrowse. The HSP is displayed in the 'BLAST+ Results' track. Contiguous HSPs are grouped together into a single glyph if they have an identical query sequence, subject sequence, strand direction and an overlap length less than 6 between neighbouring HSPs under the same match.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_jbrowse.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>Any of the fields in the Results table can be filtered.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_filter.png' %} style="border:1px groove;"></p>
+<p></p>
+<p><span>The results can also be exported in various formats.</span></p>
+<p><img class="img-responsive" src={% static 'blast/images/blast_result_export.png' %} style="border:1px groove;"></p>
+{% endblock %}
