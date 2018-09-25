@@ -183,9 +183,10 @@ FILEBROWSER_VERSIONS = {
     'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''},
 }
 
-# suit settings
+
 ENABLE_JBROWSE_INTEGRATION = False
 
+# customize some part of django-suit settings based on ENABLE_JBROWSE_INTEGRATION
 if ENABLE_JBROWSE_INTEGRATION:
     blast_models = (
             {'model': 'blastqueryrecord'},
