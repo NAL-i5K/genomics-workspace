@@ -44,8 +44,6 @@
                 // do nothing
             },
             success: function (data) {
-                console.log(data);
-                //console.log(data['status']);
                 if (data['status'] == 'done') {
                     $("#qstatus").text("Status: Completed!");
                     $("#progress-text").text("Completed!");
