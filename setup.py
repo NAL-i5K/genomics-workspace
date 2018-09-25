@@ -97,7 +97,7 @@ def install_clustal(bin_name):
     clustal_bin_path = join(BASE_DIR, 'clustal', bin_name + '/')
     if exists(clustal_bin_path):
         print(
-            'Old clustal installation detected. {} will be removed and new blast copy will be installed.'.
+            'Old clustal installation detected. {} will be removed and new clustal copy will be installed.'.
             format(clustal_bin_path))
         rmtree(clustal_bin_path)
     mkdir(clustal_bin_path)
