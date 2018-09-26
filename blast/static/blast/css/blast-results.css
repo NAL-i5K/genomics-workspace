@@ -3,13 +3,13 @@
     top: 0;
     width: 12px;
     border-width: 0;
-    background: #efefef url('images/handle.svg') no-repeat center;
+    background: #efefef;
 }
 .k-ghost-splitbar-vertical, .k-splitbar-vertical {
     left: 0;
     height: 12px;
     border-width: 0;
-    background: #efefef url('images/handle-h.svg') no-repeat center;
+    background: #efefef;
 }
 .k-splitbar:hover {
     background-color: #ddd;
