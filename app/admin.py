@@ -30,9 +30,9 @@ class OrganismAdmin(admin.ModelAdmin):
 
     class Media:
         css = {
-            'all': ('blast/css/organism-admin.css',)
+            'all': ('app/css/organism-admin.css',)
         }
-        js = ('blast/scripts/organism-admin.js',)
+        js = ('app/scripts/organism-admin.js',)
 
 
 admin.site.register(Organism, OrganismAdmin)
