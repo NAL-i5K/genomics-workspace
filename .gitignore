@@ -51,6 +51,8 @@ dist/
 /app/static/app/scripts/jquery.validate.js
 /app/static/app/scripts/marked.min.js
 /app/static/app/css/bootstrap.css
+/app/static/app/css/bootstrap.css.map
+/app/static/app/fonts/
 
 /blast/static/blast/scripts/active-line.js
 /blast/static/blast/scripts/codemirror.js
