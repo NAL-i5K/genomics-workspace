@@ -67,6 +67,7 @@ const blastScriptConfig = {
         { from: path.join(nodeModules, '/datatables.net-colreorder-dt/css/colReorder.dataTables.css'), to: blastStyles},
         { from: path.join(nodeModules, '/datatables.net-bs/css/dataTables.bootstrap.css'), to: blastStyles},
         { from: path.join(nodeModules, '/datatables.net-dt/css/jquery.dataTables.css'), to: blastStyles},
+        { from: path.join(nodeModules, '/jquery-ui-1.11.1/jquery-ui.css'), to: blastStyles},
         { from: path.join(nodeModules, '/jquery-ui-dist/images/ui-icons_444444_256x240.png'), to: blastImages},
         { from: path.join(nodeModules, '/jquery-ui-dist/images/ui-icons_777620_256x240.png'), to: blastImages},
         { from: path.join(nodeModules, '/jquery-ui-dist/images/ui-icons_cc0000_256x240.png'), to: blastImages},
