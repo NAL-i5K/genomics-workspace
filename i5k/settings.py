@@ -309,7 +309,7 @@ PIPELINE = {
                 'blast/css/xq-light.css',
                 'blast/css/kendo.common-bootstrap.core.css',
                 'blast/css/kendo.bootstrap.css',
-                'blast/css/jquery-ui-custom.css',
+                'blast/css/jquery-ui.css',
                 'blast/css/jquery.dataTables.css',
                 'blast/css/dataTables.scroller.css',
                 'blast/css/colReorder.dataTables.css',
