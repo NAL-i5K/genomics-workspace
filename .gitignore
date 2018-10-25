@@ -65,6 +65,7 @@ dist/
 /blast/static/blast/scripts/dataTables.colReorder.js
 /blast/static/blast/scripts/dataTables.tableTools.js
 /blast/static/blast/scripts/dragscrollable.js
+/blast/static/blast/scripts/jquery-ui.css
 /blast/static/blast/scripts/jquery-ui.js
 /blast/static/blast/scripts/jquery.hoverIntent.js
 /blast/static/blast/scripts/jquery.validate.js
