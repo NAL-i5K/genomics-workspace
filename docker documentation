@@ -1,0 +1,49 @@
+
+查看 image : docker images
+
+建立 image : docker create [OPTIONS] IMAGE [COMMAND] [ARG...]
+	ex : docker create -it --name my-container
+
+刪除 image : docker rmi [OPTIONS] IMAGE [IMAGE...]
+
+目前運行的 container : docker ps 
+
+查看目前全部的 container（ 包含停止狀態的 container ）: docker ps -a
+
+新建並啟動 Container : docker run [OPTIONS] IMAGE[:TAG|@DIGEST] [COMMAND] [ARG...]
+	ex : docker run -itd -p 8080:80 -p 5432:5432 --name my-container -v /c/Users/user/tripal_apollo statonlab/tripal3
+		option : -d 代表在 Detached（ 背景 ）執行，如不加 -d，預設會 foreground ( 前景 ) 執行
+		         -p 代表將本機的 8080 port 的所有流量轉發到 container 中的 80 port
+		         --name 設定 container 的名稱 (如果不設的話系統會random給名字)
+		         -v 這是一個大topic我放在下面單獨解釋
+
+存放image : Registry 一個類似Github的地方，可以在Docker hub查看
+
+進入 Container : docker exec -it <Container ID> bash
+
+停止指定的 CONTAINER 中全部的 processes : docker pause CONTAINER [CONTAINER...]
+
+										docker stop : process 級別。
+
+										docker pause: container 級別。
+
+-v 解釋:
+Volume
+接下來要介紹 Volume，Volume 是 Docker 最推薦存放 persisting data（ 數據 ）的機制， 
+使用 Volume 有下列優點
+
+Volumes are easier to back up or migrate than bind mounts.
+You can manage volumes using Docker CLI commands or the Docker API.
+Volumes work on both Linux and Windows containers.
+Volumes can be more safely shared among multiple containers.
+Volume drivers allow you to store volumes on remote hosts or cloud providers, to encrypt the contents of volumes, or to add other functionality.
+A new volume's contents can be pre-populated by a container.
+在 container 的可寫層中，使用 volume 是一個比較好的選擇，因為他不會增加 container 的容量，volume 的內容存在於 container 之外。
+
+	link : https://docs.docker.com/storage/volumes/
+
+查看 DOCKER 目前的網路清單 : docker network ls [OPTION]
+	docker 中的網路主要有三種 Bridge、Host、None，預設皆為 Bridge 模式。
+	
+
+
