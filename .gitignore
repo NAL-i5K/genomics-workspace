@@ -73,6 +73,10 @@ dist/
 /blast/static/blast/css/colReorder.dataTables.css
 /blast/static/blast/css/dataTables.bootstrap.css
 /blast/static/blast/css/jquery.dataTables.css
+/blast/static/blast/css/images/ui-icons_*
+/blast/static/blast/css/images/ui-bg_g*
+/blast/static/blast/css/images/ui-bg_h*
+/blast/static/blast/css/images/ui-bg_d*
 
 /hmmer/static/hmmer/scripts/jquery.hoverIntent.js
 /hmmer/static/hmmer/scripts/jquery.validate.js

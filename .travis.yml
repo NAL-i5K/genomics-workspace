@@ -15,9 +15,6 @@ matrix:
   - os: osx
     language: generic
     osx_image: xcode8.3
-  - os: osx
-    language: generic
-    osx_image: xcode7.3
 
 # command to install dependencies
 install:
