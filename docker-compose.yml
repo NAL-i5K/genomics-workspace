@@ -1,0 +1,45 @@
+version: '3'
+services:
+    postgres:      
+      container_name: 'postgres'
+      image: postgres:alpine
+      environment: 
+        POSTGRES_USER: django
+        POSTGES_PASSWORD: django1234
+      ports:  
+        - "5432:5432"
+      volumes: 
+        - .:/var/lib/postgresql/data/
+    
+    workspace:
+      image: centos:6.10
+      build: .
+      links: 
+        - postgres
+        - postgres:postgresql
+        - rabbitmq
+        - memcache
+      restart: always
+      volumes: 
+        - .:/genomics-workspace
+      ports: 
+        - "8000:8000"
+      depends_on:
+        - postgres
+        - rabbitmq
+        - memcache
+    
+    memcache: 
+      image: memcached:1.5.1-alpine
+      ports:
+        - "11211:11211"
+    rabbitmq:
+      image: rabbitmq:3.6.12-management-alpine  
+      ports:
+        - "4369:4369"
+      
+volumes:
+  api_data:
+  pgdata:
+            
+
