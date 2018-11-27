@@ -9,10 +9,9 @@ services:
       ports:  
         - "5432:5432"
       volumes: 
-        - .:/var/lib/postgresql/data/
+        - pgdata:/var/lib/postgresql/data/
     
     workspace:
-      image: centos:6.10
       build: .
       links: 
         - postgres
@@ -20,8 +19,6 @@ services:
         - rabbitmq
         - memcache
       restart: always
-      volumes: 
-        - .:/genomics-workspace
       ports: 
         - "8000:8000"
       depends_on:
