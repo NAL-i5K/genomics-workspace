@@ -47,9 +47,6 @@ DATABASES = {
     }
 }
 
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/home'
-
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
@@ -186,9 +183,10 @@ FILEBROWSER_VERSIONS = {
     'large': {'verbose_name': 'Large (8 col)', 'width': 680, 'height': '', 'opts': ''},
 }
 
-# suit settings
+
 ENABLE_JBROWSE_INTEGRATION = False
 
+# customize some part of django-suit settings based on ENABLE_JBROWSE_INTEGRATION
 if ENABLE_JBROWSE_INTEGRATION:
     blast_models = (
             {'model': 'blastqueryrecord'},

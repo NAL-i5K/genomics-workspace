@@ -11,8 +11,8 @@ In short, you need to configure database for BLAST and HMMER, but you don't need
 .. note:: The page is for user that wants to set up genomics-workspace by creating new admin user and confuguring in admin page. **If you want to know how to use services provided by genomics-workspace, see these tutorials:**
 
    * BLAST: https://i5k.nal.usda.gov/content/blast-tutorial
-   * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/manual
-   * CLUSTAL: https://i5k.nal.usda.gov/webapp/clustal/manual
+   * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/manual/
+   * CLUSTAL: https://i5k.nal.usda.gov/webapp/clustal/manual/
 
 To get started, you need to setup an admin account::
 
@@ -32,6 +32,7 @@ There are five steps to create a BLAST database.
   * Descriptions and NCBI taxa ID are automatically filled.
 
 .. image:: img/add_organism.png
+   :alt: Add organism example
 
 * Add Sequence types:
 
@@ -50,6 +51,7 @@ There are five steps to create a BLAST database.
   * Save
 
 .. image:: img/add_blastdb.png
+   :alt: Add BLAST database example
 
 * Browse to ``http://127.0.0.1:8000/blast/``, you should able to see the page with dataset shown there.
 
@@ -67,3 +69,4 @@ Go django admin page and click Hmmer on left-menubar. You need to create HMMER d
 * Save
 
 .. image:: img/hmmer_add.png
+   :alt: Add HMMER database example

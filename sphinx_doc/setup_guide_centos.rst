@@ -166,6 +166,7 @@ Install PostgreSQL::
     create database django;
     create user django;
     grant all on database django to django;
+    ALTER USER django CREATEDB;
 
     # Connect to django database:
     \c django

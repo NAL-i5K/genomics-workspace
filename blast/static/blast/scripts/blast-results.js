@@ -40,8 +40,6 @@ $(function () { // document ready
     //////////////////
     // Prepare Data //
     //////////////////
-    // convert arrays to objects
-    //var results_db = _.map(results_data, function (row) { return _.object(results_col_names, row); });
     var col_idx = _.object(results_col_names, _.range(results_col_names.length));
     /////////////////////////
     // Hover and Selection //
@@ -67,12 +65,6 @@ $(function () { // document ready
         }
     });
     var s = new State;
-    s.on('change:hover', function (model, value, options) {
-        //console.log('change:hover - ' + value);
-    });
-    s.on('change:selected', function (model, value, options) {
-        //console.log('change:selected - ' + value);
-    });
     //////////////////
     // BLAST Report //
     //////////////////
@@ -105,7 +97,6 @@ $(function () { // document ready
             cm_blast_report.curOp.cursorActivityHandlers = false; // don't fire event
         });
         cm_blast_report.operation(function () {
-            //$('.CodeMirror')[0].CodeMirror.scrollTo(0, 2976+551/2-42)
             var info = cm_blast_report.getScrollInfo();
             cm_blast_report.scrollTo(0, info.top + info.clientHeight / 2 - 42);
             cm_blast_report.curOp.cursorActivityHandlers = false; // don't fire event
@@ -167,17 +158,7 @@ $(function () { // document ready
             return fasta_loading[sseqid];
         }
     }
-    s.on('change:hover', function (model, value, options) {
-        //if (options.set_by == this)
-        //    return;
-        //if (value != null)
-        //    cm_fasta_viewer_load_fasta(value);
-        //else {
-        //    selected = s.get('selected')
-        //    if (selected.length > 0)
-        //        cm_fasta_viewer_load_fasta(selected[0]);
-        //}
-    }, cm_fasta_viewer);
+    s.on('change:hover', function (model, value, options) {}, cm_fasta_viewer);
     s.on('change:selected', function (model, row_indexes, options) {
         if (options.set_by == this)
             return;
@@ -218,10 +199,6 @@ $(function () { // document ready
             '<"' + toolbar_prefix + 'tl ui-corner-tr"Rifr>' +
             't' +
             '<"' + toolbar_prefix + 'bl ui-corner-br"<"btn-download btn-group dropup">T>S',
-        //dom: 'Rifrt<"btn-group dropup">S',
-        //"dom": 'T<"clear">lfrtip',
-        //deferRender: true,
-        //bJQueryUI: true,
         tableTools: {
             sRowSelect: "os",
             aButtons: [],
@@ -265,7 +242,7 @@ $(function () { // document ready
                                 end_pos = row[col_idx['slen']];
 
 			    db_url = decodeURI( results_info['db_url'][dbtitle]);
-			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"0. Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
+			    final_url = encodeURI( db_url + '?loc=' + sseqid + ':' + start_pos + '..' + end_pos + '&addStores={"url":{"type":"JBrowse/Store/SeqFeature/GFF3","urlTemplate":"' + /^(https?:\/\/)/g.exec(results_info['db_url'][dbtitle])[1] + /https?:\/\/(.*?)\/(?:blast)+/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + dbtitle + '.gff"}}&addTracks=[{"label":"BLAST+ Results","category":"Reference Assembly","type":"WebApollo/View/Track/DraggableBLASTFeatures","store":"url","style":{"renderClassName":"gray-center-30pct","subfeatureClasses":{"match_part":"blast-match_part"}}}]&tracks=BLAST+ Results');
 
 			    return '<a class="btn btn-primary btn-xs" data-toggle="tooltip" data-placement="right" data-container="body" title="' + dbtitle + '\nClick to view in genome browser" target="_blank" href="' + final_url  + '" role="button"><span class="glyphicon glyphicon-new-window"></span> ' + results_info['db_organism'][dbtitle] + '</a>';
                         } else {
@@ -898,7 +875,6 @@ $(function () { // document ready
                     var r = color_scale.invertExtent(c);
                     return Math.round(r[0]);
                 });
-                //$('.score-to-color-text').text('Dynamic');
                 updateAlignmentGraph();
             } else {
                 // static
@@ -932,12 +908,6 @@ $(function () { // document ready
             .style('background', function (c) {
                 return c[0];
             })
-            /*
-    linear-gradient(60deg, rgba(30,87,153,1) 0%,rgba(0,0,0,0) 100%),
-    linear-gradient(120deg, rgba(131,179,211,1) 0%,rgba(0,0,0,0) 100%),
-    linear-gradient(60deg, rgba(0,0,0,0) 0%,rgba(136,216,144,1) 100%),
-    linear-gradient(120deg, rgba(0,0,0,0) 0%,rgba(0,109,7,1) 100%);
-             */
             .style('background', function (c) {
                 return '-moz-linear-gradient(top, ' + c[0] + ' 0%, ' + c[1] + ' 100%)';
             }) //-moz-linear-gradient(top, #1e5799 0%, #7db9e8 100%);
@@ -1037,7 +1007,6 @@ $(function () { // document ready
         var start = Math.floor(filtered_rows.indexOf(focus_row_index) / graph_page_size) * graph_page_size;
         var paged_filtered_rows = filtered_rows.toArray().slice(start, start + graph_page_size);
         // Sort data ascending by coordinate for draw order
-        //var sorted_data = _.sortBy(filtered_data, function (row) { return -row['bitscore']; });
         // Set name text
         $('#' + canvas_name + '-name').text(focus_row_data[rseqid] + ', BLAST Hits ' + (start + 1) + '-' + (start + paged_filtered_rows.length));
 

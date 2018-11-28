@@ -18,6 +18,8 @@ class HmmerDbAdmin(admin.ModelAdmin):
     actions_on_top = True
     actions_on_bottom = True
 
+    class Media:
+        js = ('blast/scripts/blastdb-admin.js',)
 admin.site.register(HmmerDB, HmmerDbAdmin)
 
 class HmmerQueryRecordAdmin(admin.ModelAdmin):
