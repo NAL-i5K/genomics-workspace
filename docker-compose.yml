@@ -4,12 +4,9 @@ services:
       container_name: 'postgres'
       image: postgres:alpine
       environment: 
-        POSTGRES_USER: django
         POSTGRES_PASSWORD: django1234
       ports:  
         - "5432:5432"
-      volumes: 
-        - pgdata:/var/lib/postgresql/data/
     
     workspace:
       build: .
@@ -18,7 +15,6 @@ services:
         - postgres:postgresql
         - rabbitmq
         - memcache
-      command: python manage.py runserver 
       restart: always
       ports: 
         - "8000:8000"
@@ -26,8 +22,6 @@ services:
         - postgres
         - rabbitmq
         - memcache
-      volumes:
-        - .:/genomics-workspace
     
     memcache: 
       image: memcached:1.5.1-alpine
