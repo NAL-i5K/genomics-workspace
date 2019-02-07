@@ -1,7 +1,7 @@
 1. Download docker for windows: https://www.docker.com/docker-windows 
 2. Download docker for mac :https://hub.docker.com/editions/community/docker-ce-desktop-mac
 3. After installing, go to settings to check feature of sharing drive is activated
-4. Introduce some important and common commend to manipulate docker:
+4. Introduce some important and common commands to manipulate docker:
    check the current images:
        ```docker images```
    check all containers (include all of status):
@@ -15,7 +15,7 @@
    execute container:
        ```docker exec -it [containerID] bash```
 5. use Dockerfile to make customize image:
-       some commend will be used in Dockerfile:
+       some commands will be used in Dockerfile:
            1.FROM
            2.COPY
            3.ADD
