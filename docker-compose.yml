@@ -10,6 +10,7 @@ services:
     
     workspace:
       build: .
+      command: ["./run_web.sh"]
       links: 
         - postgres
         - postgres:postgresql
@@ -31,8 +32,3 @@ services:
       image: rabbitmq:3.6.12-management-alpine  
       ports:
         - "4369:4369"
-      
-volumes:
-  pgdata:
-            
-

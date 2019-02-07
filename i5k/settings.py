@@ -11,6 +11,8 @@ DEBUG = True
 
 TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
+ALLOWED_HOSTS = ['192.168.99.100','localhost','127.0.0.1']
+
 # template settings
 TEMPLATES = [
     {
