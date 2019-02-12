@@ -1,0 +1,26 @@
+FROM centos:6.10
+LABEL maintainer Deming
+ENV PYTHONBUFFERED 1
+RUN mkdir /genomics-workspace
+WORKDIR /genomics-workspace
+COPY  . /genomics-workspace
+RUN yum -y groupinstall "Development tools" && \ 
+    yum -y install zlib-devel bzip2-devel openssl-devel ncurses-devel sqlite-devel && \
+    yum -y install readline-devel tk-devel gdbm-devel db4-devel libpcap-devel xz-devel python-devel && \    
+    yum install wget -y  
+RUN wget http://www.python.org/ftp/python/2.7.15/Python-2.7.15.tar.xz && \ 
+    tar -xf Python-2.7.15.tar.xz
+RUN cd Python-2.7.15 && \
+    ./configure --enable-optimizations  && \
+    make && \
+    make altinstall && \
+    wget https://bootstrap.pypa.io/ez_setup.py && \
+    /usr/local/bin/python2.7 ez_setup.py && \
+    wget https://bootstrap.pypa.io/get-pip.py && \
+    /usr/local/bin/python2.7 get-pip.py 
+RUN yum install -y gcc-c++ make &&\
+    curl -sL  https://rpm.nodesource.com/setup_10.x | sudo -E bash - && \
+    yum install nodejs
+RUN npm run build
+RUN pip install -r requirements.txt
+
