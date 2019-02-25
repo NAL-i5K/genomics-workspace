@@ -38,6 +38,8 @@ Clone or refresh the genomics-workspace::
     git clone -b genomics_docker  --single-branch https://github.com/NAL-i5k/genomics-workspace   
     
     cd genomics-workspace 
+
+    sudo chmod +x ./run_web.sh 
     
     docker-compose up 
 
