@@ -24,10 +24,10 @@ class Command(BaseCommand):
         def display_name():
 
             if len(options['Genus_Species']) == 2:
-                display_name = options['Genus_Species'][0] + ' ' + options['Genus_Species'][1]
+                display_name = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
                 return display_name
             else:
-                display_name = options['Genus_Species'][0] + ' ' + options['Genus_Species'][1] + ' ' + options['Genus_Species'][2]
+                display_name = options['Genus_Species'][0].lower().capitalize()  + ' ' + options['Genus_Species'][1].lower() + ' ' + options['Genus_Species'][2].lower()
                 return display_name
 
         def short_name():
@@ -65,8 +65,10 @@ class Command(BaseCommand):
                     return description
                 except 	IndexError:
                     print("check your organism name again")
+                    sys.exit(0)
             except requests.exceptions.ConnectionError:
                 print("check your internet connection")
+                sys.exit(0)
 
         def get_taxid():
             try:
@@ -80,6 +82,7 @@ class Command(BaseCommand):
                 return tax_id
             except IndexError:
                 print("make sure your name is completed and correct")
+                sys.exit(0)
 
         #def main():
 
