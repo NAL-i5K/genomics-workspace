@@ -33,5 +33,5 @@ class Command(BaseCommand):
         print(args)
         p = Popen(args, stdout=PIPE, stderr=PIPE)
         output, error = p.communicate()
-        print("end")
+        print("finish to execute the makeblastdb ")
         #return p.returncode, error, output

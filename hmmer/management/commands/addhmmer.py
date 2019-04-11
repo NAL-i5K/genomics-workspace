@@ -19,10 +19,10 @@ class Command(BaseCommand):
         def get_organism():
             
             if len(options['Genus_Species']) == 3:
-                organism = options['Genus_Species'][0] + ' ' + options['Genus_Species'][1] + ' '+ options['Genus_Species'][2]
+                organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower() + ' '+ options['Genus_Species'][2].lower()
 
             else:
-                organism = options['Genus_Species'][0] + ' ' + options['Genus_Species'][1]
+                organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
  
             organism_database = Organism.objects.get(display_name = organism)
             display_name = str(organism_database.display_name)
@@ -34,10 +34,10 @@ class Command(BaseCommand):
                 print("check your organism name again and if the organism is in the database or not ")
 
         def get_path():
-            
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-            path = os.path.join(base_dir,'media/hmmer/db',title)
-            check = os.path.isfile(path)
+            path = os.path.join('hmmer/db',title)
+            a=os.path.join(base_dir,'media',path)
+            check = os.path.isfile(a)
             if check:
                 return path
             else: 
