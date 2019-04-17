@@ -1,8 +1,6 @@
 from app.models import Organism
-from django.core.management.base import BaseCommand, CommandError
-from django.db import models
+from django.core.management.base import BaseCommand
 import requests
-import argparse
 import django
 
 
@@ -43,7 +41,7 @@ class Command(BaseCommand):
             url1 = wiki_url1 + display_name
             #re1 = urllib.urlopen(url1)
             #data1 = json.loads(re1.read())  
-            try: 
+            try:
             
                 re1 = requests.get(url1)
                 data1 = re1.json()
@@ -96,5 +94,5 @@ class Command(BaseCommand):
             new_org.save()
             print("Succeessfully add to database")
         except django.db.utils.IntegrityError:
-            print("adding database failed, check if this organism is already in the database and try again")           
+            print("adding database failed, check if this organism is already in the database and try again")        
         

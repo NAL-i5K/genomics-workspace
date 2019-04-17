@@ -2,11 +2,10 @@ from hmmer.models import HmmerDB
 from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from app.models import Organism
-import sys
 import requests
-import argparse
 import os 
 import django.db
+import sys
 
 class Command(BaseCommand):
 
@@ -40,7 +39,7 @@ class Command(BaseCommand):
             check = os.path.isfile(a)
             if check:
                 return path
-            else: 
+            else:
                 print("No fasta file in media/hmmer/db")
                 sys.exit(0)
 

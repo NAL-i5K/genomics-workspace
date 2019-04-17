@@ -1,11 +1,11 @@
-
-m blast.models import BlastDb,BlastQueryRecord,SequenceType
+from blast.models import BlastDb,BlastQueryRecord,SequenceType
 from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from app.models import Organism
 import sys
 import os 
 import django.db
+
 class Command(BaseCommand):
 
     def add_arguments(self,parser):
@@ -61,7 +61,7 @@ class Command(BaseCommand):
                 else :
                     print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
                     sys.exit(0)
-            elif len(options['type']) == 3:	
+            elif len(options['type']) == 3:
                 dataset = options['type'][1].lower().capitalize() +' '+options['type'][2].lower().capitalize()
                 if dataset == 'Genome Assembly':
                     print(dataset)
@@ -80,7 +80,7 @@ class Command(BaseCommand):
                 if len(dataset_type)== 0:
                     print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule.capitalize(),dataset=dataset_str))
                     sys.exit(0)
-                else: 
+                else:
                     return dataset_type[0] 
 
             else:
@@ -94,7 +94,7 @@ class Command(BaseCommand):
             check = os.path.isfile(a)
             if check:
                 return path
-            else: 
+            else:
                 print("No fasta file in media/blast/db")
                 sys.exit(0)
         organism = get_organism()
