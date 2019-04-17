@@ -1,5 +1,4 @@
-
-m app.models import Organism
+from app.models import Organism
 from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 import requests
