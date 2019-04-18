@@ -13,7 +13,7 @@ class Command(BaseCommand):
         parser.add_argument('Genus_Species',nargs='+',type=str)
         parser.add_argument('-f','--filename',nargs=1,type=str)
 
-    def handle(*args,**options):
+    def handle(self,*args,**options):
 
         def get_organism():
             

@@ -2,6 +2,7 @@ from app.models import Organism
 from django.core.management.base import BaseCommand
 import requests
 import django
+import os
 
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
@@ -17,7 +18,7 @@ class Command(BaseCommand):
         #parser.add_argument('Species',nargs='*',type=str)
         #parser.add_argument('Species2',nargs='?',type=str)
            
-    def handle(*args,**options):
+    def handle(self,*args,**options):
         
         def display_name():
 
@@ -90,6 +91,9 @@ class Command(BaseCommand):
         description = get_description()
         tax_id = get_taxid()
         new_org = Organism(display_name=display_name, short_name=short_name, description=description, tax_id=tax_id)
+        file_name = str(display_name)
+        os.mknod(file_name)
+        #f=open(file_name,'w')
         try:
             new_org.save()
             print("Succeessfully add to database")

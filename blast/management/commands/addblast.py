@@ -14,7 +14,7 @@ class Command(BaseCommand):
         parser.add_argument('-f','--filename',nargs=1,type=str)
    
     
-    def handle(*args,**options):
+    def handle(self,*args,**options):
         
 
         def get_organism():
@@ -26,16 +26,15 @@ class Command(BaseCommand):
                 organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
  
             organism_database = Organism.objects.get(display_name = organism)
-            display_name = str(organism_database.display_name)
             #print (type(display_name))
             #print display_name
-            if organism == display_name :
+            if organism_database :
                 return organism_database
             else:
                 print("check your organism name again if it still fails then check your organism database")
                 sys.exit(0)		
 
-        def get_type(): #get the sequence type from SequencType
+        def get_type(): #get the sequence type from SequencType Table
             try:
                 molecule = options['type'][0].lower() #get molecule_type from command line
                 if molecule == 'peptide':    #change the name tp prot or nucl
@@ -45,18 +44,17 @@ class Command(BaseCommand):
                 else:
                     print("please enter the correct molecule_type, must be nucleotide or peptide")
                     sys.exit(0)
-            except Exception as e :
+            except Exception :
                 print("enter the argument complete '-t' '-f' ")
                 sys.exit(0)
             molecule_type = SequenceType.objects.filter(molecule_type = molecule2) #get the data from molecule_type field
             a = molecule_type[0]
-            molecule_str = str(a.molecule_type)
+            molecule_str = a.molecule_type
             print(molecule_str) #print the name of molecule_type after translating
 
             if len(options['type']) == 2:                
                 dataset = options['type'][1].lower().capitalize()
-                #dataset = dataset.replace(dataset[0],dataset[0].upper())
-                if dataset == 'Trascript' or dataset == 'Protein':
+                if dataset == 'Transcript' or dataset == 'Protein':
                     print(dataset)
                 else :
                     print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
@@ -64,16 +62,17 @@ class Command(BaseCommand):
             elif len(options['type']) == 3:
                 dataset = options['type'][1].lower().capitalize() +' '+options['type'][2].lower().capitalize()
                 if dataset == 'Genome Assembly':
-                    print(dataset)
+                    pass
+                    #print(dataset)
                 else:
                     print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
                     sys.exit(0)
             
             dataset_type = SequenceType.objects.filter(dataset_type = dataset) 
-            print dataset_type
+            #print dataset_type
             b = dataset_type[0]
             dataset_str = str(b.dataset_type)
-            print(dataset_str)            
+            #print(dataset_str)            
 
             if molecule2 == molecule_str and dataset == dataset_str :
                 dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
@@ -97,24 +96,21 @@ class Command(BaseCommand):
             else:
                 print("No fasta file in media/blast/db")
                 sys.exit(0)
+        
         organism = get_organism()
-        #print options
         if organism:#check whether organism is exist or not
             
-            print organism
+            #print organism
             #print(type(organism))
             blast_type = get_type()
-            print blast_type
+            #print blast_type
             title = options['filename'][0]
-            print title
-            fasta_file_path = get_path()
-            print fasta_file_path 
-            #description = 
+            fasta_file_path = get_path() 
             #try:
+            os.mknod(title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
             new_db.save()
-            print(new_db.fasta_file)
-            print("next step is going to add in the database")
+            print("you can move to makeblastdb and populate sequence step")
             #except django.db.utils.IntegrityError:
                 #print("This database already exists")
                 #sys.exit(0)
