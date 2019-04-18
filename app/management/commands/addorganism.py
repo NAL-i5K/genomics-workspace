@@ -41,7 +41,7 @@ class Command(BaseCommand):
         def get_description():
             url1 = wiki_url1 + display_name
             #re1 = urllib.urlopen(url1)
-            #data1 = json.loads(re1.read())  
+            #data1 = json.loads(re1.read())
             try:
             
                 re1 = requests.get(url1)
@@ -55,11 +55,11 @@ class Command(BaseCommand):
                     re2 = requests.get(url2)
                     #print re2.text
                     data2 = re2.json()
-                    key = data1['query']['search'][0]['pageid']    
+                    key = data1['query']['search'][0]['pageid']
                     #print type(key)
                     key = str(key)
                     #print type(key)
-                    description = data2['query']['pages'][key]['extract']    
+                    description = data2['query']['pages'][key]['extract']
                     #print description
                     return description
                 except 	IndexError:
@@ -98,5 +98,4 @@ class Command(BaseCommand):
             new_org.save()
             print("Succeessfully add to database")
         except django.db.utils.IntegrityError:
-            print("adding database failed, check if this organism is already in the database and try again")        
-        
+            print("adding database failed, check if this organism is already in the database and try again")

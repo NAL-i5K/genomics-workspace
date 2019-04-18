@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from app.models import Organism
 import sys
-import os 
+import os
 import django.db
 from filebrowser.fields import FileBrowseField
 class Command(BaseCommand):

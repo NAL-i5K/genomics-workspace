@@ -1,8 +1,6 @@
 from hmmer.models import HmmerDB
-from django.core.management.base import BaseCommand, CommandError
-from django.db import models
+from django.core.management.base import BaseCommand
 from app.models import Organism
-import requests
 import os 
 import django.db
 import sys
@@ -46,14 +44,14 @@ class Command(BaseCommand):
         organism = get_organism()
         #print options
         if organism:#check whether organism is exist or not
-            
+
             print organism
             #print(type(organism))
             title = options['filename'][0]
             print title
             fasta_file_path = get_path()
-            print fasta_file_path 
-            #description = 
+            print fasta_file_path
+            #description =
             #try:
             new_db = HmmerDB(organism = organism, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
             new_db.save()
@@ -63,4 +61,4 @@ class Command(BaseCommand):
                 #sys.exit(0)
         else :
             pass
-            #can use subprocess lib here to add new organism       
+            #can use subprocess lib here to add new organism

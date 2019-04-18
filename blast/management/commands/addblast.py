@@ -1,10 +1,10 @@
-from blast.models import BlastDb,BlastQueryRecord,SequenceType
-from django.core.management.base import BaseCommand, CommandError
-from django.db import models
+from blast.models import BlastDb,SequenceType
+from django.core.management.base import BaseCommand
 from app.models import Organism
 import sys
-import os 
-import django.db
+import os
+#sys.path.append('genomics-workspace/app/management/commands/add_func.py')
+#from add_func import *
 
 class Command(BaseCommand):
 
@@ -32,7 +32,7 @@ class Command(BaseCommand):
                 return organism_database
             else:
                 print("check your organism name again if it still fails then check your organism database")
-                sys.exit(0)		
+                sys.exit(0)
 
         def get_type(): #get the sequence type from SequencType Table
             try:
@@ -52,7 +52,7 @@ class Command(BaseCommand):
             molecule_str = a.molecule_type
             print(molecule_str) #print the name of molecule_type after translating
 
-            if len(options['type']) == 2:                
+            if len(options['type']) == 2:
                 dataset = options['type'][1].lower().capitalize()
                 if dataset == 'Transcript' or dataset == 'Protein':
                     print(dataset)
@@ -67,12 +67,12 @@ class Command(BaseCommand):
                 else:
                     print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
                     sys.exit(0)
-            
-            dataset_type = SequenceType.objects.filter(dataset_type = dataset) 
+
+            dataset_type = SequenceType.objects.filter(dataset_type = dataset)
             #print dataset_type
             b = dataset_type[0]
             dataset_str = str(b.dataset_type)
-            #print(dataset_str)            
+            #print(dataset_str)
 
             if molecule2 == molecule_str and dataset == dataset_str :
                 dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
@@ -80,12 +80,11 @@ class Command(BaseCommand):
                     print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule.capitalize(),dataset=dataset_str))
                     sys.exit(0)
                 else:
-                    return dataset_type[0] 
+                    return dataset_type[0]
 
             else:
                 print("something wrong in get_type")
-                
-                                       
+
         def get_path():
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
             path = os.path.join('blast/db',title)
@@ -105,7 +104,7 @@ class Command(BaseCommand):
             blast_type = get_type()
             #print blast_type
             title = options['filename'][0]
-            fasta_file_path = get_path() 
+            fasta_file_path = get_path()
             #try:
             os.mknod(title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
@@ -117,4 +116,3 @@ class Command(BaseCommand):
         else :
             pass
             #TODO can use subprocess lib here to add new organism
-        	
