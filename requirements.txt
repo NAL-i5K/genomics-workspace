@@ -1,4 +1,4 @@
-Django==1.11.15
+Django==1.11.19
 Markdown==2.6.6
 amqp==2.3.2
 celery==4.1.1
