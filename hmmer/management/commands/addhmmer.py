@@ -4,6 +4,10 @@ from app.models import Organism
 import os 
 import django.db
 import sys
+path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+path=os.path.join(path1,'blast/management/commands')
+sys.path.append(path)
+from add_func import get_organism
 
 class Command(BaseCommand):
 
@@ -12,7 +16,7 @@ class Command(BaseCommand):
         parser.add_argument('-f','--filename',nargs=1,type=str)
 
     def handle(self,*args,**options):
-
+        '''
         def get_organism():
             
             if len(options['Genus_Species']) == 3:
@@ -29,7 +33,7 @@ class Command(BaseCommand):
                 return organism_database
             else:
                 print("check your organism name again and if the organism is in the database or not ")
-
+        '''
         def get_path():
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
             path = os.path.join('hmmer/db',title)
@@ -41,7 +45,7 @@ class Command(BaseCommand):
                 print("No fasta file in media/hmmer/db")
                 sys.exit(0)
 
-        organism = get_organism()
+        organism = get_organism(options)
         #print options
         if organism:#check whether organism is exist or not
 

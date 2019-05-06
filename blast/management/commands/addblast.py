@@ -4,7 +4,7 @@ from app.models import Organism
 import sys
 import os
 #sys.path.append('genomics-workspace/app/management/commands/add_func.py')
-#from add_func import *
+from add_func import get_organism
 
 class Command(BaseCommand):
 
@@ -12,13 +12,12 @@ class Command(BaseCommand):
         parser.add_argument('Genus_Species',nargs='+',type=str)
         parser.add_argument('-t','--type',nargs='+',type=str,help='please enter nucleotide or peptide and enter Genome Assembly or Protein or Transcript')
         parser.add_argument('-f','--filename',nargs=1,type=str)
-   
-    
-    def handle(self,*args,**options):
-        
 
+    def handle(self,*args,**options):
+
+        '''
         def get_organism():
-            
+
             if len(options['Genus_Species']) == 3:
                 organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower() + ' '+ options['Genus_Species'][2].lower()
 
@@ -33,7 +32,7 @@ class Command(BaseCommand):
             else:
                 print("check your organism name again if it still fails then check your organism database")
                 sys.exit(0)
-
+        '''
         def get_type(): #get the sequence type from SequencType Table
             try:
                 molecule = options['type'][0].lower() #get molecule_type from command line
@@ -72,7 +71,6 @@ class Command(BaseCommand):
             #print dataset_type
             b = dataset_type[0]
             dataset_str = str(b.dataset_type)
-            #print(dataset_str)
 
             if molecule2 == molecule_str and dataset == dataset_str :
                 dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
@@ -95,18 +93,16 @@ class Command(BaseCommand):
             else:
                 print("No fasta file in media/blast/db")
                 sys.exit(0)
-        
-        organism = get_organism()
+        print(options)
+        organism = get_organism(options)
         if organism:#check whether organism is exist or not
-            
-            #print organism
-            #print(type(organism))
+
             blast_type = get_type()
             #print blast_type
             title = options['filename'][0]
             fasta_file_path = get_path()
             #try:
-            os.mknod(title)
+            #os.mknod(title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
             new_db.save()
             print("you can move to makeblastdb and populate sequence step")
