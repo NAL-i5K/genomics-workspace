@@ -1,8 +1,8 @@
-from hmmer.models import HmmerDB
+#from hmmer.models import HmmerDB
 #from django.core.management.base import BaseCommand, CommandError
 from app.models import Organism
 #import requests
-#import os 
+#import os
 import sys
 
 def get_organism(options):
@@ -19,6 +19,7 @@ def get_organism(options):
     else:
         print("check your organism name again if it still fails then check your organism database")
         sys.exit(0)
+
 '''
 def get_path():
     base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
@@ -31,4 +32,5 @@ def get_path():
          print("No fasta file in media/blast/db")
          sys.exit(0)
 '''
+
 

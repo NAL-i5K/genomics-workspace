@@ -1,8 +1,8 @@
 from hmmer.models import HmmerDB
 from django.core.management.base import BaseCommand
-from app.models import Organism
+#from app.models import Organism
 import os 
-import django.db
+#import django.db
 import sys
 path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 path=os.path.join(path1,'blast/management/commands')
@@ -24,7 +24,7 @@ class Command(BaseCommand):
 
             else:
                 organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
- 
+
             organism_database = Organism.objects.get(display_name = organism)
             display_name = str(organism_database.display_name)
             #print (type(display_name))

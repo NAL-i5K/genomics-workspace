@@ -7,7 +7,7 @@ import os
 import django.db
 from filebrowser.fields import FileBrowseField
 class Command(BaseCommand):
-    
+
     def add_arguments(self,parser):
         parser.add_argument('BlastDb', nargs='+', type=str, help='enter the blastdb name')
 

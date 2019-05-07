@@ -50,7 +50,7 @@ class Command(BaseCommand):
                 try:
                     title = data1['query']['search'][0]['title']
                 #re1.encoding = 'utf8'
-    
+
                     url2 = wiki_url2 + title
                     re2 = requests.get(url2)
                     #print re2.text
