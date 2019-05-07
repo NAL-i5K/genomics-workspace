@@ -4,7 +4,6 @@ from subprocess import Popen, PIPE
 from util.get_bin_name import get_bin_name
 #from filebrowser.fields import FileBrowseField
 from django.conf import settings
-import os
 
 class Command(BaseCommand):
 
@@ -14,7 +13,11 @@ class Command(BaseCommand):
     def handle(*args,**options):
         title = options['BlastDb'][0]
         blast = BlastDb.objects.get(title = title)
-        #print(blast)
+        blast.makeblastdb
+        print("done")
+
+
+        ''' 
         if not os.path.isfile(blast.fasta_file.path_full):
             return 1, 'FASTA file not found', ''
         bin_name = get_bin_name()
@@ -31,3 +34,4 @@ class Command(BaseCommand):
         output, error = p.communicate()
         print("finish to execute the makeblastdb ")
         #return p.returncode, error, output
+        '''
