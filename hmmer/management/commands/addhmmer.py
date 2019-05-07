@@ -7,7 +7,7 @@ import sys
 path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 path=os.path.join(path1,'blast/management/commands')
 sys.path.append(path)
-from add_func import get_organism
+from add_func import get_organism, display_name, get_path
 
 class Command(BaseCommand):
 
@@ -33,7 +33,7 @@ class Command(BaseCommand):
                 return organism_database
             else:
                 print("check your organism name again and if the organism is in the database or not ")
-        '''
+
         def get_path():
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
             path = os.path.join('hmmer/db',title)
@@ -44,8 +44,9 @@ class Command(BaseCommand):
             else:
                 print("No fasta file in media/hmmer/db")
                 sys.exit(0)
-
-        organism = get_organism(options)
+        '''
+        name=display_name(options)
+        organism = get_organism(name)
         #print options
         if organism:#check whether organism is exist or not
 
@@ -53,7 +54,7 @@ class Command(BaseCommand):
             #print(type(organism))
             title = options['filename'][0]
             print title
-            fasta_file_path = get_path()
+            fasta_file_path = get_path('hmmer',title)
             print fasta_file_path
             #description =
             #try:

@@ -4,7 +4,7 @@ from django.core.management.base import BaseCommand
 import sys
 import os
 #sys.path.append('genomics-workspace/app/management/commands/add_func.py')
-from add_func import get_organism
+from add_func import get_organism, display_name, get_path
 
 class Command(BaseCommand):
 
@@ -82,7 +82,7 @@ class Command(BaseCommand):
 
             else:
                 print("something wrong in get_type")
-
+        '''
         def get_path():
             base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
             path = os.path.join('blast/db',title)
@@ -93,14 +93,17 @@ class Command(BaseCommand):
             else:
                 print("No fasta file in media/blast/db")
                 sys.exit(0)
+        '''
         print(options)
-        organism = get_organism(options)
+        name=display_name(options)
+        organism = get_organism(name)
         if organism:#check whether organism is exist or not
 
             blast_type = get_type()
             #print blast_type
             title = options['filename'][0]
-            fasta_file_path = get_path()
+            fasta_file_path = get_path('blast',title)
+            print fasta_file_path
             #try:
             #os.mknod(title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
