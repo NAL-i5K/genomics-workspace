@@ -1,6 +1,6 @@
 from blast.models import BlastDb,SequenceType
 from django.core.management.base import BaseCommand
-from app.models import Organism
+#from app.models import Organism
 import sys
 import os
 #sys.path.append('genomics-workspace/app/management/commands/add_func.py')
@@ -23,7 +23,7 @@ class Command(BaseCommand):
 
             else:
                 organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
- 
+
             organism_database = Organism.objects.get(display_name = organism)
             #print (type(display_name))
             #print display_name
