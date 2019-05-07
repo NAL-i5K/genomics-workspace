@@ -2,7 +2,7 @@ from blast.models import BlastDb
 from django.core.management.base import BaseCommand
 from subprocess import Popen, PIPE
 from util.get_bin_name import get_bin_name
-#from filebrowser.fields import FileBrowseField
+from filebrowser.fields import FileBrowseField
 from django.conf import settings
 
 class Command(BaseCommand):
@@ -13,7 +13,7 @@ class Command(BaseCommand):
     def handle(*args,**options):
         title = options['BlastDb'][0]
         blast = BlastDb.objects.get(title = title)
-        blast.makeblastdb
+        blast.makeblastdb()
         print("done")
 
 

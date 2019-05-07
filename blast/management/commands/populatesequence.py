@@ -1,4 +1,4 @@
-from blast.models import BlastDb,BlastQueryRecord,SequenceType,Sequence
+from blast.models import BlastDb,SequenceType,Sequence
 from django.core.management.base import BaseCommand, CommandError
 from django.db import models
 from app.models import Organism
@@ -14,6 +14,10 @@ class Command(BaseCommand):
     def handle(*args,**options):
         title = options['BlastDb'][0]
         blast = BlastDb.objects.get(title = title)
+        blast.index_fasta()
+        print("successfuly populate")
+
+        '''
         try:
             # remove existing sequences
             blast.sequence_set.all().delete()
@@ -49,3 +53,4 @@ class Command(BaseCommand):
 
         except Exception as e:
             return 1, str(e), ''
+        '''
