@@ -3,14 +3,19 @@ from django.core.management.base import BaseCommand
 import requests
 import django
 import os
+import sys
+path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+path=os.path.join(path1,'blast/management/commands')
+sys.path.append(path)
+from add_func import display_name
+#from add_func import get_organism
 
+print sys.path
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
 wiki_url1 = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srprop=snippet&srlimit=1&format=json&srsearch='
 wiki_url2 = 'https://en.wikipedia.org/w/api.php?action=query&prop=extracts&format=json&exintro=true&titles='
 
-#print tax_id
-# TODO: autogenerate short name / autogenerate tax_id / pull the description from wiki like we did in the GUI
 class Command(BaseCommand):
 
     def add_arguments(self,parser):
@@ -19,7 +24,7 @@ class Command(BaseCommand):
         #parser.add_argument('Species2',nargs='?',type=str)
            
     def handle(self,*args,**options):
-        
+        ''' 
         def display_name():
 
             if len(options['Genus_Species']) == 2:
@@ -28,9 +33,10 @@ class Command(BaseCommand):
             else:
                 display_name = options['Genus_Species'][0].lower().capitalize()  + ' ' + options['Genus_Species'][1].lower() + ' ' + options['Genus_Species'][2].lower()
                 return display_name
+        '''
 
         def short_name():
-            short_name = display_name.split(' ')
+            short_name = name.split(' ')
             short_name1 = short_name[0][0:3]
             short_name2 = short_name[1][0:3]
             short_name = short_name1 + short_name2
@@ -39,7 +45,7 @@ class Command(BaseCommand):
 
 
         def get_description():
-            url1 = wiki_url1 + display_name
+            url1 = wiki_url1 + name
             #re1 = urllib.urlopen(url1)
             #data1 = json.loads(re1.read())
             try:
@@ -71,7 +77,7 @@ class Command(BaseCommand):
 
         def get_taxid():
             try:
-                url = id_baseurl+display_name
+                url = id_baseurl+ name
                 re = requests.get(url)
                 data = re.json()
                 tax_id = data['esearchresult']['idlist'][0]
@@ -83,17 +89,15 @@ class Command(BaseCommand):
                 print("make sure your name is completed and correct")
                 sys.exit(0)
 
-        #def main():
-
-        display_name = display_name()
+        name = display_name(options)
         #print options
         short_name = short_name()
         description = get_description()
         tax_id = get_taxid()
-        new_org = Organism(display_name=display_name, short_name=short_name, description=description, tax_id=tax_id)
-        file_name = str(display_name)
-        os.mknod(file_name)
-        #f=open(file_name,'w')
+        new_org = Organism(display_name=name, short_name=short_name, description=description, tax_id=tax_id)
+        #file_name = str(display_name)
+        #os.mknod(file_name)
+
         try:
             new_org.save()
             print("Succeessfully add to database")
