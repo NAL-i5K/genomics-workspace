@@ -33,24 +33,8 @@ def get_path(app_name,title):
     
     a=os.path.join(base_dir,'media',path)
     check = os.path.isfile(a)
-    
     if check:
         return path
     else:
         print("No fasta file in media/blast/db or media/hmmer/db")
-        sys.exit(0)
-
-'''
-def get_path():
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-    path = os.path.join('blast/db',title)
-    a=os.path.join(base_dir,'media',path)
-    check = os.path.isfile(a)
-    if check:
-        return path
-    else:
-         print("No fasta file in media/blast/db")
-         sys.exit(0)
-'''
-
-
+        sys.exit(0)	

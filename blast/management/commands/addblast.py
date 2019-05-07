@@ -2,7 +2,6 @@ from blast.models import BlastDb,SequenceType
 from django.core.management.base import BaseCommand
 #from app.models import Organism
 import sys
-import os
 #sys.path.append('genomics-workspace/app/management/commands/add_func.py')
 from add_func import get_organism, display_name, get_path
 
@@ -15,24 +14,6 @@ class Command(BaseCommand):
 
     def handle(self,*args,**options):
 
-        '''
-        def get_organism():
-
-            if len(options['Genus_Species']) == 3:
-                organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower() + ' '+ options['Genus_Species'][2].lower()
-
-            else:
-                organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
-
-            organism_database = Organism.objects.get(display_name = organism)
-            #print (type(display_name))
-            #print display_name
-            if organism_database :
-                return organism_database
-            else:
-                print("check your organism name again if it still fails then check your organism database")
-                sys.exit(0)
-        '''
         def get_type(): #get the sequence type from SequencType Table
             try:
                 molecule = options['type'][0].lower() #get molecule_type from command line
@@ -82,18 +63,7 @@ class Command(BaseCommand):
 
             else:
                 print("something wrong in get_type")
-        '''
-        def get_path():
-            base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
-            path = os.path.join('blast/db',title)
-            a=os.path.join(base_dir,'media',path)
-            check = os.path.isfile(a)
-            if check:
-                return path
-            else:
-                print("No fasta file in media/blast/db")
-                sys.exit(0)
-        '''
+
         print(options)
         name=display_name(options)
         organism = get_organism(name)

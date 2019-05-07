@@ -8,9 +8,6 @@ path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))
 path=os.path.join(path1,'blast/management/commands')
 sys.path.append(path)
 from add_func import display_name
-#from add_func import get_organism
-
-print sys.path
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
 wiki_url1 = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srprop=snippet&srlimit=1&format=json&srsearch='
@@ -23,17 +20,7 @@ class Command(BaseCommand):
         #parser.add_argument('Species',nargs='*',type=str)
         #parser.add_argument('Species2',nargs='?',type=str)
            
-    def handle(self,*args,**options):
-        ''' 
-        def display_name():
-
-            if len(options['Genus_Species']) == 2:
-                display_name = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
-                return display_name
-            else:
-                display_name = options['Genus_Species'][0].lower().capitalize()  + ' ' + options['Genus_Species'][1].lower() + ' ' + options['Genus_Species'][2].lower()
-                return display_name
-        '''
+    def handle(self,*args,**options):	
 
         def short_name():
             short_name = name.split(' ')
