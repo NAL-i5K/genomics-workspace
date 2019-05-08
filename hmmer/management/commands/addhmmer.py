@@ -4,9 +4,6 @@ from django.core.management.base import BaseCommand
 import os
 #import django.db
 import sys
-path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-path=os.path.join(path1,'blast/management/commands')
-sys.path.append(path)
 from add_func import get_organism, display_name, get_path
 
 class Command(BaseCommand):

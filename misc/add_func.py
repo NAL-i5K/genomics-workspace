@@ -4,6 +4,7 @@ from app.models import Organism
 #import requests
 import os
 import sys
+import requests
 
 def display_name(options):
 
@@ -33,7 +34,6 @@ def get_path(app_name,title):
         path = os.path.join('hmmer/db',title)
 
     a=os.path.join(base_dir,'media',path)
-    print a
     check = os.path.isfile(a)
     if check:
         return path
@@ -97,3 +97,37 @@ def get_type(options): #get the sequence type from SequencType Table
 
     else:
         print("something wrong in get_type")
+
+def get_description(url1,wiki_url2):
+    try:
+        re1 = requests.get(url1)
+        data1 = re1.json()
+        try:
+            title = data1['query']['search'][0]['title']
+            url2 = wiki_url2 + title
+            re2 = requests.get(url2)
+            data2 = re2.json()
+            key = data1['query']['search'][0]['pageid']
+            key = str(key)
+            #print type(key)
+            description = data2['query']['pages'][key]['extract']
+            #print description
+            return description
+        except 	IndexError:
+            print("check your organism name again")
+            sys.exit(0)
+    except requests.exceptions.ConnectionError:
+        print("check your internet connection")
+        sys.exit(0)
+
+def get_taxid(id_baseurl,name):
+    try:
+        url = id_baseurl+ name
+        re = requests.get(url)
+        data = re.json()
+        tax_id = data['esearchresult']['idlist'][0]
+        tax_id = int(tax_id)
+        return tax_id
+    except IndexError:
+        print("make sure your name is completed and correct")
+        sys.exit(0)

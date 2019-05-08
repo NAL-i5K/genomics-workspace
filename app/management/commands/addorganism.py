@@ -4,7 +4,7 @@ import requests
 import django
 import os
 import sys
-from add_func import display_name, short_name
+from add_func import display_name, short_name, get_description, get_taxid
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
 wiki_url1 = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srprop=snippet&srlimit=1&format=json&srsearch='
@@ -19,58 +19,12 @@ class Command(BaseCommand):
            
     def handle(self,*args,**options):
 
-        def get_description():
-            url1 = wiki_url1 + name
-            #re1 = urllib.urlopen(url1)
-            #data1 = json.loads(re1.read())
-            try:
-                re1 = requests.get(url1)
-                data1 = re1.json()
-                #print type(data1)
-                try:
-                    title = data1['query']['search'][0]['title']
-                #re1.encoding = 'utf8'
-
-                    url2 = wiki_url2 + title
-                    re2 = requests.get(url2)
-                    #print re2.text
-                    data2 = re2.json()
-                    key = data1['query']['search'][0]['pageid']
-                    #print type(key)
-                    key = str(key)
-                    #print type(key)
-                    description = data2['query']['pages'][key]['extract']
-                    #print description
-                    return description
-                except 	IndexError:
-                    print("check your organism name again")
-                    sys.exit(0)
-            except requests.exceptions.ConnectionError:
-                print("check your internet connection")
-                sys.exit(0)
-
-        def get_taxid():
-            try:
-                url = id_baseurl+ name
-                re = requests.get(url)
-                data = re.json()
-                tax_id = data['esearchresult']['idlist'][0]
-                #print type(tax_id)
-                tax_id = int(tax_id)
-                #print tax_id
-                return tax_id
-            except IndexError:
-                print("make sure your name is completed and correct")
-                sys.exit(0)
-
         name = display_name(options)
-        #print options
         shortname = short_name(name)
-        description = get_description()
-        tax_id = get_taxid()
+        url1 = wiki_url1 + name
+        description = get_description(url1,wiki_url2)
+        tax_id = get_taxid(id_baseurl,name)
         new_org = Organism(display_name=name, short_name=shortname, description=description, tax_id=tax_id)
-        #file_name = str(display_name)
-        #os.mknod(file_name)
 
         try:
             new_org.save()
