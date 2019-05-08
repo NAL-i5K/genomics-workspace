@@ -3,7 +3,7 @@ from django.core.management.base import BaseCommand
 #from app.models import Organism
 import sys
 #sys.path.append('genomics-workspace/app/management/commands/add_func.py')
-from add_func import get_organism, display_name, get_path, get_type
+from add_func import get_organism, display_name, get_path, get_type, get_molecule, get_dataset
 
 class Command(BaseCommand):
 
@@ -17,8 +17,9 @@ class Command(BaseCommand):
         name=display_name(options)
         organism = get_organism(name)
         if organism:#check whether organism is exist or not
-
-            blast_type = get_type(options)
+            molecule2,molecule_str = get_molecule(options)
+            dataset,dataset_str = get_dataset(options)
+            blast_type = get_type(dataset,molecule2,molecule_str,dataset_str)
             title = options['filename'][0]
             fasta_file_path = get_path('blast',title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )

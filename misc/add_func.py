@@ -48,7 +48,7 @@ def short_name(name):
     short_name = short_name1 + short_name2
     return short_name
 
-def get_type(options): #get the sequence type from SequencType Table
+def get_molecule(options):
     try:
         molecule = options['type'][0].lower() #get molecule_type from command line
         if molecule == 'peptide':    #change the name tp prot or nucl
@@ -64,8 +64,9 @@ def get_type(options): #get the sequence type from SequencType Table
     molecule_type = SequenceType.objects.filter(molecule_type = molecule2) #get the data from molecule_type field
     a = molecule_type[0]
     molecule_str = a.molecule_type
-    print(molecule_str) #print the name of molecule_type after translating
+    return molecule2,molecule_str
 
+def get_dataset(options):
     if len(options['type']) == 2:
         dataset = options['type'][1].lower().capitalize()
         if dataset == 'Transcript' or dataset == 'Protein':
@@ -86,6 +87,9 @@ def get_type(options): #get the sequence type from SequencType Table
     #print dataset_type
     b = dataset_type[0]
     dataset_str = str(b.dataset_type)
+    return dataset,dataset_str
+
+def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type from SequencType Table
 
     if molecule2 == molecule_str and dataset == dataset_str :
         dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
