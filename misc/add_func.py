@@ -67,14 +67,18 @@ def get_molecule(options):
     return molecule2,molecule_str
 
 def get_dataset(options):
+
     if len(options['type']) == 2:
         dataset = options['type'][1].lower().capitalize()
         if dataset == 'Transcript' or dataset == 'Protein':
-            print(dataset)
+            pass
         else :
             print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
             sys.exit(0)
-    elif len(options['type']) == 3:
+    elif len(options['type']) != 3:
+        print("enter the correct dataset_type")
+
+    else:
         dataset = options['type'][1].lower().capitalize() +' '+options['type'][2].lower().capitalize()
         if dataset == 'Genome Assembly':
             pass
@@ -91,16 +95,16 @@ def get_dataset(options):
 
 def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type from SequencType Table
 
-    if molecule2 == molecule_str and dataset == dataset_str :
+    if molecule2 != molecule_str or dataset != dataset_str :
+        print("something wrong in get_type")
+
+    else:
         dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
         if len(dataset_type)== 0:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule.capitalize(),dataset=dataset_str))
             sys.exit(0)
         else:
             return dataset_type[0]
-
-    else:
-        print("something wrong in get_type")
 
 def get_description(url1,wiki_url2):
     try:
