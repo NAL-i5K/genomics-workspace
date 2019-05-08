@@ -4,9 +4,6 @@ import requests
 import django
 import os
 import sys
-path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
-path=os.path.join(path1,'blast/management/commands')
-sys.path.append(path)
 from add_func import display_name, short_name
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
@@ -68,10 +65,10 @@ class Command(BaseCommand):
 
         name = display_name(options)
         #print options
-        short_name = short_name(name)
+        shortname = short_name(name)
         description = get_description()
         tax_id = get_taxid()
-        new_org = Organism(display_name=name, short_name=short_name, description=description, tax_id=tax_id)
+        new_org = Organism(display_name=name, short_name=shortname, description=description, tax_id=tax_id)
         #file_name = str(display_name)
         #os.mknod(file_name)
 

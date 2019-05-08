@@ -21,9 +21,6 @@ class Command(BaseCommand):
             blast_type = get_type(options)
             title = options['filename'][0]
             fasta_file_path = get_path('blast',title)
-            print fasta_file_path
-            #try:
-            #os.mknod(title)
             new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
             new_db.save()
             print("you can move to makeblastdb and populate sequence step")

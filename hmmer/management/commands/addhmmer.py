@@ -22,14 +22,8 @@ class Command(BaseCommand):
         #print options
         if organism:#check whether organism is exist or not
 
-            print organism
-            #print(type(organism))
             title = options['filename'][0]
-            print title
             fasta_file_path = get_path('hmmer',title)
-            print fasta_file_path
-            #description =
-            #try:
             new_db = HmmerDB(organism = organism, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
             new_db.save()
             print("Success")

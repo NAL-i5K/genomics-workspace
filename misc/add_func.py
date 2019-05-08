@@ -7,12 +7,13 @@ import sys
 
 def display_name(options):
 
+    base = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
     if len(options['Genus_Species']) == 3:
-        display_name = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower() + ' '+ options['Genus_Species'][2].lower()
+        display_name = base + ' '+ options['Genus_Species'][2].lower()
         return display_name
 
     else:
-        display_name = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
+        display_name = base
         return display_name
 
 def get_organism(display_name):
@@ -25,13 +26,14 @@ def get_organism(display_name):
         sys.exit(0)
 
 def get_path(app_name,title):
-    base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__)))))
+    base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
     if app_name == 'blast':
         path = os.path.join('blast/db',title)
     else:
         path = os.path.join('hmmer/db',title)
 
     a=os.path.join(base_dir,'media',path)
+    print a
     check = os.path.isfile(a)
     if check:
         return path
