@@ -7,7 +7,7 @@ import sys
 path1=os.path.dirname(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 path=os.path.join(path1,'blast/management/commands')
 sys.path.append(path)
-from add_func import display_name
+from add_func import display_name, short_name
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
 wiki_url1 = 'https://en.wikipedia.org/w/api.php?action=query&list=search&srprop=snippet&srlimit=1&format=json&srsearch='
@@ -20,23 +20,13 @@ class Command(BaseCommand):
         #parser.add_argument('Species',nargs='*',type=str)
         #parser.add_argument('Species2',nargs='?',type=str)
            
-    def handle(self,*args,**options):	
-
-        def short_name():
-            short_name = name.split(' ')
-            short_name1 = short_name[0][0:3]
-            short_name2 = short_name[1][0:3]
-            short_name = short_name1 + short_name2
-            #print short_name
-            return short_name
-
+    def handle(self,*args,**options):
 
         def get_description():
             url1 = wiki_url1 + name
             #re1 = urllib.urlopen(url1)
             #data1 = json.loads(re1.read())
             try:
-            
                 re1 = requests.get(url1)
                 data1 = re1.json()
                 #print type(data1)
@@ -78,7 +68,7 @@ class Command(BaseCommand):
 
         name = display_name(options)
         #print options
-        short_name = short_name()
+        short_name = short_name(name)
         description = get_description()
         tax_id = get_taxid()
         new_org = Organism(display_name=name, short_name=short_name, description=description, tax_id=tax_id)
