@@ -68,22 +68,20 @@ def get_molecule(options):
 
 def get_dataset(options):
 
-    if len(options['type']) == 2:
-        dataset = options['type'][1].lower().capitalize()
-        if dataset == 'Transcript' or dataset == 'Protein':
-            pass
-        else :
-            print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
-            sys.exit(0)
-    elif len(options['type']) != 3:
-        print("enter the correct dataset_type")
-
-    else:
+    if len(options['type']) == 3:
         dataset = options['type'][1].lower().capitalize() +' '+options['type'][2].lower().capitalize()
         if dataset == 'Genome Assembly':
             pass
             #print(dataset)
         else:
+            print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
+            sys.exit(0)
+
+    else:
+        dataset = options['type'][1].lower().capitalize()
+        if dataset == 'Transcript' or dataset == 'Protein':
+            pass
+        else :
             print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
             sys.exit(0)
 
