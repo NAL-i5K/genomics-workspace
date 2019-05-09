@@ -86,10 +86,11 @@ def get_dataset(options):
 
 def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type from SequencType Table
 
-    if molecule2 != molecule_str or dataset != dataset_str :
-        print("something wrong in get_type")
-
-    else:
+    if molecule2 != molecule_str :
+        print("something wrong in molecule")
+    elif dataset != dataset_str :
+        print("something wrong with dataset")
+    else:	
         dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
         if len(dataset_type)== 0:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
