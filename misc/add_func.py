@@ -68,25 +68,18 @@ def get_molecule(options):
 
 def get_dataset(options):
 
-    if len(options['type']) == 3:
-        dataset = options['type'][1].lower().capitalize() +' '+options['type'][2].lower().capitalize()
-        if dataset == 'Genome Assembly':
-            pass
-            #print(dataset)
-        else:
-            print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
-            sys.exit(0)
-
+    dataset = options['type'][1].lower().capitalize()
+    if dataset =='Genome':
+        dataset = dataset + ' ' + options['type'][2].lower().capitalize()
+        pass
+    elif dataset == 'Transcript':
+        pass
+    elif dataset == 'Protein':
+        pass
     else:
-        dataset = options['type'][1].lower().capitalize()
-        if dataset == 'Transcript' or dataset == 'Protein':
-            pass
-        else :
-            print("check your dataset_type, must be Protein or Transcript or Genome Assembly")
-            sys.exit(0)
-
+        print('enter the correct dataset type')
+        sys.exit(0)
     dataset_type = SequenceType.objects.filter(dataset_type = dataset)
-    #print dataset_type
     b = dataset_type[0]
     dataset_str = str(b.dataset_type)
     return dataset,dataset_str
@@ -99,7 +92,7 @@ def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type
     else:
         dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
         if len(dataset_type)== 0:
-            print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule.capitalize(),dataset=dataset_str))
+            print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
             sys.exit(0)
         else:
             return dataset_type[0]
