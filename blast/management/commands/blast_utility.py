@@ -10,13 +10,16 @@ class Command(BaseCommand):
 
     def handle(self,*args,**options):
 
-        title = options['BlastDb'][0]
-        blast = BlastDb.objects.get(title = title)
-        if options['makeblastdb'] == []:
-            blast.makeblastdb()
-            print("done")
-        elif options['populatesequence'] == []:
-            blast.index_fasta()
-            print("done")
-        else:
-            print("please choose -m for makeblastd and -p for populate sequence")
+        n=0;
+        title = options['BlastDb']
+        for title in title:
+            blast = BlastDb.objects.get(title = title)
+            n+=1
+            if options['makeblastdb'] == []:
+                blast.makeblastdb()
+            elif options['populatesequence'] == []:
+                blast.index_fasta()
+            else:
+                print("please choose -m for makeblastd and -p for populate sequence")
+            print("%d species finished "%n)
+        print("all done")

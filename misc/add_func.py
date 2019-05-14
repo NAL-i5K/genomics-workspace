@@ -1,4 +1,4 @@
-from blast.models import SequenceType
+from blast.models import BlastDb, SequenceType
 #from django.core.management.base import BaseCommand, CommandError
 from app.models import Organism
 #import requests
@@ -137,3 +137,22 @@ def get_taxid(id_baseurl,name):
     except IndexError:
         print("make sure your name is completed and correct")
         sys.exit(0)
+
+def delete_func(options):
+    if options["organism"]:
+        organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
+        organism1 = Organism.objects.filter(display_name = organism).delete()
+        print organism1
+        return ("remove %s in database"%organism)
+    elif options["blast"]:
+        blast = options["blast"][0]
+        for blast in options["blast"]:
+            blast = BlastDb.objects.filter(title = blast).delete()
+            return blast, "remove blastdb you selected"
+    elif options["hmmer"]:
+        hmmer = options["hmmer"][0]
+        for hmmer in options["hmmer"]:
+            hmmer = HmmerDB.objects.filter(title = hmmer).delete()
+            return hmmer, "remove hmmerdb you selected"
+    else:
+        return "please give the argument, -o to delete organism, -b to delete blastdb, -hr to delete hmmerdb"
