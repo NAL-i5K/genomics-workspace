@@ -1,9 +1,6 @@
 from app.models import Organism
 from django.core.management.base import BaseCommand
-import requests
 import django
-import os
-import sys
 from add_func import display_name, short_name, get_description, get_taxid
 
 id_baseurl = 'https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?db=taxonomy&retmode=json&term='
@@ -16,7 +13,6 @@ class Command(BaseCommand):
         parser.add_argument('Genus_Species',nargs='+',type=str)
         #parser.add_argument('Species',nargs='*',type=str)
         #parser.add_argument('Species2',nargs='?',type=str)
-           
     def handle(self,*args,**options):
 
         name = display_name(options)

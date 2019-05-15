@@ -1,20 +1,21 @@
 from blast.models import BlastDb, SequenceType
 #from django.core.management.base import BaseCommand, CommandError
 from app.models import Organism
-#import requests
 import os
 import sys
 import requests
+from hmmer.models import HmmerDB
+
 
 def display_name(options):
 
-    base = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
+    base_organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
     if len(options['Genus_Species']) == 3:
-        display_name = base + ' '+ options['Genus_Species'][2].lower()
+        display_name = base_organism + ' '+ options['Genus_Species'][2].lower()
         return display_name
 
     else:
-        display_name = base
+        display_name = base_organism
         return display_name
 
 def get_organism(display_name):
@@ -71,7 +72,6 @@ def get_dataset(options):
     dataset = options['type'][1].lower().capitalize()
     if dataset =='Genome':
         dataset = dataset + ' ' + options['type'][2].lower().capitalize()
-        pass
     elif dataset == 'Transcript':
         pass
     elif dataset == 'Protein':
@@ -91,19 +91,12 @@ def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type
     elif dataset != dataset_str :
         print("something wrong with dataset")
     else:
-        try:	
+        try:
             dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
             return dataset_type[0]
         except:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
             sys.exit(0)
-        '''
-        if len(dataset_type)== 0:
-            print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
-            sys.exit(0)
-        else:
-            return dataset_type[0]
-        '''
 def get_description(url1,wiki_url2):
     try:
         re1 = requests.get(url1)
@@ -138,21 +131,24 @@ def get_taxid(id_baseurl,name):
         print("make sure your name is completed and correct")
         sys.exit(0)
 
-def delete_func(options):
-    if options["organism"]:
-        organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
-        organism1 = Organism.objects.filter(display_name = organism).delete()
-        print organism1
-        return ("remove %s in database"%organism)
-    elif options["blast"]:
-        blast = options["blast"][0]
-        for blast in options["blast"]:
-            blast = BlastDb.objects.filter(title = blast).delete()
-            return blast, "remove blastdb you selected"
-    elif options["hmmer"]:
-        hmmer = options["hmmer"][0]
-        for hmmer in options["hmmer"]:
-            hmmer = HmmerDB.objects.filter(title = hmmer).delete()
-            return hmmer, "remove hmmerdb you selected"
+def delete_org(name):
+    #if options["organism"]:
+    #for organism in options["organism"]:
+    #organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
+    organism1 = Organism.objects.filter(display_name = base_organism).delete()
+    return ("remove %s in database"%organism)
+
+def delete(db, dbname):
+    tmp=[]
+    if db[0]=='all':
+        status = BlastDb.objects.all().delete()
+        print("remove all data in blast")
     else:
-        return "please give the argument, -o to delete organism, -b to delete blastdb, -hr to delete hmmerdb"
+
+        for name in db :
+            if dbname=='blast':
+                status = BlastDb.objects.filter(title = name).delete()
+            else:
+                status = HmmerDB.objects.filter(title = name).delete()
+            tmp.append(name)
+    return "remove %s "%tmp
