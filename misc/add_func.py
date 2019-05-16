@@ -8,8 +8,10 @@ from hmmer.models import HmmerDB
 
 
 def display_name(options):
-
-    base_organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
+    try:
+        base_organism = options['Genus_Species'][0].lower().capitalize() + ' ' + options['Genus_Species'][1].lower()
+    except TypeError:
+        return 0
     if len(options['Genus_Species']) == 3:
         display_name = base_organism + ' '+ options['Genus_Species'][2].lower()
         return display_name
@@ -91,12 +93,16 @@ def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type
     elif dataset != dataset_str :
         print("something wrong with dataset")
     else:
-        try:
-            dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
+        #try:
+        dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
+        if dataset_type:
             return dataset_type[0]
-        except:
+        else:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
             sys.exit(0)
+        #except:
+            #print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
+            #sys.exit(0)
 def get_description(url1,wiki_url2):
     try:
         re1 = requests.get(url1)
@@ -135,16 +141,19 @@ def delete_org(name):
     #if options["organism"]:
     #for organism in options["organism"]:
     #organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
-    organism1 = Organism.objects.filter(display_name = base_organism).delete()
-    return ("remove %s in database"%organism)
+    Organism.objects.filter(display_name = name).delete()
+    return ("remove %s in database"%name)
 
 def delete(db, dbname):
     tmp=[]
     if db[0]=='all':
-        status = BlastDb.objects.all().delete()
-        print("remove all data in blast")
+        if dbname=='blast':
+            BlastDb.objects.all().delete()
+            print("remove all data in blast")
+        else:
+            HmmerDB.objects.all().delete()
+            print("remove all data in hmmer")
     else:
-
         for name in db :
             if dbname=='blast':
                 status = BlastDb.objects.filter(title = name).delete()
