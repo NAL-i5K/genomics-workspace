@@ -93,16 +93,12 @@ def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type
     elif dataset != dataset_str :
         print("something wrong with dataset")
     else:
-        #try:
-        dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
-        if dataset_type:
+        try:
+            dataset_type = SequenceType.objects.filter(molecule_type = molecule2, dataset_type = dataset)
             return dataset_type[0]
-        else:
+        except IndexError:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
-            sys.exit(0)
-        #except:
-            #print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
-            #sys.exit(0)
+             	sys.exit(0)
 def get_description(url1,wiki_url2):
     try:
         re1 = requests.get(url1)
