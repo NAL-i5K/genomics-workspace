@@ -21,7 +21,7 @@ class Command(BaseCommand):
             blast_type = get_type(dataset,molecule2,molecule_str,dataset_str)
             title = options['filename'][0]
             fasta_file_path = get_path('blast',title)
-            new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
+            new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = False )
             new_db.save()
             print("you can move to makeblastdb and populate sequence step")
             #except django.db.utils.IntegrityError:
