@@ -26,9 +26,10 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">Tools<span class="caret"></span></a>
                         <ul class="dropdown-menu">
-                            <li><a href="{% url 'blast:create' %}">BLAST</a></li>
-                            <li><a href="{% url 'hmmer:create' %}">HMMER</a></li>
-                            <li><a href="{% url 'clustal:create' %}">CLUSTAL</a></li>
+                                <li><a href="{% url 'blast:create' %}">BLAST</a></li>
+                                <li><a href="{% url 'hmmer:create' %}">HMMER</a></li>
+                                <li><a href="{% url 'clustal:create' %}">CLUSTAL</a></li>
+                                <li><a href="https://i5k.nal.usda.gov/available-genome-browsers">JBrowse/Apollo</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -56,7 +57,6 @@
           <hr/>
           <footer>
             <p>{% now "Y" %} - National Agricultural Library</p>
-			<p>Take a look at <a href=https://github.com/NAL-i5K/genomics-workspace> our github</a> for more detailed information</p>
           </footer>
         </div>
       {% endblock %}
