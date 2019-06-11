@@ -98,7 +98,7 @@ def get_type(dataset,molecule2,molecule_str,dataset_str): #get the sequence type
             return dataset_type[0]
         except IndexError:
             print("there are no {molecule} - {dataset} combination in the database".format(molecule=molecule2.capitalize(),dataset=dataset_str))
-             	sys.exit(0)
+            sys.exit(0)
 def get_description(url1,wiki_url2):
     try:
         re1 = requests.get(url1)
@@ -139,7 +139,7 @@ def delete_org(name):
     #organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
     Organism.objects.filter(display_name = name).delete()
     return ("remove %s in database"%name)
-
+'''
 def delete(db, dbname):
     tmp=[]
     if db[0]=='all':
@@ -152,8 +152,9 @@ def delete(db, dbname):
     else:
         for name in db :
             if dbname=='blast':
-                status = BlastDb.objects.filter(title = name).delete()
+                BlastDb.objects.filter(title = name).delete()
             else:
-                status = HmmerDB.objects.filter(title = name).delete()
+                HmmerDB.objects.filter(title = name).delete()
             tmp.append(name)
     return "remove %s "%tmp
+'''
