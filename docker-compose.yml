@@ -4,16 +4,15 @@ services:
       container_name: 'postgres'
       image: postgres:alpine
       environment: 
+        POSTGRES_USER: django
         POSTGRES_PASSWORD: django1234
       ports:  
         - "5432:5432"
     
     workspace:
       build: .
-      command: ["./run_web.sh"]
-      links: 
+      links:
         - postgres
-        - postgres:postgresql
         - rabbitmq
         - memcache
       restart: always

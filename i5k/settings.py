@@ -11,7 +11,9 @@ DEBUG = True
 
 TEST_RUNNER = 'i5k.testing.MyDiscoverRunner'
 
-ALLOWED_HOSTS = ['192.168.99.100','localhost','127.0.0.1']
+ALLOWED_HOSTS = ['*']
+
+DOCKER = True
 
 # template settings
 TEMPLATES = [
@@ -41,8 +43,8 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'postgres',
-        'USER': 'postgres',
+        'NAME': 'django',
+        'USER': 'django',
         'PASSWORD': 'django1234',
         'HOST': 'postgres',
         'PORT': '5432',
