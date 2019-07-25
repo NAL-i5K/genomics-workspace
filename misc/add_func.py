@@ -1,9 +1,10 @@
-from blast.models import BlastDb, SequenceType
+from blast.models import SequenceType
+#from blast.models import BlastDb
 from app.models import Organism
 import os
 import sys
 import requests
-from hmmer.models import HmmerDB
+#from hmmer.models import HmmerDB
 
 
 def display_name(options):
@@ -133,7 +134,7 @@ def get_taxid(id_baseurl,name):
 def delete_org(name):
     Organism.objects.filter(display_name = name).delete()
     return ("remove %s in database"%name)
-'''
+"""
 def delete(db, dbname):
     tmp=[]
     if db[0]=='all':
@@ -151,4 +152,4 @@ def delete(db, dbname):
                 HmmerDB.objects.filter(title = name).delete()
             tmp.append(name)
     return "remove %s "%tmp
-'''
+"""
