@@ -1,5 +1,4 @@
 from blast.models import BlastDb, SequenceType
-#from django.core.management.base import BaseCommand, CommandError
 from app.models import Organism
 import os
 import sys
@@ -110,9 +109,7 @@ def get_description(url1,wiki_url2):
             data2 = re2.json()
             key = data1['query']['search'][0]['pageid']
             key = str(key)
-            #print type(key)
             description = data2['query']['pages'][key]['extract']
-            #print description
             return description
         except 	IndexError:
             print("check your organism name again")
@@ -134,9 +131,6 @@ def get_taxid(id_baseurl,name):
         sys.exit(0)
 
 def delete_org(name):
-    #if options["organism"]:
-    #for organism in options["organism"]:
-    #organism = options["organism"][0].lower().capitalize() + " " + options["organism"][1].lower()
     Organism.objects.filter(display_name = name).delete()
     return ("remove %s in database"%name)
 '''
