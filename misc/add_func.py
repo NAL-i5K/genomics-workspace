@@ -134,22 +134,3 @@ def get_taxid(id_baseurl,name):
 def delete_org(name):
     Organism.objects.filter(display_name = name).delete()
     return ("remove %s in database"%name)
-"""
-def delete(db, dbname):
-    tmp=[]
-    if db[0]=='all':
-        if dbname=='blast':
-            BlastDb.objects.all().delete()
-            print("remove all data in blast")
-        else:
-            HmmerDB.objects.all().delete()
-            print("remove all data in hmmer")
-    else:
-        for name in db :
-            if dbname=='blast':
-                BlastDb.objects.filter(title = name).delete()
-            else:
-                HmmerDB.objects.filter(title = name).delete()
-            tmp.append(name)
-    return "remove %s "%tmp
-"""
