@@ -18,6 +18,7 @@ import stat as Perm
 from itertools import groupby
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
+from subprocess import Popen, PIPE
 
 blast_customized_options = {'blastn': ['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn': ['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -39,6 +40,23 @@ blast_info = {
         '.tsv': '6 ' + blast_col_name,
     },
 }
+
+def get_fasta(request):
+    if request.method=="GET" and request.is_ajax():
+        sseqid2 = request.GET.get("sseqid")
+        #print(request)
+        #print(sseqid2)
+        bin_name = get_bin_name()
+        blastdbcmd_path = path.join('/home/vagrant/genomics-workspace/','blast', bin_name, 'blastdbcmd')
+        args = [blastdbcmd_path,'-db','Cflo.scaffolds.fa','-entry',sseqid2]
+        #args = [blastdbcmd_path,'-show_blastdb_search_path']
+        p = Popen(args, stdin=PIPE, stdout=PIPE)
+        output, error = p.communicate()
+        if output :
+            return HttpResponse(output)
+
+        else:
+            return HttpResponse(error)
 
 def manual(request):
     '''

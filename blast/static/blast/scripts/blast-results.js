@@ -152,7 +152,8 @@ $(function () { // document ready
         else if (sseqid in fasta_loading)
             return fasta_loading[sseqid];
         else {
-            fasta_loading[sseqid] = $.get(url_root + '/api/seq/' + sseqid + '/?format=fasta', function (data) {
+            //fasta_loading[sseqid] = $.get(url_root + '/api/seq/' + sseqid + '/?format=fasta', function (data) {
+            fasta_loading[sseqid] = $.get('getfasta/',{"sseqid": sseqid}, function (data) {    
                 fasta_cache[sseqid] = data;
             });
             return fasta_loading[sseqid];

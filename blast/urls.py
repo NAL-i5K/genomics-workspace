@@ -25,6 +25,7 @@ urlpatterns = [
     # url(r'^api-docs/', include('rest_framework_swagger.urls')),
     url(r'^user-tasks/(?P<user_id>[0-9]+)$', views.user_tasks),
     url(r'^manual/$', views.manual, name='manual'),
+    url(r'getfasta/$',views.get_fasta)
 ]
 
 if settings.DEBUG:
