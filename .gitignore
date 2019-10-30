@@ -83,3 +83,5 @@ dist/
 
 /clustal/static/clustal/scripts/jquery.hoverIntent.js
 /clustal/static/clustal/scripts/jquery.validate.js
+
+celerybeat-schedule
