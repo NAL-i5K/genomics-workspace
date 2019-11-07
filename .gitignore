@@ -7,6 +7,10 @@
 # Mac desktop service store files
 .DS_Store
 
+# Log and Process id files
+*.log
+*.pid
+
 # Virtual Environment
 /py2.7/
 /env/
