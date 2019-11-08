@@ -12,6 +12,11 @@ class Command(BaseCommand):
             management.call_command("migrate")
             management.call_command("addorganism", "Apis", "mellifera")
             try:
+                management.call_command("addhmmer", "Apis", "mellifera", "-f", "amel_OGSv3.3_pep.fa")
+            except IntegrityError as key_error:
+                msg = key_error.args[0].split("\n")[1]
+                self.stdout.write("[warning]: {}, continuing to seed the blast database".format(msg))
+            try:
                 management.call_command("addblast", "Apis", "mellifera", "-t", "nucleotide", "Genome","Assembly", "-f", blast_file_name)
             except IntegrityError as key_error:
                 msg = key_error.args[0].split("\n")[1]
