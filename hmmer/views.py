@@ -140,7 +140,7 @@ def create(request):
 
         record = HmmerQueryRecord()
         record.task_id = task_id
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             record.user = request.user
         record.save()
         # generate status.json for frontend statu checking

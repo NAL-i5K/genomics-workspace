@@ -131,7 +131,7 @@ def create(request, iframe=False):
                 args_list.append(args)
             record = BlastQueryRecord()
             record.task_id = task_id
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 record.user = request.user
             record.save()
 

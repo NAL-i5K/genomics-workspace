@@ -7,7 +7,7 @@ from app.views import handle_404
 
 admin.autodiscover()
 
-login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
+login_forbidden = user_passes_test(lambda u: u.is_anonymous, '/home')
 
 urlpatterns = [
     url(r'^proxy/', include('proxy.urls', namespace='proxy')),

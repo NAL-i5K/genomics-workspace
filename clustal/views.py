@@ -189,7 +189,7 @@ def create(request):
 
             record = ClustalQueryRecord()
             record.task_id = task_id
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 record.user = request.user
             record.save()
 
