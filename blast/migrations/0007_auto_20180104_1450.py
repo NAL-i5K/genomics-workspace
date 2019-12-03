@@ -20,6 +20,6 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='blastdb',
             name='organism',
-            field=models.ForeignKey(to='app.Organism'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, to='app.Organism'),
         ),
     ]

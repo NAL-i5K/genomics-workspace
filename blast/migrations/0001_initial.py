@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blastdb',
             name='organism',
-            field=models.ForeignKey(to='blast.Organism'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, to='blast.Organism'),
             preserve_default=True,
         ),
         migrations.CreateModel(
@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                 ('seq_start_pos', models.BigIntegerField()),
                 ('seq_end_pos', models.BigIntegerField()),
                 ('modified_date', models.DateTimeField(auto_now_add=True)),
-                ('blast_db', models.ForeignKey(verbose_name=b'BLAST DB', to='blast.BlastDb')),
+                ('blast_db', models.ForeignKey(on_delete=models.deletion.CASCADE, verbose_name=b'BLAST DB', to='blast.BlastDb')),
             ],
             options={
             },
@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='sequence',
-            unique_together=set([(b'blast_db', b'id')]),
+            unique_together=set([(u'blast_db', u'id')]),
         ),
         migrations.CreateModel(
             name='SequenceType',
@@ -103,7 +103,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blastdb',
             name='type',
-            field=models.ForeignKey(to='blast.SequenceType'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, to='blast.SequenceType'),
             preserve_default=True,
         ),
     ]

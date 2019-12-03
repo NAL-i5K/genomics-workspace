@@ -20,7 +20,7 @@ class Migration(migrations.Migration):
                 ('dequeue_date', models.DateTimeField(null=True)),
                 ('result_date', models.DateTimeField(null=True)),
                 ('result_status', models.CharField(default=b'WAITING', max_length=32)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(on_delete=models.deletion.CASCADE, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
     ]
