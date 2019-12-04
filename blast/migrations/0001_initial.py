@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('url', models.URLField(help_text=b'The URL to Jbrowse using this reference', unique=True, verbose_name=b'Jbrowse URL')),
-                ('blast_db', models.OneToOneField(verbose_name=b'reference', to='blast.BlastDb', help_text=b'The BLAST database used as the reference in Jbrowse')),
+                ('blast_db', models.OneToOneField(on_delete=models.CASCADE,verbose_name=b'reference', to='blast.BlastDb', help_text=b'The BLAST database used as the reference in Jbrowse')),
             ],
             options={
             },
