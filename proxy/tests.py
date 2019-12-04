@@ -1,5 +1,5 @@
 from django.test import TestCase
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 class Proxy_viewTest(TestCase):
     def test_url_and_args(self):
