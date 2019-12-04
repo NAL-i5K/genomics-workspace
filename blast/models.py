@@ -3,7 +3,7 @@ import os.path
 from django.db import models
 from django.contrib.auth.models import User
 from filebrowser.fields import FileBrowseField
-from django.core.urls import reverse
+from django.urls import reverse
 from django.conf import settings
 import app.models
 from util.get_bin_name import get_bin_name
