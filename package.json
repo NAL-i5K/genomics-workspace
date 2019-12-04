@@ -22,7 +22,7 @@
   "dependencies": {
     "Respond.js": "https://github.com/scottjehl/Respond/archive/1.4.0.tar.gz",
     "backbone": "^1.1.2",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "bootstrap-select": "^1.6.3",
     "bootstrap-switch": "^3.0.2",
     "chroma-js": "https://github.com/gka/chroma.js/archive/v0.6.1.tar.gz",
