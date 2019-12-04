@@ -15,7 +15,7 @@ class BlastQueryRecord(models.Model):
     dequeue_date = models.DateTimeField(null=True)
     result_date = models.DateTimeField(null=True)
     result_status = models.CharField(max_length=32, default='WAITING') # ex. WAITING, SUCCESS, NO_ASN, ASN_EMPTY, NO_CSV, CSV_EMPTY
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User,models.CASCADE, null=True, blank=True)
     is_shown = models.BooleanField(default=True)
 
     def __unicode__(self):
@@ -57,8 +57,8 @@ class BlastDbManager(models.Manager):
 
 class BlastDb(models.Model):
     objects = BlastDbManager()
-    organism = models.ForeignKey(app.models.Organism)
-    type = models.ForeignKey(SequenceType)
+    organism = models.ForeignKey(app.models.Organism, models.CASCADE)
+    type = models.ForeignKey(SequenceType, models.CASCADE)
     # fasta_file = models.FileField(upload_to='blastdb') # upload file
     fasta_file = FileBrowseField('FASTA file path', max_length=200, directory='blast/db/', extensions='FASTA', format='FASTA')
     title = models.CharField(max_length=200, unique=True, help_text='This is passed into makeblast -title') # makeblastdb -title
@@ -154,7 +154,8 @@ class Sequence(models.Model):
     SELECT [key], blast_db_id, id, length, seq_start_pos, seq_end_pos, modified_date FROM blast_sequence
     '''
     key = models.AutoField(primary_key=True)
-    blast_db = models.ForeignKey(BlastDb, verbose_name='BLAST DB')
+    blast_db = models.ForeignKey(
+        BlastDb, models.CASCADE, verbose_name='BLAST DB')
     id = models.CharField(max_length=200, unique=True)  # gi|45478711|ref|NC_005816.1|
     length = models.PositiveIntegerField()
     seq_start_pos = models.BigIntegerField()  # used for file.seek(offset), marks start of '>'
@@ -194,7 +195,8 @@ class Sequence(models.Model):
 
 class JbrowseSetting(models.Model):
     '''Used to link databases to Jbrowse'''
-    blast_db = models.OneToOneField(BlastDb, verbose_name='reference', unique=True, help_text='The BLAST database used as the reference in Jbrowse')
+    blast_db = models.OneToOneField(BlastDb, models.CASCADE, verbose_name='reference',
+                                    unique=True, help_text='The BLAST database used as the reference in Jbrowse')
     url = models.URLField('Jbrowse URL', unique=True, help_text='The URL to Jbrowse using this reference')
 
     def __unicode__(self):

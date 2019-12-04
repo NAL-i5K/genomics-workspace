@@ -10,13 +10,13 @@ class HmmerQueryRecord(models.Model):
     dequeue_date = models.DateTimeField(null=True)
     result_date = models.DateTimeField(null=True)
     result_status = models.CharField(max_length=32, default='WAITING') # ex. WAITING, SUCCESS, NO_ASN, ASN_EMPTY, NO_CSV, CSV_EMPTY
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Hmmer result'
 
 class HmmerDB(models.Model):
-    organism = models.ForeignKey(Organism, default=0) #
+    organism = models.ForeignKey(Organism, models.CASCADE, default=0)
     fasta_file = FileBrowseField('FASTA file path', max_length=100, directory='hmmer/db/', extensions='FASTA', format='FASTA', default='')
     title = models.CharField(max_length=200, unique=True, default='') # makeblastdb -title
     description = models.TextField(blank=True) # shown in hmmer db selection ui

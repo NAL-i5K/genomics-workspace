@@ -7,7 +7,7 @@ class ClustalQueryRecord(models.Model):
     dequeue_date = models.DateTimeField(null=True)
     result_date = models.DateTimeField(null=True)
     result_status = models.CharField(max_length=32, default='WAITING')
-    user = models.ForeignKey(User, null=True, blank=True)
+    user = models.ForeignKey(User, models.CASCADE, null=True, blank=True)
 
     class Meta:
         verbose_name = 'Clustal result'
