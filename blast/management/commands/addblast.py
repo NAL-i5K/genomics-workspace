@@ -10,6 +10,7 @@ class Command(BaseCommand):
         parser.add_argument('Genus_Species',nargs='+',type=str)
         parser.add_argument('-t','--type',nargs='+',type=str,help='please enter nucleotide or peptide and enter Genome Assembly or Protein or Transcript')
         parser.add_argument('-f','--filename',nargs=1,type=str)
+        parser.add_argument('-d','--description',nargs='*',type=str,default='',help='please enter description')
 
     def handle(self,*args,**options):
 
@@ -21,7 +22,12 @@ class Command(BaseCommand):
             blast_type = get_type(dataset,molecule2,molecule_str,dataset_str)
             title = options['filename'][0]
             fasta_file_path = get_path('blast',title)
-            new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, title = title, description = '', is_shown = False )
+            if options['description']=='':
+               options['description']= options['filename'][0]
+            else:
+               options['description']= ' '.join(options['description'])
+            new_db = BlastDb(organism = organism, type = blast_type, fasta_file = fasta_file_path, \
+             title = title, description = options['description'], is_shown = False)
             new_db.save()
             print("you can move to makeblastdb and populate sequence step")
             #except django.db.utils.IntegrityError:
