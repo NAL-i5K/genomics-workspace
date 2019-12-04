@@ -172,7 +172,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                                 match_part_id += 1
                             match_id += 1
             result_status = 'SUCCESS'
-        except Exception, e:
+        except Exception as e:
             # print Exception, e
             result_status = 'NO_GFF'
     record.result_status = result_status
