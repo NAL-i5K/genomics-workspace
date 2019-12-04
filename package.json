@@ -35,7 +35,7 @@
     "datatables.net-colreorder-dt": "^1.5.1",
     "datatables.net-dt": "^1.10.16",
     "disable-output-webpack-plugin": "^1.0.1",
-    "jquery": "^1.11.1",
+    "jquery": "^3.3.1",
     "jquery-hoverintent": "^1.9.0",
     "jquery-ui-dist": "^1.12.0",
     "jquery-ui-themes": "^1.12.0",

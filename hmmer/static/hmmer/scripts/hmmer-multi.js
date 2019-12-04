@@ -640,4 +640,4 @@ OFAS004738-PA:polypeptide,      AGGAGSCGQQNGNNFSQQSRGPTVEEVD-----\n\
 });
 
 //prevention of cache pages
-$(window).unload(function () { });
+$(window).on("unload",function () { });

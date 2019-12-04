@@ -48,6 +48,7 @@ if (!Array.prototype.indexOf) {
     return -1;
   };
 }
+
 $(function() { // document ready
     ///////////////////////////////
     // HTML STRUCTURE GENERATION //
@@ -658,6 +659,5 @@ $(function() { // document ready
     }
     });
 });
-
 //prevention of cache pages
-$(window).unload(function () { });
+$(window).on('beforeunload', function(){});
