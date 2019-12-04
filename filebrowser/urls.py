@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from filebrowser import views
-
+app_name='filebrowser'
 urlpatterns = [
     # filebrowser urls
     url(r'^browse/$', views.browse, name="fb_browse"),

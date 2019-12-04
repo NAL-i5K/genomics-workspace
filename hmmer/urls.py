@@ -2,6 +2,7 @@ from django.conf.urls import url
 from hmmer import views
 # from .api import *
 
+app_name='hmmer'
 urlpatterns = [
     # ex: /hmmer/
     url(r'^$', views.create, name='create'),

@@ -2,6 +2,7 @@ from django.conf.urls import url
 from clustal import views
 # from .api import *
 
+app_name='clustal'
 urlpatterns = [
     # ex: /clustal/
     url(r'^$', views.create, name='create'),
