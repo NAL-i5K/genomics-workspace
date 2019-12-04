@@ -18,6 +18,7 @@ import stat as Perm
 from itertools import groupby
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
+import pdb
 
 blast_customized_options = {'blastn': ['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn': ['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -70,15 +71,17 @@ def create(request, iframe=False):
         bin_name = get_bin_name()
         # write query to file
         if 'query-file' in request.FILES:
-            with open(query_filename, 'wb') as query_f:
+            with open(query_filename, 'wt') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST:
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+            with open(query_filename, 'wt') as query_f:
+                query_text = [x.encode('utf-8','ignore').decode('utf-8').strip() for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
+
+        
 
         if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
             return render(request, 'blast/invalid_query.html', {'title': 'Your query size is ' + str(path.getsize(query_filename)) + ' bytes, but exceeds our query size limit of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' kbytes,  Please try again with a smaller query size.',})
@@ -136,15 +139,16 @@ def create(request, iframe=False):
             record.save()
 
             # generate status.json for frontend status checking
-            with open(query_filename, 'r') as f:
+            with open(query_filename, 'rt') as f:
                 # count number of query sequence by counting '>'
                 qstr = f.read()
                 seq_count = qstr.count('>')
                 if (seq_count == 0):
                     seq_count = 1
-                with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
+                with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
                     json.dump({'status': 'pending', 'seq_count': seq_count}, f)
 
+            
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
 
             # debug
@@ -228,7 +232,7 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            with open(status_file_path, 'rt') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
