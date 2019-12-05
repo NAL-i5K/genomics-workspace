@@ -86,7 +86,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AlterUniqueTogether(
             name='sequence',
-            unique_together=set([(b'blast_db', b'id')]),
+            unique_together=set([('blast_db', 'id')]),
         ),
         migrations.CreateModel(
             name='SequenceType',

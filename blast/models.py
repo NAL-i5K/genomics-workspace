@@ -108,7 +108,7 @@ class BlastDb(models.Model):
             # parse fasta
             #seq_count = 0
             sequence_list = []
-            with open(self.fasta_file.path_full, 'rb') as f:
+            with open(self.fasta_file.path_full, 'rt') as f:
                 offset = 0
                 id = ''
                 # header = ''
@@ -164,7 +164,7 @@ class Sequence(models.Model):
     def fasta_seq(self):
         if not os.path.isfile(self.blast_db.fasta_file.path_full):
             return 'FASTA file not found.'
-        with open(self.blast_db.fasta_file.path_full, 'rb') as f:
+        with open(self.blast_db.fasta_file.path_full, 'rt') as f:
             f.seek(self.seq_start_pos)
             seq = f.read(self.seq_end_pos - self.seq_start_pos)
             if seq[-1] != '\n':
@@ -174,14 +174,14 @@ class Sequence(models.Model):
     def get_sequence(self):
         if not os.path.isfile(self.blast_db.fasta_file.path_full):
             return 'FASTA file not found.'
-        with open(self.blast_db.fasta_file.path_full, 'rb') as f:
+        with open(self.blast_db.fasta_file.path_full, 'rt') as f:
             f.seek(self.seq_start_pos)
             return f.read(self.seq_end_pos - self.seq_start_pos).split('\n', 1)[1]
 
     def get_header(self):
         if not os.path.isfile(self.blast_db.fasta_file.path_full):
             return 'FASTA file not found.'
-        with open(self.blast_db.fasta_file.path_full, 'rb') as f:
+        with open(self.blast_db.fasta_file.path_full, 'rt') as f:
             f.seek(self.seq_start_pos)
             return f.read(self.seq_end_pos - self.seq_start_pos).split('\n', 1)[0]
 

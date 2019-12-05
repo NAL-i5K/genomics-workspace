@@ -31,15 +31,15 @@ def run_clustal_task(task_id, args_list, file_prefix):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open('status.json', 'r') as f:
+    with open('status.json', 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
 
-    with open('status.json', 'w') as f:
+    with open('status.json', 'wt') as f:
         json.dump(statusdata, f)
 
     # run
-    FNULL = open(devnull, 'w')
+    FNULL = open(devnull, 'wt')
     for args in args_list:
         p = Popen(args, stdout=FNULL, stderr=PIPE)
         p.wait()
@@ -54,10 +54,10 @@ def run_clustal_task(task_id, args_list, file_prefix):
     record.result_date = datetime.utcnow().replace(tzinfo=utc)
     record.save()
 
-    with open('status.json', 'r') as f:
+    with open('status.json', 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'done'
-    with open('status.json', 'wb') as f:
+    with open('status.json', 'wt') as f:
         json.dump(statusdata, f)
 
     return task_id  # passed to 'result' argument of task_success_handler

@@ -16,7 +16,7 @@ from django.conf import settings
 import csv
 import json
 import time
-from celery.contrib import rdb
+
 logger = get_task_logger(__name__)
 
 if settings.USE_CACHE:

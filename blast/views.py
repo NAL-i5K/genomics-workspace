@@ -70,12 +70,13 @@ def create(request, iframe=False):
         bin_name = get_bin_name()
         # write query to file
         if 'query-file' in request.FILES:
-            with open(query_filename, 'wb') as query_f:
+            with open(query_filename, 'wt') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST:
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii','ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+            with open(query_filename, 'wt') as query_f:
+                query_text = [x.encode('utf-8', 'ignore').strip().decode('utf-8')
+                              for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
@@ -136,13 +137,13 @@ def create(request, iframe=False):
             record.save()
 
             # generate status.json for frontend status checking
-            with open(query_filename, 'r') as f:
+            with open(query_filename, 'rt') as f:
                 # count number of query sequence by counting '>'
                 qstr = f.read()
                 seq_count = qstr.count('>')
                 if (seq_count == 0):
                     seq_count = 1
-                with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
+                with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
                     json.dump({'status': 'pending', 'seq_count': seq_count}, f)
 
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
@@ -157,18 +158,20 @@ def create(request, iframe=False):
 def retrieve(request, task_id='1'):
     try:
         r = BlastQueryRecord.objects.get(task_id=task_id)
+        
         # if result is generated and not expired
         if r.result_date and (r.result_date.replace(tzinfo=None) >= (datetime.utcnow()+ timedelta(days=-7))):
             if r.result_status in ['SUCCESS', 'NO_GFF']:
                 file_prefix = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, task_id)
                 results_info = ''
-                with open(path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'info.json'), 'rb') as f:
+                with open(path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'info.json'), 'rt') as f:
                     results_info = f.read()
                 results_data = ''
-                with open(file_prefix + '.json', 'rb') as f:
+
+                with open(file_prefix + '.json', 'rt') as f:
                     results_data = f.read()
                 results_detail = ''
-                with open(file_prefix + '.0', 'rb') as f:
+                with open(file_prefix + '.0', 'rt') as f:
                     results_detail = f.read()
                 results_col_names = blast_info['col_names']
                 results_col_names_display = blast_col_names_display
@@ -217,7 +220,7 @@ def read_gff3(request, task_id, dbname):
     output = '##gff-version 3\n'
     try:
         if request.method == 'GET':
-            with open(path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, dbname) + '.gff', 'rb') as f:
+            with open(path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, dbname) + '.gff', 'rt') as f:
                 output = f.read()
     finally:
         return HttpResponse(output)
@@ -228,7 +231,7 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            with open(status_file_path, 'rt') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])
@@ -242,7 +245,7 @@ def status(request, task_id):
                 elif statusdata['status'] == 'running':
                     asn_path = path.join(settings.MEDIA_ROOT, 'blast', 'task', task_id, (task_id+'.asn'))
                     if path.isfile(asn_path):
-                        with open(asn_path, 'r') as asn_f:
+                        with open(asn_path, 'rt') as asn_f:
                             astr = asn_f.read()
                             processed_seq_count = astr.count('title \"')
                             statusdata['processed'] = processed_seq_count
