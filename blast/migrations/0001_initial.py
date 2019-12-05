@@ -44,7 +44,7 @@ class Migration(migrations.Migration):
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
                 ('url', models.URLField(help_text=b'The URL to Jbrowse using this reference', unique=True, verbose_name=b'Jbrowse URL')),
-                ('blast_db', models.OneToOneField(verbose_name=b'reference', to='blast.BlastDb', help_text=b'The BLAST database used as the reference in Jbrowse')),
+                ('blast_db', models.OneToOneField(on_delete=models.CASCADE,verbose_name=b'reference', to='blast.BlastDb', help_text=b'The BLAST database used as the reference in Jbrowse')),
             ],
             options={
             },
@@ -66,7 +66,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blastdb',
             name='organism',
-            field=models.ForeignKey(to='blast.Organism'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, to='blast.Organism'),
             preserve_default=True,
         ),
         migrations.CreateModel(
@@ -78,7 +78,7 @@ class Migration(migrations.Migration):
                 ('seq_start_pos', models.BigIntegerField()),
                 ('seq_end_pos', models.BigIntegerField()),
                 ('modified_date', models.DateTimeField(auto_now_add=True)),
-                ('blast_db', models.ForeignKey(verbose_name=b'BLAST DB', to='blast.BlastDb')),
+                ('blast_db', models.ForeignKey(on_delete=models.deletion.CASCADE, verbose_name=b'BLAST DB', to='blast.BlastDb')),
             ],
             options={
             },
@@ -103,7 +103,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='blastdb',
             name='type',
-            field=models.ForeignKey(to='blast.SequenceType'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, to='blast.SequenceType'),
             preserve_default=True,
         ),
     ]

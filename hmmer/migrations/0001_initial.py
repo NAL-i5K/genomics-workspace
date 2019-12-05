@@ -22,7 +22,7 @@ class Migration(migrations.Migration):
                 ('title', models.CharField(default=b'', help_text=b'This is passed into makeblast -title', unique=True, max_length=200)),
                 ('description', models.TextField(blank=True)),
                 ('is_shown', models.BooleanField(default=None, help_text=b'Display this database in the BLAST submit form')),
-                ('organism', models.ForeignKey(default=0, to='blast.Organism')),
+                ('organism', models.ForeignKey(on_delete=models.deletion.CASCADE, default=0, to='blast.Organism')),
             ],
         ),
         migrations.CreateModel(
@@ -33,7 +33,7 @@ class Migration(migrations.Migration):
                 ('dequeue_date', models.DateTimeField(null=True)),
                 ('result_date', models.DateTimeField(null=True)),
                 ('result_status', models.CharField(default=b'WAITING', max_length=32)),
-                ('user', models.ForeignKey(blank=True, to=settings.AUTH_USER_MODEL, null=True)),
+                ('user', models.ForeignKey(on_delete=models.deletion.CASCADE, blank=True, to=settings.AUTH_USER_MODEL, null=True)),
             ],
         ),
     ]

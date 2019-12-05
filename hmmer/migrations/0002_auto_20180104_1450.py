@@ -23,7 +23,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='hmmerdb',
             name='organism',
-            field=models.ForeignKey(default=0, to='app.Organism'),
+            field=models.ForeignKey(on_delete=models.deletion.CASCADE, default=0, to='app.Organism'),
         ),
         migrations.AlterField(
             model_name='hmmerdb',

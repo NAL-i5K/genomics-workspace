@@ -18,6 +18,7 @@ import stat as Perm
 from itertools import groupby
 from multiprocessing import cpu_count
 from util.get_bin_name import get_bin_name
+import pdb
 
 blast_customized_options = {'blastn': ['max_target_seqs', 'evalue', 'word_size', 'reward', 'penalty', 'gapopen', 'gapextend', 'strand', 'low_complexity', 'soft_masking'],
                             'tblastn': ['max_target_seqs', 'evalue', 'word_size', 'matrix', 'threshold', 'gapopen', 'gapextend', 'low_complexity', 'soft_masking'],
@@ -81,6 +82,8 @@ def create(request, iframe=False):
         else:
             return render(request, 'blast/invalid_query.html', {'title': 'Invalid Query'})
 
+        
+
         if (path.getsize(query_filename) > int(settings.BLAST_QUERY_SIZE_MAX) * 1024):
             return render(request, 'blast/invalid_query.html', {'title': 'Your query size is ' + str(path.getsize(query_filename)) + ' bytes, but exceeds our query size limit of ' + str(settings.BLAST_QUERY_SIZE_MAX) + ' kbytes,  Please try again with a smaller query size.',})
 
@@ -132,7 +135,7 @@ def create(request, iframe=False):
                 args_list.append(args)
             record = BlastQueryRecord()
             record.task_id = task_id
-            if request.user.is_authenticated():
+            if request.user.is_authenticated:
                 record.user = request.user
             record.save()
 
@@ -146,6 +149,7 @@ def create(request, iframe=False):
                 with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
                     json.dump({'status': 'pending', 'seq_count': seq_count}, f)
 
+            
             run_blast_task.delay(task_id, args_list, file_prefix, blast_info)
 
             # debug

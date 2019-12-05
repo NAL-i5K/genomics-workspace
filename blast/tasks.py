@@ -16,6 +16,7 @@ from django.conf import settings
 import csv
 import json
 import time
+from celery.contrib import rdb
 
 logger = get_task_logger(__name__)
 
@@ -40,11 +41,11 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'r') as f:
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
 
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
         json.dump(statusdata, f)
 
     # run

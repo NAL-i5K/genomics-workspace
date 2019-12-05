@@ -1,4 +1,4 @@
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 
 from filebrowser.tests.base import BaseTestCase
 from filebrowser.conf import fb_settings

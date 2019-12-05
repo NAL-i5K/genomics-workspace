@@ -12,6 +12,7 @@ router.register(r'seq', SequenceViewSet)
 router.register(r'task', BlastQueryRecordViewSet)
 router.register(r'user', UserViewSet)
 
+app_name='blast'
 urlpatterns = [
     # ex: /blast/
     url(r'^$', views.create, name='create'),
