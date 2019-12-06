@@ -14,7 +14,7 @@ import json
 import traceback
 import stat as Perm
 from itertools import groupby
-from subprocess import Popen, PIPE
+from subprocess import run, PIPE
 from i5k.settings import HMMER_QUERY_MAX
 from util.get_bin_name import get_bin_name
 
@@ -109,12 +109,13 @@ def create(request):
             If the machine can't perform it in short time, it could be marked.
             But you need find a good to check format in front-end
             '''
-            proc = Popen([path.join(program_path, "hmmbuild"), "--fast", '--amino',
-                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename],
-                      stdout=PIPE, stderr=PIPE)
-            proc.wait()
-            result = proc.communicate()[1]
-            if(result != ''):
+            cmd = [path.join(program_path, "hmmbuild"), "--fast", '--amino',
+                     path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename]
+            
+            try:
+                proc = run(cmd, check=True, stdout=PIPE, stderr=PIPE,
+                           universal_newlines=True)
+            except Exception as e:
                 return render(request, 'hmmer/invalid_query.html',
                              {'title': 'Invalid MSA format',
                               'info' :'<a href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format" target="_blank"> \
