@@ -109,11 +109,11 @@ def create(request):
             If the machine can't perform it in short time, it could be marked.
             But you need find a good to check format in front-end
             '''
-            p = Popen([path.join(program_path, "hmmbuild"), "--fast", '--amino',
+            proc = Popen([path.join(program_path, "hmmbuild"), "--fast", '--amino',
                       path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename],
                       stdout=PIPE, stderr=PIPE)
-            p.wait()
-            result = p.communicate()[1]
+            proc.wait()
+            result = proc.communicate()[1]
             if(result != ''):
                 return render(request, 'hmmer/invalid_query.html',
                              {'title': 'Invalid MSA format',
