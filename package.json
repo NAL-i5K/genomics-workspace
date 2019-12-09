@@ -2,7 +2,7 @@
   "name": "genomics-workspace",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm install && webpack && python2.7 setup.py"
+    "build": "npm install && webpack-cli && python2.7 setup.py"
   },
   "private": true,
   "repository": {
@@ -22,7 +22,7 @@
   "dependencies": {
     "Respond.js": "https://github.com/scottjehl/Respond/archive/1.4.0.tar.gz",
     "backbone": "^1.1.2",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^3.4.1",
     "bootstrap-select": "^1.6.3",
     "bootstrap-switch": "^3.0.2",
     "chroma-js": "https://github.com/gka/chroma.js/archive/v0.6.1.tar.gz",
@@ -35,7 +35,7 @@
     "datatables.net-colreorder-dt": "^1.5.1",
     "datatables.net-dt": "^1.10.16",
     "disable-output-webpack-plugin": "^1.0.1",
-    "jquery": "^1.11.1",
+    "jquery": "^3.4.0",
     "jquery-hoverintent": "^1.9.0",
     "jquery-ui-dist": "^1.12.0",
     "jquery-ui-themes": "^1.12.0",

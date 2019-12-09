@@ -1,14 +1,14 @@
-Django==1.11.22
+Django==1.11.23
 Markdown==2.6.6
 amqp==2.3.2
 celery==4.1.1
 cssmin==0.2.0
 django-pipeline==1.6.8
-djangorestframework==3.7.7
+djangorestframework==3.9.1
 django-rest-swagger==0.3.5
 docutils==0.12
 jsmin==2.0.11
-pillow==3.4.0
+pillow==6.2.0
 psycopg2==2.7.1
 python-memcached==1.57
 wsgiref==0.1.2

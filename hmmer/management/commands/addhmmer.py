@@ -9,6 +9,7 @@ class Command(BaseCommand):
     def add_arguments(self,parser):
         parser.add_argument('Genus_Species',nargs='+',type=str)
         parser.add_argument('-f','--filename',nargs=1,type=str)
+        parser.add_argument('-d','--description',nargs='*',default='',help='please  enter description')
 
     def handle(self,*args,**options):
 
@@ -19,7 +20,12 @@ class Command(BaseCommand):
 
             title = options['filename'][0]
             fasta_file_path = get_path('hmmer',title)
-            new_db = HmmerDB(organism = organism, fasta_file = fasta_file_path, title = title, description = '', is_shown = True )
+            if options['description']=='':
+               options['description']= options['filename'][0]
+            else:
+               options['description']= ''.join(options['description'])
+            new_db = HmmerDB(organism = organism, fasta_file = fasta_file_path, title = title, \
+ description = options['description'], is_shown = True )
             new_db.save()
             print("Success")
             #except django.db.utils.IntegrityError:
