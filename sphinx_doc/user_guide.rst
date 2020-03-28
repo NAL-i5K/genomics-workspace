@@ -18,11 +18,9 @@ In short, you need to configure database for BLAST and HMMER, but you don't need
 
 * setup an admin account
 
-Use ``python manage.py createsuperuser``.
-
-Follow the instruction shown on your terminal, then browse and login to the admin of genomics-workspace. Usually, the admin page should be at ``http://127.0.0.1:8000/admin/``.
-
-If you already have an admin account, use ``python manage.py runserver`` and then browse and login to genomics-workspace.
+  * Use ``python manage.py createsuperuser``.
+  * Follow the instruction shown on your terminal, then browse and login to the admin of genomics-workspace. Usually, the admin page should be at ``http://127.0.0.1:8000/admin/``.
+  * If you already have an admin account, use ``python manage.py runserver`` and then browse and login to genomics-workspace.
 
 * Create these directories if you don’t have them
 
