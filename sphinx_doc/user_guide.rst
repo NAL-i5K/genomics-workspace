@@ -73,27 +73,27 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 .. Note:: the order of steps is important. Try to do these steps in order.  
 
-1.	To add organism
+1. To add organism
 
- a.	``python manage.py addorganism [genus] [species]`` (e.g python manage.py addorganism Apis mellifera)
+* ``python manage.py addorganism [genus] [species]`` (e.g python manage.py addorganism Apis mellifera)
 
-2.	To add a fasta file to the Blast application
+2. To add a fasta file to the Blast application
 
- a.	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
- b.	[type] here should be "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
- c.	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example descriptions are "[genus] [species] genome assembly, [assembly name]", "[genus] [species] [annotation name], peptides", "[genus] [species] [annotation name], transcripts" or "[genus] [species] [annotation name], CDS"
+*	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
+*	[type] here should be "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
+*	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example descriptions are "[genus] [species] genome assembly, [assembly name]", "[genus] [species] [annotation name], peptides", "[genus] [species] [annotation name], transcripts" or "[genus] [species] [annotation name], CDS"
 
 3.	To make the blast database (via makeblastdb)
 
- a.	``python manage.py blast_utility [path of fasta file] -m`` (e.g python manage.py blast_utility media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -m)
+*	``python manage.py blast_utility [path of fasta file] -m`` (e.g python manage.py blast_utility media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -m)
 
 4.	To populate the genomics-workspace sequences table
 
- a.	``python manage.py blast_utility [path of fasta file] -p`` (e.g python manage.py blast_utility media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -p)
+* ``python manage.py blast_utility [path of fasta file] -p`` (e.g python manage.py blast_utility media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -p)
 
-5.	To show the blast database in the web interface (the blast database will not show by default)
+5. To show the blast database in the web interface (the blast database will not show by default)
 
- a.	``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown ‘true’)
+* ``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown ‘true’)
 
 
 
@@ -121,9 +121,9 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 1.	To add organism (not necessary if the organism is already added)
 
-  a.	``python manage.py addorganism [genus] [species]`` (e.g python manage.py addorganism Apis mellifera)
+* ``python manage.py addorganism [genus] [species]`` (e.g python manage.py addorganism Apis mellifera)
 
 2.	To add hmmer
 
- a.	``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], peptides`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
- b.	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides"
+* ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], peptides`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
+* [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides"
