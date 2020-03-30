@@ -1,20 +1,23 @@
 User Guide
 ==========
 
-BLAST, HMMER, and Clustal are main functionality of genomics-workspace. Each one of this, we implemented it as a single `app
+BLAST, HMMER, and Clustal are the main functions of the genomics-workspace. Each of these functions is implemented as a single `app
 <https://docs.djangoproject.com/en/1.8/ref/applications/#s-projects-and-applications>`_ under Django.
 
-In this section, we will go through details about how to configure each one of them.
+In this section, we will go through details about how to configure each application.
 
 In short, you need to configure database for BLAST and HMMER, but you don't need to configure anything for Clustal.
 
-.. note:: The page is for user that wants to set up genomics-workspace by creating new admin user and confuguring in admin page. **If you want to know how to use services provided by genomics-workspace, see these tutorials:**
+.. note:: The page is for users that want to set up genomics-workspace by creating new admin user and confuguring in admin page. **If you want to know how to use services provided by genomics-workspace, see these tutorials:**
 
    * BLAST: https://i5k.nal.usda.gov/content/blast-tutorial
    * HMMER: https://i5k.nal.usda.gov/webapp/hmmer/manual/
    * CLUSTAL: https://i5k.nal.usda.gov/webapp/clustal/manual/
 
-**To get started, you need to finish these following things:**
+
+Getting started
+---------------
+**To get started, set up the following:**
 
 * setup an admin account
 
@@ -27,21 +30,21 @@ In short, you need to configure database for BLAST and HMMER, but you don't need
   * media/blast/db
   * media/hmmer/db
 
-* Create three sequence types in blast/sequence-type
+* Create sequence sequence types in blast/sequence-type. We recommend creating these three:
 
   * Peptide/Protein
   * Nucleotide/Genome Assembly
   * Nucleotide/Transcript
 
-* Copy fasta files to be formatted for blast to media/blast/db
+* Copy all fasta files to be formatted for blast to media/blast/db
 
 * Copy protein fasta files to be formatted for hmmer to media/hmmer/db
 
 BLAST Database Configuration
 ----------------------------
 
-**For manually creating a BLAST database, please follow these steps:** 
-
+Manually creating a BLAST database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Add Organism (click the **Organism** icon at sidebar and click **Add organism**):
 
   * Display name should be scientific name.
@@ -67,8 +70,8 @@ BLAST Database Configuration
 
 * Browse to ``http://127.0.0.1:8000/blast/``, you should able to see the page with dataset shown there.
 
-**For creating a BLAST database via command line, please follow these steps:**
-
+Creating a BLAST database via command line
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 An admin user can add or remove data from the genomics-workspace database via the command line interface. Here, we describe how to use commands to interact with the database.
 
 .. Note:: the order of steps is important. Try to do these steps in order.  
@@ -80,7 +83,7 @@ An admin user can add or remove data from the genomics-workspace database via th
 2. To add a fasta file to the Blast application
 
 *	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
-*	[type] here should be "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
+*	[type] here should be one of the sequence types you set up earlier, e.g. "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
 *	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example descriptions are "[genus] [species] genome assembly, [assembly name]", "[genus] [species] [annotation name], peptides", "[genus] [species] [annotation name], transcripts" or "[genus] [species] [annotation name], CDS"
 
 3.	To make the blast database (via makeblastdb)
@@ -101,10 +104,10 @@ HMMER Database Configuration
 ----------------------------
 Like BLAST, HMMER databases must be configured then they could be searched.
 
-Go django admin page and click Hmmer on left-menubar. You need to create HMMER db instance (Hmmer dbs) for each fasta file.
+Go to the django admin page and click Hmmer on the left menu bar. You need to create a HMMER db instance (Hmmer dbs) for each fasta file.
 
-**For manually creating a HMMER database, please follow these steps:** 
-
+Manually creating a HMMER database
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Choose ``Organsim``
 * Type location of peptide fasta file in ``FASTA file path``
 * Type ``Title`` name. (showed in HMMER page)
@@ -115,8 +118,8 @@ Go django admin page and click Hmmer on left-menubar. You need to create HMMER d
 .. image:: img/hmmer_add.png
    :alt: Add HMMER database example
 
-**For creating a HMMER database via command line, please follow these steps:**
-
+Creating a HMMER database via command line
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 An admin user can add or remove data from the genomics-workspace database via the command line interface. Here, we describe how to use commands to interact with the database.
 
 1.	To add organism (not necessary if the organism is already added)
@@ -125,5 +128,5 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 2.	To add hmmer
 
-* ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], peptides`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
+* ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
 * [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides"
