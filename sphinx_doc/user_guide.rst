@@ -130,3 +130,19 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 * ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
 * [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides"
+
+Organism and Database deletion
+------------------------------
+Organism, BLAST and HMMER databases can be deleted after configuration via the command line interface. Here, we describe the commands for deleting them.
+
+1. To delete organism
+
+* ``python manage.py delete -o [genus] [species]`` (e.g python manage.py delete -o Apis mellifera)
+
+2. To delete BLAST database
+
+* ``python manage.py delete -b [path of fasta file]`` (e.g python manage.py delete -b media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna)
+
+3. To delete HMMER database
+
+* ``python manage.py delete -h [path of fasta file]`` (e.g python manage.py delete -h media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna)
