@@ -12,9 +12,10 @@
 </script>
 <h2 id="hmmer-success">HMMER Success</h2>
 <h3>Download</h3>
-<p><a href="{{input}}">Input file</a></p>
-<p><a href="{{output}}">Hmmer result</a></p>
-<p><a href="{{status}}">Submission Details</a></p>
+<p><a href="{{request.path|cut:request.path_info}}{{{input}}">Input file</a></p>
+<p><a href="{{request.path|cut:request.path_info}}{{{output}}">Hmmer result</a></p>
+<p><a href="{{request.path|cut:request.path_info}}{{{status}}">Submission Details</a></p>
+
 <h3>Report Details</h3>
 {% if isExceed %}
 {{report}}
