@@ -284,7 +284,8 @@ $(function () { // document ready
     ///////////////////
     // Download Menu //
     ///////////////////
-    var task_path = /(https?:\/\/.*?)\/(?:blast)*/g.exec(document.URL)[1] + '/media/blast/task/' + task_id + '/' + task_id;
+    var url = new URL(document.URL)
+    var task_path =   url.pathname.match(/(.*)\/blast/)[1]+ '/media/blast/task/' + task_id + '/' + task_id;
     $('.btn-download').html('<button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">\
 <span class="glyphicon glyphicon-download"></span> Download <span class="caret"></span>\
 </button>\
