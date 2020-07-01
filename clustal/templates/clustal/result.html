@@ -12,8 +12,8 @@
 <h2 id="clustal-success">CLUSTAL Success</h2>
 <h3>Download</h3>
 <p><a href="{{ request.path|cut:request.path_info }}{{aln}}">Alignment</a><p>
-<p>{% if ph != None %} <a href="{{ph}}">Phylogenetic Tree</a>{% endif %}</p>
-<p>{% if dnd != None %} <a href="{{dnd}}">Phylogenetic Tree</a>{% endif %}</p>
+<p>{% if ph != None %} <a href="{{ request.path|cut:request.path_info }}{{ph}}">Phylogenetic Tree</a>{% endif %}</p>
+<p>{% if dnd != None %} <a href="{{ request.path|cut:request.path_info }}{{dnd}}">Phylogenetic Tree</a>{% endif %}</p>
 <p><a href="{{ request.path|cut:request.path_info }}{{status}}">Submission Details</a></p>
 <h3>Report Details</h3>
 <div class="tripal_details">
