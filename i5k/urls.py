@@ -4,26 +4,27 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.contrib.auth.decorators import user_passes_test
 from app.views import handle_404
+from django.urls import path, re_path
 
 admin.autodiscover()
 
-login_forbidden = user_passes_test(lambda u: u.is_anonymous(), '/home')
+login_forbidden = user_passes_test(lambda u: u.is_anonymous, '/home')
 
 urlpatterns = [
-    url(r'^proxy/', include('proxy.urls', namespace='proxy')),
+    path(r'proxy/', include('proxy.urls', namespace='proxy')),
 
-    # Enable the admin:
-    url(r'^admin/', include(admin.site.urls)),
+
     # Enable admin documentation:
-    url(r'^admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
-    url(r'^admin/filebrowser/', include('filebrowser.urls')),
-
+    #re_path(r'admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
+    #re_path(r'admin/filebrowser/', include('filebrowser.urls')),
+    # Enable the admin:
+    re_path(r'admin/', admin.site.urls),
     # BLAST
-    url(r'^blast/', include('blast.urls', namespace='blast')),
+    path(r'blast/', include('blast.urls', namespace='blast')),
     # HMMER
-    url(r'^hmmer/', include('hmmer.urls', namespace='hmmer')),
+    path(r'hmmer/', include('hmmer.urls', namespace='hmmer')),
     # CLUSTAL
-    url(r'^clustal/', include('clustal.urls', namespace='clustal')),
+    path(r'clustal/', include('clustal.urls', namespace='clustal')),
 ]
 
 # handle 404 page

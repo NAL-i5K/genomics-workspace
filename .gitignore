@@ -89,3 +89,5 @@ dist/
 /clustal/static/clustal/scripts/jquery.validate.js
 
 celerybeat-schedule
+v8-compile*
+i5k.ini

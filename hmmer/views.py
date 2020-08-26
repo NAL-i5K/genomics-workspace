@@ -14,7 +14,7 @@ import json
 import traceback
 import stat as Perm
 from itertools import groupby
-from subprocess import Popen, PIPE
+from subprocess import run, PIPE
 from i5k.settings import HMMER_QUERY_MAX
 from util.get_bin_name import get_bin_name
 
@@ -49,7 +49,7 @@ def create(request):
                                     'task', request.GET['clustal_task_id'],
                                     request.GET['clustal_task_id'] + ".aln")
 
-            with open(clustal_aln, 'r') as content_file:
+            with open(clustal_aln, 'rt') as content_file:
                 for line in content_file:
                     clustal_content.append(line)
 
@@ -76,13 +76,14 @@ def create(request):
 
         if 'query-file' in request.FILES:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, request.FILES['query-file'].name)
-            with open(query_filename, 'wb') as query_f:
+            with open(query_filename, 'wt') as query_f:
                 for chunk in request.FILES['query-file'].chunks():
                     query_f.write(chunk)
         elif 'query-sequence' in request.POST and request.POST['query-sequence']:
             query_filename = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, task_id + '.in')
-            with open(query_filename, 'wb') as query_f:
-                query_text = [x.encode('ascii', 'ignore').strip() for x in request.POST['query-sequence'].split('\n')]
+            with open(query_filename, 'wt') as query_f:
+                query_text = [x.encode('utf-8', 'ignore').strip().decode(
+                    'utf-8') for x in request.POST['query-sequence'].split('\n')]
                 query_f.write('\n'.join(query_text))
         else:
             return render(request, 'hmmer/invalid_query.html', {'title': '', })
@@ -95,7 +96,7 @@ def create(request):
         program_path = path.join(settings.BASE_DIR, 'hmmer', bin_name, 'bin')
 
         if request.POST['program'] == 'phmmer':
-            with open(query_filename, 'r') as f:
+            with open(query_filename, 'rt') as f:
                 qstr = f.read()
                 if qstr.count('>') > int(HMMER_QUERY_MAX):
                     query_cnt = str(qstr.count('>'))
@@ -108,12 +109,13 @@ def create(request):
             If the machine can't perform it in short time, it could be marked.
             But you need find a good to check format in front-end
             '''
-            p = Popen([path.join(program_path, "hmmbuild"), "--fast", '--amino',
-                      path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename],
-                      stdout=PIPE, stderr=PIPE)
-            p.wait()
-            result = p.communicate()[1]
-            if(result != ''):
+            cmd = [path.join(program_path, "hmmbuild"), "--fast", '--amino',
+                     path.join(settings.MEDIA_ROOT, 'hmmer', 'task', 'hmmbuild.test'), query_filename]
+            
+            try:
+                proc = run(cmd, check=True, stdout=PIPE, stderr=PIPE,
+                           universal_newlines=True)
+            except Exception as e:
                 return render(request, 'hmmer/invalid_query.html',
                              {'title': 'Invalid MSA format',
                               'info' :'<a href="http://toolkit.tuebingen.mpg.de/reformat/help_params#format" target="_blank"> \
@@ -140,16 +142,16 @@ def create(request):
 
         record = HmmerQueryRecord()
         record.task_id = task_id
-        if request.user.is_authenticated():
+        if request.user.is_authenticated:
             record.user = request.user
         record.save()
         # generate status.json for frontend statu checking
-        with open(query_filename, 'r') as f:
+        with open(query_filename, 'rt') as f:
             qstr = f.read()
             seq_count = qstr.count('>')
             if (seq_count == 0):
                 seq_count = 1
-            with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wb') as f:
+            with open(path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json'), 'wt') as f:
                 json.dump({'status': 'pending', 'seq_count': seq_count,
                            'db_list': [db[db.rindex('/') + 1:] for db in db_list],
                            'program': request.POST['program'],
@@ -173,7 +175,7 @@ def retrieve(request, task_id='1'):
             url_prefix = path.join(url_base_prefix, task_id)
             dir_prefix = path.join(dir_base_prefix, task_id)
 
-            with open(path.join(dir_base_prefix, 'status.json'), 'r') as f:
+            with open(path.join(dir_base_prefix, 'status.json'), 'rt') as f:
                 statusdata = json.load(f)
                 db_list = statusdata['db_list']
                 file_in = path.join(url_base_prefix, statusdata['input'])
@@ -188,7 +190,7 @@ def retrieve(request, task_id='1'):
             else:
                 isExceed = False
                 # '[ok]' is the end line of each hmmer output (delimiter for different dbs)
-                with open(dir_prefix + ".merge", 'r') as content_file:
+                with open(dir_prefix + ".merge", 'rt') as content_file:
                     for line in content_file:
                         line = line.rstrip('\n')
                         if line == '[ok]':
@@ -244,7 +246,7 @@ def status(request, task_id):
         status_file_path = path.join(settings.MEDIA_ROOT, 'hmmer', 'task', task_id, 'status.json')
         status = {'status': 'unknown'}
         if path.isfile(status_file_path):
-            with open(status_file_path, 'rb') as f:
+            with open(status_file_path, 'rt') as f:
                 statusdata = json.load(f)
                 if statusdata['status'] == 'pending' and settings.USE_CACHE:
                     tlist = cache.get('task_list_cache', [])

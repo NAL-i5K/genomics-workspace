@@ -16,6 +16,7 @@ from django.conf import settings
 import csv
 import json
 import time
+from celery.contrib import rdb
 
 logger = get_task_logger(__name__)
 
@@ -40,11 +41,11 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'r') as f:
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
 
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'w') as f:
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
         json.dump(statusdata, f)
 
     # run
@@ -65,7 +66,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         # parse .0, and save index in line_num_list
         report_path = file_prefix + '.0'
         line_num_list = []
-        with open(report_path, 'rb') as f:
+        with open(report_path, 'rt') as f:
             target_str = ' Score ='
             line_num = 0
             for line in f:
@@ -77,7 +78,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
         json_path = file_prefix + '.json'
         type_func = {'str': str, 'float': float, 'int': int}
         hsp_list = []
-        with open(tsv_path, 'rb') as f:
+        with open(tsv_path, 'rt') as f:
             hsp_list = [[type_func[convert](value) for convert, value in zip(blast_info['col_types'], row)] for row in csv.reader(f, delimiter='\t')]
         # generate gff3 files
         try:
@@ -98,15 +99,16 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                         .values_list('blast_db__title', 'url'))
             else:
                 db_url = []
-            with open(path.join(basedir, 'info.json'), 'wb') as f:
+            with open(path.join(basedir, 'info.json'), 'wt') as f:
                 json.dump({'sseqid_db': sseqid_db, 'db_organism': db_organism, 'db_url': db_url, 'line_num_list': line_num_list}, f)
-            with open(json_path, 'wb') as f:
+            with open(json_path, 'wt') as f:
                 json.dump([[sseqid_db[hsp_dict_list[i]['sseqid']]] + hsp for i, hsp in enumerate(hsp_list)], f)
+    
             overlap_cutoff = 5
             # group hsps by database, need to sort before doing groupby
             sorted_hsp_dict_list = sorted([hsp for hsp in hsp_dict_list if sseqid_db[hsp['sseqid']] in db_url], key=lambda a: sseqid_db[a['sseqid']])
             for db_name, db_hsp_dict_list in groupby(sorted_hsp_dict_list, key=lambda a: sseqid_db[a['sseqid']]):
-                with open(path.join(basedir, db_name + '.gff'), 'wb') as fgff:
+                with open(path.join(basedir, db_name + '.gff'), 'wt') as fgff:
                     fgff.write('##gff-version 3\n')
                     match_id = 1
                     match_part_id = 1
@@ -172,7 +174,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
                                 match_part_id += 1
                             match_id += 1
             result_status = 'SUCCESS'
-        except Exception, e:
+        except Exception as e:
             # print Exception, e
             result_status = 'NO_GFF'
     record.result_status = result_status
@@ -180,7 +182,7 @@ def run_blast_task(task_id, args_list, file_prefix, blast_info):
     record.save()
 
     # generate status.json for frontend status checking
-    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wb') as f:
+    with open(path.join(path.dirname(file_prefix), 'status.json'), 'wt') as f:
         json.dump({'status': 'done'}, f)
 
     return task_id  # passed to 'result' argument of task_success_handler

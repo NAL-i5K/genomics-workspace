@@ -2,7 +2,7 @@
   "name": "genomics-workspace",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm install && webpack-cli && python2.7 setup.py"
+    "build": "npm install && webpack-cli && /usr/local/i5k/bin/python3 setup.py"
   },
   "private": true,
   "repository": {

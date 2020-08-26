@@ -13,7 +13,6 @@ class Command(BaseCommand):
         title = options['BlastDb']
         for title in title:
             blast2 = BlastDb.objects.filter(title = title)
-            print options
             n+=1
             if options['shown'][0] == 'true':
                 blast2.update(is_shown = True)

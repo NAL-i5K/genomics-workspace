@@ -29,7 +29,7 @@ def install_blast(bin_name):
     if exists(blast_local_file_path):
         remove(blast_local_file_path)
 
-    extracted_blast_path = join(BASE_DIR, 'ncbi-blast-2.7.1+')
+    extracted_blast_path = join(BASE_DIR, 'ncbi-blast-2.8.1+')
     if exists(extracted_blast_path):
         rmtree(extracted_blast_path)
 
@@ -37,12 +37,12 @@ def install_blast(bin_name):
     if platform == 'darwin':
         urllib.request.urlretrieve(
             ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
-             'blast+/2.7.1/ncbi-blast-2.7.1+-x64-macosx.tar.gz'),
+             'blast+/2.8.1/ncbi-blast-2.8.1+-x64-macosx.tar.gz'),
             blast_local_file_path)
     else:  # for linux
         urllib.request.urlretrieve(
             ('https://ftp.ncbi.nlm.nih.gov/blast/executables/'
-             'blast+/2.7.1/ncbi-blast-2.7.1+-x64-linux.tar.gz'),
+             'blast+/2.8.1/ncbi-blast-2.8.1+-x64-linux.tar.gz'),
             blast_local_file_path)
 
     # extract tar.gz file
@@ -73,10 +73,10 @@ def install_hmmer(bin_name):
     hmmer_local_file_path = join(hmmer_bin_path, 'hmmer-3.2-0.tar.bz2')
     if platform == 'darwin':
         download_url = ('https://anaconda.org/bioconda/hmmer/'
-                        '3.2/download/osx-64/hmmer-3.2-0.tar.bz2')
+                        '3.2.1/download/osx-64/hmmer-3.2.1-h6de7cb9_2.tar.bz2')
     else:  # for linux
         download_url = ('https://anaconda.org/bioconda/hmmer/'
-                        '3.2/download/linux-64/hmmer-3.2-0.tar.bz2')
+                        '3.2.1/download/linux-64/hmmer-3.2.1-he1b5a44_2.tar.bz2')
 
     req = requests.get(download_url)
     with open(hmmer_local_file_path, 'wb') as f:
