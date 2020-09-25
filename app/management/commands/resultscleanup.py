@@ -24,3 +24,5 @@ class Command(BaseCommand):
                         task_dir = os.path.join(task_path,record.task_id)
                         if os.path.exists(task_dir):
                             print(task_dir)
+            except Exceptions as e:
+                raise e
