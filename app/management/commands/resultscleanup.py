@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 from django.core.management.base import BaseCommand
 import django
-
+import os
 class Command(BaseCommand):
 
     def handle(self,*args,**options):
@@ -16,7 +16,7 @@ class Command(BaseCommand):
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
             try:
                 records = QC.objects.all().filter(enqueue_date__gte=time_threshold)
-                app = QC.__name__.repave("QueryRecord").lower()
+                app = QC.__name__.replace("QueryRecord","").lower()
                 task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
 
                 if records.count() >= 1:
