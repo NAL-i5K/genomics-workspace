@@ -4,7 +4,7 @@ from hmmer.models import HmmerQueryRecord
 from datetime import timedelta
 from django.utils import timezone
 
-
+from django.conf import settings
 from django.core.management.base import BaseCommand
 import django
 
@@ -13,14 +13,14 @@ class Command(BaseCommand):
     def handle(self,*args,**options):
 
         time_threshold = timezone.now() - timedelta(days=7)
-        for QC in [BlastQueryRecord,ClustalQueryRecord HmmerQueryRecord]:
+        for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
             try:
-                records = QC.objects.all.filter((entered__gte=time_threshold))
-                if records.count() >= 1:
-                    print(f"{QC.__class__} => {records.count()}")
-                    print(records.first.enqueue_date)
-                    
+                records = QC.objects.all().filter(enqueue_date__gte=time_threshold)
+                app = QC.__name__.repave("QueryRecord").lower()
+                task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
 
-                
-            except django.db.utils.IntegrityError:
-                print("QueryResults database cleanup failed, check if this organism is already in the database and try again")
+                if records.count() >= 1:
+                    for record in records:
+                        task_dir = os.path.join(task_path,record.task_id)
+                        if os.path.exists(task_dir):
+                            print(task_dir)
