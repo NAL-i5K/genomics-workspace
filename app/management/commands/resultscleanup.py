@@ -8,11 +8,14 @@ from django.conf import settings
 from django.core.management.base import BaseCommand
 import django
 import os
+from shutil import rmtree
 class Command(BaseCommand):
 
     def handle(self,*args,**options):
 
         time_threshold = timezone.now() - timedelta(days=7)
+        qr_count = 0
+        qr_dirs = 0
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
             try:
                 records = QC.objects.all().filter(enqueue_date__gte=time_threshold)
@@ -20,9 +23,18 @@ class Command(BaseCommand):
                 task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
 
                 if records.count() >= 1:
+                    qr_count = records.count()
+
                     for record in records:
                         task_dir = os.path.join(task_path,record.task_id)
-                        if os.path.exists(task_dir):
-                            print(task_dir)
+                        if os.path.exists(task_dir) and os.path.isdir(task_dir):
+                            rmtree(task_dir, ignore_errors=True)
+                            qr_dirs += 1
+
             except Exceptions as e:
                 raise e
+
+            print(f"Located {qr_count} {QC.__name__} record ")
+            print(f"Located {qr_dirs} {QC.__name__} task directories ")
+
+            
