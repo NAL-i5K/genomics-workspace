@@ -42,7 +42,7 @@ class Command(BaseCommand):
                 totoal_qr_count += qr_count
                 print(f"Located {qr_count} {QC.__name__} records ")
 
-            if qrqr_dirs > 0: 
+            if qr_dirs > 0: 
                 totoal_qrqr_dirs += qrqr_dirs
                 print(f"Located {qr_dirs} {QC.__name__} task directories ")
 
