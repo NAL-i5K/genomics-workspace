@@ -72,7 +72,7 @@ class Command(BaseCommand):
                 body.append(msg)
                 print(msg)
 
-        if total_qr_count > 0 or total_qr_dirs > 0) and len(body) > 0:
+        if (total_qr_count > 0 or total_qr_dirs > 0) and len(body) > 0:
             body.append("\n\n")
             body.append(f"Total Records:  Located: {total_qr_count}")
             body.append(f"Total Directories: Located: {total_qr_dirs}  ")
