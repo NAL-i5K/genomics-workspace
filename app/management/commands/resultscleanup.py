@@ -47,7 +47,7 @@ class Command(BaseCommand):
                 print(f"Located {qr_dirs} {QC.__name__} task directories ")
 
         print(f"Total Records:  Located: {totoal_qr_count} {QC.__name__}")
-        print(f"Total Directories Located: {totoal_qr_count} {QC.__name__} ")
+        print(f"Total Directories Located: {totoal_qr_dirs} {QC.__name__} ")
 
 
             
