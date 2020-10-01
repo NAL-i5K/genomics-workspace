@@ -16,6 +16,9 @@ class Command(BaseCommand):
         time_threshold = timezone.now() - timedelta(days=7)
         qr_count = 0
         qr_dirs = 0
+        totoal_qr_count = 0
+        totoal_qr_dirs = 0
+
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
             try:
                 records = QC.objects.all().filter(enqueue_date__gte=time_threshold)
@@ -30,11 +33,21 @@ class Command(BaseCommand):
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
                             qr_dirs += 1
+                    
 
             except Exceptions as e:
                 raise e
 
-            print(f"Located {qr_count} {QC.__name__} record ")
-            print(f"Located {qr_dirs} {QC.__name__} task directories ")
+            if qr_count > 0:
+                totoal_qr_count += qr_count
+                print(f"Located {qr_count} {QC.__name__} records ")
+
+            if qrqr_dirs > 0: 
+                totoal_qrqr_dirs += qrqr_dirs
+                print(f"Located {qr_dirs} {QC.__name__} task directories ")
+
+        print(f"Total Records:  Located: {totoal_qr_count} {QC.__name__}")
+        print(f"Total Directories Located: {totoal_qr_count} {QC.__name__} ")
+
 
             
