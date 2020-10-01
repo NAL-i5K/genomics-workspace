@@ -14,22 +14,22 @@ from django.core import mail
 
 class Command(BaseCommand):
 
-    def send_email(self, body=[]):
+    def send_email(self, body=["No Message Body"]):
         connection = mail.get_connection()
         try:
-            
-            
             subject = f"Test Results Cleanup Management Command - {timezone.now()}"
             body = "\n".join(body)
-            sender = os.environ.get("HOSTNAME").replace(".","@",1)
+            user = os.environ.get('USER')
+            domain = os.environ.get('HOSTNAME').split(".",1)[1]
+            sender = f'{user}@{domain}'
             email_to = [
-            'vernon.chapman@usda.gov',
-            'monica.poelchau@usda.gov',
-            'chris.childers@usda.gov' 
+                'vernon.chapman@usda.gov',
+                'monica.poelchau@usda.gov',
+                'chris.childers@usda.gov' 
             ]   
-            mail.EmailMessage(subject, body, sender, email).send()
-        except Eception as e:
-            pass
+            mail.EmailMessage(subject, body, sender, email_to).send()
+        except Exception as e:
+            print(e)
         finally:
             connection.close()
 
@@ -41,8 +41,6 @@ class Command(BaseCommand):
         total_qr_count = 0
         total_qr_dirs = 0
         body = []
-
-
 
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
             try:
@@ -59,7 +57,6 @@ class Command(BaseCommand):
                             rmtree(task_dir, ignore_errors=True)
                             qr_dirs += 1
                     
-
             except Exceptions as e:
                 raise e
 
@@ -77,7 +74,7 @@ class Command(BaseCommand):
 
         if total_qr_count > 0 or total_qr_dirs > 0) and len(body) > 0:
             body.append("\n\n")
-            body.append(f"Total Records:  Located: {total_qr_count} {QC.__name__}")
-            body.append(f"Total Directories Located: {total_qr_dirs} {QC.__name__} ")
+            body.append(f"Total Records:  Located: {total_qr_count}")
+            body.append(f"Total Directories: Located: {total_qr_dirs}  ")
             self.send_email(body)
 
