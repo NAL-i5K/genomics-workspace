@@ -1,7 +1,5 @@
 from hmmer.models import HmmerDB
 from django.core.management.base import BaseCommand
-#from app.models import Organism
-#import django.db
 from add_func import get_organism, display_name, get_path
 
 class Command(BaseCommand):
