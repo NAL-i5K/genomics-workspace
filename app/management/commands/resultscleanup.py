@@ -24,8 +24,8 @@ class Command(BaseCommand):
             sender = f'{user}@{domain}'
             email_to = [
                 'vernon.chapman@usda.gov',
-                'monica.poelchau@usda.gov',
-                'chris.childers@usda.gov' 
+                #'monica.poelchau@usda.gov',
+                #'chris.childers@usda.gov' 
             ]   
             mail.EmailMessage(subject, body, sender, email_to).send()
         except Exception as e:
@@ -56,8 +56,10 @@ class Command(BaseCommand):
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
                             qr_dirs += 1
-                    
-            except Exceptions as e:
+                        record.delete()
+                        
+
+            except Exception as e:
                 raise e
 
             if qr_count > 0:
