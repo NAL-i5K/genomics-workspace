@@ -55,7 +55,7 @@ class Command(BaseCommand):
                 records = all_records.filter(enqueue_date__lte=time_threshold)  
 
                 
-                if all_records.count() = 0 or records.count() =  0:
+                if all_records.count() == 0 or records.count() ==  0:
                     body.append(f"No matching {class_name} objects located")
                     ended = timezone.now()
                     elapsed = str(ended - started).split(".")[0]
