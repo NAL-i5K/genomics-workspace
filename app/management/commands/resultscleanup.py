@@ -35,48 +35,50 @@ class Command(BaseCommand):
 
     def handle(self,*args,**options):
 
-        time_threshold = timezone.now() - timedelta(days=7)
-        qr_count = 0
         qr_dirs = 0
+        qr_count = 0        
+        total_qr_dirs = 0        
         total_qr_count = 0
-        total_qr_dirs = 0
+        time_threshold = timezone.now() - timedelta(days=7)
+
         body = []
-
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
+            class_name = QC.__name__    
+            app = QC.__name__.replace("QueryRecord","").lower()        
             try:
-                records = QC.objects.all().filter(enqueue_date__lte=time_threshold)
-                app = QC.__name__.replace("QueryRecord","").lower()
-                task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
 
-                if records.count() >= 1:
-                    qr_count = records.count()
+                started = timezone.now()
+                all_records = QC.objects.all()
+                records = records.filter(enqueue_date__lte=time_threshold)    
+                body.append(f"Started processing {class_name} Objects at {started}")
 
+                if all_records.count() <= 0 and records.count() <=  0:
+                    body.append(f"No matching {class_name} objects located")
+                    body.append(f"Ended processing {class_name} Objects at {timezone.now()}")
+                else:
+                    body.append(f"Located a total of {all_records.count()} {class_name} Objects")
+
+                    processd = 0
                     for record in records:
+                        qr_count += 1
+                        processd += 1
                         task_dir = os.path.join(task_path,record.task_id)
+
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
                             qr_dirs += 1
-                        record.delete()
-                        
+
+                        #record.delete()
+
+                ended = timezone.now()
+                body.append("\n\n")
+                body.append(f"Processed a total of {processd} {class_name} Objects")
+                body.append(f"Ended processing {class_name} Objects at {ended}\n")
+
 
             except Exception as e:
                 raise e
 
-            if qr_count > 0:
-                total_qr_count += qr_count
-                msg = f"Located {qr_count} {QC.__name__} records "
-                body.append(msg)
-                print(msg)
-
-            if qr_dirs > 0: 
-                total_qr_dirs += qr_dirs
-                msg = f"Located {qr_dirs} {QC.__name__} task directories "
-                body.append(msg)
-                print(msg)
-
-        if (total_qr_count > 0 or total_qr_dirs > 0) and len(body) > 0:
-            body.append("\n\n")
-            body.append(f"Total Records:  Located: {total_qr_count}")
-            body.append(f"Total Directories: Located: {total_qr_dirs}  ")
-            self.send_email(body)
-
+        body.append(f"Total Records:  Located: {total_qr_count}")
+        body.append(f"Total Directories: Located: {total_qr_dirs}")
+        self.send_email(body)
