@@ -49,7 +49,7 @@ class Command(BaseCommand):
                 all_records = QC.objects.all()
                 records = all_records.filter(enqueue_date__lte=time_threshold)  
 
-                body.append(f"Started processing {class_name} Objects at {started.strftime("%H:%M:%S")}")
+                body.append(f"Started processing {class_name} Objects at {started.strftime('%H:%M:%S')}")
                 if all_records.count() <= 0 and records.count() <=  0:
                     body.append(f"No matching {class_name} objects located")
                     ended = timezone.now()
