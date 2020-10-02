@@ -4,13 +4,15 @@ from hmmer.models import HmmerQueryRecord
 from datetime import timedelta
 from django.utils import timezone
 
+from django.db import connection
+from django.db import transaction
 from django.conf import settings
 from django.core.management.base import BaseCommand
 import django
 import os
 from shutil import rmtree
 from django.core import mail
-
+from pprint import pprint
 
 class Command(BaseCommand):
 
@@ -44,13 +46,16 @@ class Command(BaseCommand):
             class_name = QC.__name__    
             app = QC.__name__.replace("QueryRecord","").lower()        
             try:
-
+                # Start Processing
                 started = timezone.now()
+                body.append(f"Started processing {class_name} Objects at {started.strftime('%H:%M:%S')}")
+
+                # Get all objects and filter
                 all_records = QC.objects.all()
                 records = all_records.filter(enqueue_date__lte=time_threshold)  
 
-                body.append(f"Started processing {class_name} Objects at {started.strftime('%H:%M:%S')}")
-                if all_records.count() <= 0 and records.count() <=  0:
+                
+                if all_records.count() = 0 or records.count() =  0:
                     body.append(f"No matching {class_name} objects located")
                     ended = timezone.now()
                     elapsed = str(ended - started).split(".")[0]
@@ -59,37 +64,43 @@ class Command(BaseCommand):
                 else:
                     processed_dirs = 0
                     processed_records = 0
-                    body.append(f"Located a total of {all_records.count()} {class_name} Objects")
+                    body.append(f"Located a total of {records.count()} {class_name} Objects")
                     task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
+
+                    records_start = timezone.now()
                     for record in records:
                         processed_records += 1
                         task_dir = os.path.join(task_path,record.task_id)
-
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
                             processed_dirs += 1
+                    records_end = timezone.now()
 
-                        #record.delete()
-
-                    ended = timezone.now()
-                    elapsed = str(ended - started).split(".")[0]
+                    elapsed = str(records_end - records_start).split(".")[0]
                     body.append(f"Processed a total of {processed_records} {class_name} Records")
-
                     if processed_dirs > 0:
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
-                    
                     body.append(f"Ended processing {class_name} Objects at {ended.strftime('%H:%M:%S')}")
                     body.append(f"Processing Time: {elapsed}")
-
                     total_dirs += processed_dirs
-                    total_records += processed_records
+                    total_records += processed_records      
+
+                    #with transaction.atomic():
+                    #    deleted = records.delete()
+                    #    body.append(f"{deleted}")
+                    #    #record.delete()
+
+
 
             except Exception as e:
                 raise e
             finally:
+                pass
                 body.append(f"Total Records: {total_records}")
                 if total_dirs > 0:
                     body.append(f"Total Directories: {total_dirs}")
                 body.append("\n")
 
-        self.send_email(body)
+        #self.send_email(body)
+        pprint("\n.join(body)")
+        
