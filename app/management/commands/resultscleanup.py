@@ -54,7 +54,7 @@ class Command(BaseCommand):
                     body.append(f"No matching {class_name} objects located")
                     ended = timezone.now()
                     elapsed = str(ended - started).split(".")[0]
-                    body.append(f"Ended processing {class_name} Objects at {ended.strftime("%H:%M:%S")}")
+                    body.append(f"Ended processing {class_name} Objects at {ended.strftime('%H:%M:%S')}")
                     body.append(f"Processing Time: {elapsed}")
                 else:
                     processed_dirs = 0
@@ -78,7 +78,7 @@ class Command(BaseCommand):
                     if processed_dirs > 0:
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
                     
-                    body.append(f"Ended processing {class_name} Objects at {ended.strftime("%H:%M:%S")}")
+                    body.append(f"Ended processing {class_name} Objects at {ended.strftime('%H:%M:%S')}")
                     body.append(f"Processing Time: {elapsed}")
 
                     total_dirs += processed_dirs
