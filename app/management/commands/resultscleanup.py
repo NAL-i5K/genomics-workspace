@@ -1,26 +1,26 @@
+import os
+
+from datetime import timedelta
+from django.core import mail
+from django.conf import settings
+from django.utils import timezone
+from django.db import transaction
+from django.core.management.base import BaseCommand
+from shutil import rmtree
+
 from blast.models import BlastQueryRecord
 from clustal.models import ClustalQueryRecord
 from hmmer.models import HmmerQueryRecord
-from datetime import timedelta
-from django.utils import timezone
-
-from django.conf import settings
-from django.core.management.base import BaseCommand
-import django
-import os
-from shutil import rmtree
-from django.core import mail
-
-
+import socket
 class Command(BaseCommand):
 
     def send_email(self, body=["No Message Body"]):
         connection = mail.get_connection()
         try:
-            subject = f"Test Results Cleanup Management Command - {timezone.now()}"
+            subject = f"Results Cleanup Management Command - {timezone.now().strftime('%m/%d/%Y')}"
             body = "\n".join(body)
             user = os.environ.get('USER')
-            domain = os.environ.get('HOSTNAME').split(".",1)[1]
+            domain = socket.gethostname().split(".",1)[1]
             sender = f'{user}@{domain}'
             email_to = [
                 'vernon.chapman@usda.gov',
@@ -29,54 +29,80 @@ class Command(BaseCommand):
             ]   
             mail.EmailMessage(subject, body, sender, email_to).send()
         except Exception as e:
-            print(e)
+            raise e
         finally:
             connection.close()
 
     def handle(self,*args,**options):
-
+      
+        total_dirs = 0        
+        total_records = 0
         time_threshold = timezone.now() - timedelta(days=7)
-        qr_count = 0
-        qr_dirs = 0
-        total_qr_count = 0
-        total_qr_dirs = 0
+
         body = []
-
         for QC in [BlastQueryRecord,ClustalQueryRecord, HmmerQueryRecord]:
+            class_name = QC.__name__    
+            app = QC.__name__.replace("QueryRecord","").lower()        
             try:
-                records = QC.objects.all().filter(enqueue_date__lte=time_threshold)
-                app = QC.__name__.replace("QueryRecord","").lower()
-                task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
+                # Start Processing
+                started = timezone.now()
+                body.append(f"Started processing {class_name} Objects at {started.strftime('%H:%M:%S')}")
 
-                if records.count() >= 1:
-                    qr_count = records.count()
+                # Get all objects and filter
+                all_records = QC.objects.all()
+                records = all_records.filter(enqueue_date__lte=time_threshold)  
 
+                # Check if any records exist
+                if all_records.count() == 0 or records.count() ==  0:
+                    body.append(f"No matching {class_name} objects located")
+                    ended = timezone.now()
+                    elapsed = str(ended - started).split(".")[0]
+                    body.append(f"Ended processing {class_name} Objects at {ended.strftime('%H:%M:%S')}\n")
+                else:
+                    
+                    processed_dirs = 0
+                    processed_records = 0
+                    body.append(f"Located a total of {records.count()} {class_name} Objects")
+                    task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
+
+                    # Start Records
+                    records_start = timezone.now()
                     for record in records:
+                        processed_records += 1
                         task_dir = os.path.join(task_path,record.task_id)
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
-                            qr_dirs += 1
-                        record.delete()
-                        
+                            processed_dirs += 1
+                    records_end = timezone.now()
+                    # End Records
+
+                    elapsed = str(records_end - records_start).split(".")[0]
+                    body.append(f"Processed a total of {processed_records} {class_name} Records")
+                    if processed_dirs > 0:
+                        body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
+                    body.append(f"Ended processing {class_name} Objects at {records_end.strftime('%H:%M:%S')}")
+                    body.append(f"Processing Time: {elapsed}\n")
+
+                    total_dirs += processed_dirs
+                    total_records += processed_records      
+
+                    # Use transaction to delete all matching records at once
+                    with transaction.atomic():
+                        deleted = records.delete()
+                        body.append(f"{deleted}")
 
             except Exception as e:
                 raise e
+            finally:
+                pass
 
-            if qr_count > 0:
-                total_qr_count += qr_count
-                msg = f"Located {qr_count} {QC.__name__} records "
-                body.append(msg)
-                print(msg)
+        body.append(f"Total Records: {total_records}")
+        if total_dirs > 0:
+            body.append(f"Total Directories: {total_dirs}")
 
-            if qr_dirs > 0: 
-                total_qr_dirs += qr_dirs
-                msg = f"Located {qr_dirs} {QC.__name__} task directories "
-                body.append(msg)
-                print(msg)
-
-        if (total_qr_count > 0 or total_qr_dirs > 0) and len(body) > 0:
-            body.append("\n\n")
-            body.append(f"Total Records:  Located: {total_qr_count}")
-            body.append(f"Total Directories: Located: {total_qr_dirs}  ")
-            self.send_email(body)
-
+        ended = timezone.now()
+        elapsed = str(ended - started).split(".")[0]
+        body.append(f"Total Elapsed Time: {elapsed}")
+        body.append("\n")
+        self.send_email(body)
+        
