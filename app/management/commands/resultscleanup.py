@@ -11,7 +11,7 @@ from shutil import rmtree
 from blast.models import BlastQueryRecord
 from clustal.models import ClustalQueryRecord
 from hmmer.models import HmmerQueryRecord
-
+import socket
 class Command(BaseCommand):
 
     def send_email(self, body=["No Message Body"]):
@@ -20,7 +20,7 @@ class Command(BaseCommand):
             subject = f"Results Cleanup Management Command - {timezone.now().strftime('%m/%d/%Y')}"
             body = "\n".join(body)
             user = os.environ.get('USER')
-            domain = os.environ.get('HOSTNAME').split(".",1)[1]
+            domain = socket.gethostname().split(".",1)[1]
             sender = f'{user}@{domain}'
             email_to = [
                 'vernon.chapman@usda.gov',
