@@ -81,5 +81,6 @@ class Command(BaseCommand):
             finally:
                 body.append(f"Total Records:  Located: {total_records}")
                 body.append(f"Total Directories: Located: {total_dirs}")
+                body.append("\n")
 
         self.send_email(body)
