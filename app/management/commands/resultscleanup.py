@@ -34,9 +34,7 @@ class Command(BaseCommand):
             connection.close()
 
     def handle(self,*args,**options):
-
-        qr_dirs = 0
-        qr_count = 0        
+      
         total_dirs = 0        
         total_records = 0
         time_threshold = timezone.now() - timedelta(days=7)
@@ -49,15 +47,15 @@ class Command(BaseCommand):
 
                 started = timezone.now()
                 all_records = QC.objects.all()
-                records = all_records.filter(enqueue_date__lte=time_threshold)    
-                body.append(f"Started processing {class_name} Objects at {started}")
+                records = all_records.filter(enqueue_date__lte=time_threshold)  
 
-                processed_records = 0
-                processed_dirs = 0
+                body.append(f"Started processing {class_name} Objects at {started}")
                 if all_records.count() <= 0 and records.count() <=  0:
                     body.append(f"No matching {class_name} objects located")
                     body.append(f"Ended processing {class_name} Objects at {timezone.now()}")
                 else:
+                    processed_dirs = 0
+                    processed_records = 0
                     body.append(f"Located a total of {all_records.count()} {class_name} Objects")
                     task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
                     for record in records:
@@ -71,18 +69,17 @@ class Command(BaseCommand):
                         #record.delete()
 
                     ended = timezone.now()
-                    body.append("\n\n")
                     body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
                     body.append(f"Processed a total of {processed_records} {class_name} Records")
                     body.append(f"Ended processing {class_name} Objects at {ended}\n")
 
-                total_dirs += processed_dirs
-                total_records += processed_records
+                    total_dirs += processed_dirs
+                    total_records += processed_records
 
             except Exception as e:
                 raise e
             finally:
                 body.append(f"Total Records:  Located: {total_records}")
                 body.append(f"Total Directories: Located: {total_dirs}")
-                
+
         self.send_email(body)
