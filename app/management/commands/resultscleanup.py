@@ -81,7 +81,7 @@ class Command(BaseCommand):
                     if processed_dirs > 0:
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
                     body.append(f"Ended processing {class_name} Objects at {records_end.strftime('%H:%M:%S')}")
-                    body.append(f"Processing Time: {elapsed\n}")
+                    body.append(f"Processing Time: {elapsed}\n")
 
                     total_dirs += processed_dirs
                     total_records += processed_records      
