@@ -17,7 +17,7 @@ class Command(BaseCommand):
     def send_email(self, body=["No Message Body"]):
         connection = mail.get_connection()
         try:
-            subject = f"Test Results Cleanup Management Command - {timezone.now()}"
+            subject = f"Results Cleanup Management Command - {timezone.now().strftime('%m/%d/%Y')}"
             body = "\n".join(body)
             user = os.environ.get('USER')
             domain = os.environ.get('HOSTNAME').split(".",1)[1]
@@ -49,10 +49,13 @@ class Command(BaseCommand):
                 all_records = QC.objects.all()
                 records = all_records.filter(enqueue_date__lte=time_threshold)  
 
-                body.append(f"Started processing {class_name} Objects at {started}")
+                body.append(f"Started processing {class_name} Objects at {started.strftime("%H:%M:%S")}")
                 if all_records.count() <= 0 and records.count() <=  0:
                     body.append(f"No matching {class_name} objects located")
-                    body.append(f"Ended processing {class_name} Objects at {timezone.now()}")
+                    ended = timezone.now()
+                    elapsed = str(ended - started).split(".")[0]
+                    body.append(f"Ended processing {class_name} Objects at {ended.strftime("%H:%M:%S")}")
+                    body.append(f"Processing Time: {elapsed}")
                 else:
                     processed_dirs = 0
                     processed_records = 0
@@ -69,11 +72,14 @@ class Command(BaseCommand):
                         #record.delete()
 
                     ended = timezone.now()
+                    elapsed = str(ended - started).split(".")[0]
                     body.append(f"Processed a total of {processed_records} {class_name} Records")
+
                     if processed_dirs > 0:
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
-
-                    body.append(f"Ended processing {class_name} Objects at {ended}")
+                    
+                    body.append(f"Ended processing {class_name} Objects at {ended.strftime("%H:%M:%S")}")
+                    body.append(f"Processing Time: {elapsed}")
 
                     total_dirs += processed_dirs
                     total_records += processed_records
