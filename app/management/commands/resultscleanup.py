@@ -29,7 +29,7 @@ class Command(BaseCommand):
             ]   
             mail.EmailMessage(subject, body, sender, email_to).send()
         except Exception as e:
-            print(e)
+            raise e
         finally:
             connection.close()
 
