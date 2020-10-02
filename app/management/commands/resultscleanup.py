@@ -82,8 +82,7 @@ class Command(BaseCommand):
             except Exception as e:
                 raise e
             finally:
-
-
-        body.append(f"Total Records:  Located: {total_records}")
-        body.append(f"Total Directories: Located: {total_dirs}")
+                body.append(f"Total Records:  Located: {total_records}")
+                body.append(f"Total Directories: Located: {total_dirs}")
+                
         self.send_email(body)
