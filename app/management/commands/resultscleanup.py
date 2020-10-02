@@ -86,9 +86,9 @@ class Command(BaseCommand):
                     total_dirs += processed_dirs
                     total_records += processed_records      
 
-                    #with transaction.atomic():
-                    #    deleted = records.delete()
-                    #    body.append(f"{deleted}")
+                    with transaction.atomic():
+                        deleted = records.delete()
+                        body.append(f"{deleted}")
                     #    #record.delete()
 
 
@@ -103,6 +103,6 @@ class Command(BaseCommand):
             body.append(f"Total Directories: {total_dirs}")
         body.append("\n")
 
-        #self.send_email(body)
+        self.send_email(body)
         pprint("\n".join(body))
         
