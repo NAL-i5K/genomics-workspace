@@ -82,6 +82,7 @@ class Command(BaseCommand):
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
                     body.append(f"Ended processing {class_name} Objects at {records_end.strftime('%H:%M:%S')}")
                     body.append(f"Processing Time: {elapsed}")
+
                     total_dirs += processed_dirs
                     total_records += processed_records      
 
@@ -96,11 +97,12 @@ class Command(BaseCommand):
                 raise e
             finally:
                 pass
-                body.append(f"Total Records: {total_records}")
-                if total_dirs > 0:
-                    body.append(f"Total Directories: {total_dirs}")
-                body.append("\n")
+
+        body.append(f"Total Records: {total_records}")
+        if total_dirs > 0:
+            body.append(f"Total Directories: {total_dirs}")
+        body.append("\n")
 
         #self.send_email(body)
-        pprint("\n.join(body)")
+        pprint("\n".join(body))
         
