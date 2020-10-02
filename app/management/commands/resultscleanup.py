@@ -1,18 +1,16 @@
+import os
+
+from datetime import timedelta
+from django.core import mail
+from django.conf import settings
+from django.utils import timezone
+from django.db import transaction
+from django.core.management.base import BaseCommand
+from shutil import rmtree
+
 from blast.models import BlastQueryRecord
 from clustal.models import ClustalQueryRecord
 from hmmer.models import HmmerQueryRecord
-from datetime import timedelta
-from django.utils import timezone
-
-from django.db import connection
-from django.db import transaction
-from django.conf import settings
-from django.core.management.base import BaseCommand
-import django
-import os
-from shutil import rmtree
-from django.core import mail
-from pprint import pprint
 
 class Command(BaseCommand):
 
@@ -54,19 +52,20 @@ class Command(BaseCommand):
                 all_records = QC.objects.all()
                 records = all_records.filter(enqueue_date__lte=time_threshold)  
 
-                
+                # Check if any records exist
                 if all_records.count() == 0 or records.count() ==  0:
                     body.append(f"No matching {class_name} objects located")
                     ended = timezone.now()
                     elapsed = str(ended - started).split(".")[0]
                     body.append(f"Ended processing {class_name} Objects at {ended.strftime('%H:%M:%S')}\n")
-                    #body.append(f"Processing Time: {elapsed}")
                 else:
+                    
                     processed_dirs = 0
                     processed_records = 0
                     body.append(f"Located a total of {records.count()} {class_name} Objects")
                     task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
 
+                    # Start Records
                     records_start = timezone.now()
                     for record in records:
                         processed_records += 1
@@ -75,6 +74,7 @@ class Command(BaseCommand):
                             rmtree(task_dir, ignore_errors=True)
                             processed_dirs += 1
                     records_end = timezone.now()
+                    # End Records
 
                     elapsed = str(records_end - records_start).split(".")[0]
                     body.append(f"Processed a total of {processed_records} {class_name} Records")
@@ -86,12 +86,10 @@ class Command(BaseCommand):
                     total_dirs += processed_dirs
                     total_records += processed_records      
 
+                    # Use transaction to delete all matching records at once
                     with transaction.atomic():
                         deleted = records.delete()
                         body.append(f"{deleted}")
-                    #    #record.delete()
-
-
 
             except Exception as e:
                 raise e
@@ -106,7 +104,5 @@ class Command(BaseCommand):
         elapsed = str(ended - started).split(".")[0]
         body.append(f"Total Elapsed Time: {elapsed}")
         body.append("\n")
-
         self.send_email(body)
-        pprint("\n".join(body))
         
