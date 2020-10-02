@@ -101,6 +101,10 @@ class Command(BaseCommand):
         body.append(f"Total Records: {total_records}")
         if total_dirs > 0:
             body.append(f"Total Directories: {total_dirs}")
+
+        ended = timezone.now()
+        elapsed = str(ended - started).split(".")[0]
+        body.append(f"Total Elapsed Time: {elapsed}")
         body.append("\n")
 
         self.send_email(body)
