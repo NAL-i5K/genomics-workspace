@@ -69,8 +69,10 @@ class Command(BaseCommand):
                         #record.delete()
 
                     ended = timezone.now()
-                    body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
                     body.append(f"Processed a total of {processed_records} {class_name} Records")
+                    if processed_dirs > 0:
+                        body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
+
                     body.append(f"Ended processing {class_name} Objects at {ended}\n")
 
                     total_dirs += processed_dirs
@@ -80,7 +82,8 @@ class Command(BaseCommand):
                 raise e
             finally:
                 body.append(f"Total Records:  Located: {total_records}")
-                body.append(f"Total Directories: Located: {total_dirs}")
+                if total_dirs > 0:
+                    body.append(f"Total Directories: Located: {total_dirs}")
                 body.append("\n")
 
         self.send_email(body)
