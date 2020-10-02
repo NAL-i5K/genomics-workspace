@@ -37,8 +37,8 @@ class Command(BaseCommand):
 
         qr_dirs = 0
         qr_count = 0        
-        total_qr_dirs = 0        
-        total_qr_count = 0
+        total_dirs = 0        
+        total_records = 0
         time_threshold = timezone.now() - timedelta(days=7)
 
         body = []
@@ -49,36 +49,41 @@ class Command(BaseCommand):
 
                 started = timezone.now()
                 all_records = QC.objects.all()
-                records = records.filter(enqueue_date__lte=time_threshold)    
+                records = all_records.filter(enqueue_date__lte=time_threshold)    
                 body.append(f"Started processing {class_name} Objects at {started}")
 
+                processed_records = 0
+                processed_dirs = 0
                 if all_records.count() <= 0 and records.count() <=  0:
                     body.append(f"No matching {class_name} objects located")
                     body.append(f"Ended processing {class_name} Objects at {timezone.now()}")
                 else:
                     body.append(f"Located a total of {all_records.count()} {class_name} Objects")
-
-                    processd = 0
+                    task_path = os.path.join(settings.MEDIA_ROOT,f"{app}/task")
                     for record in records:
-                        qr_count += 1
-                        processd += 1
+                        processed_records += 1
                         task_dir = os.path.join(task_path,record.task_id)
 
                         if os.path.exists(task_dir) and os.path.isdir(task_dir):
                             rmtree(task_dir, ignore_errors=True)
-                            qr_dirs += 1
+                            processed_dirs += 1
 
                         #record.delete()
 
-                ended = timezone.now()
-                body.append("\n\n")
-                body.append(f"Processed a total of {processd} {class_name} Objects")
-                body.append(f"Ended processing {class_name} Objects at {ended}\n")
+                    ended = timezone.now()
+                    body.append("\n\n")
+                    body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
+                    body.append(f"Processed a total of {processed_records} {class_name} Records")
+                    body.append(f"Ended processing {class_name} Objects at {ended}\n")
 
+                total_dirs += processed_dirs
+                total_records += processed_records
 
             except Exception as e:
                 raise e
+            finally:
 
-        body.append(f"Total Records:  Located: {total_qr_count}")
-        body.append(f"Total Directories: Located: {total_qr_dirs}")
+
+        body.append(f"Total Records:  Located: {total_records}")
+        body.append(f"Total Directories: Located: {total_dirs}")
         self.send_email(body)
