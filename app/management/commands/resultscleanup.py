@@ -73,7 +73,7 @@ class Command(BaseCommand):
                     if processed_dirs > 0:
                         body.append(f"Processed a total of {processed_dirs} {class_name} Directories")
 
-                    body.append(f"Ended processing {class_name} Objects at {ended}\n")
+                    body.append(f"Ended processing {class_name} Objects at {ended}")
 
                     total_dirs += processed_dirs
                     total_records += processed_records
@@ -81,9 +81,9 @@ class Command(BaseCommand):
             except Exception as e:
                 raise e
             finally:
-                body.append(f"Total Records:  Located: {total_records}")
+                body.append(f"Total Records: {total_records}")
                 if total_dirs > 0:
-                    body.append(f"Total Directories: Located: {total_dirs}")
+                    body.append(f"Total Directories: {total_dirs}")
                 body.append("\n")
 
         self.send_email(body)
