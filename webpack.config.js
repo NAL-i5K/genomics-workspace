@@ -16,7 +16,6 @@ const appScriptConfig = {
   plugins: [
     new DisableOutputWebpackPlugin(),
     new CopyWebpackPlugin([
-        { from: path.join(nodeModules, '/marked/marked.min.js'), to: appScripts},
         { from: path.join(nodeModules, '/jquery-validation/dist/jquery.validate.js'), to: appScripts},
         { from: path.join(nodeModules, '/jquery/dist/jquery.js'), to: appScripts},
         { from: path.join(nodeModules, '/bootstrap/dist/js/bootstrap.js'), to: appScripts},
