@@ -298,12 +298,6 @@ PIPELINE = {
             ),
             'output_filename': 'app/css/app-layout.min.css',
         },
-        'app-readme': {
-            'source_filenames': (
-                'app/content/app-readme.css',
-            ),
-            'output_filename': 'app/content/app-readme.min.css',
-        },
         'blast-results': {
             'source_filenames': (
                 'blast/css/codemirror.css',
@@ -362,13 +356,6 @@ PIPELINE = {
                 'app/scripts/error.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
-        },
-        'app-readme': {
-            'source_filenames': (
-                'app/scripts/marked.min.js',
-                'app/scripts/jquery.gh-readme.js'
-            ),
-            'output_filename': 'app/scripts/app-readme.min.js',
         },
         'blast-results': {
             'source_filenames': (
