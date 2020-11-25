@@ -1,0 +1,52 @@
+- hosts: localhost
+  strategy: debug
+  gather_facts: false
+  name: "\e[34m\e[1m i5k Workspace Provisioning Playbook \e[0m "
+  vars:
+    postgres_user: postgres
+    django_user: django
+    django_user_passwd: django1234
+
+  tasks:     
+
+    - name: Create Database Roles
+      postgresql_user:
+        name: "{{ django_user }}"
+        password: "{{ django_user_passwd }}"
+        login_host: "{{ postgres_user }}"
+        login_user: "{{ postgres_user }}"
+        role_attr_flags: CREATEDB,NOSUPERUSER
+
+    - name: Create Genomics Workspace Database
+      postgresql_db:
+        name: "{{ django_user }}"
+        owner: "{{ django_user }}"
+        login_host: "{{ postgres_user }}"
+        login_user: "{{ postgres_user }}"
+        state: present
+
+    - name: Make Django Migrations
+      shell: python3 manage.py makemigrations
+      args:
+        chdir: /usr/local/i5k
+        warn: false
+
+    - name: Migrate The Database
+      shell: python3 manage.py migrate
+      args:
+        chdir: /usr/local/i5k
+        warn: false
+
+    - name: Install Binaries
+      shell: python3 setup.py
+      args:
+        chdir: /usr/local/i5k
+        warn: false
+    
+    - name: Seed The Database
+      shell: python3 manage.py seed
+      args:
+        chdir: /usr/local/i5k
+        warn: false
+    
+    
