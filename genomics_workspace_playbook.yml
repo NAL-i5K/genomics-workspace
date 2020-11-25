@@ -1,7 +1,7 @@
 - hosts: localhost
   strategy: debug
   gather_facts: false
-  name: "\e[34m\e[1m i5k Workspace Provisioning Playbook \e[0m "
+  name: "\e[34m\e[1m Genomics Workspace Playbook \e[0m "
   vars:
     postgres_user: postgres
     django_user: django
@@ -48,5 +48,3 @@
       args:
         chdir: /usr/local/i5k
         warn: false
-    
-    
