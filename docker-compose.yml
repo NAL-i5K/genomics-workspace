@@ -1,0 +1,50 @@
+version: '3.7'
+services:
+    workspace:
+        build: .
+        image: genomics_workspace
+        container_name: genomics_workspace
+        hostname: workspace
+        tty: true
+        stdin_open: true
+        command: ["python3", "manage.py", "runserver", "0.0.0.0:8000"]
+        ports:
+            - "8000:8000"
+        #volumes:
+        #    - .:/usr/local/i5k
+        depends_on:
+            - rabbitmq
+            - postgres
+
+    rabbitmq:
+        image: rabbitmq:alpine
+        hostname: rabbitmq
+        container_name: genomics_workspace_rabbitmq
+        tty: true
+        stdin_open: true
+        ports:
+            - "5672:5672"
+        environment:
+            RABBITMQ_DEFAULT_USER: django
+            RABBITMQ_DEFAULT_PASS: django1234
+            RABBITMQ_DEFAULT_VHOST: django
+
+    postgres:
+        image: postgres:11-alpine
+        hostname: postgres
+        container_name: genomics_workspace_postgres
+        tty: true
+        stdin_open: true
+        environment: 
+            POSTGRES_HOST_AUTH_METHOD: trust
+        command: [ "postgres", "-c", "wal_level=logical" ]
+        ports:
+            - "5432:5432"
+        
+
+
+#volumes:
+  #rabbitmq_data:
+  #postgres_data:
+
+        
