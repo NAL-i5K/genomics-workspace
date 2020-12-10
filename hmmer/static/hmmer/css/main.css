@@ -1,5 +1,8 @@
 body {
-	font-family: Arial,Helvetica,Verdana,"Bitstream Vera Sans",sans-serif;
+    /*font-family: Arial,Helvetica,Verdana,"Bitstream Vera Sans",sans-serif;*/
+    /* Source Sans Pro - Google Font */
+    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
+    font-family: 'Source Sans Pro', sans-serif !important;
 }
 
 .tripal-info-box {
@@ -308,7 +311,8 @@ a {
 }
 
 .dataset-title {
-	font-family: 'Droid Serif', serif;
+    /*font-family: 'Droid Serif', serif;*/
+    font-family: 'Source Sans Pro', sans-serif !important;
 	text-shadow: 2px 2px 4px #aaa;
 	font-size: 1.3em;
 	line-height: 110%;
@@ -316,7 +320,8 @@ a {
 }
 
 legend {
-	font-family: 'Droid Serif', serif;
+    /*font-family: 'Droid Serif', serif;*/
+    font-family: 'Source Sans Pro', sans-serif !important;
 	text-shadow: 2px 2px 4px #aaa;
 	font-size: 1.3em;
     margin-bottom: 3px;
@@ -441,7 +446,8 @@ input[type="checkbox"].input-validation-error {
 }
 
 #query-textarea {
-    font-family: monospace;
+    /*font-family: monospace;*/
+    font-family: 'Source Sans Pro', sans-serif !important;
     font-weight:normal;
     font-size:14px;
     padding: 6px;
