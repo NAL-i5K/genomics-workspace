@@ -1,8 +1,8 @@
 body {
     /*font-family: Arial,Helvetica,Verdana,"Bitstream Vera Sans",sans-serif;*/
     /* Source Sans Pro - Google Font */
-    @import url('https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap');
-    font-family: 'Source Sans Pro', sans-serif !important;
+    @import url("https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@200;300;400;600&display=swap");
+    font-family: "Source Sans Pro", sans-serif !important;
 }
 
 .tripal-info-box {
@@ -20,7 +20,7 @@ body {
 }
 .tripal-table th,
 .tripal-table td {
-    vertical-align:text-top;
+    vertical-align: text-top;
     padding-left: 10px;
     padding-right: 10px;
     padding-top: 5px;
@@ -33,47 +33,47 @@ body {
 
 /* settings for vertical tables (headers across left-side) */
 table.tripal-table-vert .tripal-table-even-row th {
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     font-weight: none;
     text-align: right;
 }
 
 table.tripal-table-vert .tripal-table-odd-row th {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     text-align: right;
 }
 
 table.tripal-table-vert .tripal-table-even-row {
-    background-color: #EEEEEE;
-    border-top: 1px solid #CCCCCC;
-    border-bottom: 1px solid #CCCCCC;
+    background-color: #eeeeee;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 table.tripal-table-vert .tripal-table-odd-row {
-    background-color: #FFFFFF;
-    border-top: 1px solid #CCCCCC;
-    border-bottom: 1px solid #CCCCCC;
+    background-color: #ffffff;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 /* settings for horizontal tables (headers across top) */
 table.tripal-table-horz th {
-    background-color: #EEEEFF;
+    background-color: #eeeeff;
     font-weight: none;
     text-align: left;
 }
 
 table.tripal-table-horz .tripal-table-even-row {
-    background-color: #FFFFFF;
+    background-color: #ffffff;
     font-weight: none;
     text-align: left;
-    border-top: 1px solid #CCCCCC;
-    border-bottom: 1px solid #CCCCCC;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 table.tripal-table-horz .tripal-table-odd-row {
-   background-color: #EEEEEE;
-   text-align: left;
-   border-top: 1px solid #CCCCCC;
-   border-bottom: 1px solid #CCCCCC;
+    background-color: #eeeeee;
+    text-align: left;
+    border-top: 1px solid #cccccc;
+    border-bottom: 1px solid #cccccc;
 }
 
 .tripal-info-box-title {
@@ -104,7 +104,7 @@ table.tripal-table-horz .tripal-table-odd-row {
     left: 40%;
     padding: 15px;
     border: 1px solid #000000;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
     opacity: 0.75;
     -moz-opacity: 0.75;
     z-index: 10;
@@ -127,13 +127,13 @@ table.tripal-table-horz .tripal-table-odd-row {
 .tripal-no-results {
     font-style: italic;
     padding: 10px;
-    background-color: #FFEEEE;
+    background-color: #ffeeee;
 }
 
 .tripal_toc {
     float: left;
     width: 18%;
-    background-color: #EEEEEE;
+    background-color: #eeeeee;
 
     -moz-border-radius: 15px;
     -webkit-border-radius: 15px;
@@ -146,8 +146,8 @@ table.tripal-table-horz .tripal-table-odd-row {
 
     padding: 20px;
     min-height: 500px;
-    border-style:solid;
-    border-width:1px;
+    border-style: solid;
+    border-width: 1px;
 }
 
 .tripal_toc ul {
@@ -164,7 +164,7 @@ table.tripal-table-horz .tripal-table-odd-row {
 
 .tripal_details {
     width: 100%;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -178,16 +178,16 @@ table.tripal-table-horz .tripal-table-odd-row {
     min-height: 500px;
     margin-top: 10px;
     margin-bottom: 10px;
-    border-style:solid;
-    border-width:1px;
+    border-style: solid;
+    border-width: 1px;
 
-    overflow:auto;
+    overflow: auto;
 }
 
 .tripal_details_full {
     float: left;
     width: 95%;
-    background-color: #FFFFFF;
+    background-color: #ffffff;
 
     -moz-border-radius: 6px;
     -webkit-border-radius: 6px;
@@ -201,14 +201,14 @@ table.tripal-table-horz .tripal-table-odd-row {
     min-height: 500px;
     margin-top: 10px;
     margin-bottom: 10px;
-    border-style:solid;
-    border-width:1px;
+    border-style: solid;
+    border-width: 1px;
 
-    overflow:auto;
+    overflow: auto;
 }
 
 .tripal-subtable {
-    border-collapse:collapse;
+    border-collapse: collapse;
     border: 0px solid black;
 }
 
@@ -254,11 +254,11 @@ table.tripal-table-horz .tripal-table-odd-row {
 }
 
 #fieldset-organism {
-	width: 240px;
-	height: 344px;
-	overflow: hidden;
-	float: left;
-	padding: 6px;
+    width: 240px;
+    height: 344px;
+    overflow: hidden;
+    float: left;
+    padding: 6px;
 }
 
 #fieldset-query {
@@ -266,32 +266,32 @@ table.tripal-table-horz .tripal-table-odd-row {
 }
 
 #box-organism {
-	width: 240px;
-	height: 310px;
-	overflow-x: auto;
-	overflow-y: auto;
-	float: right;
-	padding: 6px;
+    width: 240px;
+    height: 310px;
+    overflow-x: auto;
+    overflow-y: auto;
+    float: right;
+    padding: 6px;
 }
 
 #box-datasets {
-	overflow-x: auto;
-	overflow-y: auto;
-	padding-left: 11px;
-	margin: 5px;
+    overflow-x: auto;
+    overflow-y: auto;
+    padding-left: 11px;
+    margin: 5px;
 }
 
 #fieldset-datasets {
-	margin-bottom: 0px;
+    margin-bottom: 0px;
 }
 
 fieldset {
-	-webkit-border-radius: 15px;
-	-moz-border-radius: 15px;
-	border-radius: 15px;
-	border-color: rgb(200, 200, 200);
-	border-width: 2;
-	margin: 5px;
+    -webkit-border-radius: 15px;
+    -moz-border-radius: 15px;
+    border-radius: 15px;
+    border-color: rgb(200, 200, 200);
+    border-width: 2;
+    margin: 5px;
 }
 
 a {
@@ -299,81 +299,84 @@ a {
 }
 
 .organism-div {
-    -webkit-transition:box-shadow 0.5s, -webkit-box-shadow 0.5s, background-color 0.5s;
-    transition:box-shadow 0.5s, -webkit-box-shadow 0.5s, background-color 0.5s;
+    -webkit-transition: box-shadow 0.5s, -webkit-box-shadow 0.5s, background-color 0.5s;
+    transition: box-shadow 0.5s, -webkit-box-shadow 0.5s, background-color 0.5s;
 }
 
 .organism-active-background {
     background-color: rgb(145, 166, 193);
-    -webkit-box-shadow:0 0 5px 1px rgb(145, 166, 193);
+    -webkit-box-shadow: 0 0 5px 1px rgb(145, 166, 193);
     -moz-box-shadow: 0 0 5px 1px rgb(145, 166, 193);
-    box-shadow:0 0 5px 1px rgb(145, 166, 193);
+    box-shadow: 0 0 5px 1px rgb(145, 166, 193);
 }
 
 .dataset-title {
     /*font-family: 'Droid Serif', serif;*/
-    font-family: 'Source Sans Pro', sans-serif !important;
-	text-shadow: 2px 2px 4px #aaa;
-	font-size: 1.3em;
-	line-height: 110%;
-	padding: 6px;
+    font-family: "Source Sans Pro", sans-serif !important;
+    text-shadow: 2px 2px 4px #aaa;
+    font-size: 1.3em;
+    line-height: 110%;
+    padding: 6px;
 }
 
 legend {
     /*font-family: 'Droid Serif', serif;*/
-    font-family: 'Source Sans Pro', sans-serif !important;
-	text-shadow: 2px 2px 4px #aaa;
-	font-size: 1.3em;
+    font-family: "Source Sans Pro", sans-serif !important;
+    text-shadow: 2px 2px 4px #aaa;
+    font-size: 1.3em;
     margin-bottom: 3px;
 }
 
 .datasets-div legend {
-	font-size: 1.1em;
+    font-size: 1.1em;
 }
 
 .disabled-fieldset {
-	color: lightgray;
-	border-color: white;
+    color: lightgray;
+    border-color: white;
 }
 
 .disabled-radio {
-	color: lightgray;
+    color: lightgray;
 }
 
 .program {
-	float: left;
+    float: left;
     margin: 15px;
 }
 
 .cutoff {
-	float: left;
+    float: left;
     margin: 15px;
 }
 
 .italic {
-	font-style: italic;
+    font-style: italic;
 }
 
 #hmmerProgramDescription {
-	width: 100%;
-	float: left;
-	padding: 5px;
-	font-size: 0.9em;
+    width: 100%;
+    float: left;
+    padding: 5px;
+    font-size: 0.9em;
 }
 
 label {
-	display: block;
+    display: block;
 }
 
 label.error {
     display: inline;
-    background: url('images/unchecked.gif') no-repeat;
+    background: url("images/unchecked.gif") no-repeat;
     padding-left: 16px;
-    margin-left: .3em;
+    margin-left: 0.3em;
     color: red;
 }
 
-#max_target_seqs, #matrix, #strand, .input-fields {
+#max_target_seqs,
+#matrix,
+#strand,
+.input-fields {
     margin-bottom: 3px;
 }
 
@@ -425,7 +428,9 @@ input[type="checkbox"].input-validation-error {
     padding: 2px 0px 2px;
 }
 
-.nav-tabs>li.active>a, .nav-tabs>li.active>a:hover, .nav-tabs>li.active>a:focus {
+.nav-tabs > li.active > a,
+.nav-tabs > li.active > a:hover,
+.nav-tabs > li.active > a:focus {
     box-shadow: inset 0 -2px 0 #317eac;
     color: #317eac;
     border: 0px;
@@ -433,8 +438,8 @@ input[type="checkbox"].input-validation-error {
 
 .txt {
     cursor: pointer;
-    font-weight:bold;
-    color:blue;
+    font-weight: bold;
+    color: blue;
 }
 
 .txt:hover {
@@ -442,14 +447,14 @@ input[type="checkbox"].input-validation-error {
 }
 
 #tutorial {
-    float:right;
+    float: right;
 }
 
 #query-textarea {
     /*font-family: monospace;*/
-    font-family: 'Source Sans Pro', sans-serif !important;
-    font-weight:normal;
-    font-size:14px;
+    font-family: "Source Sans Pro", sans-serif !important;
+    font-weight: normal;
+    font-size: 14px;
     padding: 6px;
-    margin-top:10px;
+    margin-top: 10px;
 }
