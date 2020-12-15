@@ -12,9 +12,6 @@ matrix:
     - rabbitmq
     - memcached
     - postgresql
-  - os: osx
-    language: generic
-    osx_image: xcode8.3
 
 # command to install dependencies
 install:

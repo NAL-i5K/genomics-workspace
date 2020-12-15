@@ -2,7 +2,7 @@
   "name": "genomics-workspace",
   "version": "1.0.0",
   "scripts": {
-    "build": "npm install && webpack-cli && python2.7 setup.py"
+    "build": "npm install && webpack-cli && /usr/local/i5k/bin/python3 setup.py"
   },
   "private": true,
   "repository": {
@@ -41,7 +41,6 @@
     "jquery-ui-themes": "^1.12.0",
     "jquery-validation": "^1.14.0",
     "jquery.dragscrollable": "^1.0.0",
-    "marked": "^0.3.19",
     "underscore": "^1.7.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1"

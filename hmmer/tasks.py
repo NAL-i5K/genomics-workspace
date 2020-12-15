@@ -31,12 +31,12 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.save()
 
     # update status from 'pending' to 'running' for frontend
-    with open('status.json', 'r') as f:
+    with open('status.json', 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'running'
         # db_list = statusdata['db_list']
 
-    with open('status.json', 'w') as f:
+    with open('status.json', 'wt') as f:
         json.dump(statusdata, f)
 
     # run
@@ -70,11 +70,11 @@ def run_hmmer_task(task_id, args_list, file_prefix):
     record.save()
 
     # generate status.json for frontend status checking
-    with open('status.json', 'r') as f:
+    with open('status.json', 'rt') as f:
         statusdata = json.load(f)
         statusdata['status'] = 'done'
 
-    with open('status.json', 'wb') as f:
+    with open('status.json', 'wt') as f:
         json.dump(statusdata, f)
 
     return task_id  # passed to 'result' argument of task_success_handler

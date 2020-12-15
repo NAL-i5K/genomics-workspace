@@ -16,7 +16,7 @@ from django.utils.translation import ugettext as _
 from django.utils.encoding import smart_str
 from django.conf import settings
 from django import forms
-from django.core.urlresolvers import reverse
+from django.urls import reverse
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.move import file_move_safe
 from django.core.paginator import Paginator, InvalidPage, EmptyPage

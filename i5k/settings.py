@@ -106,12 +106,13 @@ SECRET_KEY = 'n(bd1f1c%e8=_xad02x5qtfn%wg2pi492e$8_erx+d)!tpeoim'
 
 SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
-MIDDLEWARE_CLASSES = (
+MIDDLEWARE = (
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    'axes.middleware.AxesMiddleware',
     # Uncomment the next line for simple clickjacking protection:
     # 'django.middleware.clickjacking.XFrameOptionsMiddleware',
 )
@@ -297,12 +298,6 @@ PIPELINE = {
             ),
             'output_filename': 'app/css/app-layout.min.css',
         },
-        'app-readme': {
-            'source_filenames': (
-                'app/content/app-readme.css',
-            ),
-            'output_filename': 'app/content/app-readme.min.css',
-        },
         'blast-results': {
             'source_filenames': (
                 'blast/css/codemirror.css',
@@ -361,13 +356,6 @@ PIPELINE = {
                 'app/scripts/error.js',
             ),
             'output_filename': 'app/scripts/app-layout.min.js',
-        },
-        'app-readme': {
-            'source_filenames': (
-                'app/scripts/marked.min.js',
-                'app/scripts/jquery.gh-readme.js'
-            ),
-            'output_filename': 'app/scripts/app-readme.min.js',
         },
         'blast-results': {
             'source_filenames': (
@@ -430,6 +418,7 @@ PIPELINE['JS_COMPRESSOR'] = 'pipeline.compressors.jsmin.JSMinCompressors'
 
 AUTHENTICATION_BACKENDS = (
     'django.contrib.auth.backends.ModelBackend',
+    'axes.backends.AxesBackend',
 )
 
 

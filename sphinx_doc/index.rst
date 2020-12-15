@@ -40,6 +40,7 @@ All source codes of genomics workspace are in `our github repo
    setup_guide
    user_guide
    deployment_guide
+   docker_setup
    troubleshooting
    about
 

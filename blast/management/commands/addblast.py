@@ -1,7 +1,5 @@
 from blast.models import BlastDb
 from django.core.management.base import BaseCommand
-#from app.models import Organism
-#sys.path.append('genomics-workspace/app/management/commands/add_func.py')
 from add_func import get_organism, display_name, get_path, get_type, get_molecule, get_dataset
 
 class Command(BaseCommand):
