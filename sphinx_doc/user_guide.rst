@@ -43,7 +43,7 @@ Getting started
 BLAST Database Configuration
 ----------------------------
 
-Manually creating a BLAST database
+Manually creating a BLAST database (deprecated)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Add Organism (click the **Organism** icon at sidebar and click **Add organism**):
 
