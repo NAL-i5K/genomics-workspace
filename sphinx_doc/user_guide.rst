@@ -96,7 +96,7 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 5. To show the blast database in the web interface (the blast database will not show by default)
 
-* ``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown ‘true’)
+* ``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown true)
 
 
 
