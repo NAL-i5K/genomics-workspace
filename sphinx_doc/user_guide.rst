@@ -84,7 +84,7 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 2. To add a fasta file to the Blast application
 
-*	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
+*	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
 *	[type] here should be one of the sequence types you set up earlier, e.g. "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
 *	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example descriptions are "[genus] [species] genome assembly, [assembly name]", "[genus] [species] [annotation name], peptides", "[genus] [species] [annotation name], transcripts" or "[genus] [species] [annotation name], CDS"
 
@@ -101,6 +101,11 @@ An admin user can add or remove data from the genomics-workspace database via th
 * ``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown ‘true’)
 
 If you don't see the new organism under the blast webapp, you can login into the postgres database and see if the ``blast_blastdb`` table has the rows with information about your organism.
+
+6. To show the genome in jbrowse
+
+* ``python manage.py addjbrowse [genome assembly fasta file] -shown ‘true’`` (e.g python manage.py addjbrowse GCF_003254395.2_Amel_HAv3.1_genomic.fna https://apollo.nal.usda.gov/apollo/[genus]%20[species]/jbrowse/)
+
 
 HMMER Database Configuration (deprecated)
 ----------------------------
