@@ -25,7 +25,7 @@ Getting started
   * Follow the instructions shown on your terminal, then browse and login to the admin page of genomics-workspace. Usually, the admin page should be at ``http://127.0.0.1:8000/admin/``.
   * If you already have an admin account, use ``python manage.py runserver`` and then browse and login to genomics-workspace.
   
-* All opeations on the command line will be done as the i5k user which is a admin user. You can switch to the i5k user with ``sudo su -l i5k``. You need to be in the apollo group to be able to run this command.
+* All opeations on the command line will be done as the i5k user which is a admin user. You can switch to the i5k user with ``sudo su -l i5k``. You need to be in the i5k group to be able to run this command.
 
 * Create these directories if you don’t have them
 
@@ -104,7 +104,7 @@ If you don't see the new organism under the blast webapp, you can login into the
 
 6. To show the genome in jbrowse
 
-* ``python manage.py addjbrowse [genome assembly fasta file] -shown ‘true’`` (e.g python manage.py addjbrowse GCF_003254395.2_Amel_HAv3.1_genomic.fna https://apollo.nal.usda.gov/apollo/[genus]%20[species]/jbrowse/)
+* ``python manage.py addjbrowse [genome assembly fasta file] [Jbrowse URL]`` (e.g python manage.py addjbrowse GCF_003254395.2_Amel_HAv3.1_genomic.fna https://apollo.nal.usda.gov/apollo/[genus]_[species]/jbrowse/)
 
 
 HMMER Database Configuration (deprecated)
@@ -135,7 +135,7 @@ An admin user like i5k can add or remove data from the genomics-workspace databa
 
 2.	To add hmmer database
 
-* ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d "Apis mellifera Apis_mellifera_Annotation_Release_103, peptides")
+* ``python manage.py addhmmer [genus] [species] -f [path of protein fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d "Apis mellifera Apis_mellifera_Annotation_Release_103, peptides")
 * [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides". Note that double quotes are required around the description string otherwise spaces will be ignored.
 
 If you don't see the new organism under the hmmer webapp, you can login into the postgres database and see if the last few rows in the ``hmmer_hmmerdb`` table have information about your organism.
