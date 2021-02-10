@@ -24,11 +24,13 @@ Getting started
   * Use ``python manage.py createsuperuser``.
   * Follow the instructions shown on your terminal, then browse and login to the admin page of genomics-workspace. Usually, the admin page should be at ``http://127.0.0.1:8000/admin/``.
   * If you already have an admin account, use ``python manage.py runserver`` and then browse and login to genomics-workspace.
+  
+* All opeations on the command line will be done as the i5k user which is a admin user. You can switch to the i5k user with ``sudo su -l i5k``. You need to be in the i5k group to be able to run this command.
 
 * Create these directories if you don’t have them
 
-  * media/blast/db
-  * media/hmmer/db
+  * /usr/local/i5k/media/blast/db/
+  * /usr/local/i5k/media/hmmer/db
 
 * Create sequence sequence types in blast/sequence-type. We recommend creating these three:
 
@@ -36,14 +38,14 @@ Getting started
   * Nucleotide/Genome Assembly
   * Nucleotide/Transcript
 
-* Copy all fasta files to be formatted for blast to media/blast/db
+* Copy all fasta files to be formatted for blast to /usr/local/i5k/media/blast/db/
 
-* Copy protein fasta files to be formatted for hmmer to media/hmmer/db
+* Copy protein fasta files to be formatted for hmmer to /usr/local/i5k/media/hmmer/db
 
 BLAST Database Configuration
 ----------------------------
 
-Manually creating a BLAST database
+Manually creating a BLAST database (deprecated)
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 * Add Organism (click the **Organism** icon at sidebar and click **Add organism**):
 
@@ -74,7 +76,7 @@ Creating a BLAST database via command line
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 An admin user can add or remove data from the genomics-workspace database via the command line interface. Here, we describe how to use commands to interact with the database.
 
-.. Note:: the order of steps is important. Try to do these steps in order.  
+.. Note:: the order of steps is important. Try to do these steps in order as the i5k user.
 
 1. To add organism
 
@@ -82,7 +84,7 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 2. To add a fasta file to the Blast application
 
-*	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
+*	``python manage.py addblast [genus] [species] -t [type] -f [path of fasta file] -d  [description]`` (e.g python manage.py addblast Apis mellifera -t nucleotide Genome Assembly -f GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera genome assembly, Amel_HAv3.1)
 *	[type] here should be one of the sequence types you set up earlier, e.g. "peptide Protein", "nucleotide Genome Assembly" or "nucleotide Transcript"
 *	[description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example descriptions are "[genus] [species] genome assembly, [assembly name]", "[genus] [species] [annotation name], peptides", "[genus] [species] [annotation name], transcripts" or "[genus] [species] [annotation name], CDS"
 
@@ -98,9 +100,14 @@ An admin user can add or remove data from the genomics-workspace database via th
 
 * ``python manage.py blast_shown [path of fasta file] -shown ‘true’`` (e.g python manage.py blast_shown media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -shown ‘true’)
 
+If you don't see the new organism under the blast webapp, you can login into the postgres database and see if the ``blast_blastdb`` table has the rows with information about your organism.
+
+6. To show the genome in jbrowse
+
+* ``python manage.py addjbrowse [genome assembly fasta file] [Jbrowse URL]`` (e.g python manage.py addjbrowse GCF_003254395.2_Amel_HAv3.1_genomic.fna https://apollo.nal.usda.gov/apollo/[genus]_[species]/jbrowse/)
 
 
-HMMER Database Configuration
+HMMER Database Configuration (deprecated)
 ----------------------------
 Like BLAST, HMMER databases must be configured then they could be searched.
 
@@ -120,18 +127,20 @@ Manually creating a HMMER database
 
 Creating a HMMER database via command line
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-An admin user can add or remove data from the genomics-workspace database via the command line interface. Here, we describe how to use commands to interact with the database.
+An admin user like i5k can add or remove data from the genomics-workspace database via the command line interface. Here, we describe how to use commands to interact with the database.
 
 1.	To add organism (not necessary if the organism is already added)
 
 * ``python manage.py addorganism [genus] [species]`` (e.g python manage.py addorganism Apis mellifera)
 
-2.	To add hmmer
+2.	To add hmmer database
 
-* ``python manage.py addhmmer [genus] [species] -f [path of fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d Apis mellifera Apis_mellifera_Annotation_Release_103, peptides)
-* [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides"
+* ``python manage.py addhmmer [genus] [species] -f [path of protein fasta file] -d [genus] [species] [annotation name], [sequence type]`` (e.g python manage.py addhmmer Apis mellifera -f  media/blast/db/GCF_003254395.2_Amel_HAv3.1_genomic.fna -d "Apis mellifera Apis_mellifera_Annotation_Release_103, peptides")
+* [description] will be the Fasta file description in the web interface. If this argument is omitted, the program will use the Fasta file name. Example description: "[genus][ species] [annotation name], peptides". Note that double quotes are required around the description string otherwise spaces will be ignored.
 
-Organism and Database deletion
+If you don't see the new organism under the hmmer webapp, you can login into the postgres database and see if the last few rows in the ``hmmer_hmmerdb`` table have information about your organism.
+
+Organism and Database deletion (unavailable)
 ------------------------------
 Organism, BLAST and HMMER databases can be deleted after configuration via the command line interface. Here, we describe the commands for deleting them.
 
