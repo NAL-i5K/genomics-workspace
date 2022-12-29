@@ -27,7 +27,7 @@
     "bootstrap-switch": "^3.0.2",
     "chroma-js": "https://github.com/gka/chroma.js/archive/v0.6.1.tar.gz",
     "codemirror": "^4.5.0",
-    "copy-webpack-plugin": "^4.5.1",
+    "copy-webpack-plugin": "^11.0.0",
     "d3": "^3.5.12",
     "datatables-tabletools": "^2.2.2",
     "datatables.net-bs": "^1.10.9",
@@ -42,7 +42,7 @@
     "jquery-validation": "^1.14.0",
     "jquery.dragscrollable": "^1.0.0",
     "underscore": "^1.7.0",
-    "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1"
+    "webpack": "^5.75.0",
+    "webpack-cli": "^5.0.1"
   }
 }
