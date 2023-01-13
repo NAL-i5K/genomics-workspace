@@ -43,6 +43,6 @@
     "jquery.dragscrollable": "^1.0.0",
     "underscore": "^1.7.0",
     "webpack": "^4.20.2",
-    "webpack-cli": "^3.1.1"
+    "webpack-cli": "^3.3.12"
   }
 }
