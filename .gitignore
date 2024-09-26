@@ -90,3 +90,4 @@ dist/
 
 celerybeat-schedule
 v8-compile*
+tmp/
