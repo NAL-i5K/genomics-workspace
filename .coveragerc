@@ -1,5 +1,0 @@
-[run]
-omit =
-    */site-packages/*
-    */dist-packages/*
-    */tests.py
