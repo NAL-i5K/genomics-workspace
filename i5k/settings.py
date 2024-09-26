@@ -1,5 +1,6 @@
 # Django settings for i5k project.
 from os import path
+from os import environ as env
 import sys
 import os
 import socket
@@ -39,11 +40,11 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'django',
-        'USER': 'django',
-        'PASSWORD': 'django1234',
-        'HOST': 'localhost',
-        'PORT': '5432',
+        'NAME': env.get('DB_NAME','django'),
+        'USER': env.get('DB_USER','django'),
+        'PASSWORD': env.get('DB_PASS','django'),
+        'HOST': env.get('DB_HOST','localhost'),
+        'PORT': env.get('DB_HOST','5432'),
     }
 }
 
