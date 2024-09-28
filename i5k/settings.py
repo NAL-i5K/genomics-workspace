@@ -44,7 +44,7 @@ DATABASES = {
         'USER': env.get('DB_USER','django'),
         'PASSWORD': env.get('DB_PASS','django'),
         'HOST': env.get('DB_HOST','localhost'),
-        'PORT': env.get('DB_HOST','5432'),
+        'PORT': env.get('DB_PORT','5432'),
     }
 }
 
