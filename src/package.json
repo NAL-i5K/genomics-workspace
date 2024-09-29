@@ -20,7 +20,6 @@
     "prettier": "1.13.0"
   },
   "dependencies": {
-    "Respond.js": "https://github.com/scottjehl/Respond/archive/1.4.0.tar.gz",
     "backbone": "^1.1.2",
     "bootstrap": "^3.4.1",
     "bootstrap-select": "^1.6.3",
@@ -42,6 +41,7 @@
     "jquery-validation": "^1.14.0",
     "jquery.dragscrollable": "^1.0.0",
     "marked": "^0.3.19",
+    "Respond.js": "https://github.com/scottjehl/Respond/archive/1.4.0.tar.gz",
     "underscore": "^1.7.0",
     "webpack": "^4.20.2",
     "webpack-cli": "^3.1.1"
