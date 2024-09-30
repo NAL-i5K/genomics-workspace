@@ -11,14 +11,14 @@ admin.autodiscover()
 login_forbidden = user_passes_test(lambda u: u.is_anonymous, '/home')
 
 urlpatterns = [
-    path(r'proxy/', include('proxy.urls', namespace='proxy')),
+    #path(r'proxy/', include('proxy.urls', namespace='proxy')),
 
 
     # Enable admin documentation:
     #re_path(r'admin/doc/', include('django.contrib.admindocs.urls'), name='doc'),
     #re_path(r'admin/filebrowser/', include('filebrowser.urls')),
     # Enable the admin:
-    re_path(r'admin/', admin.site.urls),
+    #re_path(r'admin/', admin.site.urls),
     # BLAST
     path(r'blast/', include('blast.urls', namespace='blast')),
     # HMMER
