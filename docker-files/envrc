@@ -1,0 +1,7 @@
+export DB_USER=${DB_USER:=$(whoami)}
+export DB_PASS=${DB_PASS:=$(whoami)}
+export DB_HOST=${DB_HOST:=localhost}
+export DB_PORT=${DB_PORT:=5432}
+
+layout poetry
+

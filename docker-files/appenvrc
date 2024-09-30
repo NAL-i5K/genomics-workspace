@@ -1,0 +1,2 @@
+source_up 
+export DB_NAME=${DB_NAME:=$(whoami)_training}

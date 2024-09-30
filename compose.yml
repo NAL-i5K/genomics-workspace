@@ -1,0 +1,71 @@
+services:
+
+  django_db:
+    #############################################################
+    # This database container serves as the datastore for
+    # both the api and workspace services defined below.
+    # Ideally this is a managed service in Azure  VDC: 09/21/2024
+    ##############################################################
+    image: "postgres:16.2-alpine"
+    container_name: "django_db"
+    hostname: "django_db"
+    environment:
+      POSTGRES_USER: "${APP_USER}"
+      POSTGRES_PASSWORD: "${APP_USER}"
+      POSTGRES_HOST_AUTH_METHOD: md5
+    #volumes:
+    #  - ./src/data/sql/i5k-dev-data.pgc:/docker-entrypoint-initdb.d/i5k-dev-data.pgc
+    #  - ./docker-files/init-app.sh:/docker-entrypoint-initdb.d/init-app.sh
+    ports:
+      - 5434:5432
+
+  django:
+    #############################################################
+    # i5K api backend tasks service
+    # VDC: 08/21/2024
+    ##############################################################
+    image: "i5k-django"
+    hostname: "django"
+    container_name: "django"
+    command: ["bash", "-l"]
+    #platform: linux/amd64
+    tty: true
+    build:
+      args:
+        UID: "${UID}"
+        GID: "${GID}"
+    environment:
+      DB_PASS: "${APP_USER}"
+      DB_USER: "${APP_USER}"
+      DB_HOST: django_db
+    ports:
+      - 8000:8000
+    volumes: []
+      ##############################################################
+      # Persitant Volumes
+      ##############################################################
+      #- ./docker-files/supervisord.conf:/opt/app/supervisord.conf
+      #- ./docker-files/entry-point.sh:/opt/app/conf/entry-point.sh
+      #- tasks:/opt/i5k/tasks
+      #- ./i5k:/opt/i5k/i5k
+      #- ./src/data:/opt/i5k/data
+
+      ################################################################
+      # Uncomment any/all entries to develop interactively 
+      # VDC: 08/21/2024
+      ################################################################
+      #- ./pyproject.toml:/opt/api/pyproject.toml
+      #- ./poetry.lock:/opt/api/poetry.lock
+      #- ./docker-files/entry-point.sh:/opt/api/bin/entry-point.sh
+      #- ./docker-files/supervisord.conf:/opt/api/.local/supervisord.conf
+      #- ./docker-files/nginx.conf:/etc/nginx/nginx.conf
+      #- ./docker-files/default:/etc/nginx/sites-enabled/default
+
+volumes:
+  bin:
+  dbs:
+  tasks:
+
+networks:
+  default:
+    name: api
