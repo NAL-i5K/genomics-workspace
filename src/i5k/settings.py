@@ -133,8 +133,8 @@ INSTALLED_APPS = (
     'django.contrib.staticfiles',
     'django.contrib.postgres',
     'axes',
-    'rest_framework',
-    'rest_framework_swagger',
+    #'rest_framework',
+    #'rest_framework_swagger',
     'pipeline',
     'app',
     'blast',
@@ -143,8 +143,7 @@ INSTALLED_APPS = (
     # Enable the admin:
     'django.contrib.admin',
     # Enable admin documentation:
-    'django.contrib.admindocs',
-    'proxy',
+    #'django.contrib.admindocs',
     'hmmer',
     'clustal',
 )
