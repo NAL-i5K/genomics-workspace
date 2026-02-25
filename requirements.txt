@@ -34,7 +34,7 @@ PyYAML==5.2
 requests==2.22.0
 simplejson==3.17.0
 six==1.13.0
-sqlparse==0.3.0
+sqlparse==0.5.5
 uritemplate==3.0.0
 urllib3==1.24.3
 uWSGI==2.0.18
