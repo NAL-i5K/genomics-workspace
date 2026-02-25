@@ -20,7 +20,7 @@ importlib-metadata==1.2.0
 itypes==1.1.0
 Jinja2==2.10.3
 jsmin==2.2.2
-kombu==4.6.6
+kombu==5.6.2
 Markdown==3.1.1
 MarkupSafe==1.1.1
 modernize==0.7
