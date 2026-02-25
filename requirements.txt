@@ -19,7 +19,7 @@ idna==2.7
 importlib-metadata==1.2.0
 itypes==1.1.0
 Jinja2==2.10.3
-jsmin==2.2.2
+jsmin==3.0.1
 kombu==4.6.6
 Markdown==3.1.1
 MarkupSafe==1.1.1
