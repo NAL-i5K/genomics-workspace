@@ -51,6 +51,37 @@ BLAST Results
 * PostgreSQL
 * mod_wsgi (optional, only for production)
 
+## Local Python Compatibility (Current macOS Validation)
+
+The original dependency set in [requirements.txt](requirements.txt) is legacy and
+some pinned packages do not build cleanly on newer Python versions.
+
+Validated result on macOS:
+
+* Highest working interpreter for this repository: **Python 3.9**
+* Interpreter versions 3.10+ require dependency upgrades in the app stack
+  (`django-pipeline`, older C-extension pins, etc.)
+
+Recommended local setup:
+
+```bash
+brew install python@3.9
+/opt/homebrew/bin/python3.9 -m venv .venv39
+.venv39/bin/python -m pip install "pip<24.1" "setuptools<58" wheel
+.venv39/bin/python -m pip install -r requirements.txt
+
+# Pillow 6.2.1 can fail to build on modern macOS toolchains.
+# If needed locally, install a compatible wheel:
+.venv39/bin/python -m pip install "Pillow>=9,<11"
+```
+
+Quick validation commands:
+
+```bash
+.venv39/bin/python manage.py check
+.venv39/bin/python manage.py test blast.test_updated_tasks
+```
+
 ## Documentation
 
 Docs can be found at [genomics-workspace.readthedocs.io](https://genomics-workspace.readthedocs.io/en/latest/).
